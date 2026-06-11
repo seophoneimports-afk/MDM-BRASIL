@@ -1,0 +1,198 @@
+{
+  "seo": {
+    "title": "MDM & FRP Brasil | Soluções técnicas autorizadas",
+    "description": "Plataforma profissional para atendimento técnico autorizado, suporte e gestão de serviços em dispositivos móveis.",
+    "siteUrl": "http://localhost:3000"
+  },
+  "brand": {
+    "name": "MDM & FRP Brasil",
+    "shortName": "MDM FRP",
+    "whatsapp": "5519994783127",
+    "email": "atendimento@seudominio.com.br",
+    "badge": "Atendimento técnico responsável"
+  },
+  "theme": {
+    "primary": "#16f29a",
+    "secondary": "#42a5ff",
+    "accent": "#f6c84c",
+    "background": "#08111f",
+    "surface": "#101c2e",
+    "text": "#f4f8ff",
+    "muted": "#aab7c9",
+    "radius": 24,
+    "density": "confortavel",
+    "layout": "premium"
+  },
+  "hero": {
+    "eyebrow": "Central profissional para técnicos",
+    "title": "Site profissional para atendimento técnico, planos e suporte autorizado.",
+    "subtitle": "Organize seus serviços, apresente planos, capture contatos e direcione clientes para o WhatsApp com uma experiência moderna, rápida e segura.",
+    "primaryButton": "Chamar no WhatsApp",
+    "secondaryButton": "Ver planos",
+    "imageTitle": "Painel técnico",
+    "imageText": "Atendimento responsável, documentação do cliente e operação segura."
+  },
+  "stats": [
+    {
+      "number": "24h",
+      "label": "Atendimento rápido"
+    },
+    {
+      "number": "+15",
+      "label": "Marcas no catálogo"
+    },
+    {
+      "number": "100%",
+      "label": "Foco em uso autorizado"
+    }
+  ],
+  "pain": {
+    "title": "Seu cliente precisa confiar antes de chamar.",
+    "description": "Um site bem estruturado passa profissionalismo, explica limites do serviço e reduz dúvidas antes do atendimento.",
+    "items": [
+      "Página pronta para apresentar serviços e planos",
+      "Contato direto pelo WhatsApp configurado",
+      "Painel admin para editar textos, cores e preços",
+      "Backend com salvamento real das alterações"
+    ]
+  },
+  "features": [
+    {
+      "icon": "🛡️",
+      "title": "Operação responsável",
+      "text": "Textos preparados para reforçar atendimento técnico com autorização e comprovação do cliente."
+    },
+    {
+      "icon": "⚡",
+      "title": "Rápido e responsivo",
+      "text": "Interface otimizada para celular, computador e compartilhamento direto no WhatsApp."
+    },
+    {
+      "icon": "🎛️",
+      "title": "Painel admin real",
+      "text": "Altere marca, cores, planos, benefícios, FAQ e chamadas sem editar código."
+    },
+    {
+      "icon": "🔐",
+      "title": "Headers de segurança",
+      "text": "Backend com proteção básica, sessões assinadas, CSP e limites de requisição."
+    }
+  ],
+  "tools": {
+    "title": "O que o site entrega para sua operação",
+    "description": "Uma presença digital profissional para vender melhor, organizar dúvidas e captar contatos.",
+    "items": [
+      "Landing page premium",
+      "Admin com login",
+      "Edição de layout",
+      "Gestão de planos",
+      "Formulário de leads",
+      "Integração WhatsApp",
+      "FAQ editável",
+      "Aviso legal"
+    ]
+  },
+  "brands": [
+    "Samsung",
+    "Motorola",
+    "Xiaomi",
+    "LG",
+    "Realme",
+    "OPPO",
+    "Vivo",
+    "Infinix",
+    "Tecno",
+    "Positivo",
+    "Multilaser",
+    "Lenovo"
+  ],
+  "steps": [
+    {
+      "title": "1. Cliente chama",
+      "text": "O visitante escolhe o plano ou envia dúvida pelo formulário/WhatsApp."
+    },
+    {
+      "title": "2. Você qualifica",
+      "text": "Confirma documentação, autorização e detalhes do aparelho antes de qualquer atendimento."
+    },
+    {
+      "title": "3. Atendimento seguro",
+      "text": "O serviço é feito apenas em aparelhos próprios, autorizados e com responsabilidade."
+    }
+  ],
+  "plans": [
+    {
+      "name": "Essencial",
+      "price": "R$ 29,90",
+      "period": "/mês",
+      "tag": "Para começar",
+      "featured": false,
+      "benefits": [
+        "Página profissional",
+        "Contato por WhatsApp",
+        "FAQ completo",
+        "Atualização manual"
+      ]
+    },
+    {
+      "name": "Profissional",
+      "price": "R$ 59,90",
+      "period": "/mês",
+      "tag": "Mais escolhido",
+      "featured": true,
+      "benefits": [
+        "Tudo do Essencial",
+        "Painel admin",
+        "Captação de leads",
+        "Layout editável",
+        "Planos editáveis"
+      ]
+    },
+    {
+      "name": "Premium",
+      "price": "R$ 99,90",
+      "period": "/mês",
+      "tag": "Operação completa",
+      "featured": false,
+      "benefits": [
+        "Tudo do Profissional",
+        "Prioridade no atendimento",
+        "Mais seções",
+        "Suporte para publicação"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "O painel admin salva de verdade?",
+      "a": "Sim. Nesta versão com backend, as alterações são salvas no arquivo data/site-config.json do servidor."
+    },
+    {
+      "q": "Consigo mudar cores e layout?",
+      "a": "Sim. Você pode alterar cores principais, raio dos cards, textos, planos, benefícios e FAQ pelo painel."
+    },
+    {
+      "q": "O site funciona no celular?",
+      "a": "Sim. A interface foi feita pensando primeiro em celular, mas também fica profissional no computador."
+    },
+    {
+      "q": "Posso usar para serviços técnicos?",
+      "a": "Sim, desde que os atendimentos sejam legais, autorizados e com comprovação do proprietário do aparelho."
+    }
+  ],
+  "legal": {
+    "title": "Uso legal e autorizado",
+    "text": "A MDM & FRP Brasil atua apenas com orientação, atendimento técnico responsável e serviços autorizados pelo proprietário legítimo do dispositivo. Não realizamos nem incentivamos uso indevido, acesso não autorizado, fraude, desbloqueio de aparelhos de terceiros ou contorno ilegal de sistemas de segurança."
+  },
+  "sections": {
+    "stats": true,
+    "pain": true,
+    "features": true,
+    "tools": true,
+    "brands": true,
+    "steps": true,
+    "plans": true,
+    "faq": true,
+    "legal": true
+  }
+}

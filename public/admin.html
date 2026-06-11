@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Painel Admin | MDM & FRP Brasil</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body class="admin-body">
+  <main class="admin-shell">
+    <section class="admin-login card" data-login-panel>
+      <div class="admin-brand">
+        <span class="brand-mark">MF</span>
+        <div>
+          <h1>Painel Admin</h1>
+          <p>Entre para editar o site.</p>
+        </div>
+      </div>
+      <form data-login-form class="admin-form slim">
+        <label>Usuário
+          <input name="username" autocomplete="username" required value="admin">
+        </label>
+        <label>Senha
+          <input name="password" type="password" autocomplete="current-password" required placeholder="Sua senha do servidor">
+        </label>
+        <button class="button primary full" type="submit">Entrar</button>
+        <p class="form-message" data-login-message></p>
+        <p class="admin-hint">Senha local padrão para teste: <strong>admin12345</strong>. Troque em produção pelo arquivo `.env`.</p>
+      </form>
+    </section>
+
+    <section class="admin-panel hidden" data-admin-panel>
+      <aside class="admin-sidebar card">
+        <div class="admin-brand small">
+          <span class="brand-mark">MF</span>
+          <div>
+            <strong>Admin</strong>
+            <small>MDM & FRP Brasil</small>
+          </div>
+        </div>
+        <nav class="admin-tabs" data-tabs>
+          <button class="active" data-tab="geral">Geral</button>
+          <button data-tab="layout">Layout</button>
+          <button data-tab="conteudo">Conteúdo</button>
+          <button data-tab="planos">Planos</button>
+          <button data-tab="listas">Listas</button>
+          <button data-tab="leads">Leads</button>
+        </nav>
+        <a class="button ghost full" href="/" target="_blank" rel="noopener">Ver site</a>
+        <button class="button danger full" type="button" data-logout>Sair</button>
+      </aside>
+
+      <div class="admin-content">
+        <div class="admin-top card">
+          <div>
+            <h1>Editor do site</h1>
+            <p>Altere e clique em salvar. O backend grava para todos os visitantes.</p>
+          </div>
+          <button class="button primary" type="button" data-save>Salvar alterações</button>
+        </div>
+
+        <p class="form-message admin-status" data-admin-message></p>
+
+        <form class="admin-editor" data-editor-form>
+          <div class="tab-content active" data-tab-content="geral">
+            <div class="card admin-section">
+              <h2>Marca e SEO</h2>
+              <div class="admin-grid">
+                <label>Nome da marca<input data-path="brand.name"></label>
+                <label>Nome curto<input data-path="brand.shortName"></label>
+                <label>WhatsApp<input data-path="brand.whatsapp"></label>
+                <label>E-mail<input data-path="brand.email"></label>
+                <label>Título SEO<input data-path="seo.title"></label>
+                <label>Descrição SEO<textarea data-path="seo.description"></textarea></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" data-tab-content="layout">
+            <div class="card admin-section">
+              <h2>Cores e visual</h2>
+              <div class="admin-grid colors">
+                <label>Primária<input type="color" data-path="theme.primary"></label>
+                <label>Secundária<input type="color" data-path="theme.secondary"></label>
+                <label>Destaque<input type="color" data-path="theme.accent"></label>
+                <label>Fundo<input type="color" data-path="theme.background"></label>
+                <label>Cards<input type="color" data-path="theme.surface"></label>
+                <label>Texto<input type="color" data-path="theme.text"></label>
+                <label>Texto suave<input type="color" data-path="theme.muted"></label>
+                <label>Arredondamento<input type="range" min="6" max="40" data-path="theme.radius"></label>
+                <label>Densidade
+                  <select data-path="theme.density">
+                    <option value="compacto">Compacto</option>
+                    <option value="confortavel">Confortável</option>
+                    <option value="espacoso">Espaçoso</option>
+                  </select>
+                </label>
+                <label>Layout
+                  <select data-path="theme.layout">
+                    <option value="premium">Premium</option>
+                    <option value="direto">Direto</option>
+                    <option value="corporativo">Corporativo</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="card admin-section">
+              <h2>Seções visíveis</h2>
+              <div class="toggle-grid" data-render-admin="sections"></div>
+            </div>
+          </div>
+
+          <div class="tab-content" data-tab-content="conteudo">
+            <div class="card admin-section">
+              <h2>Hero / topo</h2>
+              <div class="admin-grid">
+                <label>Etiqueta<input data-path="hero.eyebrow"></label>
+                <label>Título<textarea data-path="hero.title"></textarea></label>
+                <label>Subtítulo<textarea data-path="hero.subtitle"></textarea></label>
+                <label>Botão principal<input data-path="hero.primaryButton"></label>
+                <label>Botão secundário<input data-path="hero.secondaryButton"></label>
+                <label>Título do card<input data-path="hero.imageTitle"></label>
+                <label>Texto do card<textarea data-path="hero.imageText"></textarea></label>
+              </div>
+            </div>
+            <div class="card admin-section">
+              <h2>Dor do cliente e aviso legal</h2>
+              <div class="admin-grid">
+                <label>Título da dor<textarea data-path="pain.title"></textarea></label>
+                <label>Descrição<textarea data-path="pain.description"></textarea></label>
+                <label>Título legal<input data-path="legal.title"></label>
+                <label>Texto legal<textarea data-path="legal.text"></textarea></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" data-tab-content="planos">
+            <div class="card admin-section">
+              <div class="admin-row">
+                <h2>Planos</h2>
+                <button class="button ghost" type="button" data-add-plan>Adicionar plano</button>
+              </div>
+              <div class="admin-list" data-render-admin="plans"></div>
+            </div>
+          </div>
+
+          <div class="tab-content" data-tab-content="listas">
+            <div class="card admin-section">
+              <h2>Listas do site</h2>
+              <label>Estatísticas — uma por linha, formato: número | texto<textarea data-list="stats"></textarea></label>
+              <label>Itens da dor — um por linha<textarea data-list="pain.items"></textarea></label>
+              <label>Recursos — formato: emoji | título | texto<textarea data-list="features"></textarea></label>
+              <label>Ferramentas — uma por linha<textarea data-list="tools.items"></textarea></label>
+              <label>Marcas — uma por linha<textarea data-list="brands"></textarea></label>
+              <label>Passos — formato: título | texto<textarea data-list="steps"></textarea></label>
+              <label>FAQ — formato: pergunta | resposta<textarea data-list="faq"></textarea></label>
+            </div>
+          </div>
+
+          <div class="tab-content" data-tab-content="leads">
+            <div class="card admin-section">
+              <div class="admin-row">
+                <h2>Leads recebidos</h2>
+                <button class="button ghost" type="button" data-refresh-leads>Atualizar</button>
+              </div>
+              <div class="leads-table" data-leads></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script src="/assets/admin.js" defer></script>
+</body>
+</html>
