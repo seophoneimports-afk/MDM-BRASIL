@@ -1,0 +1,16 @@
+{
+  "name": "mdm-frp-brasil-fullstack",
+  "version": "1.0.0",
+  "description": "Site profissional com backend Node.js, painel admin e edição dinâmica de conteúdo.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js"
+  },
+  "keywords": ["site", "landing-page", "admin", "nodejs"],
+  "author": "MDM & FRP Brasil",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  }
+}
