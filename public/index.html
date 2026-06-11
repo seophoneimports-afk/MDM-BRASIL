@@ -1,170 +1,171 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Plataforma profissional para atendimento técnico autorizado, suporte e gestão de serviços em dispositivos móveis.">
-  <meta name="theme-color" content="#08111f">
-  <title>MDM & FRP Brasil</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#020403" />
+  <meta name="description" content="Arquivos, ferramentas e métodos profissionais para atendimento técnico autorizado em celulares." />
+  <title>MDM & FRP BRASIL — Métodos e Arquivos</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body>
-  <div class="page-glow"></div>
-  <header class="site-header" id="topo">
-    <a class="brand" href="#topo" aria-label="Voltar ao início">
-      <span class="brand-mark">MF</span>
-      <span class="brand-text">MDM & FRP Brasil</span>
+  <div class="bg-noise"></div>
+  <div class="top-glow"></div>
+
+  <header class="header">
+    <a class="brand" href="#topo" aria-label="MDM & FRP BRASIL">
+      <img data-brand-logo src="/assets/logo-mdm-frp.png" alt="MDM & FRP BRASIL" />
+      <span data-text="brand.name">MDM & FRP BRASIL</span>
     </a>
-    <button class="menu-button" type="button" data-menu-button aria-label="Abrir menu">☰</button>
-    <nav class="nav" data-nav>
-      <a href="#recursos">Recursos</a>
-      <a href="#planos">Planos</a>
-      <a href="#faq">FAQ</a>
-      <a href="#contato" class="nav-cta">WhatsApp</a>
-    </nav>
+    <button class="menu-btn" type="button" data-menu>☰</button>
+    <nav class="nav" data-nav></nav>
+    <a class="login-link" href="/admin.html">Entrar</a>
   </header>
 
-  <main>
-    <section class="hero section">
-      <div class="hero-content reveal">
-        <span class="eyebrow" data-field="hero.eyebrow">Central profissional para técnicos</span>
-        <h1 data-field="hero.title">Site profissional para atendimento técnico, planos e suporte autorizado.</h1>
-        <p data-field="hero.subtitle">Organize seus serviços, apresente planos, capture contatos e direcione clientes para o WhatsApp com uma experiência moderna, rápida e segura.</p>
-        <div class="hero-actions">
-          <a class="button primary" data-whatsapp-link href="#">Chamar no WhatsApp</a>
-          <a class="button ghost" href="#planos" data-field="hero.secondaryButton">Ver planos</a>
-        </div>
-        <div class="trust-row">
-          <span>✓ Site com backend</span>
-          <span>✓ Admin com login</span>
-          <span>✓ Layout editável</span>
-        </div>
+  <main id="topo">
+    <section class="featured-tools" id="ferramentas" data-section="featuredTools">
+      <div class="container">
+        <h2 data-text="featuredTitle">Programas & Métodos em destaque</h2>
+        <div class="tools-row" data-tools></div>
       </div>
+    </section>
 
-      <div class="hero-card reveal delay-1" aria-label="Destaque do serviço">
-        <div class="hero-card-top">
-          <span class="status-dot"></span>
-          <span>Online agora</span>
+    <div class="marquee" aria-label="Destaques">
+      <div class="marquee-track" data-marquee></div>
+    </div>
+
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <h1 data-text="hero.title">Ganhe dinheiro todos os dias desbloqueando celulares sem sair de casa</h1>
+          <p data-text="hero.subtitle">Arquivos, ferramentas e métodos profissionais para desbloqueios remotos e presenciais — acesso imediato.</p>
+          <div class="brand-tags" data-tags></div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" data-whatsapp data-button="hero.primaryButton" href="#">Quero começar a lucrar agora</a>
+            <a class="btn btn-ghost" href="#recebe" data-button="hero.secondaryButton">Ver tudo que vou receber</a>
+          </div>
+          <div class="trust-list" data-trust></div>
         </div>
-        <div class="phone-mock">
-          <div class="phone-bar"></div>
-          <div class="mock-logo">MF</div>
-          <h2 data-field="hero.imageTitle">Painel técnico</h2>
-          <p data-field="hero.imageText">Atendimento responsável, documentação do cliente e operação segura.</p>
-          <div class="mock-list">
-            <span></span><span></span><span></span>
+        <div class="hero-visual reveal delay">
+          <div class="logo-orbit">
+            <img data-brand-logo src="/assets/logo-mdm-frp.png" alt="Logo MDM & FRP Brasil" />
+            <span class="orbit o1"></span><span class="orbit o2"></span><span class="orbit o3"></span>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="stats section compact" data-section="stats">
-      <div class="stats-grid" data-render="stats"></div>
-    </section>
-
-    <section class="section split" data-section="pain">
-      <div class="section-copy reveal">
-        <span class="eyebrow">Mais confiança</span>
-        <h2 data-field="pain.title">Seu cliente precisa confiar antes de chamar.</h2>
-        <p data-field="pain.description">Um site bem estruturado passa profissionalismo, explica limites do serviço e reduz dúvidas antes do atendimento.</p>
-      </div>
-      <div class="check-card reveal delay-1" data-render="painItems"></div>
-    </section>
-
-    <section class="section" id="recursos" data-section="features">
-      <div class="section-head reveal">
-        <span class="eyebrow">Recursos</span>
-        <h2>Bonito, rápido e pronto para vender melhor</h2>
-        <p>Uma página comercial completa com edição via painel admin e foco em conversão para WhatsApp.</p>
-      </div>
-      <div class="feature-grid" data-render="features"></div>
-    </section>
-
-    <section class="section tools-section" data-section="tools">
-      <div class="tools-card reveal">
-        <div>
-          <span class="eyebrow">Estrutura completa</span>
-          <h2 data-field="tools.title">O que o site entrega para sua operação</h2>
-          <p data-field="tools.description">Uma presença digital profissional para vender melhor, organizar dúvidas e captar contatos.</p>
+    <section class="pain section" id="metodos" data-section="pain">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow" data-text="pain.eyebrow">A dor do lojista e do técnico</span>
+          <h2 data-text="pain.title">Situações que você quer evitar no dia a dia</h2>
         </div>
-        <div class="pill-grid" data-render="tools"></div>
+        <div class="pain-grid" data-pain></div>
+        <div class="center-badge" data-text="pain.badge">Foco em resultados</div>
       </div>
     </section>
 
-    <section class="section compact" data-section="brands">
-      <div class="section-head small reveal">
-        <span class="eyebrow">Catálogo visual</span>
-        <h2>Marcas que você pode exibir no site</h2>
+    <section class="receive section" id="recebe" data-section="receive">
+      <div class="container split">
+        <div class="section-heading sticky-title">
+          <span class="eyebrow" data-text="receive.eyebrow">O que você recebe</span>
+          <h2 data-text="receive.title">Não é curso genérico. É uma biblioteca de arquivos e métodos, cada um focado em um problema específico. Direto ao ponto.</h2>
+        </div>
+        <div class="receive-list" data-receive></div>
       </div>
-      <div class="brand-cloud" data-render="brands"></div>
     </section>
 
-    <section class="section" data-section="steps">
-      <div class="section-head reveal">
-        <span class="eyebrow">Processo</span>
-        <h2>Como o atendimento fica mais organizado</h2>
+    <section class="brands section" data-section="brands">
+      <div class="container">
+        <div class="section-heading centered">
+          <h2 data-text="brands.title">Marcas e sistemas cobertos</h2>
+          <p data-text="brands.subtitle">Métodos para as principais marcas do mercado</p>
+        </div>
+        <div class="brand-cloud" data-brands></div>
       </div>
-      <div class="steps" data-render="steps"></div>
     </section>
 
-    <section class="section" id="planos" data-section="plans">
-      <div class="section-head reveal">
-        <span class="eyebrow">Planos</span>
-        <h2>Escolha o melhor plano</h2>
-        <p>Edite nomes, preços e benefícios pelo painel admin.</p>
+    <section class="steps section" data-section="steps">
+      <div class="container">
+        <div class="section-heading centered">
+          <h2 data-text="steps.title">Como funciona</h2>
+          <p data-text="steps.subtitle">Processo simples, do checkout ao desbloqueio</p>
+        </div>
+        <div class="steps-grid" data-steps></div>
       </div>
-      <div class="plans-grid" data-render="plans"></div>
     </section>
 
-    <section class="section lead-section" id="contato">
-      <div class="lead-copy reveal">
-        <span class="eyebrow">Contato</span>
-        <h2>Receba contatos pelo site e pelo WhatsApp</h2>
-        <p>O formulário salva os leads no backend e o botão leva direto para seu WhatsApp.</p>
-        <a class="button primary" data-whatsapp-link href="#">Falar no WhatsApp</a>
+    <section class="plans section" id="planos" data-section="plans">
+      <div class="container">
+        <div class="section-heading centered">
+          <span class="cup-badge" data-text="plansIntro.badge">Promo Copa 2026</span>
+          <h2 data-text="plansIntro.title">Planos de acesso</h2>
+          <p data-text="plansIntro.subtitle">Pague via Pix no WhatsApp ou pelo link oficial (Infinity Pay / Mercado Pago)</p>
+        </div>
+        <div class="plans-grid" data-plans></div>
       </div>
-      <form class="lead-form reveal delay-1" data-lead-form>
-        <label>Nome
-          <input name="name" placeholder="Seu nome" required maxlength="80">
-        </label>
-        <label>Telefone
-          <input name="phone" placeholder="DDD + número" required maxlength="40">
-        </label>
-        <label>Plano de interesse
-          <select name="plan" data-plan-select></select>
-        </label>
-        <label>Mensagem
-          <textarea name="message" placeholder="Como podemos ajudar?" maxlength="500"></textarea>
-        </label>
-        <button class="button primary full" type="submit">Enviar contato</button>
-        <p class="form-message" data-form-message></p>
-      </form>
     </section>
 
-    <section class="section faq-section" id="faq" data-section="faq">
-      <div class="section-head reveal">
-        <span class="eyebrow">FAQ</span>
-        <h2>Dúvidas frequentes</h2>
+    <section class="ethics section" data-section="ethics">
+      <div class="container">
+        <div class="section-heading centered">
+          <span class="eyebrow" data-text="ethics.badge">Compromisso ético</span>
+          <h2 data-text="ethics.title">Conteúdo educacional e profissional</h2>
+        </div>
+        <div class="ethics-grid" data-ethics></div>
       </div>
-      <div class="faq-list" data-render="faq"></div>
     </section>
 
-    <section class="section compact" data-section="legal">
-      <div class="legal-card reveal">
-        <h2 data-field="legal.title">Uso legal e autorizado</h2>
-        <p data-field="legal.text">A MDM & FRP Brasil atua apenas com orientação, atendimento técnico responsável e serviços autorizados pelo proprietário legítimo do dispositivo.</p>
+    <section class="lead section" id="contato">
+      <div class="container lead-card">
+        <div>
+          <span class="eyebrow">Atendimento rápido</span>
+          <h2>Fale com o suporte agora</h2>
+          <p>Preencha seus dados ou chame diretamente no WhatsApp para tirar dúvidas sobre planos e acesso.</p>
+          <a class="btn btn-primary" data-whatsapp href="#">Suporte via WhatsApp</a>
+        </div>
+        <form class="lead-form" data-lead-form>
+          <input name="name" placeholder="Seu nome" required maxlength="120" />
+          <input name="phone" placeholder="WhatsApp com DDD" required maxlength="60" />
+          <select name="interest" data-plan-select></select>
+          <textarea name="message" placeholder="Mensagem" maxlength="600"></textarea>
+          <button class="btn btn-primary full" type="submit">Enviar contato</button>
+          <p class="form-status" data-form-status></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="faq section" data-section="faq">
+      <div class="container">
+        <div class="section-heading centered">
+          <h2 data-text="faq.title">Perguntas Frequentes</h2>
+          <p data-text="faq.subtitle">Dúvidas comuns sobre o acesso</p>
+        </div>
+        <div class="faq-list" data-faq></div>
+      </div>
+    </section>
+
+    <section class="final-cta section" data-section="finalCta">
+      <div class="container final-card">
+        <img data-brand-logo src="/assets/logo-mdm-frp.png" alt="MDM & FRP Brasil" />
+        <div>
+          <h2 data-text="finalCta.title">Entre em campo com a seleção dos desbloqueios</h2>
+          <p data-text="finalCta.subtitle">Arquivos profissionais, métodos atualizados e suporte real. Edição Copa 2026 com bônus exclusivos.</p>
+          <a class="btn btn-primary" data-whatsapp data-button="finalCta.button" href="#">Garantir meu acesso</a>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div>
-      <strong data-field="brand.name">MDM & FRP Brasil</strong>
-      <p>Site profissional com backend, painel admin e WhatsApp integrado.</p>
-    </div>
-    <div class="footer-links">
-      <a href="/admin.html">Painel admin</a>
-      <a data-whatsapp-link href="#">WhatsApp</a>
+    <div class="container footer-inner">
+      <div>
+        <strong data-text="brand.name">MDM & FRP BRASIL</strong>
+        <p>© 2026 MDM & FRP Brasil — Edição Copa 2026. Todos os direitos reservados.</p>
+        <small data-text="legalNotice">Uso exclusivo em aparelhos próprios, autorizados ou com comprovação de procedência.</small>
+      </div>
+      <a data-whatsapp href="#" data-text="brand.supportText">Suporte via WhatsApp</a>
     </div>
   </footer>
 

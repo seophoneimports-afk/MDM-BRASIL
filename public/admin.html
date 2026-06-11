@@ -1,176 +1,305 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Painel Admin | MDM & FRP Brasil</title>
-  <link rel="stylesheet" href="/assets/styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel Admin — MDM & FRP BRASIL</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body class="admin-body">
-  <main class="admin-shell">
-    <section class="admin-login card" data-login-panel>
-      <div class="admin-brand">
-        <span class="brand-mark">MF</span>
+  <div class="login-box" data-login-box>
+    <h1>Painel Admin</h1>
+    <p class="muted">Entre para editar seu site, planos, ferramentas e leads.</p>
+    <form data-login-form>
+      <div class="field"><label>Usuário</label><input name="username" value="admin" autocomplete="username" /></div>
+      <div class="field"><label>Senha</label><input name="password" type="password" autocomplete="current-password" placeholder="Sua senha do Render" /></div>
+      <button class="btn btn-primary full" type="submit">Entrar</button>
+      <p class="form-status" data-login-status></p>
+    </form>
+  </div>
+
+  <div class="admin-shell" data-admin hidden>
+    <aside class="admin-sidebar">
+      <h1>MDM & FRP BRASIL</h1>
+      <p>Painel integrado com backend. Tudo que salvar aqui aparece no site publicado.</p>
+      <div class="admin-tabs">
+        <button class="active" data-tab="quick">Edição rápida</button>
+        <button data-tab="tools">Ferramentas</button>
+        <button data-tab="plans">Planos</button>
+        <button data-tab="faq">FAQ</button>
+        <button data-tab="json">JSON completo</button>
+        <button data-tab="leads">Leads</button>
+      </div>
+      <hr style="border-color:rgba(68,255,34,.14);margin:20px 0">
+      <a class="btn btn-ghost full" href="/" target="_blank">Ver site</a>
+      <button class="btn btn-ghost full" data-logout style="margin-top:10px">Sair</button>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top">
         <div>
-          <h1>Painel Admin</h1>
-          <p>Entre para editar o site.</p>
+          <h1>Editor do site</h1>
+          <p class="muted">Estrutura baseada no site original: destaque, hero, dores, recebimentos, marcas, passos, planos, FAQ e CTA final.</p>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-primary" data-save-all>Salvar alterações</button>
+          <button class="btn btn-ghost" data-reload>Recarregar</button>
         </div>
       </div>
-      <form data-login-form class="admin-form slim">
-        <label>Usuário
-          <input name="username" autocomplete="username" required value="admin">
-        </label>
-        <label>Senha
-          <input name="password" type="password" autocomplete="current-password" required placeholder="Sua senha do servidor">
-        </label>
-        <button class="button primary full" type="submit">Entrar</button>
-        <p class="form-message" data-login-message></p>
-        <p class="admin-hint">Senha local padrão para teste: <strong>admin12345</strong>. Troque em produção pelo arquivo `.env`.</p>
-      </form>
-    </section>
 
-    <section class="admin-panel hidden" data-admin-panel>
-      <aside class="admin-sidebar card">
-        <div class="admin-brand small">
-          <span class="brand-mark">MF</span>
-          <div>
-            <strong>Admin</strong>
-            <small>MDM & FRP Brasil</small>
+      <section data-panel="quick">
+        <div class="admin-grid">
+          <div class="admin-card">
+            <h2>Marca e contato</h2>
+            <div class="field"><label>Nome da marca</label><input data-path="brand.name"></div>
+            <div class="field"><label>WhatsApp</label><input data-path="brand.whatsapp"></div>
+            <div class="field"><label>Texto do suporte</label><input data-path="brand.supportText"></div>
+          </div>
+          <div class="admin-card">
+            <h2>Cores</h2>
+            <div class="field"><label>Cor principal</label><input data-path="theme.primary" type="color"></div>
+            <div class="field"><label>Cor secundária</label><input data-path="theme.secondary" type="color"></div>
+            <div class="field"><label>Fundo</label><input data-path="theme.background" type="color"></div>
+          </div>
+          <div class="admin-card">
+            <h2>Hero</h2>
+            <div class="field"><label>Título principal</label><textarea data-path="hero.title"></textarea></div>
+            <div class="field"><label>Subtítulo</label><textarea data-path="hero.subtitle"></textarea></div>
+            <div class="field"><label>Botão principal</label><input data-path="hero.primaryButton"></div>
+          </div>
+          <div class="admin-card">
+            <h2>Chamada final</h2>
+            <div class="field"><label>Título</label><textarea data-path="finalCta.title"></textarea></div>
+            <div class="field"><label>Subtítulo</label><textarea data-path="finalCta.subtitle"></textarea></div>
+            <div class="field"><label>Botão</label><input data-path="finalCta.button"></div>
           </div>
         </div>
-        <nav class="admin-tabs" data-tabs>
-          <button class="active" data-tab="geral">Geral</button>
-          <button data-tab="layout">Layout</button>
-          <button data-tab="conteudo">Conteúdo</button>
-          <button data-tab="planos">Planos</button>
-          <button data-tab="listas">Listas</button>
-          <button data-tab="leads">Leads</button>
-        </nav>
-        <a class="button ghost full" href="/" target="_blank" rel="noopener">Ver site</a>
-        <button class="button danger full" type="button" data-logout>Sair</button>
-      </aside>
+      </section>
 
-      <div class="admin-content">
-        <div class="admin-top card">
-          <div>
-            <h1>Editor do site</h1>
-            <p>Altere e clique em salvar. O backend grava para todos os visitantes.</p>
-          </div>
-          <button class="button primary" type="button" data-save>Salvar alterações</button>
+      <section data-panel="tools" hidden>
+        <div class="admin-card">
+          <h2>Programas & Métodos em destaque</h2>
+          <p class="muted">Edite os cards do topo. Para manter seguro, use links de checkout/WhatsApp e evite publicar procedimentos sensíveis direto na página.</p>
+          <div data-tools-editor></div>
+          <button class="btn btn-ghost" data-add-tool>Adicionar ferramenta</button>
         </div>
+      </section>
 
-        <p class="form-message admin-status" data-admin-message></p>
+      <section data-panel="plans" hidden>
+        <div class="admin-card">
+          <h2>Planos de acesso</h2>
+          <div data-plans-editor></div>
+          <button class="btn btn-ghost" data-add-plan>Adicionar plano</button>
+        </div>
+      </section>
 
-        <form class="admin-editor" data-editor-form>
-          <div class="tab-content active" data-tab-content="geral">
-            <div class="card admin-section">
-              <h2>Marca e SEO</h2>
-              <div class="admin-grid">
-                <label>Nome da marca<input data-path="brand.name"></label>
-                <label>Nome curto<input data-path="brand.shortName"></label>
-                <label>WhatsApp<input data-path="brand.whatsapp"></label>
-                <label>E-mail<input data-path="brand.email"></label>
-                <label>Título SEO<input data-path="seo.title"></label>
-                <label>Descrição SEO<textarea data-path="seo.description"></textarea></label>
-              </div>
-            </div>
-          </div>
+      <section data-panel="faq" hidden>
+        <div class="admin-card">
+          <h2>Perguntas Frequentes</h2>
+          <div data-faq-editor></div>
+          <button class="btn btn-ghost" data-add-faq>Adicionar pergunta</button>
+        </div>
+      </section>
 
-          <div class="tab-content" data-tab-content="layout">
-            <div class="card admin-section">
-              <h2>Cores e visual</h2>
-              <div class="admin-grid colors">
-                <label>Primária<input type="color" data-path="theme.primary"></label>
-                <label>Secundária<input type="color" data-path="theme.secondary"></label>
-                <label>Destaque<input type="color" data-path="theme.accent"></label>
-                <label>Fundo<input type="color" data-path="theme.background"></label>
-                <label>Cards<input type="color" data-path="theme.surface"></label>
-                <label>Texto<input type="color" data-path="theme.text"></label>
-                <label>Texto suave<input type="color" data-path="theme.muted"></label>
-                <label>Arredondamento<input type="range" min="6" max="40" data-path="theme.radius"></label>
-                <label>Densidade
-                  <select data-path="theme.density">
-                    <option value="compacto">Compacto</option>
-                    <option value="confortavel">Confortável</option>
-                    <option value="espacoso">Espaçoso</option>
-                  </select>
-                </label>
-                <label>Layout
-                  <select data-path="theme.layout">
-                    <option value="premium">Premium</option>
-                    <option value="direto">Direto</option>
-                    <option value="corporativo">Corporativo</option>
-                  </select>
-                </label>
-              </div>
-            </div>
-            <div class="card admin-section">
-              <h2>Seções visíveis</h2>
-              <div class="toggle-grid" data-render-admin="sections"></div>
-            </div>
-          </div>
+      <section data-panel="json" hidden>
+        <div class="admin-card">
+          <h2>JSON completo do site</h2>
+          <p class="muted">Editor avançado. Use somente se souber editar JSON.</p>
+          <textarea class="json-editor" data-json-editor></textarea>
+        </div>
+      </section>
 
-          <div class="tab-content" data-tab-content="conteudo">
-            <div class="card admin-section">
-              <h2>Hero / topo</h2>
-              <div class="admin-grid">
-                <label>Etiqueta<input data-path="hero.eyebrow"></label>
-                <label>Título<textarea data-path="hero.title"></textarea></label>
-                <label>Subtítulo<textarea data-path="hero.subtitle"></textarea></label>
-                <label>Botão principal<input data-path="hero.primaryButton"></label>
-                <label>Botão secundário<input data-path="hero.secondaryButton"></label>
-                <label>Título do card<input data-path="hero.imageTitle"></label>
-                <label>Texto do card<textarea data-path="hero.imageText"></textarea></label>
-              </div>
-            </div>
-            <div class="card admin-section">
-              <h2>Dor do cliente e aviso legal</h2>
-              <div class="admin-grid">
-                <label>Título da dor<textarea data-path="pain.title"></textarea></label>
-                <label>Descrição<textarea data-path="pain.description"></textarea></label>
-                <label>Título legal<input data-path="legal.title"></label>
-                <label>Texto legal<textarea data-path="legal.text"></textarea></label>
-              </div>
-            </div>
-          </div>
+      <section data-panel="leads" hidden>
+        <div class="admin-card">
+          <h2>Leads recebidos</h2>
+          <div data-leads></div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-          <div class="tab-content" data-tab-content="planos">
-            <div class="card admin-section">
-              <div class="admin-row">
-                <h2>Planos</h2>
-                <button class="button ghost" type="button" data-add-plan>Adicionar plano</button>
-              </div>
-              <div class="admin-list" data-render-admin="plans"></div>
-            </div>
-          </div>
+  <script>
+    let config = {};
+    let tools = [];
+    let leads = [];
+    const $ = (s, c=document) => c.querySelector(s);
+    const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 
-          <div class="tab-content" data-tab-content="listas">
-            <div class="card admin-section">
-              <h2>Listas do site</h2>
-              <label>Estatísticas — uma por linha, formato: número | texto<textarea data-list="stats"></textarea></label>
-              <label>Itens da dor — um por linha<textarea data-list="pain.items"></textarea></label>
-              <label>Recursos — formato: emoji | título | texto<textarea data-list="features"></textarea></label>
-              <label>Ferramentas — uma por linha<textarea data-list="tools.items"></textarea></label>
-              <label>Marcas — uma por linha<textarea data-list="brands"></textarea></label>
-              <label>Passos — formato: título | texto<textarea data-list="steps"></textarea></label>
-              <label>FAQ — formato: pergunta | resposta<textarea data-list="faq"></textarea></label>
-            </div>
-          </div>
+    function get(obj, path) { return path.split('.').reduce((a,k)=>a&&a[k]!==undefined?a[k]:undefined,obj); }
+    function set(obj, path, val) {
+      const parts = path.split('.');
+      let cur = obj;
+      parts.slice(0,-1).forEach(p => { cur[p] ??= {}; cur = cur[p]; });
+      cur[parts.at(-1)] = val;
+    }
+    function html(v){ return String(v ?? '').replace(/[&<>"]+/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]||c)); }
 
-          <div class="tab-content" data-tab-content="leads">
-            <div class="card admin-section">
-              <div class="admin-row">
-                <h2>Leads recebidos</h2>
-                <button class="button ghost" type="button" data-refresh-leads>Atualizar</button>
-              </div>
-              <div class="leads-table" data-leads></div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </section>
-  </main>
-  <script src="/assets/admin.js" defer></script>
+    async function api(url, options={}) {
+      const res = await fetch(url, { headers:{'content-type':'application/json'}, ...options });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'Erro');
+      return data;
+    }
+
+    async function check() {
+      const data = await api('/api/admin/check');
+      if (data.logged) showAdmin();
+    }
+
+    $('[data-login-form]').addEventListener('submit', async e => {
+      e.preventDefault();
+      const status = $('[data-login-status]');
+      status.textContent = 'Entrando...';
+      try {
+        await api('/api/auth/login', { method:'POST', body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
+        await showAdmin();
+      } catch (err) { status.textContent = err.message; }
+    });
+
+    async function showAdmin(){
+      $('[data-login-box]').hidden = true;
+      $('[data-admin]').hidden = false;
+      await loadData();
+    }
+
+    async function loadData(){
+      const data = await api('/api/admin/site');
+      config = data.config || {};
+      tools = data.tools || [];
+      leads = data.leads || [];
+      fillQuick();
+      renderToolsEditor();
+      renderPlansEditor();
+      renderFaqEditor();
+      renderLeads();
+      $('[data-json-editor]').value = JSON.stringify(config, null, 2);
+    }
+
+    function fillQuick(){
+      $$('[data-path]').forEach(input => {
+        const value = get(config, input.dataset.path) ?? '';
+        input.value = value;
+      });
+    }
+
+    function collectQuick(){
+      $$('[data-path]').forEach(input => set(config, input.dataset.path, input.value));
+    }
+
+    function renderToolsEditor(){
+      $('[data-tools-editor]').innerHTML = tools.map((tool, i) => `<div class="tool-editor" data-tool-index="${i}">
+        <div class="admin-grid">
+          <div class="field"><label>Título</label><input data-tool-field="title" value="${html(tool.title)}"></div>
+          <div class="field"><label>Letra</label><input data-tool-field="letter" value="${html(tool.letter)}"></div>
+          <div class="field"><label>Descrição</label><input data-tool-field="description" value="${html(tool.description)}"></div>
+          <div class="field"><label>Link/checkout</label><input data-tool-field="download_link" value="${html(tool.download_link)}"></div>
+        </div>
+        <label><input type="checkbox" data-tool-field="active" ${tool.active!==false?'checked':''}> Ativo</label>
+        <button class="btn danger" type="button" data-remove-tool="${i}">Remover</button>
+      </div>`).join('');
+    }
+
+    function collectTools(){
+      tools = $$('[data-tool-index]').map(row => {
+        const original = tools[Number(row.dataset.toolIndex)] || {};
+        return {
+          id: original.id || crypto.randomUUID(),
+          letter: $('[data-tool-field="letter"]', row).value,
+          title: $('[data-tool-field="title"]', row).value,
+          description: $('[data-tool-field="description"]', row).value,
+          download_link: $('[data-tool-field="download_link"]', row).value,
+          image: original.image || '',
+          whatsapp: true,
+          active: $('[data-tool-field="active"]', row).checked
+        };
+      });
+    }
+
+    function renderPlansEditor(){
+      const plans = config.plans || [];
+      $('[data-plans-editor]').innerHTML = plans.map((plan, i) => `<div class="tool-editor" data-plan-index="${i}">
+        <div class="admin-grid">
+          <div class="field"><label>Nome</label><input data-plan-field="name" value="${html(plan.name)}"></div>
+          <div class="field"><label>Preço</label><input data-plan-field="price" value="${html(plan.price)}"></div>
+          <div class="field"><label>Preço antigo</label><input data-plan-field="oldPrice" value="${html(plan.oldPrice)}"></div>
+          <div class="field"><label>Período</label><input data-plan-field="period" value="${html(plan.period)}"></div>
+          <div class="field"><label>Etiqueta</label><input data-plan-field="tag" value="${html(plan.tag)}"></div>
+          <div class="field"><label>Checkout</label><input data-plan-field="checkout" value="${html(plan.checkout)}"></div>
+        </div>
+        <div class="field"><label>Benefícios, um por linha</label><textarea data-plan-field="benefits">${html((plan.benefits||[]).join('\n'))}</textarea></div>
+        <label><input type="checkbox" data-plan-field="featured" ${plan.featured?'checked':''}> Destaque</label>
+        <button class="btn danger" type="button" data-remove-plan="${i}">Remover</button>
+      </div>`).join('');
+    }
+
+    function collectPlans(){
+      config.plans = $$('[data-plan-index]').map(row => ({
+        name: $('[data-plan-field="name"]', row).value,
+        price: $('[data-plan-field="price"]', row).value,
+        oldPrice: $('[data-plan-field="oldPrice"]', row).value,
+        period: $('[data-plan-field="period"]', row).value,
+        tag: $('[data-plan-field="tag"]', row).value,
+        checkout: $('[data-plan-field="checkout"]', row).value,
+        featured: $('[data-plan-field="featured"]', row).checked,
+        benefits: $('[data-plan-field="benefits"]', row).value.split('\n').map(x=>x.trim()).filter(Boolean)
+      }));
+    }
+
+    function renderFaqEditor(){
+      const items = config.faq?.items || [];
+      $('[data-faq-editor]').innerHTML = items.map((item, i) => `<div class="tool-editor" data-faq-index="${i}">
+        <div class="field"><label>Pergunta</label><input data-faq-field="q" value="${html(item.q)}"></div>
+        <div class="field"><label>Resposta</label><textarea data-faq-field="a">${html(item.a)}</textarea></div>
+        <button class="btn danger" type="button" data-remove-faq="${i}">Remover</button>
+      </div>`).join('');
+    }
+
+    function collectFaq(){
+      config.faq ??= {};
+      config.faq.items = $$('[data-faq-index]').map(row => ({
+        q: $('[data-faq-field="q"]', row).value,
+        a: $('[data-faq-field="a"]', row).value
+      }));
+    }
+
+    function renderLeads(){
+      $('[data-leads]').innerHTML = leads.length ? leads.map(l => `<div class="lead-row"><strong>${html(l.name)}</strong><p>${html(l.phone)} — ${html(l.interest)}</p><small>${html(l.createdAt)}</small><p>${html(l.message)}</p></div>`).join('') : '<p class="muted">Nenhum lead ainda.</p>';
+    }
+
+    async function saveAll(){
+      const activeTab = $('[data-tab].active')?.dataset.tab;
+      if (activeTab === 'json') {
+        try { config = JSON.parse($('[data-json-editor]').value || '{}'); }
+        catch (err) { throw new Error('JSON completo inválido. Corrija antes de salvar.'); }
+      } else {
+        collectQuick(); collectTools(); collectPlans(); collectFaq();
+        $('[data-json-editor]').value = JSON.stringify(config, null, 2);
+      }
+      await api('/api/admin/config', { method:'PUT', body: JSON.stringify(config) });
+      await api('/api/admin/tools', { method:'PUT', body: JSON.stringify({ tools }) });
+      alert('Salvo com sucesso! Abra o site para conferir.');
+      await loadData();
+    }
+
+    $$('[data-tab]').forEach(btn => btn.addEventListener('click', () => {
+      $$('[data-tab]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      $$('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== btn.dataset.tab);
+    }));
+
+    document.addEventListener('click', e => {
+      if (e.target.matches('[data-add-tool]')) { collectTools(); tools.push({ id: crypto.randomUUID(), letter:'M', title:'Nova ferramenta', description:'MDM • FRP • BRASIL', active:true, whatsapp:true }); renderToolsEditor(); }
+      if (e.target.matches('[data-remove-tool]')) { collectTools(); tools.splice(Number(e.target.dataset.removeTool),1); renderToolsEditor(); }
+      if (e.target.matches('[data-add-plan]')) { collectPlans(); config.plans.push({ name:'Novo plano', price:'R$ 0,00', oldPrice:'', period:'', tag:'', featured:false, checkout:'', benefits:['Benefício 1'] }); renderPlansEditor(); }
+      if (e.target.matches('[data-remove-plan]')) { collectPlans(); config.plans.splice(Number(e.target.dataset.removePlan),1); renderPlansEditor(); }
+      if (e.target.matches('[data-add-faq]')) { collectFaq(); config.faq.items.push({ q:'Nova pergunta', a:'Resposta' }); renderFaqEditor(); }
+      if (e.target.matches('[data-remove-faq]')) { collectFaq(); config.faq.items.splice(Number(e.target.dataset.removeFaq),1); renderFaqEditor(); }
+    });
+
+    $('[data-save-all]').addEventListener('click', () => saveAll().catch(err => alert(err.message)));
+    $('[data-reload]').addEventListener('click', loadData);
+    $('[data-logout]').addEventListener('click', async () => { await api('/api/auth/logout', { method:'POST' }); location.reload(); });
+    check().catch(()=>{});
+  </script>
 </body>
 </html>

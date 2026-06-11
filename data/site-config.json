@@ -1,198 +1,163 @@
 {
   "seo": {
-    "title": "MDM & FRP Brasil | Soluções técnicas autorizadas",
-    "description": "Plataforma profissional para atendimento técnico autorizado, suporte e gestão de serviços em dispositivos móveis.",
-    "siteUrl": "http://localhost:3000"
+    "title": "MDM & FRP BRASIL — Métodos e Arquivos para Desbloqueio",
+    "description": "Arquivos, ferramentas e métodos profissionais para atendimento técnico autorizado em celulares — acesso imediato, suporte e conteúdo em português.",
+    "siteUrl": "https://mdm-brasil.onrender.com"
   },
   "brand": {
-    "name": "MDM & FRP Brasil",
+    "name": "MDM & FRP BRASIL",
     "shortName": "MDM FRP",
     "whatsapp": "5519994783127",
-    "email": "atendimento@seudominio.com.br",
-    "badge": "Atendimento técnico responsável"
+    "logo": "/assets/logo-mdm-frp.png",
+    "supportText": "Suporte via WhatsApp"
   },
   "theme": {
-    "primary": "#16f29a",
-    "secondary": "#42a5ff",
-    "accent": "#f6c84c",
-    "background": "#08111f",
-    "surface": "#101c2e",
-    "text": "#f4f8ff",
-    "muted": "#aab7c9",
-    "radius": 24,
-    "density": "confortavel",
-    "layout": "premium"
+    "primary": "#44ff22",
+    "secondary": "#8cff65",
+    "background": "#020403",
+    "surface": "#0a120c",
+    "surface2": "#101a12",
+    "text": "#f4fff0",
+    "muted": "#a9b9a6",
+    "border": "#1f361e",
+    "gold": "#ffd761"
   },
+  "nav": [
+    { "label": "Planos", "href": "#planos" },
+    { "label": "Métodos", "href": "#metodos" },
+    { "label": "Ferramentas", "href": "#ferramentas" }
+  ],
+  "featuredTitle": "Programas & Métodos em destaque",
+  "marquee": [
+    "MDM corporativo autorizado",
+    "FRP com comprovação de propriedade",
+    "Suporte remoto autorizado",
+    "Ferramentas organizadas",
+    "USB Redirector Full",
+    "AnyDesk sem limites",
+    "Xiaomi / Redmi / Poco",
+    "Motorola / LG / Huawei / Honor",
+    "Tráfego pago para técnicos"
+  ],
   "hero": {
-    "eyebrow": "Central profissional para técnicos",
-    "title": "Site profissional para atendimento técnico, planos e suporte autorizado.",
-    "subtitle": "Organize seus serviços, apresente planos, capture contatos e direcione clientes para o WhatsApp com uma experiência moderna, rápida e segura.",
-    "primaryButton": "Chamar no WhatsApp",
-    "secondaryButton": "Ver planos",
-    "imageTitle": "Painel técnico",
-    "imageText": "Atendimento responsável, documentação do cliente e operação segura."
+    "title": "Ganhe dinheiro todos os dias desbloqueando celulares sem sair de casa",
+    "subtitle": "Arquivos, ferramentas e métodos profissionais para desbloqueios remotos e presenciais — acesso imediato.",
+    "tags": ["Samsung", "Xiaomi", "Motorola", "Realme", "Infinix"],
+    "primaryButton": "Quero começar a lucrar agora",
+    "secondaryButton": "Ver tudo que vou receber",
+    "trust": ["Acesso imediato", "Checkout seguro Kiwify", "Suporte especializado", "Conteúdo em português"]
   },
-  "stats": [
-    {
-      "number": "24h",
-      "label": "Atendimento rápido"
-    },
-    {
-      "number": "+15",
-      "label": "Marcas no catálogo"
-    },
-    {
-      "number": "100%",
-      "label": "Foco em uso autorizado"
-    }
-  ],
   "pain": {
-    "title": "Seu cliente precisa confiar antes de chamar.",
-    "description": "Um site bem estruturado passa profissionalismo, explica limites do serviço e reduz dúvidas antes do atendimento.",
+    "eyebrow": "A dor do lojista e do técnico",
+    "title": "Situações que você quer evitar no dia a dia",
     "items": [
-      "Página pronta para apresentar serviços e planos",
-      "Contato direto pelo WhatsApp configurado",
-      "Painel admin para editar textos, cores e preços",
-      "Backend com salvamento real das alterações"
+      { "title": "Perder serviços", "text": "Recusar aparelhos por não ter o arquivo certo" },
+      { "title": "Insegurança", "text": "Medo de travar o aparelho no meio do processo" },
+      { "title": "Depender de terceiros", "text": "Passar trabalho para fora e perder margem" },
+      { "title": "Cliente perdido", "text": "Demorar e ver o cliente procurar outra loja" }
+    ],
+    "badge": "Foco em resultados"
+  },
+  "receive": {
+    "eyebrow": "O que você recebe",
+    "title": "Não é curso genérico. É uma biblioteca de arquivos e métodos, cada um focado em um problema específico. Direto ao ponto.",
+    "items": [
+      { "title": "Vídeo Explicativo", "text": "Demonstração prática de cada procedimento" },
+      { "title": "Texto Técnico", "text": "Documentação clara e objetiva" },
+      { "title": "Arquivos e Ferramentas", "text": "Downloads organizados, prontos para usar" },
+      { "title": "Passo a Passo", "text": "Procedimentos detalhados, sem furada" }
     ]
   },
-  "features": [
-    {
-      "icon": "🛡️",
-      "title": "Operação responsável",
-      "text": "Textos preparados para reforçar atendimento técnico com autorização e comprovação do cliente."
-    },
-    {
-      "icon": "⚡",
-      "title": "Rápido e responsivo",
-      "text": "Interface otimizada para celular, computador e compartilhamento direto no WhatsApp."
-    },
-    {
-      "icon": "🎛️",
-      "title": "Painel admin real",
-      "text": "Altere marca, cores, planos, benefícios, FAQ e chamadas sem editar código."
-    },
-    {
-      "icon": "🔐",
-      "title": "Headers de segurança",
-      "text": "Backend com proteção básica, sessões assinadas, CSP e limites de requisição."
-    }
-  ],
-  "tools": {
-    "title": "O que o site entrega para sua operação",
-    "description": "Uma presença digital profissional para vender melhor, organizar dúvidas e captar contatos.",
+  "brands": {
+    "title": "Marcas e sistemas cobertos",
+    "subtitle": "Métodos para as principais marcas do mercado",
+    "items": ["Samsung", "Xiaomi", "Redmi", "Poco", "Realme", "Oppo", "Infinix", "Tecno", "Huawei", "Honor", "Vivo", "Motorola", "LG", "Asus", "OnePlus", "Apple", "E muitas outras marcas..."]
+  },
+  "steps": {
+    "title": "Como funciona",
+    "subtitle": "Processo simples, do checkout ao desbloqueio",
     "items": [
-      "Landing page premium",
-      "Admin com login",
-      "Edição de layout",
-      "Gestão de planos",
-      "Formulário de leads",
-      "Integração WhatsApp",
-      "FAQ editável",
-      "Aviso legal"
+      { "number": "01", "title": "Escolha o plano", "text": "Selecione mensal, anual ou vitalício" },
+      { "number": "02", "title": "Pague na Kiwify", "text": "Checkout seguro, Pix, cartão ou boleto" },
+      { "number": "03", "title": "Receba o acesso", "text": "Liberação imediata por e-mail" },
+      { "number": "04", "title": "Baixe os arquivos", "text": "Métodos organizados por marca e modelo" },
+      { "number": "05", "title": "Atenda com autorização", "text": "Aplique apenas em aparelho próprio, documentado ou autorizado pelo cliente" }
     ]
   },
-  "brands": [
-    "Samsung",
-    "Motorola",
-    "Xiaomi",
-    "LG",
-    "Realme",
-    "OPPO",
-    "Vivo",
-    "Infinix",
-    "Tecno",
-    "Positivo",
-    "Multilaser",
-    "Lenovo"
-  ],
-  "steps": [
-    {
-      "title": "1. Cliente chama",
-      "text": "O visitante escolhe o plano ou envia dúvida pelo formulário/WhatsApp."
-    },
-    {
-      "title": "2. Você qualifica",
-      "text": "Confirma documentação, autorização e detalhes do aparelho antes de qualquer atendimento."
-    },
-    {
-      "title": "3. Atendimento seguro",
-      "text": "O serviço é feito apenas em aparelhos próprios, autorizados e com responsabilidade."
-    }
-  ],
+  "plansIntro": {
+    "badge": "Promo Copa 2026",
+    "title": "Planos de acesso",
+    "subtitle": "Pague via Pix no WhatsApp ou pelo link oficial (Infinity Pay / Mercado Pago)"
+  },
   "plans": [
     {
-      "name": "Essencial",
+      "name": "Mensal",
       "price": "R$ 29,90",
+      "oldPrice": "R$ 59,90",
       "period": "/mês",
-      "tag": "Para começar",
       "featured": false,
-      "benefits": [
-        "Página profissional",
-        "Contato por WhatsApp",
-        "FAQ completo",
-        "Atualização manual"
-      ]
+      "tag": "Entrada rápida",
+      "checkout": "",
+      "benefits": ["Acesso imediato", "Arquivos essenciais", "Suporte via WhatsApp", "Atualizações do mês"]
     },
     {
-      "name": "Profissional",
-      "price": "R$ 59,90",
-      "period": "/mês",
-      "tag": "Mais escolhido",
+      "name": "Anual",
+      "price": "R$ 149,90",
+      "oldPrice": "R$ 299,90",
+      "period": "/ano",
       "featured": true,
-      "benefits": [
-        "Tudo do Essencial",
-        "Painel admin",
-        "Captação de leads",
-        "Layout editável",
-        "Planos editáveis"
-      ]
+      "tag": "Mais vendido",
+      "checkout": "",
+      "benefits": ["Tudo do mensal", "Atualizações por 12 meses", "Bônus Copa 2026", "Prioridade no suporte"]
     },
     {
-      "name": "Premium",
-      "price": "R$ 99,90",
-      "period": "/mês",
-      "tag": "Operação completa",
+      "name": "Vitalício",
+      "price": "R$ 299,90",
+      "oldPrice": "R$ 599,90",
+      "period": "único",
       "featured": false,
-      "benefits": [
-        "Tudo do Profissional",
-        "Prioridade no atendimento",
-        "Mais seções",
-        "Suporte para publicação"
-      ]
+      "tag": "Acesso completo",
+      "checkout": "",
+      "benefits": ["Acesso vitalício", "Biblioteca completa", "Bônus exclusivos", "Suporte especializado"]
     }
   ],
-  "faq": [
-    {
-      "q": "O painel admin salva de verdade?",
-      "a": "Sim. Nesta versão com backend, as alterações são salvas no arquivo data/site-config.json do servidor."
-    },
-    {
-      "q": "Consigo mudar cores e layout?",
-      "a": "Sim. Você pode alterar cores principais, raio dos cards, textos, planos, benefícios e FAQ pelo painel."
-    },
-    {
-      "q": "O site funciona no celular?",
-      "a": "Sim. A interface foi feita pensando primeiro em celular, mas também fica profissional no computador."
-    },
-    {
-      "q": "Posso usar para serviços técnicos?",
-      "a": "Sim, desde que os atendimentos sejam legais, autorizados e com comprovação do proprietário do aparelho."
-    }
-  ],
-  "legal": {
-    "title": "Uso legal e autorizado",
-    "text": "A MDM & FRP Brasil atua apenas com orientação, atendimento técnico responsável e serviços autorizados pelo proprietário legítimo do dispositivo. Não realizamos nem incentivamos uso indevido, acesso não autorizado, fraude, desbloqueio de aparelhos de terceiros ou contorno ilegal de sistemas de segurança."
+  "ethics": {
+    "badge": "Compromisso ético",
+    "title": "Conteúdo educacional e profissional",
+    "items": [
+      { "title": "Conteúdo Educacional", "text": "Material focado em ensinar técnicas profissionais" },
+      { "title": "Procedência Legal", "text": "Para aparelhos de procedência legal e documentada" },
+      { "title": "Boas Práticas", "text": "Ética profissional e respeito às normas vigentes" },
+      { "title": "Capacitação Real", "text": "Foco em habilidades técnicas, sem atalhos duvidosos" }
+    ]
   },
+  "faq": {
+    "title": "Perguntas Frequentes",
+    "subtitle": "Dúvidas comuns sobre o acesso",
+    "items": [
+      { "q": "Como recebo o acesso após o pagamento?", "a": "Após a confirmação, você recebe as orientações de acesso e os materiais pelo canal informado na compra." },
+      { "q": "Funciona para qual marca de celular?", "a": "A biblioteca é organizada por marcas e modelos, com foco nas principais linhas Samsung, Xiaomi, Motorola, Realme, Infinix, LG, Huawei e outras." },
+      { "q": "Preciso ter experiência técnica?", "a": "É recomendado ter noção de manutenção de celulares. Os materiais são diretos e pensados para técnicos e lojistas." },
+      { "q": "Posso usar em qualquer aparelho?", "a": "Não. Use somente em aparelhos próprios, de procedência legal ou com autorização expressa do proprietário." },
+      { "q": "O conteúdo é atualizado?", "a": "Sim. Os planos com atualização ativa recebem novas orientações, melhorias e materiais conforme disponibilidade." },
+      { "q": "Como funciona o pagamento na Kiwify?", "a": "Você pode usar Pix, cartão ou boleto pelo checkout indicado, ou solicitar atendimento pelo WhatsApp." }
+    ]
+  },
+  "finalCta": {
+    "title": "Entre em campo com a seleção dos desbloqueios",
+    "subtitle": "Arquivos profissionais, métodos atualizados e suporte real. Edição Copa 2026 com bônus exclusivos.",
+    "button": "Garantir meu acesso"
+  },
+  "legalNotice": "Uso exclusivo em aparelhos próprios, autorizados ou com comprovação de procedência. Não incentivamos fraude, furto, receptação ou uso não autorizado.",
   "sections": {
-    "stats": true,
+    "featuredTools": true,
     "pain": true,
-    "features": true,
-    "tools": true,
+    "receive": true,
     "brands": true,
     "steps": true,
     "plans": true,
+    "ethics": true,
     "faq": true,
-    "legal": true
+    "finalCta": true
   }
 }
