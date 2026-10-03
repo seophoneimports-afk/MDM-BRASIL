@@ -1,10 +1,8 @@
 services:
   - type: web
     name: MDM-BRASIL
-    env: docker
+    env: python
     plan: free
     region: oregon
-    dockerfilePath: ./Dockerfile
-    envVars:
-      - key: PORT
-        value: 10000
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn server.main:app --host 0.0.0.0 --port 10000"
