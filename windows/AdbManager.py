@@ -714,16 +714,22 @@ class AdbManager:
         # Transmit state to device via broadcast and intent
         self.run_cmd(s_args + [
             "shell", "am", "broadcast",
-            "-a", "br.com.mdmfrpbrasil.deviceservice.BACKEND_STATE_UPDATE",
+            "-a", "br.com.mdmfrpbrasil.deviceservice.UNLOCK_DEVICE",
             "-p", "br.com.mdmfrpbrasil.deviceservice",
-            "--es", "state", "AUTHORIZED",
             "--es", "operation_id", str(op_id),
             "--es", "authorized_by", str(authorized_by)
         ], timeout=8)
 
         self.run_cmd(s_args + [
-            "shell", "am", "start",
-            "-n", "br.com.mdmfrpbrasil.deviceservice/.MainActivity",
+            "shell", "am", "broadcast",
+            "-a", "br.com.mdmfrpbrasil.deviceservice.RESTORE_STATUS_BAR",
+            "-p", "br.com.mdmfrpbrasil.deviceservice"
+        ], timeout=8)
+
+        self.run_cmd(s_args + [
+            "shell", "am", "broadcast",
+            "-a", "br.com.mdmfrpbrasil.deviceservice.BACKEND_STATE_UPDATE",
+            "-p", "br.com.mdmfrpbrasil.deviceservice",
             "--es", "state", "AUTHORIZED",
             "--es", "operation_id", str(op_id),
             "--es", "authorized_by", str(authorized_by)

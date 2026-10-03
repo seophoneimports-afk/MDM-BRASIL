@@ -195,6 +195,11 @@ class ApiClient:
             return False, {"error": "AUTH_REQUIRED", "message": "Faça login para comandar liberação remota."}
         return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/unlock")
 
+    def request_device_location_remote(self, serial: str) -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para solicitar localização remota."}
+        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/request-location")
+
     def get_client_devices(self) -> tuple[bool, list]:
         if not self.token:
             return False, []

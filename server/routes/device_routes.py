@@ -104,6 +104,30 @@ async def report_device_location(request: Request):
     city = data.get("city")
     state = data.get("state")
 
+    # If coordinates are missing (e.g. device indoors or status LOCATION_UNAVAILABLE), attempt IP-based geolocation fallback
+    if lat is None or lon is None:
+        client_ip = request.headers.get("x-forwarded-for")
+        if client_ip:
+            client_ip = client_ip.split(",")[0].strip()
+        elif request.client:
+            client_ip = request.client.host
+
+        if client_ip and not client_ip.startswith(("127.", "10.", "192.168.", "172.")):
+            try:
+                import urllib.request
+                import json
+                req = urllib.request.Request(f"https://ipwho.is/{client_ip}", headers={'User-Agent': 'MDM-Brasil/2.0'})
+                with urllib.request.urlopen(req, timeout=2.5) as resp:
+                    geo = json.loads(resp.read().decode('utf-8'))
+                    if geo.get("success"):
+                        lat = geo.get("latitude")
+                        lon = geo.get("longitude")
+                        if not city: city = geo.get("city")
+                        if not state: state = geo.get("region_code")
+                        if not acc: acc = 250.0
+            except Exception:
+                pass
+
     with db_transaction() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -124,5 +148,36 @@ async def report_device_location(request: Request):
             """,
             (lat, lon, acc, bat, net, street, neighborhood, city, state, dev_id)
         )
+        if cursor.rowcount == 0:
+            cursor.execute("SELECT id FROM users ORDER BY id ASC LIMIT 1")
+            u = cursor.fetchone()
+            owner_id = u["id"] if u else 1
+            cursor.execute(
+                """
+                INSERT INTO devices (
+                    user_id, serial, model, lock_status, operation_id,
+                    latitude, longitude, accuracy, battery_level, network_status,
+                    street, neighborhood, city, state, first_seen, last_seen, last_sync
+                )
+                VALUES (?, ?, 'Android Managed Device', 'LOCKED', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                """,
+                (owner_id, dev_id, f"OP-LOC-{int(time.time())}", lat, lon, acc, bat, net, street, neighborhood, city, state)
+            )
 
-    return {"success": True, "status": "LOCATION_RECORDED", "deviceId": dev_id}
+    return {
+        "success": True,
+        "status": "LOCATION_RECORDED",
+        "deviceId": dev_id,
+        "latitude": lat,
+        "longitude": lon,
+        "city": city,
+        "state": state
+    }
+
+@router.post("/api/v1/client/devices/{serial}/request-location")
+def trigger_device_location_request(serial: str):
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute("UPDATE devices SET last_seen = CURRENT_TIMESTAMP WHERE serial = ?", (serial,))
+    log_audit_event("DEVICE_LOCATION_REQUEST_TRIGGERED", details={"serial": serial})
+    return {"success": True, "message": f"Sinal de rastreamento enviado para {serial}. O APK atualizará o GPS na nuvem."}

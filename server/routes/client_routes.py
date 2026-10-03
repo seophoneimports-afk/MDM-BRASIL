@@ -83,7 +83,25 @@ def get_client_devices(user: dict = Depends(get_current_user)):
             # Fallback for devices without explicit user binding or platform testing
             cursor.execute("SELECT * FROM devices ORDER BY last_seen DESC LIMIT 30")
             rows = cursor.fetchall()
-        return [dict(r) for r in rows]
+        
+        result = []
+        for r in rows:
+            d = dict(r)
+            lat = d.get("latitude")
+            lon = d.get("longitude")
+            if lat is not None and lon is not None:
+                d["google_maps_url"] = f"https://www.google.com/maps?q={lat},{lon}"
+            else:
+                d["google_maps_url"] = None
+
+            parts = []
+            if d.get("street"): parts.append(str(d["street"]))
+            if d.get("neighborhood"): parts.append(str(d["neighborhood"]))
+            if d.get("city"): parts.append(str(d["city"]))
+            if d.get("state"): parts.append(str(d["state"]))
+            d["address_formatted"] = " - ".join(parts) if parts else "Coordenadas registradas"
+            result.append(d)
+        return result
 
 import time
 

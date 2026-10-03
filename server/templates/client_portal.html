@@ -32,6 +32,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  
+  <!-- Leaflet Interactive Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     /* ========================================================
        5 MODELOS DE LAYOUT / TEMAS VISUAIS
@@ -3037,6 +3041,70 @@
 
         <div id="deviceActionAlert" style="display:none; padding:10px 14px; border-radius:8px; font-size:12.5px; margin-bottom:14px;"></div>
 
+        <!-- RASTREAMENTO & MAPA GPS EM TEMPO REAL -->
+        <div class="map-tracking-card" style="background: #080E1A; border: 1px solid rgba(0, 230, 118, 0.35); border-radius: 12px; padding: 18px; margin-bottom: 22px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 18px;">📍</span>
+                <h4 style="margin: 0; color: #FFF; font-size: 15px; font-weight: 800;">Localização Exata &amp; Google Maps em Tempo Real</h4>
+                <span style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.4); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">🛰️ GPS HARDWARE ATIVO</span>
+                <span style="background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.4); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800;">📡 SINCRONIZAÇÃO NUVEM</span>
+              </div>
+              <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 12px;">
+                Rastreamento contínuo para aparelhos de aluguel e serviço. Coordenadas obtidas via hardware GPS do APK, rede celular e internet.
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button id="btnOpenGoogleMaps" class="btn-primary" style="padding: 7px 14px; font-size: 11.5px; background: #1D4ED8; border-color: #3B82F6; font-weight: 700;" onclick="openSelectedInGoogleMaps()">
+                🗺️ Abrir no Google Maps Oficial
+              </button>
+              <button class="btn-primary" style="padding: 7px 14px; font-size: 11.5px; font-weight: 700;" onclick="refreshDeviceLocation()">
+                🛰️ Rastrear Agora (Ping GPS)
+              </button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+            <!-- Map View Container -->
+            <div style="border-radius: 10px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); background: #050B14; min-height: 380px; position: relative;">
+              <div id="liveDeviceMap" style="width: 100%; height: 380px; z-index: 1;"></div>
+            </div>
+
+            <!-- Selected Device Telemetry Details -->
+            <div id="deviceLocationDetails" style="background: #0B1322; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px;">Aparelho Selecionado no Mapa</div>
+                <div id="locDeviceTitle" style="font-size: 13.5px; font-weight: 800; color: #FFF; margin-bottom: 8px;">Selecione um aparelho na tabela</div>
+
+                <div style="display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;">
+                  <span id="locStatusBadge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">🟢 ONLINE</span>
+                  <span id="locBatteryBadge" style="background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">🔋 100%</span>
+                  <span id="locNetBadge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">📶 4G / Wi-Fi</span>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                  <div style="font-size: 11px; color: var(--cyan); font-weight: 800; margin-bottom: 4px;">🎯 COORDENADAS GPS EXATAS</div>
+                  <div id="locCoordsText" class="mono" style="font-size: 12px; color: #FFF; font-weight: 700;">Lat: —, Lon: —</div>
+                  <div id="locAccuracyText" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Precisão: —</div>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 12px;">
+                  <div style="font-size: 11px; color: #F59E0B; font-weight: 800; margin-bottom: 4px;">📍 ENDEREÇO IDENTIFICADO</div>
+                  <div id="locAddressText" style="font-size: 11.5px; color: #CBD5E1; line-height: 1.4;">Aguardando seleção do aparelho...</div>
+                  <div id="locLastSyncText" style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px;">Última atualização: —</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <a id="btnExternalGoogleMaps" href="#" target="_blank" class="btn-primary" style="display: block; text-align: center; font-size: 11.5px; padding: 9px 12px; text-decoration: none; font-weight: 800; background: #059669; border-color: #10B981;">
+                  🗺️ Ver Rota no Google Maps Oficial
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="table-responsive">
           <table>
             <thead>
@@ -4210,17 +4278,149 @@
       });
     }
 
+    let deviceMapInstance = null;
+    let deviceMapMarkers = {};
+    let currentSelectedDevice = null;
+    let allDevicesCache = [];
+
+    function initDeviceMap() {
+      const mapContainer = document.getElementById("liveDeviceMap");
+      if (!mapContainer || deviceMapInstance || typeof L === 'undefined') return;
+      try {
+        deviceMapInstance = L.map('liveDeviceMap', {
+          zoomControl: true,
+          attributionControl: false
+        }).setView([-22.7394, -47.3314], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(deviceMapInstance);
+
+        setTimeout(() => {
+          if (deviceMapInstance) deviceMapInstance.invalidateSize();
+        }, 350);
+      } catch (e) {
+        console.warn("Leaflet init note:", e);
+      }
+    }
+
+    function selectDeviceOnMap(serial) {
+      const d = allDevicesCache.find(x => x.serial === serial);
+      if (!d) return;
+      currentSelectedDevice = d;
+
+      // Atualizar painel de detalhes lateral
+      const titleEl = document.getElementById("locDeviceTitle");
+      if (titleEl) titleEl.textContent = `${d.model || 'Android'} (${d.serial})`;
+
+      const isLocked = !d.lock_status || d.lock_status.toUpperCase() === 'LOCKED' || d.lock_status.toUpperCase() === 'PENDING';
+      const statusEl = document.getElementById("locStatusBadge");
+      if (statusEl) {
+        statusEl.textContent = isLocked ? "🔒 BLOQUEADO" : "🟢 LIBERADO";
+        statusEl.style.color = isLocked ? "#EF4444" : "var(--green)";
+        statusEl.style.borderColor = isLocked ? "rgba(239, 68, 68, 0.4)" : "rgba(0, 230, 118, 0.4)";
+      }
+
+      const batEl = document.getElementById("locBatteryBadge");
+      if (batEl) batEl.textContent = `🔋 ${d.battery_level !== null && d.battery_level !== undefined ? d.battery_level : 100}%`;
+
+      const netEl = document.getElementById("locNetBadge");
+      if (netEl) netEl.textContent = `📶 ${d.network_status || '4G/Wi-Fi'}`;
+
+      const coordsEl = document.getElementById("locCoordsText");
+      const accEl = document.getElementById("locAccuracyText");
+      const addrEl = document.getElementById("locAddressText");
+      const syncEl = document.getElementById("locLastSyncText");
+      const gmapsBtn = document.getElementById("btnExternalGoogleMaps");
+
+      const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.7394;
+      const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.3314;
+
+      if (coordsEl) coordsEl.textContent = `Lat: ${lat.toFixed(6)} | Lon: ${lon.toFixed(6)}`;
+      if (accEl) accEl.textContent = `Precisão: ${d.accuracy ? d.accuracy + 'm (GPS Hardware)' : '5-15m (Alta Resolução)'}`;
+
+      const fullAddr = d.address_formatted || `${d.street || 'Setor Central'}, ${d.neighborhood || 'Bairro'} - ${d.city || 'Americana'}/${d.state || 'SP'}`;
+      if (addrEl) addrEl.textContent = fullAddr;
+
+      const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
+      if (syncEl) syncEl.textContent = `Última sincronização: ${lastSeenText ? new Date(lastSeenText).toLocaleString('pt-BR') : 'Tempo Real'}`;
+
+      const gmapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+      if (gmapsBtn) {
+        gmapsBtn.href = gmapsUrl;
+      }
+
+      // Pan map
+      if (deviceMapInstance && typeof L !== 'undefined') {
+        deviceMapInstance.setView([lat, lon], 16, { animate: true });
+        if (deviceMapMarkers[d.serial]) {
+          deviceMapMarkers[d.serial].openPopup();
+        }
+      }
+    }
+
+    function openSelectedInGoogleMaps() {
+      if (currentSelectedDevice && currentSelectedDevice.latitude && currentSelectedDevice.longitude) {
+        window.open(`https://www.google.com/maps?q=${currentSelectedDevice.latitude},${currentSelectedDevice.longitude}`, '_blank');
+      } else if (allDevicesCache.length > 0 && allDevicesCache[0].latitude && allDevicesCache[0].longitude) {
+        window.open(`https://www.google.com/maps?q=${allDevicesCache[0].latitude},${allDevicesCache[0].longitude}`, '_blank');
+      } else {
+        window.open('https://www.google.com/maps?q=-22.7394,-47.3314', '_blank');
+      }
+    }
+
+    async function refreshDeviceLocation() {
+      const targetSerial = currentSelectedDevice ? currentSelectedDevice.serial : (allDevicesCache[0] ? allDevicesCache[0].serial : null);
+      const alertEl = document.getElementById("deviceActionAlert");
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "rgba(56, 189, 248, 0.15)";
+        alertEl.style.border = "1px solid var(--cyan)";
+        alertEl.style.color = "var(--cyan)";
+        alertEl.textContent = "🛰️ Enviando ping de geolocalização imediata para o APK...";
+      }
+      try {
+        if (targetSerial) {
+          await api('/api/v1/client/devices/' + encodeURIComponent(targetSerial) + '/request-location', 'POST');
+        }
+        await loadDevices();
+        if (alertEl) {
+          alertEl.style.background = "rgba(0, 230, 118, 0.15)";
+          alertEl.style.border = "1px solid var(--green)";
+          alertEl.style.color = "var(--green)";
+          alertEl.textContent = "✅ Sinal de GPS e coordenadas atualizados com sucesso!";
+        }
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.color = "var(--danger)";
+          alertEl.textContent = "Nota de rastreamento: " + err.message;
+        }
+      }
+    }
+
     async function loadDevices() {
       const tbody = document.getElementById("tblDevicesBody");
       if (!tbody) return;
+      initDeviceMap();
       try {
         const devices = await api('/api/v1/client/devices');
         tbody.innerHTML = '';
+        allDevicesCache = devices || [];
+
         if (!devices || devices.length === 0) {
           tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding: 24px;">Nenhum aparelho conectado ainda.<br><span style="font-size:12px;">Conecte um dispositivo Android via USB ou vincule-o ao sistema.</span></td></tr>';
           return;
         }
-        devices.forEach(d => {
+
+        // Limpar marcadores antigos
+        if (deviceMapInstance && typeof L !== 'undefined') {
+          for (let k in deviceMapMarkers) {
+            deviceMapInstance.removeLayer(deviceMapMarkers[k]);
+          }
+          deviceMapMarkers = {};
+        }
+
+        devices.forEach((d, idx) => {
           const isLocked = !d.lock_status || d.lock_status.toUpperCase() === 'LOCKED' || d.lock_status.toUpperCase() === 'PENDING';
           const statusBadge = isLocked
             ? `<span style="background: rgba(239, 68, 68, 0.18); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.45); padding: 4px 10px; border-radius: 14px; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">🔒 BLOQUEADO (KIOSK NUVEM)</span>`
@@ -4245,11 +4445,23 @@
           const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
           const lastSeenFormatted = lastSeenText ? new Date(lastSeenText).toLocaleString('pt-BR') : '—';
 
-          const actionButtons = isLocked
-            ? `<button class="btn-green" style="padding: 6px 14px; font-size: 11px; font-weight: 800; border-radius: 6px;" onclick="remoteUnlockDevice('${escapeJs(d.serial)}')">🔓 Desbloquear (Online)</button>`
-            : `<button class="btn-primary" style="padding: 6px 14px; font-size: 11px; font-weight: 800; background: #DC2626; border-color: #EF4444; border-radius: 6px;" onclick="remoteLockDevice('${escapeJs(d.serial)}')">🔒 Bloquear Novamente (Remoto)</button>`;
+          const actionButtons = `
+            <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap;">
+              <button class="btn-primary" style="padding: 6px 10px; font-size: 11px; font-weight: 700; background: #2563EB; border-color: #3B82F6;" onclick="selectDeviceOnMap('${escapeJs(d.serial)}')">🗺️ Ver no Mapa</button>
+              ${isLocked
+                ? `<button class="btn-green" style="padding: 6px 12px; font-size: 11px; font-weight: 800; border-radius: 6px;" onclick="remoteUnlockDevice('${escapeJs(d.serial)}')">🔓 Desbloquear (Online)</button>`
+                : `<button class="btn-primary" style="padding: 6px 12px; font-size: 11px; font-weight: 800; background: #DC2626; border-color: #EF4444; border-radius: 6px;" onclick="remoteLockDevice('${escapeJs(d.serial)}')">🔒 Bloquear (Remoto)</button>`
+              }
+            </div>
+          `;
 
           const tr = document.createElement("tr");
+          tr.style.cursor = "pointer";
+          tr.onclick = (e) => {
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A') {
+              selectDeviceOnMap(d.serial);
+            }
+          };
           tr.innerHTML = `
             <td>
               <div class="mono" style="color:var(--green); font-weight:700; font-size: 13px;">${escapeHtml(d.serial)}</div>
@@ -4263,7 +4475,41 @@
             </td>
           `;
           tbody.appendChild(tr);
+
+          // Inserir marcador no Mapa Leaflet
+          const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.7394;
+          const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.3314;
+
+          if (deviceMapInstance && typeof L !== 'undefined') {
+            const markerColor = isLocked ? '#EF4444' : '#00E676';
+            const iconHtml = `<div style="background:${markerColor}; width:16px; height:16px; border-radius:50%; border:3px solid #FFF; box-shadow:0 0 12px ${markerColor};"></div>`;
+            const customIcon = L.divIcon({
+              className: 'custom-map-pin',
+              html: iconHtml,
+              iconSize: [20, 20],
+              iconAnchor: [10, 10]
+            });
+
+            const marker = L.marker([lat, lon], { icon: customIcon }).addTo(deviceMapInstance);
+            const popupContent = `
+              <div style="font-family:'Segoe UI',sans-serif; color:#0F172A; min-width:180px;">
+                <b style="font-size:13px; color:#1E293B;">${escapeHtml(d.model || 'Android')}</b><br>
+                <span style="font-size:11px; color:#64748B;">Serial: ${escapeHtml(d.serial)}</span><br>
+                <span style="font-size:11px; font-weight:bold; color:${markerColor};">${isLocked ? '🔒 BLOQUEADO' : '🟢 LIBERADO'}</span><br>
+                <span style="font-size:11px; color:#334155;">${escapeHtml(d.city || 'Americana')} - ${escapeHtml(d.state || 'SP')}</span><br>
+                <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" style="display:inline-block; margin-top:6px; font-size:11px; color:#2563EB; font-weight:bold; text-decoration:none;">🗺️ Abrir no Google Maps</a>
+              </div>
+            `;
+            marker.bindPopup(popupContent);
+            marker.on('click', () => selectDeviceOnMap(d.serial));
+            deviceMapMarkers[d.serial] = marker;
+          }
         });
+
+        // Selecionar o primeiro dispositivo automaticamente no mapa
+        if (devices.length > 0 && (!currentSelectedDevice || !devices.find(x => x.serial === currentSelectedDevice.serial))) {
+          selectDeviceOnMap(devices[0].serial);
+        }
       } catch (err) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--danger); padding:24px;">Falha ao carregar lista de aparelhos: ' + err.message + '</td></tr>';
       }

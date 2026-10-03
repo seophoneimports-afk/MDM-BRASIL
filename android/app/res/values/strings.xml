@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MDM &amp; FRP BRASIL</string>
+    <string name="service_manager_title">DEVICE SERVICE MANAGER</string>
+    <string name="status_active">ATIVO</string>
+    <string name="status_pending">AGUARDANDO CONFIRMAÇÃO</string>
+    <string name="status_released">LIBERADO</string>
+    
+    <string name="title_active">Aparelho em Atendimento</string>
+    <string name="msg_active">Este dispositivo está cadastrado no sistema de gerenciamento para atendimento técnico autorizado.</string>
+
+    <string name="title_pending">Atendimento em Andamento</string>
+    <string name="msg_pending">Após realizar o pagamento via Pix, o operador confirmará a liberação no sistema.</string>
+
+    <string name="title_released">Serviço Concluído</string>
+    <string name="msg_released">O atendimento técnico foi finalizado com sucesso e aprovado pelo operador. Aparelho totalmente liberado!</string>
+
+    <string name="btn_copy_pix">COPIAR CHAVE PIX</string>
+    <string name="btn_support">SUPORTE TÉCNICO</string>
+    <string name="terms_footer">MDM &amp; FRP BRASIL • Gestão Autorizada de Atendimento Técnico • Termos aceitos</string>
+</resources>

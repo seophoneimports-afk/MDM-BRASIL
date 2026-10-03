@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#020604"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:paddingStart="14dp"
+    android:paddingEnd="14dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="10dp"
+    android:gravity="center_horizontal">
+
+    <!-- ==================== 1. HEADER (LOGO HERO COM PRESENÇA + SUBTÍTULO + STATUS PILL) ==================== -->
+    <LinearLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- LOGO OFICIAL MDM & FRP BRASIL (GRANDE E DESTACADO) -->
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="260dp"
+            android:layout_height="90dp"
+            android:contentDescription="MDM &amp; FRP BRASIL"
+            android:src="@drawable/logo_official"
+            android:scaleType="fitCenter" />
+
+        <!-- SUBTÍTULO OFICIAL EM DESTAQUE VERDE NEON -->
+        <TextView
+            android:id="@+id/tvAppSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="SOLUÇÕES EM DESBLOQUEIO E GERENCIAMENTO MOBILE"
+            android:textColor="#6EE7B7"
+            android:textSize="9.5sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.04" />
+
+        <!-- STATUS PILL BADGE LARGO COM RELÓGIO -->
+        <LinearLayout
+            android:id="@+id/layoutStatusBadge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/badge_pending"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🕒"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvStatusBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAGAMENTO PENDENTE"
+                    android:textColor="#00E676"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04" />
+
+                <TextView
+                    android:id="@+id/tvStatusSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="Aguardando confirmação do cliente"
+                    android:textColor="#CBD5E1"
+                    android:textSize="10.5sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ==================== 2. CONTENT AREA (EXPANDE RESPONSIVAMENTE SEM SCROLL) ==================== -->
+    <FrameLayout
+        android:id="@+id/layoutContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="6dp">
+
+        <!-- ===== STATE: PENDING (VISUAL IDÊNTICO À REFERÊNCIA DO CLIENTE) ===== -->
+        <LinearLayout
+            android:id="@+id/cardPending"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <!-- CARD DE HARDWARE / TELEMETRIA (2 COLUNAS LARGAS COM DIVISOR) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/card_bg"
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="9dp"
+                android:paddingBottom="9dp"
+                android:gravity="center_vertical">
+
+                <!-- COLUNA 1: DISPOSITIVO -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📱"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DISPOSITIVO"
+                            android:textColor="#00E676"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDeviceModel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Samsung SM-G990E"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDeviceSub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Galaxy S21 FE 5G"
+                            android:textColor="#94A3B8"
+                            android:textSize="9.5sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- DIVISOR VERTICAL -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="36dp"
+                    android:background="#0A3319"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="10dp" />
+
+                <!-- COLUNA 2: ID DO APARELHO -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🤖"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ID DO APARELHO"
+                            android:textColor="#00E676"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDeviceId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="RQCTA06T67T"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11.5sp"
+                            android:typeface="monospace" />
+
+                        <TextView
+                            android:id="@+id/tvClientService"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MDM Ativo • Gerenciado"
+                            android:textColor="#94A3B8"
+                            android:textSize="9.5sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- CARD DE PAGAMENTO (SPLIT: QR CODE À ESQUERDA + INFO E VALOR À DIREITA) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/card_bg"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:gravity="center_vertical">
+
+                <!-- QR CODE COM MOLDURA VERDE NEON -->
+                <FrameLayout
+                    android:layout_width="142dp"
+                    android:layout_height="142dp"
+                    android:background="@drawable/qr_frame_bg"
+                    android:padding="6dp">
+
+                    <ImageView
+                        android:id="@+id/imgQrCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="QR Code Pix"
+                        android:scaleType="fitCenter" />
+                </FrameLayout>
+
+                <!-- LADO DIREITO: LOGO PIX + INSTRUÇÕES + CARD DE VALOR -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="❖ pix"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PAGUE VIA PIX"
+                        android:textColor="#00E676"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Escaneie o QR Code e finalize o pagamento."
+                        android:textColor="#94A3B8"
+                        android:textSize="9.5sp" />
+
+                    <!-- BOX DE VALOR DA OPERAÇÃO COM DESTAQUE VERDE -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/card_inner_bg"
+                        android:orientation="vertical"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="VALOR DA OPERAÇÃO"
+                            android:textColor="#A7F3D0"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvPendingValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R$ 250,00"
+                            android:textColor="#00E676"
+                            android:textSize="21sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-black" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- CHAVE PIX (OPCIONAL/GONE PARA REPRODUÇÃO EXATA DA REFERÊNCIA) -->
+            <TextView
+                android:id="@+id/tvPixCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Chave Pix: 19994827743"
+                android:textColor="#00E676" />
+
+            <!-- AVISO INFORMATIVO (i) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_inner_bg"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ℹ️"
+                    android:textSize="13sp"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Após realizar o pagamento, aguarde a confirmação do administrador para liberação do dispositivo."
+                    android:textColor="#E2E8F0"
+                    android:textSize="9.5sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- ==================== 3. FOOTER (3 COLUNAS + GESTÃO CONTROLADA) ==================== -->
+    <LinearLayout
+        android:id="@+id/layoutFooter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingTop="2dp">
+
+        <!-- RODAPÉ 3 COLUNAS ESTRUTURADAS COM DIVISORES -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_bg"
+            android:orientation="horizontal"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center">
+
+            <!-- COLUNA 1: SUPORTE TÉCNICO -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎧 SUPORTE TÉCNICO"
+                    android:textColor="#00E676"
+                    android:textSize="8.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvSupport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="(19) 99482-7743"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seg a Sáb 08h-22h"
+                    android:textColor="#94A3B8"
+                    android:textSize="7.5sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:background="#0A3319" />
+
+            <!-- COLUNA 2: STATUS DA CONEXÃO -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📶 STATUS CONEXÃO"
+                    android:textColor="#00E676"
+                    android:textSize="8.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvConnectivity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="🟢 ONLINE"
+                    android:textColor="#00E676"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Conectado à nuvem"
+                    android:textColor="#94A3B8"
+                    android:textSize="7.5sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:background="#0A3319" />
+
+            <!-- COLUNA 3: OPERAÇÃO -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🛡️ OPERAÇÃO"
+                    android:textColor="#00E676"
+                    android:textSize="8.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvOperationId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="#19994827743"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MDM &amp; FRP BRASIL"
+                    android:textColor="#94A3B8"
+                    android:textSize="7.5sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- LINHA FINAL: DISPOSITIVO EM GESTÃO CONTROLADA -->
+        <TextView
+            android:id="@+id/tvBackendNotice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="🔒 Dispositivo em gestão controlada • Liberação automática via Cloud"
+            android:textColor="#00E676"
+            android:textSize="8.5sp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+</LinearLayout>

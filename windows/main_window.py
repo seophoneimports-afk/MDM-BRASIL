@@ -1822,6 +1822,11 @@ class DeviceServiceManagerApp:
 
         def run_req():
             ok, out = self.adb.request_device_location(serial)
+            if self.api_client.is_logged_in():
+                try:
+                    self.api_client.request_device_location_remote(serial)
+                except Exception:
+                    pass
             for _ in range(8):
                 time.sleep(1.2)
                 loc_data = self.adb.get_device_location(serial)
