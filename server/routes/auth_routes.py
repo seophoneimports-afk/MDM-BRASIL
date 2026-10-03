@@ -5,7 +5,7 @@ import jwt
 from fastapi import APIRouter, HTTPException, Depends, Request
 from server.database import get_db_connection, db_transaction
 from server.auth import hash_password, verify_password, create_access_token, get_current_user, log_audit_event
-from server.models import UserRegisterRequest, UserLoginRequest, PasswordResetRequest, GoogleAuthRequest
+from server.models import UserRegisterRequest, UserLoginRequest, PasswordResetRequest, GoogleAuthRequest, UpdateClientPasswordRequest
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Client Auth"])
 
@@ -431,21 +431,42 @@ def google_auth(req: GoogleAuthRequest, request: Request):
             if user["status"] == "suspended":
                 raise HTTPException(status_code=403, detail="Sua conta está suspensa. Entre em contato com o suporte.")
             user_id = user["id"]
+            user_name = name or user["name"]
+            user_whatsapp = user["whatsapp"]
+
             with db_transaction() as t_conn:
-                t_conn.cursor().execute(
-                    "UPDATE users SET google_id = COALESCE(google_id, ?), avatar_url = COALESCE(avatar_url, ?), updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                    (google_id, avatar_url, user_id)
-                )
+                if req.password and len(req.password.strip()) >= 6:
+                    new_pw_hash = hash_password(req.password.strip())
+                    t_conn.cursor().execute(
+                        """
+                        UPDATE users 
+                        SET google_id = COALESCE(google_id, ?), 
+                            avatar_url = COALESCE(avatar_url, ?),
+                            name = COALESCE(?, name),
+                            password_hash = ?,
+                            updated_at = CURRENT_TIMESTAMP 
+                        WHERE id = ?
+                        """,
+                        (google_id, avatar_url, name, new_pw_hash, user_id)
+                    )
+                else:
+                    t_conn.cursor().execute(
+                        "UPDATE users SET google_id = COALESCE(google_id, ?), avatar_url = COALESCE(avatar_url, ?), updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                        (google_id, avatar_url, user_id)
+                    )
+
             cursor.execute("SELECT balance_credits FROM wallets WHERE user_id = ?", (user_id,))
             w = cursor.fetchone()
             balance = w["balance_credits"] if w else 0
-            user_name = user["name"]
-            user_whatsapp = user["whatsapp"]
             action = "GOOGLE_LOGIN"
         else:
-            dummy_hash = hash_password(secrets.token_hex(16))
+            if req.password and len(req.password.strip()) >= 6:
+                initial_pw_hash = hash_password(req.password.strip())
+            else:
+                initial_pw_hash = hash_password(secrets.token_hex(16))
             user_name = name or email_clean.split("@")[0]
             user_whatsapp = ""
+
             with db_transaction() as t_conn:
                 t_cursor = t_conn.cursor()
                 t_cursor.execute(
@@ -453,7 +474,7 @@ def google_auth(req: GoogleAuthRequest, request: Request):
                     INSERT INTO users (name, email, whatsapp, password_hash, status, google_id, auth_provider, avatar_url)
                     VALUES (?, ?, ?, ?, 'active', ?, 'google', ?)
                     """,
-                    (user_name, email_clean, user_whatsapp, dummy_hash, google_id, avatar_url)
+                    (user_name, email_clean, user_whatsapp, initial_pw_hash, google_id, avatar_url)
                 )
                 user_id = t_cursor.lastrowid
                 t_cursor.execute(
@@ -463,12 +484,12 @@ def google_auth(req: GoogleAuthRequest, request: Request):
             balance = 0
             action = "GOOGLE_REGISTER"
 
-    log_audit_event(action, user_id=user_id, details={"email": email_clean, "google_id": google_id}, ip_address=client_ip)
+    log_audit_event(action, user_id=user_id, details={"email": email_clean, "google_id": google_id, "has_password": bool(req.password)}, ip_address=client_ip)
 
     token = create_access_token({"user_id": user_id, "role": "client", "email": email_clean})
     return {
         "success": True,
-        "message": "Autenticado com sucesso via Google!",
+        "message": "Conta vinculada com sucesso! Você já pode acessar tanto o portal quanto o aplicativo EXE.",
         "access_token": token,
         "token_type": "bearer",
         "user": {
@@ -480,3 +501,22 @@ def google_auth(req: GoogleAuthRequest, request: Request):
             "avatar_url": avatar_url
         }
     }
+
+@router.post("/password/update")
+def update_user_password(req: UpdateClientPasswordRequest, request: Request, user: dict = Depends(get_current_user)):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    user_id = user.get("id") or user.get("user_id")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Sessão inválida.")
+    if len(req.new_password.strip()) < 6:
+        raise HTTPException(status_code=400, detail="A senha deve ter no mínimo 6 caracteres.")
+
+    new_hash = hash_password(req.new_password.strip())
+    with db_transaction() as conn:
+        conn.cursor().execute(
+            "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (new_hash, user_id)
+        )
+
+    log_audit_event("PASSWORD_UPDATED_FOR_EXE", user_id=user_id, details={"via": "client_portal"}, ip_address=client_ip)
+    return {"success": True, "message": "Senha atualizada com sucesso! Você já pode utilizá-la para fazer login no programa MDM & FRP BRASIL (EXE)."}

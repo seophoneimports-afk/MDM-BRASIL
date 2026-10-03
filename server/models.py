@@ -69,6 +69,10 @@ class GoogleAuthRequest(BaseModel):
     name: Optional[str] = None
     google_id: Optional[str] = None
     avatar_url: Optional[str] = None
+    password: Optional[str] = None
+
+class UpdateClientPasswordRequest(BaseModel):
+    new_password: str = Field(..., min_length=6, max_length=100)
 
 class PixPreviewRequest(BaseModel):
     pix_key: str

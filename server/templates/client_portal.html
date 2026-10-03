@@ -1252,6 +1252,58 @@
             <a onclick="showView('Login')">← Voltar ao Login</a>
           </div>
         </div>
+
+        <!-- GOOGLE AUTH & EXE PASSWORD LINK VIEW -->
+        <div id="viewGoogleLink" style="display: none;">
+          <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 12px;">
+            <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 0 24px rgba(66, 133, 244, 0.35);">
+              <svg width="34" height="34" viewBox="0 0 18 18">
+                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
+              </svg>
+            </div>
+          </div>
+          <h2 style="font-size: 19px; margin-bottom: 6px; font-weight: 800;">Conectar Conta Google</h2>
+          <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+            Vincule sua conta Google e defina sua senha para acessar tanto o <strong>Site</strong> quanto o aplicativo <strong>MDM_FRP_BRASIL.exe</strong> no seu computador.
+          </p>
+          <div id="googleAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:14px; text-align: left;"></div>
+          
+          <form onsubmit="handleGoogleLinkSubmit(event)">
+            <div class="form-group" style="text-align: left;">
+              <label>Seu E-mail Google (@gmail.com)</label>
+              <input type="email" id="googleEmail" class="form-control" required placeholder="seu.email@gmail.com">
+            </div>
+            <div class="form-group" style="text-align: left;">
+              <label>Nome Completo</label>
+              <input type="text" id="googleName" class="form-control" placeholder="Seu Nome">
+            </div>
+            <div class="form-group" style="text-align: left;">
+              <label>Criar Senha de Acesso (para o EXE e Site)</label>
+              <input type="password" id="googlePassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
+            </div>
+            <div class="form-group" style="text-align: left;">
+              <label>Confirmar Senha</label>
+              <input type="password" id="googleConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a mesma senha">
+            </div>
+
+            <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 10px; margin-bottom: 14px; font-size: 11.5px; color: #94A3B8; text-align: left; line-height: 1.45;">
+              <span style="color: var(--cyan); font-weight: 700;">🔑 Integração com o Programa no PC:</span><br>
+              Esta senha permitirá que você faça login diretamente no aplicativo <strong>MDM_FRP_BRASIL.exe</strong> com o recurso <em>Lembrar credenciais</em> ativado.
+            </div>
+
+            <button type="submit" class="btn-primary" id="btnSubmitGoogleLink" style="background: linear-gradient(135deg, #4285F4 0%, #1a73e8 100%); border-color: #4285F4; box-shadow: 0 0 20px rgba(66, 133, 244, 0.4);">
+              🚀 Vincular Google e Ativar Acesso EXE
+            </button>
+          </form>
+
+          <div class="auth-links" style="margin-top: 14px;">
+            <a onclick="showView('Login')">← Voltar ao Login</a> &bull; 
+            <a onclick="closeAuthOverlay()" style="color:var(--text-muted); font-size:12px;">✕ Fechar</a>
+          </div>
+        </div>
       </div>
     </div>
       </div>
@@ -1425,6 +1477,28 @@
           <div><label style="color: var(--text-muted); font-size: 12px;">WhatsApp:</label><div id="accPhone" style="font-weight: 600; font-size: 15px; margin-top: 2px;">—</div></div>
           <div><label style="color: var(--text-muted); font-size: 12px;">Status da Conta:</label><div id="accStatus" style="font-weight: 600; font-size: 15px; margin-top: 2px; color: var(--green);">Ativa</div></div>
         </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-green); margin: 24px 0;">
+        <h4 style="font-size: 16px; margin-bottom: 8px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+          <span>🔑</span> Senha de Acesso para o Programa no Computador (.EXE)
+        </h4>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px; line-height: 1.4;">
+          Defina ou altere a senha utilizada para fazer login no programa <strong>MDM_FRP_BRASIL.exe</strong>. Ela funciona em conjunto com seu e-mail cadastrado e suporta a função <em>Lembrar credenciais</em> no seu computador.
+        </p>
+        <div id="accPasswordAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:14px; text-align: left;"></div>
+        <form onsubmit="handleUpdateExePassword(event)" style="max-width: 440px;">
+          <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+            <label style="color: var(--text-muted); font-size: 12px;">Nova Senha do EXE</label>
+            <input type="password" id="accNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="form-group" style="text-align: left; margin-bottom: 14px;">
+            <label style="color: var(--text-muted); font-size: 12px;">Confirmar Nova Senha</label>
+            <input type="password" id="accConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
+          </div>
+          <button type="submit" class="btn-green" id="btnUpdateExePw" style="font-size: 13px; padding: 10px 18px;">
+            🔒 Atualizar Senha do EXE
+          </button>
+        </form>
       </div>
     </div>
   </main>
@@ -1564,6 +1638,8 @@
       document.getElementById("viewLogin").style.display = view === 'Login' ? 'block' : 'none';
       document.getElementById("viewRegister").style.display = view === 'Register' ? 'block' : 'none';
       document.getElementById("viewForgot").style.display = view === 'Forgot' ? 'block' : 'none';
+      const googleLinkEl = document.getElementById("viewGoogleLink");
+      if (googleLinkEl) googleLinkEl.style.display = view === 'GoogleLink' ? 'block' : 'none';
       document.getElementById("viewDashboard").style.display = view === 'Dashboard' ? 'block' : 'none';
       const showcaseEl = document.getElementById("viewShowcase");
       if (showcaseEl) showcaseEl.style.display = view === 'Dashboard' ? 'none' : 'block';
@@ -1736,34 +1812,60 @@
     }
 
     /* ========================================================
-       AUTENTICAÇÃO OFICIAL GOOGLE (REDIRECIONAMENTO DIRETO)
+       AUTENTICAÇÃO GOOGLE + VINCULAÇÃO COM SENHA PARA O EXE
        ======================================================== */
-    async function triggerGoogleAuth() {
-      try {
-        const res = await fetch('/api/v1/auth/google/config');
-        const data = await res.json();
-        if (data && data.google_client_id && data.google_client_id.trim() !== '') {
-          window.location.href = '/api/v1/auth/google/login';
-          return;
-        }
-      } catch (e) {
-        console.error(e);
+    function triggerGoogleAuth() {
+      const loginEmail = document.getElementById("loginEmail") ? document.getElementById("loginEmail").value.trim() : "";
+      const regEmail = document.getElementById("regEmail") ? document.getElementById("regEmail").value.trim() : "";
+      const initialEmail = loginEmail || regEmail;
+      if (initialEmail && document.getElementById("googleEmail")) {
+        document.getElementById("googleEmail").value = initialEmail;
       }
+      openAuthOverlay('GoogleLink');
+    }
 
-      const gmail = prompt("Conectar com sua Conta Google:\n\nDigite seu e-mail Gmail oficial (@gmail.com) para entrar imediatamente com sua conta Google:");
-      if (!gmail || !gmail.trim()) return;
+    async function handleGoogleLinkSubmit(e) {
+      e.preventDefault();
+      const alertEl = document.getElementById("googleAlert");
+      alertEl.style.display = "none";
+      alertEl.textContent = "";
 
-      const cleanEmail = gmail.trim().toLowerCase();
-      if (!cleanEmail.includes("@")) {
-        alert("Por favor, digite um e-mail válido.");
+      const email = document.getElementById("googleEmail").value.trim().toLowerCase();
+      const name = document.getElementById("googleName").value.trim() || email.split('@')[0];
+      const pw = document.getElementById("googlePassword").value;
+      const pwConf = document.getElementById("googleConfirmPassword").value;
+
+      if (!email || !email.includes("@")) {
+        alertEl.textContent = "Digite um e-mail válido (ex: seu.email@gmail.com).";
+        alertEl.style.display = "block";
         return;
       }
+
+      if (pw.length < 6) {
+        alertEl.textContent = "A senha deve ter no mínimo 6 caracteres.";
+        alertEl.style.display = "block";
+        return;
+      }
+
+      if (pw !== pwConf) {
+        alertEl.textContent = "As senhas não coincidem. Digite a mesma senha nos dois campos.";
+        alertEl.style.display = "block";
+        return;
+      }
+
+      const btn = document.getElementById("btnSubmitGoogleLink");
+      btn.disabled = true;
+      btn.textContent = "Vinculando e ativando conta...";
 
       try {
         const resp = await fetch('/api/v1/auth/google', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: cleanEmail, name: cleanEmail.split('@')[0] })
+          body: JSON.stringify({
+            email: email,
+            name: name,
+            password: pw
+          })
         });
         const resData = await resp.json();
         if (resp.ok && resData.access_token) {
@@ -1771,11 +1873,55 @@
           localStorage.setItem("mdm_token", token);
           closeAuthOverlay();
           await initDashboard();
+          alert("✅ Conta Google vinculada com sucesso!\n\nSua senha do aplicativo EXE foi configurada. Você já pode usar este mesmo e-mail e senha para entrar no MDM_FRP_BRASIL.exe com a opção 'Lembrar credenciais'!");
         } else {
-          alert("Erro ao autenticar: " + (resData.detail || "Tente novamente."));
+          alertEl.textContent = resData.detail || "Erro ao conectar conta Google.";
+          alertEl.style.display = "block";
         }
       } catch (err) {
-        alert("Falha na conexão: " + err.message);
+        alertEl.textContent = "Falha de conexão com o servidor: " + err.message;
+        alertEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "🚀 Vincular Google e Ativar Acesso EXE";
+      }
+    }
+
+    async function handleUpdateExePassword(e) {
+      e.preventDefault();
+      const alertEl = document.getElementById("accPasswordAlert");
+      alertEl.style.display = "none";
+      alertEl.textContent = "";
+
+      const pw = document.getElementById("accNewPassword").value;
+      const pwConf = document.getElementById("accConfirmPassword").value;
+
+      if (pw.length < 6) {
+        alertEl.textContent = "A senha deve ter no mínimo 6 caracteres.";
+        alertEl.style.display = "block";
+        return;
+      }
+      if (pw !== pwConf) {
+        alertEl.textContent = "As senhas não coincidem. Digite a mesma senha nos dois campos.";
+        alertEl.style.display = "block";
+        return;
+      }
+
+      const btn = document.getElementById("btnUpdateExePw");
+      btn.disabled = true;
+      btn.textContent = "Salvando...";
+
+      try {
+        const res = await api('/api/v1/auth/password/update', 'POST', { new_password: pw });
+        alert("✅ " + (res.message || "Senha atualizada com sucesso!"));
+        document.getElementById("accNewPassword").value = "";
+        document.getElementById("accConfirmPassword").value = "";
+      } catch (err) {
+        alertEl.textContent = err.message || "Erro ao atualizar senha.";
+        alertEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "🔒 Atualizar Senha do EXE";
       }
     }
 
@@ -2134,6 +2280,8 @@
         openAuthOverlay('Register');
       } else if (window.location.search.includes('auth=forgot')) {
         openAuthOverlay('Forgot');
+      } else if (window.location.pathname === '/google' || window.location.search.includes('auth=google')) {
+        openAuthOverlay('GoogleLink');
       }
     }
 
