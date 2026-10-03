@@ -130,7 +130,7 @@ def create_pix_payment(user_id: int, credits_amount: int) -> dict:
 
     price_per_credit = float(get_system_setting("credit_price_brl", "5.00"))
     amount_brl = round(credits_amount * price_per_credit, 2)
-    raw_pix_key = get_system_setting("pix_key", "19994827743")
+    raw_pix_key = get_system_setting("pix_key", "19994783127")
     key_type = get_system_setting("pix_key_type", "AUTO")
     pix_key = format_pix_key(raw_pix_key, key_type)
 

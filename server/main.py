@@ -91,18 +91,20 @@ def get_system_theme():
 @app.get("/login", response_class=HTMLResponse)
 @app.get("/register", response_class=HTMLResponse)
 @app.get("/", response_class=HTMLResponse)
-def serve_client_portal():
+def serve_client_portal(request: Request):
     from server.database import get_db_connection
-    theme = "cinema_stealth"
-    try:
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT value FROM system_settings WHERE key = 'site_theme'")
-            row = cursor.fetchone()
-            if row and row["value"]:
-                theme = row["value"]
-    except Exception:
-        pass
+    theme = request.query_params.get("preview_theme")
+    if not theme:
+        theme = "cinema_stealth"
+        try:
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT value FROM system_settings WHERE key = 'site_theme'")
+                row = cursor.fetchone()
+                if row and row["value"]:
+                    theme = row["value"]
+        except Exception:
+            pass
 
     path = os.path.join(TEMPLATES_DIR, "client_portal.html")
     with open(path, "r", encoding="utf-8") as f:

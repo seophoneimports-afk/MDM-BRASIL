@@ -226,13 +226,13 @@ def init_db():
         # Seed initial system settings
         default_settings = [
             ('credit_price_brl', '5.00'),
-            ('pix_key', '19994827743'),
+            ('pix_key', '19994783127'),
             ('pix_key_type', 'AUTO'),
             ('pix_merchant_name', 'MDM FRP BRASIL'),
             ('pix_merchant_city', 'AMERICANA'),
             ('google_client_id', ''),
             ('platform_name', 'MDM & FRP BRASIL'),
-            ('support_phone', '(19) 99482-7743')
+            ('support_phone', '(19) 99478-3127')
         ]
         for k, v in default_settings:
             cursor.execute("INSERT OR IGNORE INTO system_settings (key, value) VALUES (?, ?);", (k, v))

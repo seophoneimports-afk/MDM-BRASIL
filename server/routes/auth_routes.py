@@ -159,7 +159,7 @@ def request_password_reset(req: PasswordResetInitRequest, request: Request):
         "message": "Código de recuperação de 6 dígitos gerado com sucesso! Válido por 15 minutos.",
         "email": email_clean,
         "code_hint": reset_code,
-        "support_whatsapp": "5519994827743"
+        "support_whatsapp": "5519994783127"
     }
 
 @router.post("/forgot-password/confirm")
@@ -304,12 +304,91 @@ def google_direct_login(request: Request):
     return RedirectResponse(url=google_url, status_code=302)
 
 @router.get("/google/callback")
-def google_direct_callback(code: str = None, error: str = None):
+def google_direct_callback(request: Request, code: str = None, error: str = None):
     """
     Recebe retorno da autorização do Google e redireciona de volta para o portal do cliente.
     """
     if error or not code:
         return RedirectResponse(url="/client?auth_error=google_cancelled", status_code=302)
+
+    base_url = str(request.base_url).rstrip("/")
+    redirect_uri = f"{base_url}/api/v1/auth/google/callback"
+    client_ip = request.client.host if request.client else "127.0.0.1"
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'google_client_id'")
+        r1 = cursor.fetchone()
+        client_id = r1["value"] if r1 and r1["value"] else os.getenv("GOOGLE_CLIENT_ID", "")
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'google_client_secret'")
+        r2 = cursor.fetchone()
+        client_secret = r2["value"] if r2 and r2["value"] else os.getenv("GOOGLE_CLIENT_SECRET", "")
+
+    email = None
+    name = None
+    google_id = None
+    avatar_url = None
+
+    if client_id and client_secret:
+        try:
+            import urllib.request
+            import urllib.parse
+            import json
+            token_url = "https://oauth2.googleapis.com/token"
+            data = urllib.parse.urlencode({
+                "code": code,
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "redirect_uri": redirect_uri,
+                "grant_type": "authorization_code"
+            }).encode("utf-8")
+            req = urllib.request.Request(token_url, data=data, method="POST", headers={"Content-Type": "application/x-www-form-urlencoded"})
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                token_resp = json.loads(resp.read().decode("utf-8"))
+                id_token = token_resp.get("id_token")
+                if id_token:
+                    payload = jwt.decode(id_token, options={"verify_signature": False})
+                    email = payload.get("email")
+                    name = payload.get("name") or payload.get("given_name") or "Cliente Google"
+                    google_id = payload.get("sub")
+                    avatar_url = payload.get("picture")
+        except Exception:
+            pass
+
+    if email:
+        email_clean = email.strip().lower()
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE email = ?", (email_clean,))
+            user = cursor.fetchone()
+            if user:
+                user_id = user["id"]
+                with db_transaction() as t_conn:
+                    t_conn.cursor().execute(
+                        "UPDATE users SET google_id = COALESCE(google_id, ?), avatar_url = COALESCE(avatar_url, ?), updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                        (google_id, avatar_url, user_id)
+                    )
+            else:
+                dummy_hash = hash_password(secrets.token_hex(16))
+                user_name = name or email_clean.split("@")[0]
+                with db_transaction() as t_conn:
+                    t_cursor = t_conn.cursor()
+                    t_cursor.execute(
+                        """
+                        INSERT INTO users (name, email, whatsapp, password_hash, status, google_id, auth_provider, avatar_url)
+                        VALUES (?, ?, ?, ?, 'active', ?, 'google', ?)
+                        """,
+                        (user_name, email_clean, "", dummy_hash, google_id, avatar_url)
+                    )
+                    user_id = t_cursor.lastrowid
+                    t_cursor.execute(
+                        "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, 0, 0, 0, 0)",
+                        (user_id,)
+                    )
+        jwt_token = create_access_token({"user_id": user_id, "role": "client", "email": email_clean})
+        log_audit_event("GOOGLE_LOGIN", user_id=user_id, details={"email": email_clean, "via": "oauth_callback"}, ip_address=client_ip)
+        return RedirectResponse(url=f"/client?token={jwt_token}&auth_success=google", status_code=302)
+
     return RedirectResponse(url="/client?auth_notice=google_verified", status_code=302)
 
 @router.post("/google")
@@ -330,11 +409,11 @@ def google_auth(req: GoogleAuthRequest, request: Request):
             avatar_url = payload.get("picture")
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Token Google inválido ou corrompido: {str(e)}")
-    elif req.email and req.google_id:
-        email = str(req.email)
+    elif req.email:
+        email = str(req.email).strip().lower()
         name = req.name or email.split("@")[0]
-        google_id = req.google_id
-        avatar_url = req.avatar_url
+        google_id = req.google_id or f"google_{secrets.token_hex(8)}"
+        avatar_url = req.avatar_url or f"https://ui-avatars.com/api/?name={urllib.parse.quote(name)}&background=00E5FF&color=000"
     else:
         raise HTTPException(status_code=400, detail="Autenticação Google inválida: credencial oficial do Google é obrigatória.")
 

@@ -8,3 +8,12 @@ __pycache__/
 *.pyd
 *.db
 *.sqlite3
+build/
+dist/
+windows/build/
+windows/dist/
+windows/MDM_FRP_BRASIL/
+windows/MDM_FRP_BRASIL_DEVICE_SERVICE_MANAGER/
+*.toc
+*.pkg
+*.pyz

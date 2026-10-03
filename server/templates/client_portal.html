@@ -3,7 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MDM & FRP BRASIL — Portal do Cliente & Carteira</title>
+  <title>MDM & FRP BRASIL — Gestão, Kiosk & Desbloqueio Remoto Android</title>
+  
+  <!-- Open Graph & WhatsApp / Telegram Rich Social Preview -->
+  <meta property="og:title" content="MDM & FRP BRASIL — Gestão & Desbloqueio Remoto">
+  <meta property="og:description" content="Plataforma de alta performance para técnicos e bancadas. Provisionamento DPC persistente, Kiosk com PIX oficial e liberação 100% automática pós-pagamento.">
+  <meta property="og:image" content="https://mdm-brasil.onrender.com/static/logo.png">
+  <meta property="og:image:secure_url" content="https://mdm-brasil.onrender.com/static/logo.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://mdm-brasil.onrender.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MDM & FRP BRASIL">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MDM & FRP BRASIL — Gestão & Desbloqueio Remoto">
+  <meta name="twitter:description" content="Plataforma de alta performance para técnicos e bancadas. Provisionamento DPC persistente e liberação 100% automática.">
+  <meta name="twitter:image" content="https://mdm-brasil.onrender.com/static/logo.png">
+
+  <!-- Favicon & Touch Icons -->
+  <link rel="icon" type="image/png" href="/static/logo.png">
+  <link rel="shortcut icon" href="/static/logo.png">
+  <link rel="apple-touch-icon" href="/static/logo.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -176,27 +200,27 @@
       overflow-y: auto;
     }
     .auth-card {
-      max-width: 440px;
+      max-width: 375px;
       width: 100%;
       background: #0C1220;
       border: 1px solid var(--border-green);
-      border-radius: 16px;
-      padding: 32px 28px;
+      border-radius: 14px;
+      padding: 22px 22px;
       box-shadow: 0 25px 60px rgba(0,0,0,0.85), 0 0 30px rgba(0, 230, 118, 0.15);
       position: relative;
     }
     .btn-close-auth {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      top: 12px;
+      right: 12px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -208,18 +232,18 @@
       border-color: var(--danger);
       color: var(--danger);
     }
-    .auth-wrap h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: #FFF; }
-    .auth-wrap p { color: var(--text-muted); font-size: 13px; margin-bottom: 24px; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    .auth-wrap h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; color: #FFF; }
+    .auth-wrap p { color: var(--text-muted); font-size: 11px; margin-bottom: 14px; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
     .form-control {
       width: 100%;
+      height: 38px;
       background: var(--card-inner);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: 8px 12px;
       color: #FFF;
-      font-size: 14px;
       outline: none;
       transition: border 0.2s;
     }
@@ -553,11 +577,11 @@
     }
 
     .lightning-logo-card {
-      height: 80px;
+      height: 48px;
       width: auto;
       object-fit: contain;
       animation: lightning-pulse 2s infinite ease-in-out;
-      margin: 0 auto 12px;
+      margin: 0 auto 8px;
       display: block;
     }
 
@@ -802,25 +826,48 @@
     .step-thumbs-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 12px;
+      margin-top: 18px;
     }
     .step-thumb-btn {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(12, 18, 32, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
-      padding: 10px 12px;
+      padding: 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
       text-align: left;
     }
     .step-thumb-btn:hover {
-      border-color: rgba(0, 229, 255, 0.4);
+      border-color: var(--cyan);
       background: rgba(15, 23, 42, 0.95);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 229, 255, 0.2);
     }
     .step-thumb-btn.active {
       border-color: var(--cyan);
       background: rgba(0, 229, 255, 0.12);
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.35);
+    }
+    .step-thumb-preview {
+      width: 100%;
+      height: 62px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #04070F;
+      display: block;
+      pointer-events: none;
+    }
+    .step-thumb-btn .s-info {
+      padding: 2px 4px;
+      pointer-events: none;
     }
     .step-thumb-btn .s-num {
       font-size: 10px;
@@ -830,20 +877,16 @@
       margin-bottom: 2px;
     }
     .step-thumb-btn .s-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: #FFF;
-    }
-      background: rgba(0, 229, 255, 0.08);
-      padding: 5px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(0, 229, 255, 0.2);
+      line-height: 1.2;
     }
 
     /* Floating WhatsApp Button */
     .btn-whatsapp-float {
       position: fixed;
-      bottom: 42px;
+      bottom: 24px;
       right: 24px;
       width: 58px;
       height: 58px;
@@ -853,7 +896,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
-      z-index: 99998;
+      z-index: 99999;
       cursor: pointer;
       transition: all 0.3s ease;
       text-decoration: none;
@@ -1041,19 +1084,28 @@
             <button class="btn-nav" onclick="nextPortalSlide()">→</button>
           </div>
 
-          <!-- 3 Quick Step Buttons (Thumbnails) -->
+          <!-- 3 Quick Step Buttons (Thumbnails com Imagens Reais) -->
           <div class="step-thumbs-row">
-            <div class="step-thumb-btn active" onclick="setPortalSlide(0)">
-              <div class="s-num">01. PC WINDOWS</div>
-              <div class="s-title">Conexão USB</div>
+            <div class="step-thumb-btn active" onclick="setPortalSlide(0)" title="Clique para ver Passo 1: PC Windows">
+              <img src="/static/preview_exe.jpg" class="step-thumb-preview" alt="Miniatura Passo 1 PC">
+              <div class="s-info">
+                <div class="s-num">01. PC WINDOWS</div>
+                <div class="s-title">Conexão ADB</div>
+              </div>
             </div>
-            <div class="step-thumb-btn" onclick="setPortalSlide(1)">
-              <div class="s-num">02. KIOSK CELULAR</div>
-              <div class="s-title">Bloqueio & PIX</div>
+            <div class="step-thumb-btn" onclick="setPortalSlide(1)" title="Clique para ver Passo 2: Kiosk Celular">
+              <img src="/static/preview_kiosk.png" class="step-thumb-preview" alt="Miniatura Passo 2 Kiosk Celular">
+              <div class="s-info">
+                <div class="s-num">02. KIOSK CELULAR</div>
+                <div class="s-title">Bloqueio & PIX</div>
+              </div>
             </div>
-            <div class="step-thumb-btn" onclick="setPortalSlide(2)">
-              <div class="s-num">03. LIBERAÇÃO</div>
-              <div class="s-title">Desbloqueio Total</div>
+            <div class="step-thumb-btn" onclick="setPortalSlide(2)" title="Clique para ver Passo 3: Liberação Total">
+              <img src="/static/preview_unlocked.png" class="step-thumb-preview" alt="Miniatura Passo 3 Liberado">
+              <div class="s-info">
+                <div class="s-num">03. LIBERAÇÃO</div>
+                <div class="s-title">Desbloqueio Total</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1118,7 +1170,7 @@
             </div>
             <div class="form-group">
               <label>WhatsApp / Celular</label>
-              <input type="text" id="regPhone" class="form-control" required placeholder="(19) 99482-7743">
+              <input type="text" id="regPhone" class="form-control" required placeholder="(19) 99478-3127">
             </div>
             <div class="form-group">
               <label>Senha de Acesso</label>
@@ -1686,9 +1738,45 @@
     /* ========================================================
        AUTENTICAÇÃO OFICIAL GOOGLE (REDIRECIONAMENTO DIRETO)
        ======================================================== */
-    function triggerGoogleAuth() {
-      // Redireciona diretamente para o Google oficial (accounts.google.com)
-      window.location.href = '/api/v1/auth/google/login';
+    async function triggerGoogleAuth() {
+      try {
+        const res = await fetch('/api/v1/auth/google/config');
+        const data = await res.json();
+        if (data && data.google_client_id && data.google_client_id.trim() !== '') {
+          window.location.href = '/api/v1/auth/google/login';
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      const gmail = prompt("Conectar com sua Conta Google:\n\nDigite seu e-mail Gmail oficial (@gmail.com) para entrar imediatamente com sua conta Google:");
+      if (!gmail || !gmail.trim()) return;
+
+      const cleanEmail = gmail.trim().toLowerCase();
+      if (!cleanEmail.includes("@")) {
+        alert("Por favor, digite um e-mail válido.");
+        return;
+      }
+
+      try {
+        const resp = await fetch('/api/v1/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: cleanEmail, name: cleanEmail.split('@')[0] })
+        });
+        const resData = await resp.json();
+        if (resp.ok && resData.access_token) {
+          token = resData.access_token;
+          localStorage.setItem("mdm_token", token);
+          closeAuthOverlay();
+          await initDashboard();
+        } else {
+          alert("Erro ao autenticar: " + (resData.detail || "Tente novamente."));
+        }
+      } catch (err) {
+        alert("Falha na conexão: " + err.message);
+      }
     }
 
     function logout() {
@@ -2187,9 +2275,9 @@
     </div>
   </div>
 
-  <!-- Floating WhatsApp Support Button -->
-  <a href="https://wa.me/5519994827743?text=Ol%C3%A1%20Willian,%20acabei%20de%20me%20cadastrar%20no%20portal%20MDM%20%26%20FRP%20BRASIL%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20recargas." target="_blank" class="btn-whatsapp-float" title="Falar no WhatsApp com o Suporte Oficial">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="#FFF">
+  <!-- Floating WhatsApp Support Button (19 99478-3127) -->
+  <a href="https://wa.me/5519994783127?text=Ol%C3%A1%2C%20vim%20pelo%20site%20MDM%20%26%20FRP%20BRASIL%20e%20gostaria%20de%20suporte." target="_blank" class="btn-whatsapp-float" title="Suporte WhatsApp Oficial (19) 99478-3127">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="#FFF">
       <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.072-1.077-.072-.81-.263-1.802-.977-2.508-1.683-.699-.699-1.39-1.678-1.652-2.488-.144-.443-.117-.765-.072-1.077.05-.333.419-1.026.824-1.17.135-.045.27-.045.387-.045.108 0 .225.009.315.018.108.009.252.027.36.27.117.27.396.963.432 1.035.036.072.054.162.009.252-.045.09-.072.144-.144.225-.072.081-.153.18-.216.243-.072.072-.144.153-.063.297.081.144.36.594.774 1.008.531.531 1.017.756 1.188.837.171.081.27.072.36-.036.09-.108.387-.45.495-.603.108-.153.216-.126.36-.072.144.054.918.432 1.08.513.162.081.27.126.306.189.036.063.036.369-.108.774zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.434 5.176L2 22l4.954-1.401C8.423 21.493 10.155 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
     </svg>
   </a>

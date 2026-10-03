@@ -142,13 +142,20 @@ def exe_get_pix_config(user: dict = Depends(get_current_user)):
     import json
     with get_db_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'pix_key'")
+        r_sys = cursor.fetchone()
+        sys_key = r_sys["value"] if r_sys and r_sys["value"] else "19994783127"
+
         cursor.execute("SELECT config_value FROM platform_configs WHERE config_key = 'pix_settings'")
         row = cursor.fetchone()
         if row and row["config_value"]:
-            pix_cfg = json.loads(row["config_value"])
+            try:
+                pix_cfg = json.loads(row["config_value"])
+            except Exception:
+                pix_cfg = {"key": sys_key, "key_type": "TELEFONE", "merchant_name": "MDM FRP BRASIL", "merchant_city": "AMERICANA"}
         else:
             pix_cfg = {
-                "key": "19994827743",
+                "key": sys_key,
                 "key_type": "TELEFONE",
                 "merchant_name": "MDM FRP BRASIL",
                 "merchant_city": "AMERICANA"
