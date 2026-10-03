@@ -2631,6 +2631,13 @@
           showView('Dashboard');
         }
 
+        // Support direct tab opening via query param (?tab=account, etc)
+        const reqTab = urlParams.get("tab");
+        if (reqTab) {
+          const tabBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(reqTab));
+          if (tabBtn) switchDashTab(reqTab, tabBtn);
+        }
+
         // Load background data safely without kicking out if single query fails
         try { await loadPackages(); } catch(e) { console.error('loadPackages', e); }
         try { await loadHistory(); } catch(e) { console.error('loadHistory', e); }
