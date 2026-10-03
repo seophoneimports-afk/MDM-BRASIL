@@ -110,10 +110,8 @@ def serve_client_portal(request: Request):
     with open(path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # Dynamic server-side injection of active theme
-    html = html.replace('data-theme="cinema_stealth"', f'data-theme="{theme}"')
-    if 'data-theme=' not in html:
-        html = html.replace('<body', f'<body data-theme="{theme}"')
+    # Dynamic server-side injection of active theme directly onto <body>
+    html = html.replace('<body', f'<body data-theme="{theme}"', 1)
     return html
 
 @app.get("/headers", response_class=HTMLResponse)
