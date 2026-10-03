@@ -110,10 +110,19 @@ def get_public_config():
     from server.database import get_db_connection
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT key, value FROM system_settings WHERE key IN ('support_whatsapp', 'support_phone', 'support_message', 'platform_name', 'announcement_banner', 'welcome_bonus_credits', 'credit_price_brl', 'site_theme', 'homepage_layout')")
+        cursor.execute("SELECT key, value FROM system_settings WHERE key IN ('support_whatsapp', 'support_phone', 'support_message', 'platform_name', 'announcement_banner', 'welcome_bonus_credits', 'credit_price_brl', 'site_theme', 'homepage_layout', 'homepage_card_style')")
         rows = cursor.fetchall()
         cfg = {r["key"]: r["value"] for r in rows}
         return {"success": True, "config": cfg}
+
+@app.get("/api/v1/system/card-style")
+def get_public_card_style():
+    from server.database import get_db_connection
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_card_style'")
+        row = cursor.fetchone()
+        return {"success": True, "card_style": row["value"] if row and row["value"] else "glass_neon"}
 
 # Web Portal HTML Views
 @app.get("/client", response_class=HTMLResponse)
@@ -128,6 +137,7 @@ def serve_client_portal(request: Request):
     from server.database import get_db_connection
     theme = request.query_params.get("preview_theme")
     layout = request.query_params.get("preview_layout") or request.query_params.get("layout")
+    card_style = request.query_params.get("preview_cards") or request.query_params.get("card_style")
     supp_wa = None
     supp_phone = None
 
@@ -142,6 +152,10 @@ def serve_client_portal(request: Request):
                 cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_layout'")
                 r_lay = cursor.fetchone()
                 layout = r_lay["value"] if r_lay and r_lay["value"] else "cinema_split"
+            if not card_style:
+                cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_card_style'")
+                r_card = cursor.fetchone()
+                card_style = r_card["value"] if r_card and r_card["value"] else "glass_neon"
             
             cursor.execute("SELECT key, value FROM system_settings WHERE key IN ('support_whatsapp', 'support_phone')")
             for r in cursor.fetchall():
@@ -152,13 +166,14 @@ def serve_client_portal(request: Request):
     except Exception:
         theme = theme or "cinema_stealth"
         layout = layout or "cinema_split"
+        card_style = card_style or "glass_neon"
 
     path = os.path.join(TEMPLATES_DIR, "client_portal.html")
     with open(path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # Dynamic server-side injection of active theme and homepage layout directly onto <body>
-    html = html.replace('<body', f'<body data-theme="{theme}" data-layout="{layout}"', 1)
+    # Dynamic server-side injection of active theme, homepage layout, and card style directly onto <body>
+    html = html.replace('<body', f'<body data-theme="{theme}" data-layout="{layout}" data-card-style="{card_style}"', 1)
     
     if supp_wa:
         clean_wa = "".join(filter(str.isdigit, supp_wa))

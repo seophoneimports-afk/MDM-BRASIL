@@ -1145,6 +1145,8 @@
     body[data-layout="saas_grid"] #layoutSaasGrid { display: block !important; }
     body[data-layout="matrix_terminal"] #layoutMatrixTerminal { display: block !important; }
     body[data-layout="minimal_fast"] #layoutMinimalFast { display: block !important; }
+    body[data-layout="cyber_cockpit"] #layoutCyberCockpit { display: block !important; }
+    body[data-layout="bento_pro"] #layoutBentoPro { display: block !important; }
     body:not([data-layout]) #layoutCinemaSplit { display: block !important; }
 
     /* Bento Grid Mode (Modo 2) */
@@ -1267,6 +1269,73 @@
       margin: 15px auto 35px;
     }
 
+    /* Cyber Cockpit 3D Mode (Modo 7) */
+    .cockpit-layout-wrap {
+      display: grid;
+      grid-template-columns: 280px 1fr 280px;
+      gap: 20px;
+      margin-bottom: 35px;
+      align-items: stretch;
+    }
+    @media (max-width: 1024px) {
+      .cockpit-layout-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cockpit-hud-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .cockpit-side-card {
+      background: rgba(12, 18, 32, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.25s ease;
+    }
+    .cockpit-center-stage {
+      background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.09) 0%, rgba(6, 9, 17, 0.98) 75%);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+    .cockpit-screen-wrap {
+      max-width: 640px;
+      width: 100%;
+      margin: 18px auto;
+      position: relative;
+    }
+    .cockpit-screen-img {
+      width: 100%;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 229, 255, 0.45);
+      box-shadow: 0 15px 45px rgba(0, 229, 255, 0.2), 0 0 35px rgba(0, 230, 118, 0.12);
+      display: block;
+    }
+    .cockpit-screen-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      background: rgba(6, 9, 17, 0.9);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    }
+
     /* Live Layout Switcher Toolbar (Bottom Preview Pill) */
     .layout-switcher-pill {
       position: fixed;
@@ -1307,6 +1376,230 @@
       color: #060911;
       border-color: var(--cyan);
       font-weight: 800;
+    }
+
+    /* ========================================================
+       ESTILOS & LAYOUTS DOS CARDS DA TELA INICIAL (4 PRESETS)
+       ======================================================== */
+    /* Componentes Base de Cards da Home */
+    .home-pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .home-pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .home-pricing-card.featured {
+      border-color: var(--green);
+    }
+    .home-pkg-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      align-self: flex-start;
+    }
+    .home-pkg-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #FFF;
+      margin-bottom: 6px;
+    }
+    .home-pkg-price {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green);
+      margin: 12px 0 4px;
+    }
+    .home-pkg-unit {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .home-pkg-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+      font-size: 12.5px;
+      color: #CBD5E1;
+      line-height: 1.9;
+      text-align: left;
+    }
+    .home-pkg-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .home-pkg-features li span.icon {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    /* Benefits Grid & Cards */
+    .home-benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .benefit-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .benefit-icon-wrap {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 14px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+    }
+    .benefit-title {
+      font-size: 16.5px;
+      font-weight: 800;
+      color: #FFF;
+      margin-bottom: 8px;
+    }
+    .benefit-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* PRESET 1: Glassmorphism Holográfico Neon (Default) */
+    body[data-card-style="glass_neon"] .home-pricing-card,
+    body[data-card-style="glass_neon"] .benefit-card,
+    body[data-card-style="glass_neon"] .bento-card,
+    body[data-card-style="glass_neon"] .saas-plan-card,
+    body[data-card-style="glass_neon"] .podium-card,
+    body[data-card-style="glass_neon"] .step-thumb-btn,
+    body[data-card-style="glass_neon"] .cockpit-side-card {
+      background: rgba(12, 18, 32, 0.8) !important;
+      border: 1px solid rgba(0, 229, 255, 0.22) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border-radius: 18px !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+    body[data-card-style="glass_neon"] .home-pricing-card:hover,
+    body[data-card-style="glass_neon"] .benefit-card:hover,
+    body[data-card-style="glass_neon"] .bento-card:hover,
+    body[data-card-style="glass_neon"] .saas-plan-card:hover,
+    body[data-card-style="glass_neon"] .podium-card:hover,
+    body[data-card-style="glass_neon"] .step-thumb-btn:hover,
+    body[data-card-style="glass_neon"] .cockpit-side-card:hover {
+      transform: translateY(-6px) !important;
+      border-color: rgba(0, 229, 255, 0.85) !important;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 28px rgba(0, 229, 255, 0.35) !important;
+    }
+    body[data-card-style="glass_neon"] .home-pricing-card.featured {
+      border-color: rgba(0, 230, 118, 0.6) !important;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 230, 118, 0.25) !important;
+    }
+
+    /* PRESET 2: Cyber Deck 3D Isometric (Hover Tilt & Cantos Chanfrados) */
+    body[data-card-style="cyber_3d"] .home-pricing-card,
+    body[data-card-style="cyber_3d"] .benefit-card,
+    body[data-card-style="cyber_3d"] .bento-card,
+    body[data-card-style="cyber_3d"] .saas-plan-card,
+    body[data-card-style="cyber_3d"] .podium-card,
+    body[data-card-style="cyber_3d"] .step-thumb-btn,
+    body[data-card-style="cyber_3d"] .cockpit-side-card {
+      background: linear-gradient(145deg, #090E1A 0%, #03060F 100%) !important;
+      border: 1px solid rgba(56, 189, 248, 0.4) !important;
+      border-radius: 8px !important;
+      clip-path: polygon(0 14px, 14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%) !important;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7) !important;
+      position: relative;
+    }
+    body[data-card-style="cyber_3d"] .home-pricing-card:hover,
+    body[data-card-style="cyber_3d"] .benefit-card:hover,
+    body[data-card-style="cyber_3d"] .bento-card:hover,
+    body[data-card-style="cyber_3d"] .saas-plan-card:hover,
+    body[data-card-style="cyber_3d"] .podium-card:hover,
+    body[data-card-style="cyber_3d"] .step-thumb-btn:hover,
+    body[data-card-style="cyber_3d"] .cockpit-side-card:hover {
+      transform: translateY(-8px) scale(1.015) !important;
+      border-color: #00E676 !important;
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 230, 118, 0.3) !important;
+    }
+
+    /* PRESET 3: Bento Grid Linear (Estilo Apple Pro / Minimal Luxo) */
+    body[data-card-style="bento_minimal"] .home-pricing-card,
+    body[data-card-style="bento_minimal"] .benefit-card,
+    body[data-card-style="bento_minimal"] .bento-card,
+    body[data-card-style="bento_minimal"] .saas-plan-card,
+    body[data-card-style="bento_minimal"] .podium-card,
+    body[data-card-style="bento_minimal"] .step-thumb-btn,
+    body[data-card-style="bento_minimal"] .cockpit-side-card {
+      background: #0A0E17 !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 24px !important;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5) !important;
+      clip-path: none !important;
+    }
+    body[data-card-style="bento_minimal"] .home-pricing-card:hover,
+    body[data-card-style="bento_minimal"] .benefit-card:hover,
+    body[data-card-style="bento_minimal"] .bento-card:hover,
+    body[data-card-style="bento_minimal"] .saas-plan-card:hover,
+    body[data-card-style="bento_minimal"] .podium-card:hover,
+    body[data-card-style="bento_minimal"] .step-thumb-btn:hover,
+    body[data-card-style="bento_minimal"] .cockpit-side-card:hover {
+      transform: translateY(-4px) !important;
+      border-color: rgba(255, 255, 255, 0.22) !important;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75) !important;
+    }
+
+    /* PRESET 4: Matrix Terminal Mono (Hacker Dark) */
+    body[data-card-style="matrix_mono"] .home-pricing-card,
+    body[data-card-style="matrix_mono"] .benefit-card,
+    body[data-card-style="matrix_mono"] .bento-card,
+    body[data-card-style="matrix_mono"] .saas-plan-card,
+    body[data-card-style="matrix_mono"] .podium-card,
+    body[data-card-style="matrix_mono"] .step-thumb-btn,
+    body[data-card-style="matrix_mono"] .cockpit-side-card {
+      background: #02050A !important;
+      border: 1px solid #10B981 !important;
+      border-radius: 4px !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.15) !important;
+      clip-path: none !important;
+    }
+    body[data-card-style="matrix_mono"] .home-pricing-card:hover,
+    body[data-card-style="matrix_mono"] .benefit-card:hover,
+    body[data-card-style="matrix_mono"] .bento-card:hover,
+    body[data-card-style="matrix_mono"] .saas-plan-card:hover,
+    body[data-card-style="matrix_mono"] .podium-card:hover,
+    body[data-card-style="matrix_mono"] .step-thumb-btn:hover,
+    body[data-card-style="matrix_mono"] .cockpit-side-card:hover {
+      transform: translateY(-4px) !important;
+      border-color: #34D399 !important;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.45) !important;
     }
 
     /* Security: disable selection */
@@ -1826,6 +2119,213 @@
         </div>
       </div>
 
+      <!-- ========================================================
+           MODO 7: SHOWCASE COCKPIT 3D GAMER (TELEMETRIA & MOLDURA 3D)
+           ======================================================== -->
+      <div id="layoutCyberCockpit" class="layout-mode-view">
+        <div class="cockpit-layout-wrap">
+          <!-- Left HUD: Telemetria & Status -->
+          <div class="cockpit-hud-col">
+            <div class="cockpit-side-card">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <span style="font-size: 11px; font-weight: 800; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px;">⚡ Telemetria USB</span>
+                <span class="pulse-indicator"></span>
+              </div>
+              <div style="font-size: 24px; font-weight: 900; color: #FFF; margin-bottom: 4px;">0.4s</div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Latência de Handshake ADB / Porta COM</div>
+              <div style="background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 8px; padding: 10px; font-size: 11.5px; color: #94A3B8;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span>Auto-Baud:</span> <strong style="color: var(--green);">921600 bps</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Buffer:</span> <strong style="color: #FFF;">Zero-Loss DMA</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="cockpit-side-card">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <span style="font-size: 11px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 0.5px;">🛡️ Knox Guard DPC</span>
+                <span style="font-size: 10px; background: rgba(0,230,118,0.15); color: var(--green); padding: 2px 8px; border-radius: 10px; font-weight: 800;">ATIVO</span>
+              </div>
+              <div style="font-size: 15px; font-weight: 800; color: #FFF; margin-bottom: 6px;">Blindagem Anti-Relock</div>
+              <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 10px 0; line-height: 1.5;">
+                Injeta DPC com restrição de fábrica. Dispositivo não restaura e não refaz o bloqueio pós-update OTA.
+              </p>
+              <div style="font-size: 11px; color: var(--cyan); font-weight: 700;">✓ Compatível Knox 3.0 até 3.10+</div>
+            </div>
+          </div>
+
+          <!-- Center Stage: Executável 3D & Ações Principais -->
+          <div class="cockpit-center-stage">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.35); padding: 6px 18px; border-radius: 30px; font-size: 11.5px; font-weight: 800; color: var(--cyan); margin-bottom: 14px;">
+              <span>🚀 AMBIENTE DE BANCADA TÉCNICA 3D</span>
+            </div>
+            <h1 style="font-size: 34px; font-weight: 900; color: #FFF; margin: 0 0 10px 0; letter-spacing: -0.5px; line-height: 1.2;">
+              Showcase Operacional <span style="background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MDM &amp; FRP BRASIL</span>
+            </h1>
+            <p style="color: #94A3B8; font-size: 14px; max-width: 620px; margin: 0 auto 20px; line-height: 1.5;">
+              Controle absoluto de desbloqueios, bypass de contas Google e bloqueio inteligente com QR Code PIX na tela do smartphone.
+            </p>
+
+            <!-- 3D Holographic Screen Frame -->
+            <div class="cockpit-screen-wrap">
+              <img src="/static/showcase_1.png" alt="MDM Brasil Cockpit Stage" class="cockpit-screen-img" id="cockpitStageImg">
+              <div class="cockpit-screen-badge">
+                <span class="pulse-indicator"></span> V4.9.2 PRO • SERVIDOR ONLINE
+              </div>
+            </div>
+
+            <!-- Central Action Buttons -->
+            <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 22px;">
+              <a href="/api/v1/download/software" class="btn-primary" style="width: auto; padding: 13px 28px; font-size: 14px; font-weight: 800; box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);">
+                ⬇️ Baixar Executável Windows (.EXE)
+              </a>
+              <button type="button" class="btn-secondary" style="width: auto; padding: 13px 24px; font-size: 14px; font-weight: 700;" onclick="token ? showView('Dashboard') : openAuthOverlay('Login')">
+                ⚡ Acessar Painel Web
+              </button>
+            </div>
+          </div>
+
+          <!-- Right HUD: Módulos & Ações Rápidas -->
+          <div class="cockpit-hud-col">
+            <div class="cockpit-side-card">
+              <div style="font-size: 11px; font-weight: 800; color: #F59E0B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                ⚡ Módulos em 1 Clique
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                  <span style="color: #FFF; font-weight: 600;">Bypass FRP Universal</span>
+                  <span style="color: var(--green); font-weight: 800;">100% OK</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                  <span style="color: #FFF; font-weight: 600;">Knox KG / MDM DPC</span>
+                  <span style="color: var(--cyan); font-weight: 800;">Suportado</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                  <span style="color: #FFF; font-weight: 600;">Mi Account Clean</span>
+                  <span style="color: #38BDF8; font-weight: 800;">Imediato</span>
+                </div>
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                  <span style="color: #FFF; font-weight: 600;">Tela Bloqueio PIX</span>
+                  <span style="color: var(--green); font-weight: 800;">Automático</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cockpit-side-card" style="text-align: center;">
+              <div style="font-size: 28px; margin-bottom: 6px;">💬</div>
+              <div style="font-size: 14.5px; font-weight: 800; color: #FFF; margin-bottom: 4px;">Suporte de Bancada</div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Técnicos de plantão via WhatsApp Oficial</div>
+              <a href="https://wa.me/5519994783127" target="_blank" class="btn-green" style="display: block; padding: 9px 12px; font-size: 12px; font-weight: 800; text-decoration: none;">
+                Falar com Suporte (19) 99478-3127
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           MODO 8: BENTO GRID PRO 2026 (ALTA DENSIDADE & MOSAICO MODERNO)
+           ======================================================== -->
+      <div id="layoutBentoPro" class="layout-mode-view">
+        <div class="bento-grid-wrapper">
+          <!-- Bloco Principal 8 Colunas -->
+          <div class="bento-col-8">
+            <div class="bento-card" style="min-height: 380px; justify-content: space-between; background: radial-gradient(circle at top right, rgba(0, 229, 255, 0.15), rgba(12, 18, 32, 0.95));">
+              <div>
+                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.35); padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; color: var(--green); margin-bottom: 14px;">
+                  <span>● SISTEMA V4.9.2 PRO PRONTO</span>
+                </div>
+                <h2 style="font-size: 32px; font-weight: 900; color: #FFF; margin-bottom: 10px; line-height: 1.2;">
+                  A Plataforma mais Avançada de <span style="color: var(--cyan);">Desbloqueio &amp; MDM</span> do Brasil
+                </h2>
+                <p style="color: #94A3B8; font-size: 14px; max-width: 580px; line-height: 1.6; margin-bottom: 20px;">
+                  Automação completa via cabo USB para assistência técnica: desbloqueio de conta Google (FRP), gestão corporativa de empréstimos MDM e recebimento instantâneo no celular do cliente via PIX.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+                <a href="/api/v1/download/software" class="btn-primary" style="width: auto; padding: 12px 24px; font-size: 13.5px; font-weight: 800;">
+                  ⬇️ Baixar Software Windows
+                </a>
+                <button type="button" class="btn-secondary" style="width: auto; padding: 12px 20px; font-size: 13.5px;" onclick="token ? showView('Dashboard') : openAuthOverlay('Register')">
+                  Criar Conta / Entrar
+                </button>
+                <span style="font-size: 12px; color: var(--text-muted);">Compatível Windows 10 e 11 (64-bit)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloco Lateral 4 Colunas: Status em Tempo Real -->
+          <div class="bento-col-4">
+            <div class="bento-card" style="min-height: 380px; justify-content: space-between; border-color: rgba(0, 229, 255, 0.35);">
+              <div>
+                <div style="font-size: 11px; font-weight: 800; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                  📡 Status da Rede
+                </div>
+                <div style="font-size: 26px; font-weight: 900; color: #FFF; margin-bottom: 4px;">100% Online</div>
+                <div style="font-size: 12.5px; color: var(--green); font-weight: 700; margin-bottom: 16px;">
+                  Servidores de Nuvem em Alta Disponibilidade
+                </div>
+
+                <div style="border-top: 1px solid var(--border); padding-top: 14px; margin-top: 14px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94A3B8; margin-bottom: 8px;">
+                    <span>Dispositivos hoje:</span> <strong style="color: #FFF;">1.482 liberados</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94A3B8; margin-bottom: 8px;">
+                    <span>Latência API PIX:</span> <strong style="color: var(--green);">3.1 segundos</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94A3B8;">
+                    <span>Versão Knox:</span> <strong style="color: var(--cyan);">Knox 3.0 até 3.10+</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: rgba(0, 229, 255, 0.08); border-radius: 10px; padding: 10px; text-align: center; font-size: 12px; color: var(--cyan); font-weight: 700;">
+                ⚡ Sem mensalidade fixa • Pague por recarga
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloco 4 Colunas: Fast USB Handshake -->
+          <div class="bento-col-4">
+            <div class="bento-card">
+              <div style="font-size: 28px; margin-bottom: 8px;">⚡</div>
+              <h4 style="font-size: 16.5px; font-weight: 800; color: #FFF; margin-bottom: 6px;">USB Fast Handshake (0.4s)</h4>
+              <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5; margin: 0 0 12px 0;">
+                Detecção imediata em modo MTP, Download ou ADB. Sem necessidade de instalação manual de drivers complexos.
+              </p>
+              <span style="font-size: 11.5px; color: var(--green); font-weight: 700;">✓ Samsung, Xiaomi e Motorola</span>
+            </div>
+          </div>
+
+          <!-- Bloco 4 Colunas: Blindagem DPC -->
+          <div class="bento-col-4">
+            <div class="bento-card">
+              <div style="font-size: 28px; margin-bottom: 8px;">🛡️</div>
+              <h4 style="font-size: 16.5px; font-weight: 800; color: #FFF; margin-bottom: 6px;">Blindagem DPC Anti-HardReset</h4>
+              <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5; margin: 0 0 12px 0;">
+                O cliente não consegue burlar via Recovery Mode ou desinstalar a trava. Proteção máxima para suas operações.
+              </p>
+              <span style="font-size: 11.5px; color: var(--cyan); font-weight: 700;">✓ Inviolabilidade em Nível de Kernel</span>
+            </div>
+          </div>
+
+          <!-- Bloco 4 Colunas: PIX Integrado -->
+          <div class="bento-col-4">
+            <div class="bento-card">
+              <div style="font-size: 28px; margin-bottom: 8px;">💰</div>
+              <h4 style="font-size: 16.5px; font-weight: 800; color: #FFF; margin-bottom: 6px;">QR Code PIX na Tela do Celular</h4>
+              <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5; margin: 0 0 12px 0;">
+                O cliente aponta a câmera do banco dele na tela do celular bloqueado, paga e o aparelho desbloqueia na mesma hora.
+              </p>
+              <span style="font-size: 11.5px; color: #F59E0B; font-weight: 700;">✓ 100% Automático via Mercado Pago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- SEÇÃO RANKING DESTAQUES DO MÊS (COMPARTILHADA POR TODOS OS MODOS) -->
       <section id="secRanking" data-section="sec_ranking" class="ranking-showcase-section" style="max-width: 1100px; margin: 45px auto 25px; padding: 0 10px;">
         <div style="text-align: center; margin-bottom: 28px;">
@@ -1869,6 +2369,189 @@
                 <!-- Populated by renderRanking() -->
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO PACOTES & PREÇOS DE CRÉDITOS PIX (data-section="sec_pricing") -->
+      <section id="secPricing" data-section="sec_pricing" class="home-pricing-section" style="max-width: 1150px; margin: 45px auto 30px; padding: 0 10px;">
+        <div style="text-align: center; margin-bottom: 28px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.35); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: var(--green); margin-bottom: 12px; box-shadow: 0 0 20px rgba(0, 230, 118, 0.2);">
+            <span>💎 RECARGAS INSTANTÂNEAS PIX • LIBERAÇÃO EM 3s</span>
+          </div>
+          <h2 style="font-size: 32px; font-weight: 900; color: #FFF; margin-bottom: 10px; letter-spacing: -0.5px;">
+            Pacotes de Créditos para Bancada &amp; Assistência
+          </h2>
+          <p style="color: #94A3B8; font-size: 14px; max-width: 680px; margin: 0 auto; line-height: 1.5;">
+            Sem fidelidade ou mensalidade fixa. Adquira créditos via PIX automático com ativação imediata no software e bônus progressivo.
+          </p>
+        </div>
+
+        <div class="home-pricing-grid">
+          <!-- Card 1: Starter -->
+          <div class="home-pricing-card">
+            <div>
+              <span class="home-pkg-badge" style="background: rgba(148, 163, 184, 0.15); color: #94A3B8; border: 1px solid rgba(148, 163, 184, 0.3);">
+                BRONZE • INICIANTE
+              </span>
+              <div class="home-pkg-title">Starter Bancada</div>
+              <div style="font-size: 12.5px; color: var(--text-muted);">Ideal para testes rápidos e serviços esporádicos</div>
+              <div class="home-pkg-price">R$ 50<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+              <div class="home-pkg-unit">+ Bônus de 5 créditos cortesia</div>
+              <ul class="home-pkg-features">
+                <li><span class="icon">✓</span> Desbloqueios FRP &amp; MDM Imediatos</li>
+                <li><span class="icon">✓</span> Todas as marcas (Samsung, Xiaomi, Moto)</li>
+                <li><span class="icon">✓</span> Reconhecimento USB Automático (0.4s)</li>
+                <li><span class="icon">✓</span> Créditos sem prazo de validade</li>
+                <li><span class="icon">✓</span> Suporte oficial via WhatsApp</li>
+              </ul>
+            </div>
+            <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800;" onclick="handleHomepageRecharge(50)">
+              ⚡ Recarregar R$ 50 via PIX
+            </button>
+          </div>
+
+          <!-- Card 2: Profissional (Featured) -->
+          <div class="home-pricing-card featured" style="border-width: 2px;">
+            <div style="position: absolute; top: -13px; right: 20px; background: linear-gradient(135deg, #00E676 0%, #00B0FF 100%); color: #060911; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0, 230, 118, 0.4);">
+              🔥 MAIS POPULAR
+            </div>
+            <div>
+              <span class="home-pkg-badge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.35);">
+                PRATA • MELHOR VALOR
+              </span>
+              <div class="home-pkg-title">Profissional Pro</div>
+              <div style="font-size: 12.5px; color: var(--text-muted);">O mais escolhido por lojas e técnicos de bancada</div>
+              <div class="home-pkg-price" style="color: var(--green);">R$ 100<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+              <div class="home-pkg-unit" style="color: var(--green); font-weight: 700;">+ Bônus de 15 créditos cortesia</div>
+              <ul class="home-pkg-features">
+                <li><span class="icon">✓</span> <strong>Todos os benefícios do Starter</strong></li>
+                <li><span class="icon">✓</span> Blindagem Knox Guard DPC Inviolável</li>
+                <li><span class="icon">✓</span> Prioridade na fila de servidores em nuvem</li>
+                <li><span class="icon">✓</span> Elegível ao Ranking de Destaques do Mês</li>
+                <li><span class="icon">✓</span> Suporte VIP WhatsApp (19) 99478-3127</li>
+              </ul>
+            </div>
+            <button type="button" class="btn-green" style="width: 100%; padding: 13px; font-size: 14px; font-weight: 800; box-shadow: 0 0 25px rgba(0, 230, 118, 0.35);" onclick="handleHomepageRecharge(100)">
+              ⚡ Recarregar R$ 100 via PIX
+            </button>
+          </div>
+
+          <!-- Card 3: Master Shop -->
+          <div class="home-pricing-card">
+            <div>
+              <span class="home-pkg-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.35);">
+                OURO • ALTO VOLUME
+              </span>
+              <div class="home-pkg-title">Master Bancada</div>
+              <div style="font-size: 12.5px; color: var(--text-muted);">Para oficinas com grande fluxo de aparelhos</div>
+              <div class="home-pkg-price" style="color: var(--cyan);">R$ 250<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+              <div class="home-pkg-unit" style="color: var(--cyan); font-weight: 700;">+ Bônus de 50 créditos cortesia</div>
+              <ul class="home-pkg-features">
+                <li><span class="icon">✓</span> <strong>Todos os recursos do Profissional</strong></li>
+                <li><span class="icon">✓</span> Menor custo por aparelho desbloqueado</li>
+                <li><span class="icon">✓</span> Suporte para múltiplos PCs da mesma oficina</li>
+                <li><span class="icon">✓</span> Acesso antecipado a atualizações Android 16</li>
+                <li><span class="icon">✓</span> Atendimento técnico prioritário 24/7</li>
+              </ul>
+            </div>
+            <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800;" onclick="handleHomepageRecharge(250)">
+              ⚡ Recarregar R$ 250 via PIX
+            </button>
+          </div>
+
+          <!-- Card 4: Distribuidor / VIP Supremo -->
+          <div class="home-pricing-card">
+            <div>
+              <span class="home-pkg-badge" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.35);">
+                DIAMANTE • DISTRIBUIDOR
+              </span>
+              <div class="home-pkg-title">Rede / Distribuidor</div>
+              <div style="font-size: 12.5px; color: var(--text-muted);">Pacote master para redes de lojas e centros técnicos</div>
+              <div class="home-pkg-price" style="color: #F59E0B;">R$ 500<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+              <div class="home-pkg-unit" style="color: #F59E0B; font-weight: 700;">+ Bônus de 150 créditos cortesia</div>
+              <ul class="home-pkg-features">
+                <li><span class="icon">✓</span> <strong>Máxima margem de lucro por serviço</strong></li>
+                <li><span class="icon">✓</span> Linha direta de suporte com desenvolvedores</li>
+                <li><span class="icon">✓</span> Destaque garantido no Ranking do Mês</li>
+                <li><span class="icon">✓</span> Liberação de chaves e sub-operadores</li>
+                <li><span class="icon">✓</span> Assessoria completa de instalação e drivers</li>
+              </ul>
+            </div>
+            <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border-color: #F59E0B; color: #FFF;" onclick="handleHomepageRecharge(500)">
+              ⚡ Recarregar R$ 500 via PIX
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO VANTAGENS & BLINDAGEM TÉCNICA (data-section="sec_benefits") -->
+      <section id="secBenefits" data-section="sec_benefits" class="home-benefits-section" style="max-width: 1150px; margin: 45px auto 40px; padding: 0 10px;">
+        <div style="text-align: center; margin-bottom: 28px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.12); border: 1px solid rgba(0, 229, 255, 0.35); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: var(--cyan); margin-bottom: 12px;">
+            <span>⚙️ TECNOLOGIA DE PONTA PARA BANCADA</span>
+          </div>
+          <h2 style="font-size: 32px; font-weight: 900; color: #FFF; margin-bottom: 10px; letter-spacing: -0.5px;">
+            Por que o MDM &amp; FRP BRASIL é Líder de Mercado?
+          </h2>
+          <p style="color: #94A3B8; font-size: 14px; max-width: 680px; margin: 0 auto; line-height: 1.5;">
+            Arquitetura desenvolvida especificamente para assistências técnicas brasileiras, com máxima velocidade, segurança e estabilidade.
+          </p>
+        </div>
+
+        <div class="home-benefits-grid">
+          <!-- Benefício 1 -->
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap" style="color: var(--cyan);">🛡️</div>
+            <div class="benefit-title">DPC Knox Guard Inviolável</div>
+            <p class="benefit-desc">
+              Gerenciamento Device Owner (DPC) de última geração que bloqueia a restauração de fábrica via botões físicos (Recovery) e impede o bypass mesmo após atualizações de sistema OTA.
+            </p>
+          </div>
+
+          <!-- Benefício 2 -->
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap" style="color: var(--green);">⚡</div>
+            <div class="benefit-title">Handshake USB em 0.4s</div>
+            <p class="benefit-desc">
+              Algoritmo patenteado de detecção automática de portas COM e canais ADB. O técnico não perde tempo instalando drivers ou reiniciando o computador; conectou, o software já lê.
+            </p>
+          </div>
+
+          <!-- Benefício 3 -->
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap" style="color: #38BDF8;">🔓</div>
+            <div class="benefit-title">Bypass FRP Universal (Android 9 ao 16)</div>
+            <p class="benefit-desc">
+              Compatibilidade com todos os patches de segurança recentes para as principais marcas do mercado nacional (Samsung Galaxy, Xiaomi MIUI/HyperOS e Motorola).
+            </p>
+          </div>
+
+          <!-- Benefício 4 -->
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap" style="color: var(--green);">💰</div>
+            <div class="benefit-title">Recarga Instantânea PIX 24/7</div>
+            <p class="benefit-desc">
+              Integração direta com a API do Mercado Pago. Gere o QR Code ou Copia e Cola a qualquer hora do dia ou da noite e tenha os créditos liberados na conta em até 3 segundos.
+            </p>
+          </div>
+
+          <!-- Benefício 5 -->
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap" style="color: #F59E0B;">📱</div>
+            <div class="benefit-title">Suporte WhatsApp Oficial (19) 99478-3127</div>
+            <p class="benefit-desc">
+              Canal de suporte técnico humanizado com especialistas prontos para tirar dúvidas de bancada, auxiliar em modelos específicos e garantir que seu serviço seja concluído.
+            </p>
+          </div>
+
+          <!-- Benefício 6 -->
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap" style="color: #A855F7;">🔄</div>
+            <div class="benefit-title">Atualizações em Nuvem Sem Custo</div>
+            <p class="benefit-desc">
+              Novos modelos suportados, correções de segurança e novas funções são entregues automaticamente no executável via nuvem, sem cobrança de novas licenças ou taxas de anuidade.
+            </p>
           </div>
         </div>
       </section>
@@ -3442,11 +4125,11 @@
     }
 
     /* ========================================================
-       CONTROLE E SELEÇÃO DE LAYOUT DA PÁGINA INICIAL
+       CONTROLE E SELEÇÃO DE LAYOUT E ESTILO DE CARDS DA HOME
        ======================================================== */
     function setPortalLayout(layout, btn) {
       document.body.setAttribute('data-layout', layout);
-      document.querySelectorAll('.btn-layout-chip').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.btn-layout-chip[data-layout-target]').forEach(b => b.classList.remove('active'));
       if (btn) {
         btn.classList.add('active');
       } else {
@@ -3456,16 +4139,52 @@
       localStorage.setItem('mdm_preview_layout', layout);
     }
 
+    function setPortalCardStyle(style, btn) {
+      document.body.setAttribute('data-card-style', style);
+      document.querySelectorAll('.btn-card-style-chip').forEach(b => b.classList.remove('active'));
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        const matching = document.querySelector(`.btn-card-style-chip[data-card-target="${style}"]`);
+        if (matching) matching.classList.add('active');
+      }
+      localStorage.setItem('mdm_preview_card_style', style);
+    }
+
+    async function handleHomepageRecharge(amount) {
+      const creditsMap = { 50: 10, 100: 20, 250: 50, 500: 100 };
+      const credits = creditsMap[amount] || Math.round(amount / 5);
+      if (token) {
+        showView('Dashboard');
+        switchDashTab('profile', document.querySelector('.tab-btn'));
+        const inpt = document.getElementById("customCreditsInput");
+        if (inpt) inpt.value = credits;
+        generatePixOrder();
+      } else {
+        sessionStorage.setItem('pending_recharge_credits', credits);
+        openAuthOverlay('Register');
+        alert(`Para ativar o pacote de R$ ${amount},00 com bônus de créditos, acesse sua conta ou cadastre-se! O QR Code PIX será gerado imediatamente.`);
+      }
+    }
+
     async function applyHomepageSectionsAndLayout() {
       const urlLayout = urlParams.get("layout") || urlParams.get("preview_layout") || localStorage.getItem('mdm_preview_layout');
       if (urlLayout) {
         setPortalLayout(urlLayout);
       }
 
+      const urlCardStyle = urlParams.get("card_style") || urlParams.get("preview_cards") || localStorage.getItem('mdm_preview_card_style');
+      if (urlCardStyle) {
+        setPortalCardStyle(urlCardStyle);
+      }
+
       try {
         const res = await api('/api/v1/system/homepage-layout');
         if (res && res.layout && !urlLayout) {
           setPortalLayout(res.layout);
+        }
+        if (res && res.card_style && !urlCardStyle) {
+          setPortalCardStyle(res.card_style);
         }
 
         if (res && res.sections) {
@@ -3653,13 +4372,22 @@
 
   <!-- Live Layout Switcher Toolbar (Bottom Preview Pill) -->
   <div class="layout-switcher-pill" id="layoutSwitcherPill">
-    <span style="color: #94A3B8; font-weight: 700; margin-right: 4px;">📐 Disposição:</span>
-    <button type="button" class="btn-layout-chip active" data-layout-target="cinema_split" onclick="setPortalLayout('cinema_split', this)">1. Cinema Split</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="bento_grid" onclick="setPortalLayout('bento_grid', this)">2. Bento Grid</button>
+    <span style="color: #94A3B8; font-weight: 700; margin-right: 2px;">📐 Layout:</span>
+    <button type="button" class="btn-layout-chip active" data-layout-target="cinema_split" onclick="setPortalLayout('cinema_split', this)">1. Cinema</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="bento_grid" onclick="setPortalLayout('bento_grid', this)">2. Bento</button>
     <button type="button" class="btn-layout-chip" data-layout-target="hero_exe" onclick="setPortalLayout('hero_exe', this)">3. Hero EXE</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="saas_grid" onclick="setPortalLayout('saas_grid', this)">4. SaaS 3 Colunas</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="matrix_terminal" onclick="setPortalLayout('matrix_terminal', this)">5. Terminal Cyber</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="minimal_fast" onclick="setPortalLayout('minimal_fast', this)">6. Minimalista</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="saas_grid" onclick="setPortalLayout('saas_grid', this)">4. SaaS</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="matrix_terminal" onclick="setPortalLayout('matrix_terminal', this)">5. Terminal</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="minimal_fast" onclick="setPortalLayout('minimal_fast', this)">6. Minimal</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="cyber_cockpit" onclick="setPortalLayout('cyber_cockpit', this)">7. Cockpit 3D</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="bento_pro" onclick="setPortalLayout('bento_pro', this)">8. Bento Pro</button>
+
+    <span style="color: #475569; margin: 0 4px;">|</span>
+    <span style="color: #94A3B8; font-weight: 700; margin-right: 2px;">🎴 Cards:</span>
+    <button type="button" class="btn-layout-chip btn-card-style-chip active" data-card-target="glass_neon" onclick="setPortalCardStyle('glass_neon', this)">Glass Neon</button>
+    <button type="button" class="btn-layout-chip btn-card-style-chip" data-card-target="cyber_3d" onclick="setPortalCardStyle('cyber_3d', this)">Cyber 3D</button>
+    <button type="button" class="btn-layout-chip btn-card-style-chip" data-card-target="bento_minimal" onclick="setPortalCardStyle('bento_minimal', this)">Bento Clean</button>
+    <button type="button" class="btn-layout-chip btn-card-style-chip" data-card-target="matrix_mono" onclick="setPortalCardStyle('matrix_mono', this)">Matrix Mono</button>
   </div>
 
   <!-- Live Social Proof Ticker (Rodapé) -->

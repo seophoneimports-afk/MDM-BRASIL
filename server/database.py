@@ -235,6 +235,7 @@ def init_db():
             ('support_phone', '(19) 99478-3127'),
             ('welcome_bonus_credits', '5'),
             ('homepage_layout', 'cinema_split'),
+            ('homepage_card_style', 'glass_neon'),
             ('homepage_sections', '{"hero":true,"slider":true,"ranking":true,"download":true,"pricing":true,"benefits":true}')
         ]
         for k, v in default_settings:

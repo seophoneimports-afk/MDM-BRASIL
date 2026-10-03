@@ -478,10 +478,13 @@ def get_admin_homepage_layout(admin: dict = Depends(get_current_admin)):
         r1 = cursor.fetchone()
         cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_sections'")
         r2 = cursor.fetchone()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_card_style'")
+        r3 = cursor.fetchone()
         return {
             "success": True,
             "layout": r1["value"] if r1 and r1["value"] else "cinema_split",
-            "sections": r2["value"] if r2 and r2["value"] else ""
+            "sections": r2["value"] if r2 and r2["value"] else "",
+            "card_style": r3["value"] if r3 and r3["value"] else "glass_neon"
         }
 
 @router.post("/homepage-layout")
@@ -489,6 +492,7 @@ def set_admin_homepage_layout(data: dict, request: Request, admin: dict = Depend
     client_ip = request.client.host if request.client else "127.0.0.1"
     layout = str(data.get("layout", "cinema_split")).strip()
     sections = str(data.get("sections", "")).strip()
+    card_style = str(data.get("card_style", "")).strip()
     with db_transaction() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -506,6 +510,30 @@ def set_admin_homepage_layout(data: dict, request: Request, admin: dict = Depend
                 """,
                 (sections,)
             )
-    log_audit_event("ADMIN_CHANGE_HOMEPAGE_LAYOUT", admin_id=admin["id"], details={"layout": layout, "sections": sections}, ip_address=client_ip)
-    return {"success": True, "message": f"Modo de layout '{layout}' ativado com sucesso!", "layout": layout, "sections": sections}
+        if card_style:
+            cursor.execute(
+                """
+                INSERT INTO system_settings (key, value, updated_at) VALUES ('homepage_card_style', ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP
+                """,
+                (card_style,)
+            )
+    log_audit_event("ADMIN_CHANGE_HOMEPAGE_LAYOUT", admin_id=admin["id"], details={"layout": layout, "sections": sections, "card_style": card_style}, ip_address=client_ip)
+    return {"success": True, "message": f"Modo de layout '{layout}' ativado com sucesso!", "layout": layout, "sections": sections, "card_style": card_style}
+
+@router.post("/card-style")
+def set_admin_card_style(data: dict, request: Request, admin: dict = Depends(get_current_admin)):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    card_style = str(data.get("card_style", "glass_neon")).strip()
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO system_settings (key, value, updated_at) VALUES ('homepage_card_style', ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP
+            """,
+            (card_style,)
+        )
+    log_audit_event("ADMIN_CHANGE_CARD_STYLE", admin_id=admin["id"], details={"card_style": card_style}, ip_address=client_ip)
+    return {"success": True, "message": f"Estilo de cards '{card_style}' ativado com sucesso!", "card_style": card_style}
 
