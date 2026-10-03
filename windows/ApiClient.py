@@ -165,6 +165,44 @@ class ApiClient:
             return True, res
         return False, res
 
+    def save_custom_pix(self, pix_key: str, merchant_name: str, merchant_city: str, key_type: str = "AUTO") -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login na sua conta para salvar a chave PIX."}
+        payload = {
+            "pix_key": pix_key.strip(),
+            "key_type": key_type.strip().upper(),
+            "merchant_name": merchant_name.strip(),
+            "merchant_city": merchant_city.strip()
+        }
+        ok, res = self._request("POST", "/api/v1/client/pix-key", payload)
+        if ok and res.get("success"):
+            if self.user:
+                self.user["custom_pix_key"] = pix_key.strip()
+                self.user["custom_pix_name"] = merchant_name.strip()
+                self.user["custom_pix_city"] = merchant_city.strip()
+                self.user["custom_pix_type"] = key_type.strip().upper()
+                self.save_session()
+            return True, res
+        return False, res
+
+    def lock_device_remote(self, serial: str) -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para comandar bloqueio remoto."}
+        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/lock")
+
+    def unlock_device_remote(self, serial: str) -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para comandar liberação remota."}
+        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/unlock")
+
+    def get_client_devices(self) -> tuple[bool, list]:
+        if not self.token:
+            return False, []
+        ok, res = self._request("GET", "/api/v1/client/devices")
+        if ok and isinstance(res, list):
+            return True, res
+        return False, []
+
     def save_session(self):
         try:
             cipher = _get_encryption_cipher()

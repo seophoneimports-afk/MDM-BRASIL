@@ -2922,6 +2922,56 @@
               MDM &amp; FRP BRASIL • Plataforma Oficial de Gestão e Desbloqueios
             </div>
           </div>
+
+          <!-- Coluna 3: Minha Chave PIX Pessoal (Cobrança no Aparelho) -->
+          <div style="background: var(--card-inner); border: 1px solid var(--border-green); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <h4 style="font-size: 14.5px; font-weight: 700; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
+                  <span>💳</span> Minha Chave PIX Pessoal
+                </h4>
+                <span style="font-size: 10px; font-weight: 800; background: rgba(0, 230, 118, 0.12); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.35); padding: 3px 8px; border-radius: 12px;">
+                  RECEBIMENTO DIRETO
+                </span>
+              </div>
+              <p style="color: var(--text-muted); font-size: 12px; line-height: 1.45; margin-bottom: 14px;">
+                Configure sua própria chave PIX. Quando você bloquear um aparelho ou emitir cobrança pelo EXE ou Painel, o seu cliente final pagará diretamente na sua conta bancária.
+              </p>
+
+              <div id="accPixAlert" style="display:none; padding:10px; border-radius:8px; font-size:12px; margin-bottom:14px; text-align: left;"></div>
+
+              <form onsubmit="handleSaveCustomPix(event)">
+                <div class="form-group" style="text-align: left;">
+                  <label>Tipo de Chave PIX</label>
+                  <select id="editCustomPixType" class="form-control" style="cursor: pointer;">
+                    <option value="TELEFONE">Telefone / Celular</option>
+                    <option value="CPF">CPF</option>
+                    <option value="CNPJ">CNPJ</option>
+                    <option value="EMAIL">E-mail</option>
+                    <option value="ALEATORIA">Chave Aleatória (EVP)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Chave PIX (Telefone, CPF, CNPJ, E-mail ou EVP)</label>
+                  <input type="text" id="editCustomPixKey" class="form-control" required placeholder="Ex: 19999999999 ou seu@email.com">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                  <label>Nome do Titular / Razão Social</label>
+                  <input type="text" id="editCustomPixName" class="form-control" required placeholder="Ex: Assistência Técnica Central">
+                </div>
+                <div class="form-group" style="text-align: left; margin-bottom: 16px;">
+                  <label>Cidade do Titular</label>
+                  <input type="text" id="editCustomPixCity" class="form-control" required placeholder="Ex: Americana ou São Paulo">
+                </div>
+                <button type="submit" class="btn-green" id="btnSaveCustomPix" style="width: 100%;">
+                  💾 Salvar Minha Chave PIX
+                </button>
+              </form>
+            </div>
+            <div style="margin-top: 14px; font-size: 11px; color: var(--text-muted); text-align: center;">
+              ⚡ Sincronizado automaticamente com o software executável MDM_FRP_BRASIL.exe
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2969,22 +3019,37 @@
         </div>
       </div>
 
-      <!-- Tab: Aparelhos -->
+      <!-- Tab: Aparelhos & Gestão Remota Online -->
       <div id="tabDevices" class="panel-card" style="display: none;">
-        <h3>📱 Aparelhos Vinculados</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <div>
+            <h3 style="margin: 0; color: #FFF; display: flex; align-items: center; gap: 8px;">
+              <span>📱</span> Aparelhos Vinculados &amp; Gestão Online (Sem Necessidade de Cabo USB)
+            </h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; margin: 4px 0 0 0;">
+              Bloqueie novamente ou libere qualquer dispositivo remotamente pela nuvem. O APK instalado no aparelho executa os comandos instantaneamente via Wi-Fi ou dados móveis.
+            </p>
+          </div>
+          <button class="btn-primary" style="padding: 8px 14px; font-size: 11.5px;" onclick="loadDevices()">
+            🔄 Atualizar Aparelhos
+          </button>
+        </div>
+
+        <div id="deviceActionAlert" style="display:none; padding:10px 14px; border-radius:8px; font-size:12.5px; margin-bottom:14px;"></div>
+
         <div class="table-responsive">
           <table>
             <thead>
               <tr>
-                <th>Serial / ADB ID</th>
-                <th>Modelo</th>
-                <th>Fabricante</th>
-                <th>Primeiro Visto</th>
+                <th>Serial / Dispositivo</th>
+                <th>Status Nuvem</th>
+                <th>Telemetria &amp; Localização</th>
                 <th>Última Conexão</th>
+                <th style="text-align: right;">Comandos Remotos (Online)</th>
               </tr>
             </thead>
             <tbody id="tblDevicesBody">
-              <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum aparelho conectado ainda.</td></tr>
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">Carregando dispositivos...</td></tr>
             </tbody>
           </table>
         </div>
@@ -3675,6 +3740,66 @@
       }
     }
 
+    async function loadCustomPixConfig() {
+      try {
+        const res = await api('/api/v1/client/pix-key');
+        if (res) {
+          const elKey = document.getElementById("editCustomPixKey");
+          const elType = document.getElementById("editCustomPixType");
+          const elName = document.getElementById("editCustomPixName");
+          const elCity = document.getElementById("editCustomPixCity");
+          if (elKey) elKey.value = res.pix_key || '';
+          if (elType && res.key_type) elType.value = res.key_type;
+          if (elName) elName.value = res.merchant_name || '';
+          if (elCity) elCity.value = res.merchant_city || '';
+        }
+      } catch (e) {
+        console.warn("loadCustomPixConfig error:", e);
+      }
+    }
+
+    async function handleSaveCustomPix(e) {
+      e.preventDefault();
+      const alertEl = document.getElementById("accPixAlert");
+      if (alertEl) alertEl.style.display = "none";
+
+      const pix_key = document.getElementById("editCustomPixKey").value.trim();
+      const key_type = document.getElementById("editCustomPixType").value;
+      const merchant_name = document.getElementById("editCustomPixName").value.trim();
+      const merchant_city = document.getElementById("editCustomPixCity").value.trim();
+
+      const btn = document.getElementById("btnSaveCustomPix");
+      btn.disabled = true;
+      btn.textContent = "Salvando chave PIX...";
+
+      try {
+        const res = await api('/api/v1/client/pix-key', 'POST', {
+          pix_key,
+          key_type,
+          merchant_name,
+          merchant_city
+        });
+        if (alertEl) {
+          alertEl.style.background = "rgba(0, 230, 118, 0.15)";
+          alertEl.style.border = "1px solid var(--green)";
+          alertEl.style.color = "var(--green)";
+          alertEl.textContent = "✅ " + (res.message || "Chave PIX pessoal salva com sucesso!");
+          alertEl.style.display = "block";
+        }
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+          alertEl.style.border = "1px solid var(--danger)";
+          alertEl.style.color = "var(--danger)";
+          alertEl.textContent = "Erro ao salvar chave PIX: " + err.message;
+          alertEl.style.display = "block";
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "💾 Salvar Minha Chave PIX";
+      }
+    }
+
     /* ========================================================
        RANKING MENSAL DE RECARGAS DE CRÉDITOS
        ======================================================== */
@@ -3950,6 +4075,7 @@
         try { await loadHistory(); } catch(e) { console.error('loadHistory', e); }
         try { await loadOrders(); } catch(e) { console.error('loadOrders', e); }
         try { await loadDevices(); } catch(e) { console.error('loadDevices', e); }
+        try { await loadCustomPixConfig(); } catch(e) { console.error('loadCustomPixConfig', e); }
       } catch (err) {
         console.error("Erro ao autenticar dashboard:", err);
         logout();
@@ -4085,24 +4211,131 @@
     }
 
     async function loadDevices() {
-      const devices = await api('/api/v1/client/devices');
       const tbody = document.getElementById("tblDevicesBody");
-      tbody.innerHTML = '';
-      if (!devices || devices.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Nenhum aparelho conectado pelo EXE ainda.</td></tr>';
+      if (!tbody) return;
+      try {
+        const devices = await api('/api/v1/client/devices');
+        tbody.innerHTML = '';
+        if (!devices || devices.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding: 24px;">Nenhum aparelho conectado ainda.<br><span style="font-size:12px;">Conecte um dispositivo Android via USB ou vincule-o ao sistema.</span></td></tr>';
+          return;
+        }
+        devices.forEach(d => {
+          const isLocked = !d.lock_status || d.lock_status.toUpperCase() === 'LOCKED' || d.lock_status.toUpperCase() === 'PENDING';
+          const statusBadge = isLocked
+            ? `<span style="background: rgba(239, 68, 68, 0.18); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.45); padding: 4px 10px; border-radius: 14px; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">🔒 BLOQUEADO (KIOSK NUVEM)</span>`
+            : `<span style="background: rgba(0, 230, 118, 0.18); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.45); padding: 4px 10px; border-radius: 14px; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">🟢 LIBERADO (ONLINE)</span>`;
+
+          let telemetry = [];
+          if (d.battery_level !== null && d.battery_level !== undefined && d.battery_level !== '') {
+            telemetry.push(`🔋 ${d.battery_level}%`);
+          }
+          if (d.city) {
+            telemetry.push(`📍 ${d.city}${d.state ? (' - ' + d.state) : ''}`);
+          } else if (d.latitude && d.longitude) {
+            telemetry.push(`📍 ${Number(d.latitude).toFixed(3)}, ${Number(d.longitude).toFixed(3)}`);
+          }
+          if (d.network_status) {
+            telemetry.push(`📶 ${d.network_status}`);
+          }
+          const teleHtml = telemetry.length > 0 
+            ? `<div style="font-size: 11.5px; color: #CBD5E1; font-weight: 600;">${telemetry.join(' &bull; ')}</div>`
+            : `<span style="font-size: 11px; color: var(--text-muted);">Sincronização em espera</span>`;
+
+          const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
+          const lastSeenFormatted = lastSeenText ? new Date(lastSeenText).toLocaleString('pt-BR') : '—';
+
+          const actionButtons = isLocked
+            ? `<button class="btn-green" style="padding: 6px 14px; font-size: 11px; font-weight: 800; border-radius: 6px;" onclick="remoteUnlockDevice('${escapeJs(d.serial)}')">🔓 Desbloquear (Online)</button>`
+            : `<button class="btn-primary" style="padding: 6px 14px; font-size: 11px; font-weight: 800; background: #DC2626; border-color: #EF4444; border-radius: 6px;" onclick="remoteLockDevice('${escapeJs(d.serial)}')">🔒 Bloquear Novamente (Remoto)</button>`;
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>
+              <div class="mono" style="color:var(--green); font-weight:700; font-size: 13px;">${escapeHtml(d.serial)}</div>
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">${escapeHtml(d.model || 'Android')} (${escapeHtml(d.manufacturer || 'Dispositivo')})</div>
+            </td>
+            <td>${statusBadge}</td>
+            <td>${teleHtml}</td>
+            <td style="font-size: 12px; color: #94A3B8;">${lastSeenFormatted}</td>
+            <td style="text-align: right;">
+              ${actionButtons}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--danger); padding:24px;">Falha ao carregar lista de aparelhos: ' + err.message + '</td></tr>';
+      }
+    }
+
+    function escapeJs(s) {
+      if (!s) return '';
+      return String(s).replace(/'/g, "\\'");
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    async function remoteLockDevice(serial) {
+      if (!confirm(`Deseja BLOQUEAR REMOTAMENTE o aparelho ${serial}?\n\nO APK no smartphone exibirá a tela de bloqueio Kiosk na hora via internet (Wi-Fi/4G), sem precisar de cabo USB conectado.`)) {
         return;
       }
-      devices.forEach(d => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="mono" style="color:var(--green); font-weight:600;">${d.serial}</td>
-          <td>${d.model || 'Desconhecido'}</td>
-          <td>${d.manufacturer || 'Android'}</td>
-          <td>${new Date(d.first_seen).toLocaleString('pt-BR')}</td>
-          <td>${new Date(d.last_seen).toLocaleString('pt-BR')}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+      const alertEl = document.getElementById("deviceActionAlert");
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "rgba(56, 189, 248, 0.15)";
+        alertEl.style.border = "1px solid var(--cyan)";
+        alertEl.style.color = "var(--cyan)";
+        alertEl.textContent = `Enviando comando de bloqueio para ${serial}...`;
+      }
+      try {
+        const res = await api('/api/v1/client/devices/' + encodeURIComponent(serial) + '/lock', 'POST');
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+          alertEl.style.border = "1px solid var(--danger)";
+          alertEl.style.color = "var(--danger)";
+          alertEl.textContent = "🔒 " + (res.message || "Aparelho bloqueado remotamente com sucesso via Nuvem!");
+        }
+        await loadDevices();
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.2)";
+          alertEl.style.border = "1px solid var(--danger)";
+          alertEl.style.color = "#FFF";
+          alertEl.textContent = "Erro ao enviar bloqueio: " + err.message;
+        }
+      }
+    }
+
+    async function remoteUnlockDevice(serial) {
+      const alertEl = document.getElementById("deviceActionAlert");
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "rgba(56, 189, 248, 0.15)";
+        alertEl.style.border = "1px solid var(--cyan)";
+        alertEl.style.color = "var(--cyan)";
+        alertEl.textContent = `Enviando comando de liberação para ${serial}...`;
+      }
+      try {
+        const res = await api('/api/v1/client/devices/' + encodeURIComponent(serial) + '/unlock', 'POST');
+        if (alertEl) {
+          alertEl.style.background = "rgba(0, 230, 118, 0.15)";
+          alertEl.style.border = "1px solid var(--green)";
+          alertEl.style.color = "var(--green)";
+          alertEl.textContent = "✅ " + (res.message || "Aparelho liberado remotamente com sucesso via Nuvem!");
+        }
+        await loadDevices();
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.2)";
+          alertEl.style.border = "1px solid var(--danger)";
+          alertEl.style.color = "#FFF";
+          alertEl.textContent = "Erro ao liberar aparelho: " + err.message;
+        }
+      }
     }
 
     function switchDashTab(tab, btn) {

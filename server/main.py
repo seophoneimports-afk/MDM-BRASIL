@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from server.database import init_db
-from server.routes import auth_routes, client_routes, admin_routes, exe_routes, webhook_routes
+from server.routes import auth_routes, client_routes, admin_routes, exe_routes, webhook_routes, device_routes
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
@@ -59,8 +59,8 @@ async def security_intrusion_middleware(request: Request, call_next):
     query = request.url.query
     client_ip = request.client.host if request.client else "127.0.0.1"
 
-    # Fast bypass for static files
-    if path.startswith("/static") or path == "/favicon.ico":
+    # Fast bypass for static files and mobile device APK sync
+    if path.startswith("/static") or path == "/favicon.ico" or path.startswith("/api/device") or path.startswith("/api/v1/device"):
         return await call_next(request)
 
     # Direct preview route for admin/security trap demonstration
@@ -113,6 +113,7 @@ app.include_router(client_routes.router)
 app.include_router(admin_routes.router)
 app.include_router(exe_routes.router)
 app.include_router(webhook_routes.router)
+app.include_router(device_routes.router)
 
 @app.get("/api/v1/ranking/monthly", tags=["Public Ranking"])
 def get_public_monthly_ranking():

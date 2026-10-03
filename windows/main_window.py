@@ -350,33 +350,48 @@ class DeviceServiceManagerApp:
 
         f_pix = ctk.CTkFrame(cfg_grid, fg_color="transparent")
         f_pix.grid(row=1, column=1, sticky="ew", padx=(4, 0), pady=2)
-        ctk.CTkLabel(f_pix, text="🔒 Chave Pix Oficial (Protegida pela Nuvem):", font=ctk.CTkFont(size=10, weight="bold"), text_color=self.CLR_GREEN).pack(anchor="w")
-        self.ent_pix = ctk.CTkEntry(f_pix, font=ctk.CTkFont(size=11), fg_color="#0A1828", border_color=self.CLR_BORDER_GREEN, text_color=self.CLR_GREEN, corner_radius=6, height=28)
+        ctk.CTkLabel(f_pix, text="💳 Sua Chave Pix (Personalize Livremente):", font=ctk.CTkFont(size=10, weight="bold"), text_color=self.CLR_GREEN).pack(anchor="w")
+        self.ent_pix = ctk.CTkEntry(f_pix, font=ctk.CTkFont(size=11), fg_color=self.CLR_CARD_INNER, border_color=self.CLR_BORDER_GREEN, text_color=self.CLR_GREEN, corner_radius=6, height=28)
         self.ent_pix.insert(0, self.saved_config.get("pix", "19994783127"))
-        self.ent_pix.configure(state="readonly")
         self.ent_pix.pack(fill="x")
 
         # Row 3: Titular & Cidade
         f_mer = ctk.CTkFrame(cfg_grid, fg_color="transparent")
         f_mer.grid(row=2, column=0, sticky="ew", padx=(0, 4), pady=2)
-        ctk.CTkLabel(f_mer, text="🔒 Titular Oficial:", font=ctk.CTkFont(size=10), text_color=self.CLR_TEXT_MUTED).pack(anchor="w")
-        self.ent_merchant = ctk.CTkEntry(f_mer, font=ctk.CTkFont(size=10), fg_color="#0A1828", border_color=self.CLR_BORDER, corner_radius=6, height=26)
+        ctk.CTkLabel(f_mer, text="👤 Titular / Nome da Assistência:", font=ctk.CTkFont(size=10), text_color=self.CLR_TEXT_MUTED).pack(anchor="w")
+        self.ent_merchant = ctk.CTkEntry(f_mer, font=ctk.CTkFont(size=10), fg_color=self.CLR_CARD_INNER, border_color=self.CLR_BORDER, corner_radius=6, height=26)
         self.ent_merchant.insert(0, self.saved_config.get("merchant", "MDM FRP BRASIL"))
-        self.ent_merchant.configure(state="readonly")
         self.ent_merchant.pack(fill="x")
 
         f_cid = ctk.CTkFrame(cfg_grid, fg_color="transparent")
         f_cid.grid(row=2, column=1, sticky="ew", padx=(4, 0), pady=2)
-        ctk.CTkLabel(f_cid, text="🔒 Cidade:", font=ctk.CTkFont(size=10), text_color=self.CLR_TEXT_MUTED).pack(anchor="w")
-        self.ent_city = ctk.CTkEntry(f_cid, font=ctk.CTkFont(size=10), fg_color="#0A1828", border_color=self.CLR_BORDER, corner_radius=6, height=26)
+        ctk.CTkLabel(f_cid, text="🏙️ Cidade do Titular:", font=ctk.CTkFont(size=10), text_color=self.CLR_TEXT_MUTED).pack(anchor="w")
+        self.ent_city = ctk.CTkEntry(f_cid, font=ctk.CTkFont(size=10), fg_color=self.CLR_CARD_INNER, border_color=self.CLR_BORDER, corner_radius=6, height=26)
         self.ent_city.insert(0, self.saved_config.get("city", "AMERICANA"))
-        self.ent_city.configure(state="readonly")
         self.ent_city.pack(fill="x")
 
+        btn_pix_row = ctk.CTkFrame(card_cfg, fg_color="transparent")
+        btn_pix_row.pack(fill="x", padx=12, pady=(6, 8))
+        btn_pix_row.columnconfigure(0, weight=1)
+        btn_pix_row.columnconfigure(1, weight=1)
+
+        btn_save_my_pix = ctk.CTkButton(
+            btn_pix_row,
+            text="💾 SALVAR MINHA CHAVE PIX",
+            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            fg_color="#059669",
+            hover_color=self.CLR_GREEN,
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=30,
+            command=self.action_save_custom_pix
+        )
+        btn_save_my_pix.grid(row=0, column=0, sticky="ew", padx=(0, 3))
+
         btn_gen_pix = ctk.CTkButton(
-            card_cfg,
-            text="⚡ GERAR QR CODE PIX VINCULADO AO VALOR",
-            font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            btn_pix_row,
+            text="⚡ GERAR QR CODE PIX",
+            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
             fg_color="#0284C7",
             hover_color=self.CLR_CYAN,
             text_color="#FFFFFF",
@@ -384,7 +399,7 @@ class DeviceServiceManagerApp:
             height=30,
             command=self.action_generate_pix
         )
-        btn_gen_pix.pack(fill="x", padx=12, pady=(6, 8))
+        btn_gen_pix.grid(row=0, column=1, sticky="ew", padx=(3, 0))
 
         # --- RIGHT CARD 1: PRÉVIA DO QR CODE PIX (COMPACT) ---
         card_qr = ctk.CTkFrame(right_col, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
@@ -493,7 +508,44 @@ class DeviceServiceManagerApp:
             height=34,
             command=self.action_confirm_operation
         )
-        btn_pay_release.pack(fill="x", padx=12, pady=(0, 8))
+        btn_pay_release.pack(fill="x", padx=12, pady=(0, 6))
+
+        # Seção de Comandos Remotos em Nuvem (Sem USB / Online)
+        f_remote = ctk.CTkFrame(card_actions, fg_color="#0A1828", corner_radius=8, border_width=1, border_color="#1E3A8A")
+        f_remote.pack(fill="x", padx=12, pady=(0, 8))
+
+        ctk.CTkLabel(f_remote, text="🌐 COMANDOS REMOTOS NUVEM (SEM CABO USB / VIA 4G OU WI-FI)", font=ctk.CTkFont(size=10, weight="bold"), text_color=self.CLR_CYAN).pack(anchor="w", padx=10, pady=(6, 4))
+
+        f_rem_btns = ctk.CTkFrame(f_remote, fg_color="transparent")
+        f_rem_btns.pack(fill="x", padx=10, pady=(0, 6))
+        f_rem_btns.columnconfigure(0, weight=1)
+        f_rem_btns.columnconfigure(1, weight=1)
+
+        btn_rem_lock = ctk.CTkButton(
+            f_rem_btns,
+            text="🔒 BLOQUEAR REMOTO (NUVEM)",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#991B1B",
+            hover_color="#DC2626",
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=28,
+            command=self.action_remote_lock_cloud
+        )
+        btn_rem_lock.grid(row=0, column=0, sticky="ew", padx=(0, 3))
+
+        btn_rem_unlock = ctk.CTkButton(
+            f_rem_btns,
+            text="🔓 LIBERAR REMOTO (NUVEM)",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#047857",
+            hover_color="#059669",
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=28,
+            command=self.action_remote_unlock_cloud
+        )
+        btn_rem_unlock.grid(row=0, column=1, sticky="ew", padx=(3, 0))
 
         # --- RIGHT CARD 3: TERMINAL DE OPERAÇÕES EM TEMPO REAL ---
         card_term = ctk.CTkFrame(right_col, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
@@ -1191,33 +1243,177 @@ class DeviceServiceManagerApp:
 
     def sync_official_pix(self):
         def work():
-            ok, res = self.api_client.fetch_official_pix_config()
-            if ok and res.get("pix_key"):
-                key = res.get("pix_key")
-                mer = res.get("merchant_name", "MDM FRP BRASIL")
-                city = res.get("merchant_city", "AMERICANA")
+            # 1. Verifica se a sessão do usuário possui chave PIX personalizada
+            user_pix = None
+            if self.api_client.user:
+                cust_key = self.api_client.user.get("custom_pix_key")
+                if cust_key:
+                    user_pix = {
+                        "pix_key": cust_key,
+                        "merchant_name": self.api_client.user.get("custom_pix_name") or "MDM FRP BRASIL",
+                        "merchant_city": self.api_client.user.get("custom_pix_city") or "AMERICANA"
+                    }
+            if not user_pix:
+                ok, res = self.api_client.fetch_official_pix_config()
+                if ok and res.get("pix_key"):
+                    user_pix = res
+
+            if user_pix and user_pix.get("pix_key"):
+                key = user_pix.get("pix_key")
+                mer = user_pix.get("merchant_name", "MDM FRP BRASIL")
+                city = user_pix.get("merchant_city", "AMERICANA")
                 def apply_ui():
                     try:
                         self.ent_pix.configure(state="normal")
                         self.ent_pix.delete(0, tk.END)
                         self.ent_pix.insert(0, key)
-                        self.ent_pix.configure(state="readonly")
 
                         self.ent_merchant.configure(state="normal")
                         self.ent_merchant.delete(0, tk.END)
                         self.ent_merchant.insert(0, mer)
-                        self.ent_merchant.configure(state="readonly")
 
                         self.ent_city.configure(state="normal")
                         self.ent_city.delete(0, tk.END)
                         self.ent_city.insert(0, city)
-                        self.ent_city.configure(state="readonly")
 
                         self.action_generate_pix()
-                        self.log(f"[SEGURANÇA] ✓ Chave Pix Oficial validada e protegida: {key} ({mer})")
+                        self.log(f"[PIX TÉCNICO] ✓ Chave Pix configurada: {key} ({mer} / {city})")
                     except Exception:
                         pass
                 self.root.after(0, apply_ui)
+        threading.Thread(target=work, daemon=True).start()
+
+    def action_save_custom_pix(self):
+        key = self.ent_pix.get().strip()
+        mer = self.ent_merchant.get().strip() or "MDM FRP BRASIL"
+        city = self.ent_city.get().strip() or "AMERICANA"
+
+        if not key:
+            messagebox.showwarning("Aviso", "Digite a sua chave PIX antes de salvar.")
+            return
+
+        self.saved_config["pix"] = key
+        self.saved_config["merchant"] = mer
+        self.saved_config["city"] = city
+        self._save_current_config()
+
+        self.action_generate_pix()
+        self.log(f"[CONFIG] Chave PIX salva localmente no PC: {key}")
+
+        if self.api_client.is_logged_in():
+            def work():
+                ok, res = self.api_client.save_custom_pix(key, mer, city)
+                def done():
+                    if ok:
+                        self.log(f"[NUVEM] ✓ Chave PIX pessoal sincronizada e salva na sua conta na Nuvem!")
+                        messagebox.showinfo(
+                            "Chave PIX Salva na Nuvem",
+                            f"Sua chave PIX foi salva com sucesso no seu perfil e no aplicativo!\n\n"
+                            f"Chave: {key}\n"
+                            f"Titular: {mer}\n"
+                            f"Cidade: {city}\n\n"
+                            f"Seus clientes pagarão diretamente para você."
+                        )
+                    else:
+                        self.log(f"[AVISO] Chave salva no PC, pendente de sincronização: {res.get('error', '')}")
+                self.root.after(0, done)
+            threading.Thread(target=work, daemon=True).start()
+        else:
+            messagebox.showinfo(
+                "Chave Salva Localmente",
+                f"Chave PIX salva no seu computador!\n\nFaça login para sincronizá-la permanentemente com sua conta na nuvem."
+            )
+
+    def action_remote_lock_cloud(self):
+        serial = self.selected_device_serial
+        if not serial:
+            serial = simpledialog.askstring("Bloqueio Remoto Online", "Digite o Serial ou ID do aparelho Android a bloquear via nuvem:")
+            if not serial or not serial.strip():
+                return
+            serial = serial.strip()
+
+        if not self.api_client.is_logged_in():
+            messagebox.showwarning("Autenticação Necessária", "Faça login na sua conta para enviar comandos remotos online.")
+            return
+
+        res = messagebox.askyesno(
+            "Confirmar Bloqueio Remoto Online",
+            f"Deseja enviar comando de BLOQUEIO REMOTO para o aparelho:\n\n"
+            f"Serial / ID: {serial}\n\n"
+            f"O aparelho será bloqueado via internet (Wi-Fi ou dados móveis 4G) sem precisar de cabo USB conectado.\n\n"
+            f"Deseja prosseguir?"
+        )
+        if not res:
+            return
+
+        self.log(f"[COMANDO REMOTO] Enviando ordem de BLOQUEIO ONLINE para {serial} via nuvem...")
+        def work():
+            ok, resp = self.api_client.lock_device_remote(serial)
+            def done():
+                if ok:
+                    self.log(f"[NUVEM] 🔒 SUCESSO: Aparelho {serial} BLOQUEADO REMOTAMENTE!")
+                    try:
+                        self.adb.backend_store.set_device_pending(
+                            serial, "Android Device",
+                            self.ent_client.get().strip() or "Cliente",
+                            self.ent_service.get().strip() or "Bloqueio Remoto",
+                            self.ent_value.get().strip() or "150.00",
+                            self.ent_pix.get().strip()
+                        )
+                    except Exception:
+                        pass
+                    messagebox.showinfo(
+                        "Bloqueio Remoto Enviado",
+                        f"Comando de bloqueio remoto enviado com sucesso para {serial}!\n\n"
+                        f"O APK no smartphone aplicará o bloqueio Kiosk imediatamente via Wi-Fi/4G."
+                    )
+                else:
+                    self.log(f"[ERRO REMOTO] Falha ao enviar bloqueio remoto: {resp.get('error', '')}")
+                    messagebox.showerror("Erro", f"Falha ao enviar bloqueio remoto: {resp.get('error', '')}")
+            self.root.after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def action_remote_unlock_cloud(self):
+        serial = self.selected_device_serial
+        if not serial:
+            serial = simpledialog.askstring("Liberação Remota Online", "Digite o Serial ou ID do aparelho Android a liberar via nuvem:")
+            if not serial or not serial.strip():
+                return
+            serial = serial.strip()
+
+        if not self.api_client.is_logged_in():
+            messagebox.showwarning("Autenticação Necessária", "Faça login na sua conta para enviar comandos remotos online.")
+            return
+
+        res = messagebox.askyesno(
+            "Confirmar Liberação Remota Online",
+            f"Deseja enviar comando de LIBERAÇÃO / DESBLOQUEIO para o aparelho:\n\n"
+            f"Serial / ID: {serial}\n\n"
+            f"O aparelho será desbloqueado via internet (Wi-Fi ou 4G) sem precisar de cabo USB conectado.\n\n"
+            f"Deseja prosseguir?"
+        )
+        if not res:
+            return
+
+        self.log(f"[COMANDO REMOTO] Enviando ordem de LIBERAÇÃO ONLINE para {serial} via nuvem...")
+        def work():
+            ok, resp = self.api_client.unlock_device_remote(serial)
+            def done():
+                if ok:
+                    self.log(f"[NUVEM] 🔓 SUCESSO: Aparelho {serial} LIBERADO REMOTAMENTE!")
+                    try:
+                        self.adb.backend_store.authorize_device(serial, authorized_by="CLOUD_ONLINE")
+                    except Exception:
+                        pass
+                    messagebox.showinfo(
+                        "Liberação Remota Enviada",
+                        f"Comando de liberação enviado com sucesso para {serial}!\n\n"
+                        f"O aparelho foi desbloqueado com sucesso via internet."
+                    )
+                else:
+                    self.log(f"[ERRO REMOTO] Falha ao enviar liberação: {resp.get('error', '')}")
+                    messagebox.showerror("Erro", f"Falha ao enviar liberação: {resp.get('error', '')}")
+            self.root.after(0, done)
         threading.Thread(target=work, daemon=True).start()
 
     def do_gate_login(self):

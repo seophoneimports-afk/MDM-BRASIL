@@ -250,6 +250,42 @@ def init_db():
             cursor.execute("ALTER TABLE users ADD COLUMN auth_provider TEXT DEFAULT 'local';")
         if "avatar_url" not in cols:
             cursor.execute("ALTER TABLE users ADD COLUMN avatar_url TEXT;")
+        if "custom_pix_key" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN custom_pix_key TEXT;")
+        if "custom_pix_type" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN custom_pix_type TEXT DEFAULT 'AUTO';")
+        if "custom_pix_name" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN custom_pix_name TEXT;")
+        if "custom_pix_city" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN custom_pix_city TEXT;")
+
+        # Check and migrate columns for devices
+        cursor.execute("PRAGMA table_info(devices)")
+        dev_cols = [c["name"] for c in cursor.fetchall()]
+        if "lock_status" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN lock_status TEXT DEFAULT 'LOCKED';")
+        if "operation_id" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN operation_id TEXT;")
+        if "latitude" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN latitude REAL;")
+        if "longitude" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN longitude REAL;")
+        if "accuracy" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN accuracy REAL;")
+        if "battery_level" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN battery_level INTEGER;")
+        if "network_status" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN network_status TEXT;")
+        if "street" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN street TEXT;")
+        if "neighborhood" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN neighborhood TEXT;")
+        if "city" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN city TEXT;")
+        if "state" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN state TEXT;")
+        if "last_sync" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN last_sync TIMESTAMP;")
 
         # Create indexes
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);")

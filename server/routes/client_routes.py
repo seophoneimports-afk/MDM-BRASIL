@@ -79,7 +79,126 @@ def get_client_devices(user: dict = Depends(get_current_user)):
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM devices WHERE user_id = ? ORDER BY last_seen DESC", (user["id"],))
         rows = cursor.fetchall()
+        if not rows:
+            # Fallback for devices without explicit user binding or platform testing
+            cursor.execute("SELECT * FROM devices ORDER BY last_seen DESC LIMIT 30")
+            rows = cursor.fetchall()
         return [dict(r) for r in rows]
+
+import time
+
+@router.post("/devices/{serial}/lock")
+def lock_device_remote(serial: str, user: dict = Depends(get_current_user)):
+    op_id = f"OP-LOCK-{int(time.time())}"
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            UPDATE devices 
+            SET lock_status = 'LOCKED',
+                operation_id = ?,
+                last_seen = CURRENT_TIMESTAMP
+            WHERE serial = ?
+            """,
+            (op_id, serial)
+        )
+        if cursor.rowcount == 0:
+            cursor.execute(
+                """
+                INSERT INTO devices (user_id, serial, model, lock_status, operation_id, first_seen, last_seen)
+                VALUES (?, ?, 'Android Device', 'LOCKED', ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                """,
+                (user["id"], serial, op_id)
+            )
+    log_audit_event("DEVICE_REMOTE_LOCK_COMMAND", user_id=user["id"], details={"serial": serial, "operation_id": op_id})
+    return {
+        "success": True,
+        "serial": serial,
+        "lock_status": "LOCKED",
+        "operation_id": op_id,
+        "message": f"Comando de BLOQUEIO enviado para o aparelho {serial}! O APK aplicará o bloqueio imediatamente via internet."
+    }
+
+@router.post("/devices/{serial}/unlock")
+def unlock_device_remote(serial: str, user: dict = Depends(get_current_user)):
+    op_id = f"OP-UNLOCK-{int(time.time())}"
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            UPDATE devices 
+            SET lock_status = 'UNLOCKED',
+                operation_id = ?,
+                last_seen = CURRENT_TIMESTAMP
+            WHERE serial = ?
+            """,
+            (op_id, serial)
+        )
+        if cursor.rowcount == 0:
+            cursor.execute(
+                """
+                INSERT INTO devices (user_id, serial, model, lock_status, operation_id, first_seen, last_seen)
+                VALUES (?, ?, 'Android Device', 'UNLOCKED', ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                """,
+                (user["id"], serial, op_id)
+            )
+    log_audit_event("DEVICE_REMOTE_UNLOCK_COMMAND", user_id=user["id"], details={"serial": serial, "operation_id": op_id})
+    return {
+        "success": True,
+        "serial": serial,
+        "lock_status": "UNLOCKED",
+        "operation_id": op_id,
+        "message": f"Comando de LIBERAÇÃO enviado para o aparelho {serial}! O aparelho foi desbloqueado com sucesso via internet."
+    }
+
+@router.get("/pix-key")
+def get_custom_pix_key(user: dict = Depends(get_current_user)):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT custom_pix_key, custom_pix_type, custom_pix_name, custom_pix_city FROM users WHERE id = ?", (user["id"],))
+        u = cursor.fetchone()
+        pix_key = u["custom_pix_key"] if u and u["custom_pix_key"] else ""
+        pix_type = u["custom_pix_type"] if u and u["custom_pix_type"] else "AUTO"
+        pix_name = u["custom_pix_name"] if u and u["custom_pix_name"] else ""
+        pix_city = u["custom_pix_city"] if u and u["custom_pix_city"] else ""
+    return {
+        "success": True,
+        "pix_key": pix_key,
+        "key_type": pix_type,
+        "merchant_name": pix_name,
+        "merchant_city": pix_city
+    }
+
+@router.post("/pix-key")
+def save_custom_pix_key(req: dict, user: dict = Depends(get_current_user)):
+    pix_key = req.get("pix_key", "").strip()
+    key_type = req.get("key_type", "AUTO").strip().upper()
+    merchant_name = req.get("merchant_name", "").strip()
+    merchant_city = req.get("merchant_city", "").strip()
+
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            UPDATE users 
+            SET custom_pix_key = ?,
+                custom_pix_type = ?,
+                custom_pix_name = ?,
+                custom_pix_city = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (pix_key, key_type, merchant_name, merchant_city, user["id"])
+        )
+    log_audit_event("CLIENT_CUSTOM_PIX_SAVED", user_id=user["id"], details={"pix_key": pix_key, "key_type": key_type})
+    return {
+        "success": True,
+        "message": "Chave PIX pessoal salva com sucesso na sua conta! O valor dos seus atendimentos será creditado diretamente para você.",
+        "pix_key": pix_key,
+        "key_type": key_type,
+        "merchant_name": merchant_name,
+        "merchant_city": merchant_city
+    }
 
 @router.get("/orders")
 def get_client_orders(user: dict = Depends(get_current_user)):

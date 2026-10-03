@@ -40,7 +40,11 @@ def exe_login(req: ExeLoginRequest, request: Request):
             "name": user["name"],
             "email": user["email"],
             "whatsapp": user["whatsapp"],
-            "balance_credits": balance
+            "balance_credits": balance,
+            "custom_pix_key": user["custom_pix_key"] if "custom_pix_key" in user.keys() and user["custom_pix_key"] else "",
+            "custom_pix_type": user["custom_pix_type"] if "custom_pix_type" in user.keys() and user["custom_pix_type"] else "AUTO",
+            "custom_pix_name": user["custom_pix_name"] if "custom_pix_name" in user.keys() and user["custom_pix_name"] else "",
+            "custom_pix_city": user["custom_pix_city"] if "custom_pix_city" in user.keys() and user["custom_pix_city"] else ""
         }
     }
 
@@ -142,6 +146,20 @@ def exe_get_pix_config(user: dict = Depends(get_current_user)):
     import json
     with get_db_connection() as conn:
         cursor = conn.cursor()
+        # 1. Check if user configured their own custom technician PIX key
+        cursor.execute("SELECT custom_pix_key, custom_pix_type, custom_pix_name, custom_pix_city FROM users WHERE id = ?", (user["id"],))
+        u = cursor.fetchone()
+        if u and u["custom_pix_key"]:
+            return {
+                "success": True,
+                "is_custom": True,
+                "pix_key": u["custom_pix_key"],
+                "key_type": u["custom_pix_type"] or "AUTO",
+                "merchant_name": u["custom_pix_name"] or "MDM FRP BRASIL",
+                "merchant_city": u["custom_pix_city"] or "AMERICANA"
+            }
+
+        # 2. Fallback to platform settings
         cursor.execute("SELECT value FROM system_settings WHERE key = 'pix_key'")
         r_sys = cursor.fetchone()
         sys_key = r_sys["value"] if r_sys and r_sys["value"] else "19994783127"
@@ -162,8 +180,41 @@ def exe_get_pix_config(user: dict = Depends(get_current_user)):
             }
     return {
         "success": True,
+        "is_custom": False,
         "pix_key": pix_cfg.get("key"),
         "key_type": pix_cfg.get("key_type", "TELEFONE"),
         "merchant_name": pix_cfg.get("merchant_name", "MDM FRP BRASIL"),
         "merchant_city": pix_cfg.get("merchant_city", "AMERICANA")
+    }
+
+@router.post("/pix/config")
+def exe_save_pix_config(req: dict, user: dict = Depends(get_current_user)):
+    pix_key = req.get("pix_key", "").strip()
+    key_type = req.get("key_type", "AUTO").strip().upper()
+    merchant_name = req.get("merchant_name", "").strip()
+    merchant_city = req.get("merchant_city", "").strip()
+
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            UPDATE users 
+            SET custom_pix_key = ?,
+                custom_pix_type = ?,
+                custom_pix_name = ?,
+                custom_pix_city = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """,
+            (pix_key, key_type, merchant_name, merchant_city, user["id"])
+        )
+
+    log_audit_event("EXE_CUSTOM_PIX_SAVED", user_id=user["id"], details={"pix_key": pix_key, "key_type": key_type})
+    return {
+        "success": True,
+        "message": "Chave PIX pessoal salva com sucesso no seu perfil de técnico!",
+        "pix_key": pix_key,
+        "key_type": key_type,
+        "merchant_name": merchant_name,
+        "merchant_city": merchant_city
     }
