@@ -35,6 +35,56 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from server.security_guard import check_for_intrusion, get_hacker_troll_html
+from server.auth import log_audit_event
+
+@app.middleware("http")
+async def security_intrusion_middleware(request: Request, call_next):
+    path = request.url.path
+    query = request.url.query
+    client_ip = request.client.host if request.client else "127.0.0.1"
+
+    # Fast bypass for static files
+    if path.startswith("/static") or path == "/favicon.ico":
+        return await call_next(request)
+
+    is_intrusion, attack_type, detail = check_for_intrusion(path, query)
+    if is_intrusion:
+        # Record immediately into database audit log
+        log_audit_event(
+            "SECURITY_INTRUSION_ATTEMPT",
+            details={
+                "attack_type": attack_type,
+                "target_path": path,
+                "query_string": query[:250],
+                "detail": detail,
+                "user_agent": request.headers.get("user-agent", "Unknown"),
+                "action_taken": "BLOCKED_WITH_TROLL_PAGE"
+            },
+            ip_address=client_ip
+        )
+        accept = request.headers.get("accept", "")
+        if "text/html" in accept or path in ("/security-trap", "/wp-login.php", "/wp-admin", "/phpmyadmin") or "test_hack=1" in query:
+            return HTMLResponse(content=get_hacker_troll_html(client_ip, attack_type, path), status_code=403)
+        else:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "error": "Acesso Bloqueado!",
+                    "message": "Tentando invadir aqui, patrão? 😂 Seu IP foi registrado e enviado para o painel de auditoria do Administrador!",
+                    "ip": client_ip,
+                    "attack_type": attack_type,
+                    "funny_meme": "/static/hacker_blocked.jpg"
+                }
+            )
+
+    return await call_next(request)
+
+@app.get("/security-trap", response_class=HTMLResponse)
+def serve_security_trap(request: Request):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    return HTMLResponse(content=get_hacker_troll_html(client_ip, "SIMULACAO_TESTE", "/security-trap"), status_code=403)
+
 # Mount Static Files (Images, Styles, EXE download)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 

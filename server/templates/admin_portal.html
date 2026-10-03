@@ -547,7 +547,10 @@
             <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 4px;">Cadastre, edite dados, redefina senhas do EXE/Site e gerencie o saldo de cada técnico.</p>
           </div>
           <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <input type="text" id="userSearch" class="form-control" placeholder="Buscar por nome, e-mail ou whats..." style="max-width: 250px;" oninput="loadAdminUsers()">
+            <input type="text" id="userSearch" class="form-control" placeholder="Buscar por nome, e-mail ou whats..." style="max-width: 230px;" oninput="loadAdminUsers()">
+            <button class="btn-primary" style="width: auto; padding: 9px 16px; font-size: 12.5px; background: linear-gradient(135deg, #00E5FF 0%, #00B0FF 100%); color: #060911; font-weight: 800; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 229, 255, 0.35); border: none;" onclick="quickGenerateTestAccount()">
+              🧪 Gerar Conta Teste (2 Créditos)
+            </button>
             <button class="btn-primary" style="width: auto; padding: 9px 16px; font-size: 12.5px; background: var(--green); color: #000; font-weight: 800; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 230, 118, 0.25);" onclick="openCreateUserModal()">
               ➕ Cadastrar Novo Técnico
             </button>
@@ -556,6 +559,14 @@
             </button>
           </div>
         </div>
+
+        <!-- Filtros de Clientes -->
+        <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+          <button type="button" class="btn-layout-chip active" id="btnFilterUsersAll" onclick="filterUsersTable('all', this)">Todos (<span id="countUsersAll">0</span>)</button>
+          <button type="button" class="btn-layout-chip" id="btnFilterUsersActive" onclick="filterUsersTable('active', this)">🟢 Ativos (<span id="countUsersActive">0</span>)</button>
+          <button type="button" class="btn-layout-chip" id="btnFilterUsersTests" style="border-color: rgba(0, 229, 255, 0.4); color: var(--cyan);" onclick="filterUsersTable('tests', this)">🧪 Contas de Teste (<span id="countUsersTests">0</span>)</button>
+        </div>
+
         <div style="overflow-x: auto;">
           <table>
             <thead>
@@ -603,24 +614,69 @@
         </div>
       </div>
 
-      <!-- Tab: Audit -->
+      <!-- Tab: Audit & Security Logs -->
       <div id="tabAudit" class="panel" style="display: none;">
-        <div class="panel-hdr">
-          <h3>📜 Trilha de Auditoria (Audit Logs)</h3>
+        <div class="panel-hdr" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3>📜 Trilha de Auditoria &amp; Defesa WAF</h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 4px;">Monitoramento contínuo de acessos, contas teste com 2 créditos e tentativas de invasão bloqueadas com a tela troll meme.</p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" class="btn-primary" style="font-size: 12px; padding: 8px 16px; background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger); color: #FCA5A5; font-weight: 800; border-radius: 8px;" onclick="window.open('/security-trap', '_blank')" title="Ver tela troll com meme que o invasor recebe ao tentar burlar o site">
+              🐶 Testar / Ver Tela Troll do Invasor
+            </button>
+            <button class="btn-logout" style="font-size: 13px; padding: 8px 12px;" onclick="loadAudit()" title="Recarregar Logs">
+              🔄
+            </button>
+          </div>
         </div>
+
+        <!-- KPI Cards de Auditoria & Segurança -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px;">
+          <div style="background: rgba(12, 18, 32, 0.9); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: var(--cyan); text-transform: uppercase;">🛡️ Status Firewall WAF</div>
+            <div style="font-size: 19px; font-weight: 900; color: var(--green); margin-top: 4px;">ATIVO (0.001s)</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Proteção Anti-SQLi, LFI e Scanners</div>
+          </div>
+          <div style="background: rgba(12, 18, 32, 0.9); border: 1px solid rgba(239, 68, 68, 0.45); border-radius: 12px; padding: 14px 18px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.12);">
+            <div style="font-size: 11px; font-weight: 800; color: #EF4444; text-transform: uppercase;">🚨 Tentativas de Invasão</div>
+            <div style="font-size: 19px; font-weight: 900; color: #EF4444; margin-top: 4px;" id="countAuditIntrusions">0</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Bloqueadas com a tela troll meme</div>
+          </div>
+          <div style="background: rgba(12, 18, 32, 0.9); border: 1px solid rgba(0, 229, 255, 0.35); border-radius: 12px; padding: 14px 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: var(--cyan); text-transform: uppercase;">🧪 Contas Teste Criadas</div>
+            <div style="font-size: 19px; font-weight: 900; color: var(--cyan); margin-top: 4px;" id="countAuditTestAccs">0</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Com 2 créditos liberados</div>
+          </div>
+          <div style="background: rgba(12, 18, 32, 0.9); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: #94A3B8; text-transform: uppercase;">📋 Total de Registros</div>
+            <div style="font-size: 19px; font-weight: 900; color: #FFF; margin-top: 4px;" id="countAuditTotal">0</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Trilha auditada completa</div>
+          </div>
+        </div>
+
+        <!-- Filtros de Auditoria -->
+        <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+          <button type="button" class="btn-layout-chip active" id="btnFilterAuditAll" onclick="filterAuditTable('all', this)">Todos os Logs</button>
+          <button type="button" class="btn-layout-chip" id="btnFilterAuditIntrusions" style="border-color: rgba(239, 68, 68, 0.5); color: #FCA5A5;" onclick="filterAuditTable('intrusions', this)">🚨 Tentativas de Invasão (<span id="badgeAuditIntrusions">0</span>)</button>
+          <button type="button" class="btn-layout-chip" id="btnFilterAuditTests" style="border-color: rgba(0, 229, 255, 0.4); color: var(--cyan);" onclick="filterAuditTable('tests', this)">🧪 Contas de Teste (<span id="badgeAuditTests">0</span>)</button>
+          <button type="button" class="btn-layout-chip" id="btnFilterAuditAdmin" onclick="filterAuditTable('admin', this)">⚙️ Ações Administrativas</button>
+        </div>
+
         <div style="overflow-x: auto;">
           <table>
             <thead>
               <tr>
-                <th>Data</th>
-                <th>Evento</th>
-                <th>Usuário / Admin</th>
-                <th>IP</th>
-                <th>Detalhes</th>
+                <th>Data &amp; Hora</th>
+                <th>Tipo de Evento</th>
+                <th>Origem / Usuário</th>
+                <th>Endereço IP</th>
+                <th>Detalhes / Payloads Detectados</th>
+                <th style="text-align: center;">Ação</th>
               </tr>
             </thead>
             <tbody id="tblAuditBody">
-              <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Carregando logs...</td></tr>
+              <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Carregando logs...</td></tr>
             </tbody>
           </table>
         </div>
@@ -1585,6 +1641,70 @@
     </div>
   </div>
 
+  <!-- MODAL CONTA DE TESTE GERADA (2 CRÉDITOS) -->
+  <div class="modal-overlay" id="modalTestAccountCreated" style="z-index: 10003;">
+    <div class="modal-content" style="max-width: 540px; width: 95%; border: 1px solid rgba(0, 229, 255, 0.4); box-shadow: 0 0 35px rgba(0, 229, 255, 0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+        <h3 style="margin: 0; color: var(--cyan); font-size: 16px; display: flex; align-items: center; gap: 8px;">
+          <span>🧪</span> Conta de Teste Gerada com Sucesso!
+        </h3>
+        <button type="button" onclick="closeTestAccountModal()" style="background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+
+      <div style="background: rgba(0, 229, 255, 0.08); border-left: 3px solid var(--cyan); padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 12.5px; line-height: 1.5;">
+        Esta conta foi provisionada instantaneamente com <strong style="color: var(--green);">2 créditos cortesia</strong>. Funciona tanto no site quanto no aplicativo Windows <code style="color: var(--cyan);">MDM_FRP_BRASIL.exe</code>.
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="form-group">
+          <label style="font-size: 11.5px; color: var(--text-muted);">Nome do Técnico / Empresa</label>
+          <input type="text" id="testAccName" class="form-control" readonly style="background: rgba(0,0,0,0.3); font-weight: bold;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label style="font-size: 11.5px; color: var(--text-muted);">E-mail de Login</label>
+            <input type="text" id="testAccEmail" class="form-control" readonly style="background: rgba(0,0,0,0.3); font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+          </div>
+          <div class="form-group">
+            <label style="font-size: 11.5px; color: var(--text-muted);">Senha Provisória</label>
+            <input type="text" id="testAccPassword" class="form-control" readonly style="background: rgba(0,0,0,0.3); font-family: 'JetBrains Mono', monospace; color: var(--cyan); font-weight: bold;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label style="font-size: 11.5px; color: var(--text-muted);">Saldo Cortesia</label>
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 9px 12px; border-radius: 8px; font-weight: 800; color: var(--green); display: flex; align-items: center; gap: 6px;">
+              <span>🎁 2 Créditos Ativos</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="font-size: 11.5px; color: var(--text-muted);">Status da Conta</label>
+            <div style="background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); padding: 9px 12px; border-radius: 8px; font-weight: 700; color: var(--cyan); display: flex; align-items: center; gap: 6px;">
+              <span>🟢 Pronta para Uso</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 6px;">
+          <label style="font-size: 11.5px; color: var(--text-muted);">Mensagem Pronta para WhatsApp</label>
+          <textarea id="testAccMessage" class="form-control" rows="4" readonly style="background: rgba(0,0,0,0.4); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; resize: none;"></textarea>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap;">
+        <button type="button" class="btn-logout" onclick="closeTestAccountModal()">Fechar</button>
+        <button type="button" class="btn-primary" onclick="copyTestAccountToClipboard()" style="width: auto; padding: 10px 18px; background: rgba(0, 229, 255, 0.15); border: 1px solid var(--cyan); color: var(--cyan); font-weight: 700;">
+          📋 Copiar Dados
+        </button>
+        <button type="button" class="btn-primary" onclick="sendTestAccountWhatsApp()" style="width: auto; padding: 10px 20px; background: #25D366; color: #000; font-weight: 800;">
+          📱 Enviar via WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL RAIO-X DETALHADO DO CLIENTE -->
   <div class="modal-overlay" id="modalUserDetails" style="z-index: 10002;">
     <div class="modal-content" style="max-width: 820px; width: 95%; max-height: 88vh; display: flex; flex-direction: column;">
@@ -1787,45 +1907,142 @@
       }
     }
 
+    let currentUserFilter = 'all';
+    let allAuditCache = [];
+    let currentAuditFilter = 'all';
+    let currentGeneratedTestAccount = null;
+
     async function loadAdminUsers() {
       const search = document.getElementById("userSearch") ? document.getElementById("userSearch").value : '';
       try {
         const users = await adminApi(`/api/v1/admin/users?search=${encodeURIComponent(search)}`);
         allUsersCache = users;
-        const tbody = document.getElementById("tblUsersBody");
-        tbody.innerHTML = '';
-        if (!users.length) {
-          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted); padding:20px;">Nenhum cliente cadastrado.</td></tr>';
-          return;
-        }
-        users.forEach(u => {
-          const tr = document.createElement("tr");
-          const isActive = u.status === 'active';
-          const safeName = (u.name || '').replace(/'/g, "\\'");
-          tr.innerHTML = `
-            <td class="mono">#${u.id}</td>
-            <td><strong>${escapeHtml(u.name || 'Sem nome')}</strong></td>
-            <td>${escapeHtml(u.email || '—')}</td>
-            <td>${escapeHtml(u.whatsapp || '—')}</td>
-            <td class="mono" style="font-weight:700; color:var(--green); font-size:13px;">${u.balance_credits ?? 0} créd.</td>
-            <td class="mono">${u.total_purchased ?? 0}</td>
-            <td class="mono">${u.total_used ?? 0}</td>
-            <td><span class="${isActive ? 'badge-active' : 'badge-suspended'}">${u.status}</span></td>
-            <td>
-              <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
-                <button class="btn-sm btn-edit" onclick="openEditUserModal(${u.id})" title="Editar dados cadastrais, saldo direto e nova senha">✏️ Editar</button>
-                <button class="btn-sm btn-detail" onclick="openUserDetailsModal(${u.id})" title="Raio-X: ordens, aparelhos e extrato">🔍 Raio-X</button>
-                <button class="btn-sm btn-adjust" onclick="openAdjustModal(${u.id}, '${safeName}')" title="Ajustar saldo com justificativa para auditoria">🪙 Crédito</button>
-                <button class="btn-sm ${isActive ? 'btn-suspend' : 'btn-activate'}" onclick="toggleUserStatus(${u.id}, '${isActive ? 'suspended' : 'active'}')">${isActive ? 'Suspender' : 'Ativar'}</button>
-                <button class="btn-sm btn-delete" onclick="deleteUser(${u.id}, '${safeName}')" title="Excluir cliente permanentemente">🗑️ Excluir</button>
-              </div>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
+
+        // Atualiza contadores dos chips
+        const totalCount = users.length;
+        const activeCount = users.filter(u => u.status === 'active').length;
+        const testCount = users.filter(u => u.auth_provider === 'test_account' || (u.email && u.email.startsWith('teste_'))).length;
+
+        if (document.getElementById("countUsersAll")) document.getElementById("countUsersAll").innerText = totalCount;
+        if (document.getElementById("countUsersActive")) document.getElementById("countUsersActive").innerText = activeCount;
+        if (document.getElementById("countUsersTests")) document.getElementById("countUsersTests").innerText = testCount;
+
+        renderFilteredUsers();
       } catch (err) {
         console.error("Erro ao carregar clientes:", err);
       }
+    }
+
+    function filterUsersTable(filter, btn) {
+      currentUserFilter = filter;
+      document.querySelectorAll('#tabUsers .btn-layout-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderFilteredUsers();
+    }
+
+    function renderFilteredUsers() {
+      let filtered = allUsersCache || [];
+      if (currentUserFilter === 'active') {
+        filtered = filtered.filter(u => u.status === 'active');
+      } else if (currentUserFilter === 'tests') {
+        filtered = filtered.filter(u => u.auth_provider === 'test_account' || (u.email && u.email.startsWith('teste_')));
+      }
+
+      const tbody = document.getElementById("tblUsersBody");
+      tbody.innerHTML = '';
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted); padding:20px;">Nenhum cliente cadastrado neste filtro.</td></tr>';
+        return;
+      }
+      filtered.forEach(u => {
+        const tr = document.createElement("tr");
+        const isActive = u.status === 'active';
+        const isTest = u.auth_provider === 'test_account' || (u.email && u.email.startsWith('teste_'));
+        const safeName = (u.name || '').replace(/'/g, "\\'");
+
+        const testBadge = isTest 
+          ? `<span style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.4); font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-left: 6px; white-space: nowrap;">🧪 Teste (2c)</span>`
+          : '';
+
+        tr.innerHTML = `
+          <td class="mono">#${u.id}</td>
+          <td><strong>${escapeHtml(u.name || 'Sem nome')}</strong>${testBadge}</td>
+          <td>${escapeHtml(u.email || '—')}</td>
+          <td>${escapeHtml(u.whatsapp || '—')}</td>
+          <td class="mono" style="font-weight:700; color:var(--green); font-size:13px;">${u.balance_credits ?? 0} créd.</td>
+          <td class="mono">${u.total_purchased ?? 0}</td>
+          <td class="mono">${u.total_used ?? 0}</td>
+          <td><span class="${isActive ? 'badge-active' : 'badge-suspended'}">${u.status}</span></td>
+          <td>
+            <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+              <button class="btn-sm btn-edit" onclick="openEditUserModal(${u.id})" title="Editar dados cadastrais, saldo direto e nova senha">✏️ Editar</button>
+              <button class="btn-sm btn-detail" onclick="openUserDetailsModal(${u.id})" title="Raio-X: ordens, aparelhos e extrato">🔍 Raio-X</button>
+              <button class="btn-sm btn-adjust" onclick="openAdjustModal(${u.id}, '${safeName}')" title="Ajustar saldo com justificativa para auditoria">🪙 Crédito</button>
+              <button class="btn-sm ${isActive ? 'btn-suspend' : 'btn-activate'}" onclick="toggleUserStatus(${u.id}, '${isActive ? 'suspended' : 'active'}')">${isActive ? 'Suspender' : 'Ativar'}</button>
+              <button class="btn-sm btn-delete" onclick="deleteUser(${u.id}, '${safeName}')" title="Excluir cliente permanentemente">🗑️ Excluir</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function quickGenerateTestAccount() {
+      try {
+        const btn = document.querySelector("button[onclick='quickGenerateTestAccount()']");
+        if (btn) {
+          btn.disabled = true;
+          btn.innerText = "⏳ Gerando...";
+        }
+        const res = await adminApi('/api/v1/admin/generate-test-account', 'POST');
+        if (res && res.success) {
+          currentGeneratedTestAccount = res.account;
+
+          document.getElementById("testAccName").value = res.account.name;
+          document.getElementById("testAccEmail").value = res.account.email;
+          document.getElementById("testAccPassword").value = res.account.temporary_password;
+          document.getElementById("testAccMessage").value = res.account.ready_message;
+
+          document.getElementById("modalTestAccountCreated").style.display = 'flex';
+
+          loadAdminUsers();
+          loadAudit();
+          loadMetrics();
+        } else {
+          alert(res.message || "Erro ao gerar conta de teste.");
+        }
+      } catch (err) {
+        alert("Erro ao gerar conta de teste: " + err.message);
+      } finally {
+        const btn = document.querySelector("button[onclick='quickGenerateTestAccount()']");
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "🧪 Gerar Conta Teste (2 Créditos)";
+        }
+      }
+    }
+
+    function closeTestAccountModal() {
+      document.getElementById("modalTestAccountCreated").style.display = 'none';
+    }
+
+    function copyTestAccountToClipboard() {
+      if (!currentGeneratedTestAccount) return;
+      const text = currentGeneratedTestAccount.ready_message;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✓ Dados da conta de teste copiados com sucesso!");
+      }).catch(() => {
+        const ta = document.getElementById("testAccMessage");
+        ta.select();
+        document.execCommand("copy");
+        alert("✓ Dados copiados!");
+      });
+    }
+
+    function sendTestAccountWhatsApp() {
+      if (!currentGeneratedTestAccount) return;
+      const text = encodeURIComponent(currentGeneratedTestAccount.ready_message);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
     async function openEditUserModal(userId) {
@@ -2141,21 +2358,96 @@
     }
 
     async function loadAudit() {
-      const logs = await adminApi('/api/v1/admin/audit-logs');
+      try {
+        const logs = await adminApi('/api/v1/admin/audit-logs');
+        allAuditCache = logs || [];
+
+        // Atualiza contadores & KPIs
+        const totalLogs = allAuditCache.length;
+        const intrusionLogs = allAuditCache.filter(l => l.event_type === 'SECURITY_INTRUSION_ATTEMPT').length;
+        const testLogs = allAuditCache.filter(l => l.event_type === 'TEST_ACCOUNT_CREATED' || (l.details_json && l.details_json.includes('teste_'))).length;
+
+        if (document.getElementById("countAuditTotal")) document.getElementById("countAuditTotal").innerText = totalLogs;
+        if (document.getElementById("countAuditIntrusions")) document.getElementById("countAuditIntrusions").innerText = intrusionLogs;
+        if (document.getElementById("countAuditTestAccs")) document.getElementById("countAuditTestAccs").innerText = testLogs;
+
+        if (document.getElementById("badgeAuditIntrusions")) document.getElementById("badgeAuditIntrusions").innerText = intrusionLogs;
+        if (document.getElementById("badgeAuditTests")) document.getElementById("badgeAuditTests").innerText = testLogs;
+
+        renderFilteredAudit();
+      } catch (err) {
+        console.error("Erro ao carregar logs de auditoria:", err);
+      }
+    }
+
+    function filterAuditTable(filter, btn) {
+      currentAuditFilter = filter;
+      document.querySelectorAll('#tabAudit .btn-layout-chip').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderFilteredAudit();
+    }
+
+    function renderFilteredAudit() {
+      let filtered = allAuditCache || [];
+      if (currentAuditFilter === 'intrusions') {
+        filtered = filtered.filter(l => l.event_type === 'SECURITY_INTRUSION_ATTEMPT');
+      } else if (currentAuditFilter === 'tests') {
+        filtered = filtered.filter(l => l.event_type === 'TEST_ACCOUNT_CREATED' || (l.details_json && l.details_json.includes('teste_')));
+      } else if (currentAuditFilter === 'admin') {
+        filtered = filtered.filter(l => l.event_type !== 'SECURITY_INTRUSION_ATTEMPT');
+      }
+
       const tbody = document.getElementById("tblAuditBody");
       tbody.innerHTML = '';
-      if (!logs.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Nenhum log registrado.</td></tr>';
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">Nenhum registro encontrado para este filtro.</td></tr>';
         return;
       }
-      logs.forEach(l => {
+
+      filtered.forEach(l => {
         const tr = document.createElement("tr");
+        const isIntrusion = l.event_type === 'SECURITY_INTRUSION_ATTEMPT';
+        const isTest = l.event_type === 'TEST_ACCOUNT_CREATED';
+
+        if (isIntrusion) {
+          tr.style.background = 'rgba(239, 68, 68, 0.08)';
+          tr.style.borderLeft = '3px solid #EF4444';
+        } else if (isTest) {
+          tr.style.background = 'rgba(0, 229, 255, 0.04)';
+          tr.style.borderLeft = '3px solid var(--cyan)';
+        }
+
+        let typeBadge = `<span class="mono" style="color:var(--cyan); font-weight:600;">${escapeHtml(l.event_type)}</span>`;
+        if (isIntrusion) {
+          typeBadge = `<span class="mono" style="color:#EF4444; font-weight:800; background:rgba(239, 68, 68, 0.15); padding:3px 8px; border-radius:4px; border:1px solid rgba(239, 68, 68, 0.4); white-space:nowrap;">🚨 ${escapeHtml(l.event_type)}</span>`;
+        } else if (isTest) {
+          typeBadge = `<span class="mono" style="color:var(--cyan); font-weight:800; background:rgba(0, 229, 255, 0.12); padding:3px 8px; border-radius:4px; border:1px solid rgba(0, 229, 255, 0.35); white-space:nowrap;">🧪 ${escapeHtml(l.event_type)}</span>`;
+        }
+
+        const safeDetails = escapeHtml(l.details_json || '');
+        const ipDisplay = l.ip_address || '127.0.0.1';
+
+        let actionBtn = `—`;
+        if (isIntrusion) {
+          actionBtn = `
+            <a href="/security-trap" target="_blank" class="btn-sm" style="background:rgba(239, 68, 68, 0.2); color:#FCA5A5; border:1px solid rgba(239, 68, 68, 0.5); text-decoration:none; padding:4px 8px; border-radius:5px; font-size:11px; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
+              🐶 Ver Tela Troll
+            </a>
+          `;
+        } else {
+          const detailEscaped = (l.details_json || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          actionBtn = `
+            <button class="btn-sm btn-detail" onclick="navigator.clipboard.writeText('${detailEscaped}'); alert('Detalhes copiados!');" title="Copiar detalhes" style="font-size:11px; padding:3px 8px;">📋 Copiar</button>
+          `;
+        }
+
         tr.innerHTML = `
-          <td>${new Date(l.created_at).toLocaleString('pt-BR')}</td>
-          <td class="mono" style="color:var(--cyan); font-weight:600;">${l.event_type}</td>
-          <td>${l.admin_name ? 'Admin: ' + l.admin_name : (l.user_email ? 'Cliente: ' + l.user_email : 'Sistema')}</td>
-          <td class="mono" style="font-size:11px;">${l.ip_address || '127.0.0.1'}</td>
-          <td style="font-size:11px; max-width:300px; word-break:break-all;">${l.details_json}</td>
+          <td style="font-size:12px; white-space:nowrap;">${new Date(l.created_at).toLocaleString('pt-BR')}</td>
+          <td>${typeBadge}</td>
+          <td style="font-size:12px;">${l.admin_name ? 'Admin: ' + escapeHtml(l.admin_name) : (l.user_email ? 'Cliente: ' + escapeHtml(l.user_email) : (isIntrusion ? '<span style="color:#EF4444; font-weight:bold;">🚨 Invasor Detectado</span>' : 'Sistema'))}</td>
+          <td class="mono" style="font-size:11px; font-weight:700; color:${isIntrusion ? '#EF4444' : 'var(--cyan)'};">${escapeHtml(ipDisplay)}</td>
+          <td style="font-size:11.5px; max-width:320px; word-break:break-all; font-family:'JetBrains Mono', monospace; line-height:1.4;">${safeDetails}</td>
+          <td style="text-align:center;">${actionBtn}</td>
         `;
         tbody.appendChild(tr);
       });

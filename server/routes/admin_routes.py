@@ -1,3 +1,4 @@
+import secrets
 from fastapi import APIRouter, Depends, HTTPException, Request
 from server.auth import hash_password, verify_password, create_access_token, get_current_admin, log_audit_event
 from server.database import get_db_connection, db_transaction
@@ -198,7 +199,7 @@ def get_admin_metrics(admin: dict = Depends(get_current_admin)):
 @router.get("/users")
 def list_users(search: str = "", status: str = "", admin: dict = Depends(get_current_admin)):
     query = """
-        SELECT u.id, u.name, u.email, u.whatsapp, u.status, u.created_at,
+        SELECT u.id, u.name, u.email, u.whatsapp, u.status, u.created_at, u.auth_provider,
                w.balance_credits, w.total_purchased, w.total_used
         FROM users u
         LEFT JOIN wallets w ON u.id = w.user_id
@@ -336,6 +337,73 @@ def admin_create_user(req: AdminCreateUserRequest, request: Request, admin: dict
 
     log_audit_event("ADMIN_CREATE_USER", admin_id=admin["id"], user_id=user_id, details={"name": req.name, "email": clean_email}, ip_address=client_ip)
     return {"success": True, "message": f"Cliente '{req.name}' cadastrado com sucesso!", "user_id": user_id}
+
+@router.post("/generate-test-account")
+def generate_test_account(data: dict = None, request: Request = None, admin: dict = Depends(get_current_admin)):
+    client_ip = request.client.host if request and request.client else "127.0.0.1"
+    code = secrets.token_hex(2).upper()
+    test_email = f"teste_{code.lower()}@mdmfrpbrasil.com.br"
+    test_name = f"Cliente Teste Bancada #{code}"
+    raw_password = f"Teste{code}!"
+    test_whatsapp = "(19) 99478-3127"
+
+    if data:
+        if data.get("name"): test_name = str(data["name"]).strip()
+        if data.get("email"): test_email = str(data["email"]).strip().lower()
+        if data.get("password"): raw_password = str(data["password"]).strip()
+        if data.get("whatsapp"): test_whatsapp = str(data["whatsapp"]).strip()
+
+    pw_hash = hash_password(raw_password)
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO users (name, email, whatsapp, password_hash, status, auth_provider)
+            VALUES (?, ?, ?, ?, 'active', 'test_account')
+            """,
+            (test_name, test_email, test_whatsapp, pw_hash)
+        )
+        user_id = cursor.lastrowid
+        cursor.execute(
+            """
+            INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used)
+            VALUES (?, 2, 2, 0, 0)
+            """,
+            (user_id,)
+        )
+        cursor.execute(
+            """
+            INSERT INTO credit_transactions (wallet_id, user_id, type, amount_credits, previous_balance, new_balance, description, reference_id)
+            VALUES (last_insert_rowid(), ?, 'TEST_GRANT', 2, 0, 2, '🧪 Conta de Teste com 2 Créditos liberada pelo Admin', 'TEST_ACC_' || ?)
+            """,
+            (user_id, code)
+        )
+
+    log_audit_event(
+        "TEST_ACCOUNT_CREATED",
+        admin_id=admin["id"],
+        user_id=user_id,
+        details={
+            "email": test_email,
+            "name": test_name,
+            "credits": 2,
+            "raw_password": raw_password,
+            "code": code,
+            "note": "Conta de teste rápida de 2 créditos gerada no painel admin"
+        },
+        ip_address=client_ip
+    )
+
+    return {
+        "success": True,
+        "message": "Conta de teste gerada com sucesso com 2 créditos!",
+        "user_id": user_id,
+        "name": test_name,
+        "email": test_email,
+        "password": raw_password,
+        "credits": 2,
+        "code": code
+    }
 
 @router.delete("/users/{user_id}")
 def delete_user(user_id: int, request: Request, admin: dict = Depends(get_current_admin)):
