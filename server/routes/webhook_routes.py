@@ -11,6 +11,39 @@ router = APIRouter(prefix="/api/v1/webhooks", tags=["Webhooks"])
 
 @router.post("/pix")
 async def receive_pix_webhook(request: Request, x_idempotency_key: str = Header(None), x_webhook_secret: str = Header(None)):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    secret = os.getenv("WEBHOOK_SECRET")
+    auth_header = request.headers.get("authorization", "")
+
+    is_authorized = False
+    if secret and x_webhook_secret == secret:
+        is_authorized = True
+    elif auth_header.startswith("Bearer "):
+        from server.auth import decode_token
+        try:
+            payload = decode_token(auth_header.split(" ")[1])
+            if payload.get("role") in ("superadmin", "support") or payload.get("admin_id"):
+                is_authorized = True
+        except Exception:
+            pass
+
+    if not is_authorized:
+        from server.auth import log_audit_event
+        log_audit_event(
+            "SECURITY_INTRUSION_ATTEMPT",
+            details={
+                "attack_type": "UNAUTHORIZED_WEBHOOK_CALL",
+                "target_path": "/api/v1/webhooks/pix",
+                "detail": "Tentativa não autorizada de disparar webhook de pagamento PIX sem segredo ou token administrativo.",
+                "user_agent": request.headers.get("user-agent", "Unknown")
+            },
+            ip_address=client_ip
+        )
+        raise HTTPException(
+            status_code=403,
+            detail="Acesso não autorizado: Esta rota exige autenticação criptográfica ou token administrativo."
+        )
+
     raw_body = await request.body()
     payload_str = raw_body.decode("utf-8")
 

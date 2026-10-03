@@ -91,12 +91,21 @@ def admin_google_auth(req: GoogleAuthRequest, request: Request):
         except Exception:
             pass
 
-    if not email and req.email:
-        email = str(req.email)
-        name = req.name or email.split("@")[0].capitalize()
-
-    if not email:
-        raise HTTPException(status_code=400, detail="Não foi possível identificar o e-mail da conta Google.")
+    if not req.credential or not email:
+        log_audit_event(
+            "SECURITY_INTRUSION_ATTEMPT",
+            details={
+                "attack_type": "ADMIN_IMPERSONATION_ATTEMPT",
+                "target_path": "/api/v1/admin/auth/google",
+                "detail": "Tentativa de login administrativo sem credencial oficial do Google.",
+                "attempted_email": str(req.email) if req.email else "None"
+            },
+            ip_address=client_ip
+        )
+        raise HTTPException(
+            status_code=403,
+            detail="Acesso negado: O login administrativo exige autenticação oficial e verificada do Google."
+        )
 
     email_clean = email.strip().lower()
 

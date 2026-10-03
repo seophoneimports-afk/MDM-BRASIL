@@ -1336,8 +1336,9 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.8);
     }
 
-    /* Live Layout Switcher Toolbar (Bottom Preview Pill) */
+    /* Live Layout Switcher Toolbar (Exclusivo Administrador em Modo Preview) */
     .layout-switcher-pill {
+      display: none !important;
       position: fixed;
       bottom: 36px;
       left: 50%;
@@ -3387,12 +3388,7 @@
         document.getElementById("forgotSubtitle").innerText = `Código de recuperação gerado para ${email}. Validade de 15 minutos.`;
 
         const hintEl = document.getElementById("otpDisplayHint");
-        if (res.code_hint) {
-          hintEl.innerText = `Código OTP de Segurança: ${res.code_hint}`;
-          document.getElementById("forgotCode").value = res.code_hint;
-        } else {
-          hintEl.innerText = "Verifique sua caixa de entrada ou solicite suporte.";
-        }
+        hintEl.innerText = "Informe o código de verificação recebido ou acione o suporte.";
 
         alert.style.background = 'rgba(0, 230, 118, 0.15)';
         alert.style.borderColor = 'var(--green)';
@@ -4168,22 +4164,24 @@
     }
 
     async function applyHomepageSectionsAndLayout() {
-      const urlLayout = urlParams.get("layout") || urlParams.get("preview_layout") || localStorage.getItem('mdm_preview_layout');
-      if (urlLayout) {
-        setPortalLayout(urlLayout);
-      }
-
-      const urlCardStyle = urlParams.get("card_style") || urlParams.get("preview_cards") || localStorage.getItem('mdm_preview_card_style');
-      if (urlCardStyle) {
-        setPortalCardStyle(urlCardStyle);
-      }
+      // Prioridade absoluta: Disposição e estilo oficiais definidos pelo Administrador no banco
+      const urlLayout = urlParams.get("preview_layout") || urlParams.get("layout");
+      const urlCardStyle = urlParams.get("preview_cards") || urlParams.get("card_style");
 
       try {
         const res = await api('/api/v1/system/homepage-layout');
-        if (res && res.layout && !urlLayout) {
+        if (urlLayout) {
+          setPortalLayout(urlLayout);
+        } else if (res && res.layout) {
           setPortalLayout(res.layout);
         }
-        if (res && res.card_style && !urlCardStyle) {
+
+        const cardRes = await api('/api/v1/system/card-style');
+        if (urlCardStyle) {
+          setPortalCardStyle(urlCardStyle);
+        } else if (cardRes && cardRes.card_style) {
+          setPortalCardStyle(cardRes.card_style);
+        } else if (res && res.card_style) {
           setPortalCardStyle(res.card_style);
         }
 
@@ -4369,26 +4367,6 @@
       draw();
     })();
   </script>
-
-  <!-- Live Layout Switcher Toolbar (Bottom Preview Pill) -->
-  <div class="layout-switcher-pill" id="layoutSwitcherPill">
-    <span style="color: #94A3B8; font-weight: 700; margin-right: 2px;">📐 Layout:</span>
-    <button type="button" class="btn-layout-chip active" data-layout-target="cinema_split" onclick="setPortalLayout('cinema_split', this)">1. Cinema</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="bento_grid" onclick="setPortalLayout('bento_grid', this)">2. Bento</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="hero_exe" onclick="setPortalLayout('hero_exe', this)">3. Hero EXE</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="saas_grid" onclick="setPortalLayout('saas_grid', this)">4. SaaS</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="matrix_terminal" onclick="setPortalLayout('matrix_terminal', this)">5. Terminal</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="minimal_fast" onclick="setPortalLayout('minimal_fast', this)">6. Minimal</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="cyber_cockpit" onclick="setPortalLayout('cyber_cockpit', this)">7. Cockpit 3D</button>
-    <button type="button" class="btn-layout-chip" data-layout-target="bento_pro" onclick="setPortalLayout('bento_pro', this)">8. Bento Pro</button>
-
-    <span style="color: #475569; margin: 0 4px;">|</span>
-    <span style="color: #94A3B8; font-weight: 700; margin-right: 2px;">🎴 Cards:</span>
-    <button type="button" class="btn-layout-chip btn-card-style-chip active" data-card-target="glass_neon" onclick="setPortalCardStyle('glass_neon', this)">Glass Neon</button>
-    <button type="button" class="btn-layout-chip btn-card-style-chip" data-card-target="cyber_3d" onclick="setPortalCardStyle('cyber_3d', this)">Cyber 3D</button>
-    <button type="button" class="btn-layout-chip btn-card-style-chip" data-card-target="bento_minimal" onclick="setPortalCardStyle('bento_minimal', this)">Bento Clean</button>
-    <button type="button" class="btn-layout-chip btn-card-style-chip" data-card-target="matrix_mono" onclick="setPortalCardStyle('matrix_mono', this)">Matrix Mono</button>
-  </div>
 
   <!-- Live Social Proof Ticker (Rodapé) -->
   <div class="social-proof-ticker">

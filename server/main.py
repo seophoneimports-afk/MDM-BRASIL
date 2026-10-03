@@ -23,6 +23,9 @@ app = FastAPI(
     title="MDM & FRP BRASIL — Cloud Platform API",
     description="API Centralizada para Autenticação, Carteira de Créditos, Pagamentos PIX, Gestão de Ordens e Integração com o EXE",
     version="2.0.0",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
     lifespan=lifespan
 )
 
@@ -34,6 +37,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Security Headers Middleware
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "geolocation=(), camera=(), microphone=()"
+    response.headers["Server"] = "Protected-Gateway"
+    return response
 
 from server.security_guard import check_for_intrusion, get_hacker_troll_html
 from server.auth import log_audit_event

@@ -4,7 +4,7 @@ import secrets
 import jwt
 from fastapi import APIRouter, HTTPException, Depends, Request
 from server.database import get_db_connection, db_transaction
-from server.auth import hash_password, verify_password, create_access_token, get_current_user, log_audit_event
+from server.auth import hash_password, verify_password, create_access_token, get_current_user, get_current_admin, log_audit_event
 from server.models import UserRegisterRequest, UserLoginRequest, PasswordResetRequest, GoogleAuthRequest, UpdateClientPasswordRequest
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Client Auth"])
@@ -168,9 +168,8 @@ def request_password_reset(req: PasswordResetInitRequest, request: Request):
 
     return {
         "success": True,
-        "message": "Código de recuperação de 6 dígitos gerado com sucesso! Válido por 15 minutos.",
+        "message": "Se este e-mail estiver cadastrado, um código de verificação foi gerado (válido por 15 minutos).",
         "email": email_clean,
-        "code_hint": reset_code,
         "support_whatsapp": "5519994783127"
     }
 
@@ -274,7 +273,7 @@ def get_google_config():
     return {"google_client_id": client_id}
 
 @router.post("/google/config")
-def set_google_config(data: dict):
+def set_google_config(data: dict, admin: dict = Depends(get_current_admin)):
     client_id = str(data.get("google_client_id", "")).strip()
     with db_transaction() as conn:
         conn.cursor().execute(
@@ -455,6 +454,15 @@ def google_auth(req: GoogleAuthRequest, request: Request):
         if user:
             if user["status"] == "suspended":
                 raise HTTPException(status_code=403, detail="Sua conta está suspensa. Entre em contato com o suporte.")
+
+            # Proteção contra sequestro de contas: se a conta já existe,
+            # exige credencial oficial do Google para validar propriedade do e-mail.
+            if not req.credential:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Este e-mail já possui cadastro no sistema. Por segurança, acesse com sua senha atual ou utilize a opção 'Esqueci minha senha'."
+                )
+
             user_id = user["id"]
             user_name = name or user["name"]
             user_whatsapp = user["whatsapp"]

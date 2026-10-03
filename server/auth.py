@@ -113,15 +113,6 @@ def get_current_admin(credentials: HTTPAuthorizationCredentials = Security(secur
     role = payload.get("role")
 
     if not admin_id or role not in ("superadmin", "support"):
-        # Check if user email is a registered administrator (SSO)
-        email = payload.get("email")
-        if email:
-            with get_db_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("SELECT * FROM administrators WHERE email = ?", (email.strip().lower(),))
-                admin = cursor.fetchone()
-                if admin:
-                    return dict(admin)
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Acesso restrito ao Painel Administrativo."

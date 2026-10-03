@@ -205,7 +205,6 @@ def get_monthly_ranking():
         if credits_display > 0:
             leaderboard.append({
                 "rank": 0,
-                "user_id": r["id"],
                 "name": display_name,
                 "credits": credits_display,
                 "avatar_url": avatar,

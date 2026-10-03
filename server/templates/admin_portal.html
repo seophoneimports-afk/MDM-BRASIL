@@ -1844,25 +1844,9 @@
       }
     }
 
-    async function handleAdminGoogleLogin() {
-      const email = document.getElementById("adminEmail").value.trim();
-      const alert = document.getElementById("adminLoginAlert");
-      alert.style.display = 'none';
-
-      try {
-        const res = await adminApi('/api/v1/admin/auth/google', 'POST', {
-          email: email || "seophone.imports@gmail.com",
-          name: "Willian (Admin)",
-          google_id: "google_admin_" + Date.now()
-        });
-        adminToken = res.access_token;
-        localStorage.setItem("mdm_admin_token", adminToken);
-        document.getElementById("adminNameDisplay").innerText = res.admin ? res.admin.name : "Willian (Admin)";
-        initAdminDashboard();
-      } catch (err) {
-        alert.innerText = err.message || "Erro no login Google Admin.";
-        alert.style.display = 'block';
-      }
+    function handleAdminGoogleLogin() {
+      // Redireciona para o fluxo oficial e criptograficamente verificado do Google OAuth
+      window.location.href = '/api/v1/auth/google/login';
     }
 
     function adminLogout() {

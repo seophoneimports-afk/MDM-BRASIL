@@ -6,10 +6,16 @@ from server.auth import log_audit_event
 HONEYPOT_PATHS = {
     "/wp-login.php", "/wp-login", "/wp-admin", "/wp-admin/", "/wp-config.php",
     "/phpmyadmin", "/phpmyadmin/", "/pma", "/pma/", "/admin.php",
-    "/.env", "/.git", "/.git/config", "/config.json", "/server-status",
-    "/setup.php", "/shell.php", "/eval.php", "/xmlrpc.php", "/install.php",
-    "/cgi-bin", "/actuator", "/console", "/mysql", "/backup.sql", "/db.sql",
-    "/dump.sql", "/solr", "/jenkins", "/boaform"
+    "/.env", "/.env.local", "/.env.production", "/.git", "/.git/HEAD", "/.git/config",
+    "/config.json", "/server-status", "/setup.php", "/shell.php", "/eval.php",
+    "/eval-stdin.php", "/cmd.php", "/wso.php", "/alfa.php", "/c99.php",
+    "/xmlrpc.php", "/install.php", "/cgi-bin", "/actuator", "/actuator/health",
+    "/console", "/mysql", "/backup.sql", "/db.sql", "/dump.sql", "/database.sqlite",
+    "/database.db", "/db.sqlite3", "/backup.zip", "/backup.tar.gz",
+    "/solr", "/jenkins", "/boaform",
+    # Traps contra scanners de engenharia reversa e enumeração de APIs Swagger / OpenAPI
+    "/docs", "/redoc", "/openapi.json", "/swagger", "/swagger-ui",
+    "/swagger.json", "/v2/api-docs", "/v3/api-docs", "/api-docs"
 }
 
 SQLI_PATTERNS = [
@@ -28,10 +34,19 @@ SQLI_PATTERNS = [
 TRAVERSAL_PATTERNS = [
     r"\.\./\.\.",
     r"\.\.\\\.\.",
+    r"%2e%2e%2f",
     r"(?i)/etc/passwd",
     r"(?i)/windows/system32",
     r"(?i)web\.config",
     r"(?i)/boot\.ini"
+]
+
+XSS_PATTERNS = [
+    r"(?i)<\s*script\b",
+    r"(?i)javascript:",
+    r"(?i)onerror\s*=",
+    r"(?i)onload\s*=",
+    r"(?i)<iframe\b"
 ]
 
 def check_for_intrusion(path: str, raw_query: str) -> tuple[bool, str, str]:
@@ -42,7 +57,7 @@ def check_for_intrusion(path: str, raw_query: str) -> tuple[bool, str, str]:
     query_clean = raw_query.lower().strip()
 
     # 1. Test / Simulator trap
-    if path_clean == "/security-trap" or "test_hack=1" in query_clean:
+    if "test_hack=1" in query_clean:
         return True, "TESTE_SIMULADO_INVASAO", "Simulação de tentativa de ataque acionada"
 
     # 2. Honeypot check
@@ -60,6 +75,11 @@ def check_for_intrusion(path: str, raw_query: str) -> tuple[bool, str, str]:
     for pat in TRAVERSAL_PATTERNS:
         if re.search(pat, full_target):
             return True, "PATH_TRAVERSAL", f"Padrão de Directory Traversal detectado: {pat}"
+
+    # 5. XSS Injection check
+    for pat in XSS_PATTERNS:
+        if re.search(pat, full_target):
+            return True, "XSS_INJECTION", f"Padrão de script malicioso/XSS detectado: {pat}"
 
     return False, "", ""
 
