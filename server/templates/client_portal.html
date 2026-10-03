@@ -37,7 +37,7 @@
        5 MODELOS DE LAYOUT / TEMAS VISUAIS
        ======================================================== */
     /* TEMA 1: Cinema Stealth (Padrão Oficial Dark Cyan) */
-    :root, body, body[data-theme="cinema_stealth"] {
+    :root, body[data-theme="cinema_stealth"] {
       --bg: #060911;
       --card: #0C1220;
       --card-inner: #080C16;
@@ -1886,6 +1886,11 @@
     }
 
     async function applySiteTheme() {
+      const pTheme = urlParams.get("preview_theme");
+      if (pTheme) {
+        document.body.setAttribute('data-theme', pTheme);
+        return;
+      }
       try {
         const res = await api('/api/v1/system/theme');
         if (res && res.theme) {
