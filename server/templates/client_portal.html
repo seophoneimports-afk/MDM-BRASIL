@@ -6,10 +6,14 @@
   <title>MDM & FRP BRASIL — Portal do Cliente & Carteira</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    :root {
+    /* ========================================================
+       5 MODELOS DE LAYOUT / TEMAS VISUAIS
+       ======================================================== */
+    /* TEMA 1: Cinema Stealth (Padrão Oficial Dark Cyan) */
+    :root, body, body[data-theme="cinema_stealth"] {
       --bg: #060911;
       --card: #0C1220;
       --card-inner: #080C16;
@@ -23,9 +27,89 @@
       --text: #F8FAFC;
       --text-muted: #94A3B8;
       --danger: #EF4444;
+      --font-body: 'Inter', sans-serif;
+      --font-heading: 'Inter', sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* TEMA 2: Apex Quantum (Ultra Cyan & Sapphire) */
+    body[data-theme="apex_quantum"] {
+      --bg: #080E1A;
+      --card: #0F1A30;
+      --card-inner: #0B1324;
+      --border: #1E2D4A;
+      --border-green: #38BDF8;
+      --green: #38BDF8;
+      --green-hover: #0284C7;
+      --cyan: #38BDF8;
+      --blue: #2563EB;
+      --blue-hover: #1D4ED8;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --danger: #EF4444;
+      --font-body: 'Outfit', 'Inter', sans-serif;
+      --font-heading: 'Outfit', sans-serif;
+    }
+
+    /* TEMA 3: Matrix Cyber (Terminal Técnico Hacker Pro) */
+    body[data-theme="matrix_cyber"] {
+      --bg: #020509;
+      --card: #051015;
+      --card-inner: #030A0D;
+      --border: #0B3322;
+      --border-green: #10B981;
+      --green: #10B981;
+      --green-hover: #059669;
+      --cyan: #34D399;
+      --blue: #0D9488;
+      --blue-hover: #0F766E;
+      --text: #F0FDF4;
+      --text-muted: #6EE7B7;
+      --danger: #EF4444;
+      --font-body: 'JetBrains Mono', monospace;
+      --font-heading: 'JetBrains Mono', monospace;
+    }
+
+    /* TEMA 4: Neon Cyberblade (Obsidian, Ultravioleta & Âmbar) */
+    body[data-theme="neon_cyberblade"] {
+      --bg: #07040E;
+      --card: #120A24;
+      --card-inner: #0C0617;
+      --border: #2D1452;
+      --border-green: #A855F7;
+      --green: #A855F7;
+      --green-hover: #9333EA;
+      --cyan: #F59E0B;
+      --blue: #7C3AED;
+      --blue-hover: #6D28D9;
+      --text: #FAF5FF;
+      --text-muted: #D8B4FE;
+      --danger: #EF4444;
+      --font-body: 'Syne', 'Inter', sans-serif;
+      --font-heading: 'Syne', sans-serif;
+    }
+
+    /* TEMA 5: HyperSaaS Enterprise (Modern Titanium Clean) */
+    body[data-theme="hypersaas_enterprise"] {
+      --bg: #090D16;
+      --card: #111827;
+      --card-inner: #0D121F;
+      --border: #1F2937;
+      --border-green: #3B82F6;
+      --green: #3B82F6;
+      --green-hover: #2563EB;
+      --cyan: #06B6D4;
+      --blue: #2563EB;
+      --blue-hover: #1D4ED8;
+      --text: #F9FAFB;
+      --text-muted: #9CA3AF;
+      --danger: #EF4444;
+      --font-body: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-body, 'Inter', sans-serif); }
+    h1, h2, h3, .brand-title { font-family: var(--font-heading, 'Inter', sans-serif); }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s ease, color 0.3s ease; }
     
     /* Top Header */
     header {
@@ -553,97 +637,203 @@
       max-width: 680px;
       margin: 0 auto;
     }
-    .big-steps-grid {
+    /* ========================================================
+       OPÇÃO 1: CINEMA SPLIT-SLIDER (APPLE PRO / STRIPE STYLE)
+       ======================================================== */
+    .slider-box-opt1 {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(6, 11, 23, 0.98));
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 40px rgba(0, 229, 255, 0.05);
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 36px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
     }
     @media (max-width: 960px) {
-      .big-steps-grid {
-        grid-template-columns: 1fr;
-      }
+      .slider-box-opt1 { grid-template-columns: 1fr; padding: 20px; }
     }
-    .big-step-card {
-      background: rgba(12, 18, 32, 0.9);
-      border: 1px solid rgba(20, 34, 58, 0.9);
+    .opt1-stage {
+      background: #050811;
+      border: 1px solid rgba(30, 41, 59, 0.9);
       border-radius: 18px;
-      overflow: hidden;
+      height: 480px;
       display: flex;
-      flex-direction: column;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
       position: relative;
-    }
-    .big-step-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--cyan);
-      box-shadow: 0 18px 45px rgba(0, 229, 255, 0.22), 0 0 25px rgba(0, 229, 255, 0.12);
-    }
-    .step-img-box {
-      width: 100%;
-      height: 250px;
-      background: #060911;
       overflow: hidden;
-      position: relative;
-      border-bottom: 1px solid rgba(20, 34, 58, 0.7);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .opt1-stage img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .opt1-phone-frame {
+      max-height: 440px;
+      border: 8px solid #1E293B;
+      border-radius: 36px;
+      box-shadow: 0 15px 40px rgba(0, 230, 118, 0.25);
+      overflow: hidden;
+      background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .step-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.45s ease;
+    .opt1-phone-frame img {
+      max-height: 424px;
+      width: auto;
+      object-fit: contain;
     }
-    .big-step-card:hover .step-img-box img {
-      transform: scale(1.05);
+    .opt1-pc-frame {
+      width: 96%;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      box-shadow: 0 15px 40px rgba(0, 229, 255, 0.2);
     }
-    .step-badge {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    }
-    .step-badge-1 { background: rgba(2, 132, 199, 0.9); color: #FFF; border: 1px solid #38BDF8; }
-    .step-badge-2 { background: rgba(5, 150, 105, 0.9); color: #FFF; border: 1px solid #00E676; }
-    .step-badge-3 { background: rgba(147, 51, 234, 0.9); color: #FFF; border: 1px solid #C084FC; }
-    .big-step-body {
-      padding: 24px;
+    .opt1-content {
       display: flex;
       flex-direction: column;
-      flex: 1;
+      justify-content: center;
     }
-    .big-step-body h3 {
-      font-size: 18px;
-      font-weight: 800;
-      color: #FFFFFF;
-      margin: 0 0 10px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .big-step-body p {
-      font-size: 13.5px;
-      line-height: 1.6;
-      color: #94A3B8;
-      margin: 0 0 16px 0;
-      flex: 1;
-    }
-    .step-highlight-tag {
+    .opt1-step-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 700;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 20px;
+      background: rgba(0, 229, 255, 0.12);
+      border: 1px solid rgba(0, 229, 255, 0.3);
       color: var(--cyan);
+      margin-bottom: 14px;
+      width: fit-content;
+    }
+    .opt1-title {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.25;
+      color: #FFF;
+      margin-bottom: 14px;
+    }
+    .opt1-desc {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .opt1-features {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+    .opt1-features li {
+      font-size: 13.5px;
+      color: #E2E8F0;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .opt1-features li span.icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(0, 230, 118, 0.15);
+      border: 1px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green);
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .opt1-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .btn-nav {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #FFF;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-nav:hover {
+      background: var(--cyan);
+      color: #000;
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+    }
+    .dots-indicator {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dot.active {
+      width: 28px;
+      border-radius: 6px;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+    .step-thumbs-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .step-thumb-btn {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .step-thumb-btn:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+      background: rgba(15, 23, 42, 0.95);
+    }
+    .step-thumb-btn.active {
+      border-color: var(--cyan);
+      background: rgba(0, 229, 255, 0.12);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    }
+    .step-thumb-btn .s-num {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--cyan);
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .step-thumb-btn .s-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #FFF;
+    }
       background: rgba(0, 229, 255, 0.08);
       padding: 5px 12px;
       border-radius: 6px;
@@ -809,56 +999,61 @@
       </div>
 
 
-      <!-- Como Funciona na Prática (CARDS GRANDES E IMPACTANTES NO TOPO) -->
-      <div class="how-it-works-hero">
-        <div class="how-it-works-header">
-          <h2>🛠️ Como Funciona na Prática</h2>
-          <p>Fluxo profissional completo: do atendimento do cliente no computador até a tela verde de bloqueio Kiosk e a liberação imediata pós-pagamento.</p>
+      <!-- Como Funciona na Prática: OPÇÃO 1 CINEMA SPLIT-SLIDER -->
+      <div style="margin: 20px 0 10px 0; text-align: center;">
+        <h2 style="font-size: 26px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px; margin-bottom: 6px;">
+          🛠️ Como Funciona na Prática (Modo Cinema Split-Slider)
+        </h2>
+        <p style="font-size: 14px; color: var(--text-muted); max-width: 680px; margin: 0 auto 20px;">
+          Fluxo profissional completo: do atendimento do cliente no computador até a tela verde de bloqueio Kiosk e a liberação imediata pós-pagamento.
+        </p>
+      </div>
+
+      <!-- Option 1: Cinema Split-Slider -->
+      <div class="slider-box-opt1">
+        <!-- Lado Esquerdo: Imagem Gigante e Nítida -->
+        <div class="opt1-stage" id="opt1Stage">
+          <!-- Rendered via JS -->
         </div>
 
-        <div class="big-steps-grid">
-          <!-- Card 1: Conexão e Gestão Windows -->
-          <div class="big-step-card">
-            <div class="step-img-box">
-              <span class="step-badge step-badge-1">PASSO 01 • CONEXÃO WINDOWS</span>
-              <img src="/static/preview_exe.jpg" alt="Interface do Executável Windows">
+        <!-- Lado Direito: Descrição e Controles -->
+        <div class="opt1-content">
+          <div class="opt1-step-pill" id="opt1Badge">PASSO 01 DE 03 • CONEXÃO WINDOWS</div>
+          <h2 class="opt1-title" id="opt1Title">1. Conectar Aparelho & Reconhecimento Automático</h2>
+          <p class="opt1-desc" id="opt1Desc">
+            Conecte o smartphone Android via cabo USB com a depuração ativada. O software reconhece instantaneamente o modelo, operadora, versão de segurança e serial.
+          </p>
+
+          <ul class="opt1-features" id="opt1Features">
+            <li><span class="icon">✓</span> Reconhecimento automático do dispositivo em 0.4s via ADB</li>
+            <li><span class="icon">✓</span> Injeção silenciosa de Device Owner sem formatação prévia</li>
+            <li><span class="icon">✓</span> Consome apenas 1 crédito de saldo por aparelho provisionado</li>
+          </ul>
+
+          <!-- Navigation Controls -->
+          <div class="opt1-controls">
+            <button class="btn-nav" onclick="prevPortalSlide()">←</button>
+            <div class="dots-indicator">
+              <span class="dot active" onclick="setPortalSlide(0)"></span>
+              <span class="dot" onclick="setPortalSlide(1)"></span>
+              <span class="dot" onclick="setPortalSlide(2)"></span>
             </div>
-            <div class="big-step-body">
-              <h3>🖥️ 1. Conectar Aparelho no PC</h3>
-              <p>Conecte o smartphone Android via USB com a depuração ativada. O software reconhece automaticamente o modelo, serial, operadora e status de bloqueio, permitindo provisionar o perfil DPC corporativo em segundos.</p>
-              <div class="step-highlight-tag">
-                <span>⚡ Consome apenas 1 crédito por aparelho atendido</span>
-              </div>
-            </div>
+            <button class="btn-nav" onclick="nextPortalSlide()">→</button>
           </div>
 
-          <!-- Card 2: Bloqueio Kiosk no Celular com PIX -->
-          <div class="big-step-card">
-            <div class="step-img-box">
-              <span class="step-badge step-badge-2">PASSO 02 • BLOQUEIO KIOSK & PIX</span>
-              <img src="/static/preview_kiosk.png" alt="Tela de Bloqueio Kiosk no Celular">
+          <!-- 3 Quick Step Buttons (Thumbnails) -->
+          <div class="step-thumbs-row">
+            <div class="step-thumb-btn active" onclick="setPortalSlide(0)">
+              <div class="s-num">01. PC WINDOWS</div>
+              <div class="s-title">Conexão USB</div>
             </div>
-            <div class="big-step-body">
-              <h3>📱 2. Bloqueio no Celular com PIX</h3>
-              <p>A ferramenta aciona o modo Kiosk na tela do aparelho com sua logo, os dados do atendimento e o QR Code PIX oficial gerado pelo Banco Central. O cliente aponta a câmera do banco direto na tela do celular para pagar.</p>
-              <div class="step-highlight-tag" style="color: var(--green); background: rgba(0, 230, 118, 0.08); border-color: rgba(0, 230, 118, 0.2);">
-                <span>🔒 Botões e formatação bloqueados pelo Device Owner</span>
-              </div>
+            <div class="step-thumb-btn" onclick="setPortalSlide(1)">
+              <div class="s-num">02. KIOSK CELULAR</div>
+              <div class="s-title">Bloqueio & PIX</div>
             </div>
-          </div>
-
-          <!-- Card 3: Desbloqueio e Liberação Imediata -->
-          <div class="big-step-card">
-            <div class="step-img-box">
-              <span class="step-badge step-badge-3">PASSO 03 • LIBERAÇÃO IMEDIATA</span>
-              <img src="/static/preview_unlocked.png" alt="Celular Liberado Pós-Pagamento">
-            </div>
-            <div class="big-step-body">
-              <h3>✓ 3. Desbloqueio Instantâneo</h3>
-              <p>Assim que o pagamento é identificado ou o técnico clica em liberar, o aparelho desbloqueia na mesma hora com restauração do acesso total. O sistema mantém o aplicativo ativo em segundo plano para localização GPS e gestão contínua.</p>
-              <div class="step-highlight-tag" style="color: #C084FC; background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.2);">
-                <span>📍 Rastreamento GPS e histórico no Google Maps</span>
-              </div>
+            <div class="step-thumb-btn" onclick="setPortalSlide(2)">
+              <div class="s-num">03. LIBERAÇÃO</div>
+              <div class="s-title">Desbloqueio Total</div>
             </div>
           </div>
         </div>
@@ -953,63 +1148,60 @@
           </div>
         </div>
 
-        <!-- FORGOT VIEW -->
+        <!-- FORGOT VIEW (2-STEP SECURE OTP RECOVERY) -->
         <div id="viewForgot" style="display: none;">
-          <h2>Recuperar Senha</h2>
-          <p>Digite seu e-mail e sua nova senha.</p>
-          <div id="forgotAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:14px;"></div>
-          <form onsubmit="handleForgot(event)">
-            <div class="form-group">
-              <label>Seu E-mail Cadastrado</label>
-              <input type="email" id="forgotEmail" class="form-control" required placeholder="seu@email.com">
-            </div>
-            <div class="form-group">
-              <label>Nova Senha</label>
-              <input type="password" id="forgotPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
-            </div>
-            <button type="submit" class="btn-primary">Salvar Nova Senha</button>
-          </form>
-          <div class="auth-links">
-            Lembrou da senha? <a onclick="showView('Login')">Voltar ao Login</a>
-          </div>
-        </div>
-
-        <!-- GOOGLE CONFIG SETUP VIEW (ONLY WHEN GOOGLE CLIENT ID IS NOT YET SET) -->
-        <div id="viewGoogleSetup" style="display: none;">
           <img src="/static/logo.png" class="lightning-logo-card" alt="Logo MDM & FRP BRASIL">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
-            <svg width="22" height="22" viewBox="0 0 18 18">
-              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
-              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-              <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
-              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
-            </svg>
-            <h2 style="margin: 0; font-size: 20px;">Google Sign-In Oficial</h2>
-          </div>
-          <p style="font-size: 13px; color: #94A3B8; line-height: 1.5; margin-bottom: 14px;">
-            A autenticação direta com o Google requer um <strong>Client ID OAuth 2.0</strong> registrado no Google Cloud.
+          <h2>Recuperar Senha</h2>
+          <p id="forgotSubtitle" style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Digite seu e-mail cadastrado para gerar o código seguro de recuperação de 6 dígitos.
           </p>
-          <div id="googleSetupAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:14px;"></div>
-          
-          <form onsubmit="handleSaveGoogleClientId(event)">
-            <div class="form-group">
-              <label>Google OAuth Client ID</label>
-              <input type="text" id="inputGoogleClientIdConfig" class="form-control" required placeholder="Ex: 123456789-abc.apps.googleusercontent.com">
-            </div>
-            <button type="submit" class="btn-primary" style="margin-top: 8px;">Salvar e Ativar Google Sign-In</button>
-          </form>
+          <div id="forgotAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:14px;"></div>
 
-          <div style="margin-top: 14px; font-size: 11.5px; color: #64748B; text-align: left; line-height: 1.5; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
-            💡 <strong>Passo a passo rápido (2 minutos):</strong><br>
-            1. Acesse <em>console.cloud.google.com</em> > APIs e Serviços > Credenciais.<br>
-            2. Crie <strong>ID do cliente OAuth</strong> do tipo <em>Aplicativo da Web</em>.<br>
-            3. Adicione sua URL de origem e cole o Client ID acima.
+          <!-- Passo 1: Solicitar Código OTP -->
+          <div id="forgotStep1">
+            <form onsubmit="handleRequestResetCode(event)">
+              <div class="form-group">
+                <label>Seu E-mail Cadastrado</label>
+                <input type="email" id="forgotEmail" class="form-control" required placeholder="seu@email.com">
+              </div>
+              <button type="submit" class="btn-primary" id="btnRequestCode">
+                <span>⚡ Enviar Código de Recuperação</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Passo 2: Digitar Código e Nova Senha -->
+          <div id="forgotStep2" style="display: none;">
+            <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; color: #E2E8F0; text-align: left;">
+              <span style="color: var(--green); font-weight: 700;">✓ Código gerado!</span> 
+              Digite o código de 6 dígitos recebido e sua nova senha:
+              <div id="otpDisplayHint" style="margin-top: 4px; font-weight: 700; color: var(--cyan); font-family: monospace; font-size: 13px;"></div>
+            </div>
+            <form onsubmit="handleConfirmResetPassword(event)">
+              <div class="form-group">
+                <label>Código de 6 Dígitos</label>
+                <input type="text" id="forgotCode" class="form-control" required maxlength="6" placeholder="Ex: 481920" style="text-align: center; font-size: 18px; font-weight: 700; letter-spacing: 4px; font-family: monospace;">
+              </div>
+              <div class="form-group">
+                <label>Nova Senha</label>
+                <input type="password" id="forgotNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
+              </div>
+              <div class="form-group">
+                <label>Confirmar Nova Senha</label>
+                <input type="password" id="forgotConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
+              </div>
+              <button type="submit" class="btn-primary" id="btnConfirmReset">
+                <span>🔒 Salvar Nova Senha</span>
+              </button>
+            </form>
           </div>
 
           <div class="auth-links" style="margin-top: 16px;">
-            <a onclick="showView('Login')">← Voltar para login com e-mail e senha</a>
+            <a onclick="showView('Login')">← Voltar ao Login</a>
           </div>
         </div>
+      </div>
+    </div>
       </div>
     </div>
 
@@ -1185,37 +1377,6 @@
     </div>
   </main>
 
-  <!-- MODAL GOOGLE AUTH / INSTANT LOGIN -->
-  <div class="modal-overlay" id="modalGoogle">
-    <div class="modal-content" style="max-width: 420px; text-align: left;">
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-        <svg width="24" height="24" viewBox="0 0 18 18">
-          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
-          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-          <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
-          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
-        </svg>
-        <h3 style="margin: 0; color: #FFF; font-size: 16px;">Conectar com Google</h3>
-      </div>
-      <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 16px;">
-        Entre ou crie sua conta instantaneamente vinculada à sua conta Google.
-      </p>
-      <div id="googleModalAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:12px;"></div>
-      <div class="form-group">
-        <label>Nome Completo (Google)</label>
-        <input type="text" id="googleName" class="form-control" placeholder="Ex: Roberto Silva">
-      </div>
-      <div class="form-group">
-        <label>E-mail Google</label>
-        <input type="email" id="googleEmail" class="form-control" placeholder="exemplo@gmail.com">
-      </div>
-      <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
-        <button type="button" class="btn-logout" onclick="closeGoogleAuthModal()">Cancelar</button>
-        <button type="button" class="btn-primary" style="width: auto; padding: 10px 18px;" onclick="submitGoogleAuthModal()">Continuar com Google</button>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL PIX -->
   <div class="modal-overlay" id="modalPix">
     <div class="modal-content">
@@ -1354,8 +1515,6 @@
       document.getElementById("viewLogin").style.display = view === 'Login' ? 'block' : 'none';
       document.getElementById("viewRegister").style.display = view === 'Register' ? 'block' : 'none';
       document.getElementById("viewForgot").style.display = view === 'Forgot' ? 'block' : 'none';
-      const gSetup = document.getElementById("viewGoogleSetup");
-      if (gSetup) gSetup.style.display = view === 'GoogleSetup' ? 'block' : 'none';
       document.getElementById("viewDashboard").style.display = view === 'Dashboard' ? 'block' : 'none';
       const showcaseEl = document.getElementById("viewShowcase");
       if (showcaseEl) showcaseEl.style.display = view === 'Dashboard' ? 'none' : 'block';
@@ -1389,7 +1548,7 @@
 
     async function handleLogin(e) {
       e.preventDefault();
-      const email = document.getElementById("loginEmail").value;
+      const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value;
       const alert = document.getElementById("loginAlert");
       alert.style.display = 'none';
@@ -1407,9 +1566,9 @@
 
     async function handleRegister(e) {
       e.preventDefault();
-      const name = document.getElementById("regName").value;
-      const email = document.getElementById("regEmail").value;
-      const whatsapp = document.getElementById("regPhone").value;
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const whatsapp = document.getElementById("regPhone").value.trim();
       const password = document.getElementById("regPassword").value;
       const alert = document.getElementById("registerAlert");
       alert.style.display = 'none';
@@ -1425,147 +1584,114 @@
       }
     }
 
-    async function handleForgot(e) {
+    /* ========================================================
+       RECUPERAÇÃO DE SENHA EM 2 ETAPAS (OTP 6 DÍGITOS SEGURO)
+       ======================================================== */
+    let recoveryEmailCache = "";
+
+    async function handleRequestResetCode(e) {
       e.preventDefault();
-      const email = document.getElementById("forgotEmail").value;
-      const new_password = document.getElementById("forgotPassword").value;
+      const email = document.getElementById("forgotEmail").value.trim();
       const alert = document.getElementById("forgotAlert");
+      const btn = document.getElementById("btnRequestCode");
       alert.style.display = 'none';
+      btn.disabled = true;
+      btn.innerText = "Gerando código seguro...";
 
       try {
-        const res = await api('/api/v1/auth/forgot-password', 'POST', { email, new_password });
+        const res = await api('/api/v1/auth/forgot-password/request', 'POST', { email });
+        recoveryEmailCache = email;
+
+        document.getElementById("forgotStep1").style.display = 'none';
+        document.getElementById("forgotStep2").style.display = 'block';
+        document.getElementById("forgotSubtitle").innerText = `Código de recuperação gerado para ${email}. Validade de 15 minutos.`;
+
+        const hintEl = document.getElementById("otpDisplayHint");
+        if (res.code_hint) {
+          hintEl.innerText = `Código OTP de Segurança: ${res.code_hint}`;
+          document.getElementById("forgotCode").value = res.code_hint;
+        } else {
+          hintEl.innerText = "Verifique sua caixa de entrada ou solicite suporte.";
+        }
+
         alert.style.background = 'rgba(0, 230, 118, 0.15)';
         alert.style.borderColor = 'var(--green)';
         alert.style.color = 'var(--green)';
         alert.innerText = res.message;
         alert.style.display = 'block';
-        setTimeout(() => showView('Login'), 2000);
       } catch (err) {
+        alert.style.background = 'rgba(239, 68, 68, 0.15)';
+        alert.style.borderColor = 'var(--danger)';
+        alert.style.color = 'var(--danger)';
         alert.innerText = err.message;
         alert.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "⚡ Enviar Código de Recuperação";
       }
     }
 
-    // Google Official Authentication Handlers
-    let currentGoogleClientId = null;
-
-    async function initGoogleAuth() {
-      try {
-        const cfg = await api('/api/v1/auth/google/config').catch(() => ({}));
-        currentGoogleClientId = cfg.google_client_id;
-        if (currentGoogleClientId && window.google && window.google.accounts) {
-          google.accounts.id.initialize({
-            client_id: currentGoogleClientId,
-            callback: handleGoogleCredentialResponse,
-            auto_select: false,
-            cancel_on_tap_outside: true
-          });
-        }
-      } catch (e) {
-        console.warn("Google auth init notice:", e);
-      }
-    }
-
-    async function triggerGoogleAuth() {
-      try {
-        const cfg = await api('/api/v1/auth/google/config').catch(() => ({}));
-        currentGoogleClientId = cfg.google_client_id;
-        if (!currentGoogleClientId) {
-          showView('GoogleSetup');
-          return;
-        }
-
-        if (window.google && window.google.accounts) {
-          google.accounts.id.initialize({
-            client_id: currentGoogleClientId,
-            callback: handleGoogleCredentialResponse,
-            auto_select: false,
-            cancel_on_tap_outside: true
-          });
-          google.accounts.id.prompt((notification) => {
-            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-              // Fallback to Google OAuth 2.0 popup
-              const client = google.accounts.oauth2.initTokenClient({
-                client_id: currentGoogleClientId,
-                scope: 'email profile openid',
-                callback: async (tokenResponse) => {
-                  if (tokenResponse && tokenResponse.access_token) {
-                    try {
-                      // Fetch userinfo directly with access_token
-                      const uinfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                        headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
-                      }).then(r => r.json());
-                      
-                      const res = await api('/api/v1/auth/google', 'POST', {
-                        email: uinfo.email,
-                        name: uinfo.name,
-                        google_id: uinfo.sub,
-                        avatar_url: uinfo.picture
-                      });
-                      token = res.access_token;
-                      localStorage.setItem("mdm_token", token);
-                      closeAuthOverlay();
-                      await initDashboard();
-                    } catch (err) {
-                      alert("Erro na autenticação Google: " + err.message);
-                    }
-                  }
-                }
-              });
-              client.requestAccessToken();
-            }
-          });
-        } else {
-          alert("O serviço de autenticação Google não pôde ser carregado pelo navegador. Verifique sua conexão à internet.");
-        }
-      } catch (e) {
-        showView('GoogleSetup');
-      }
-    }
-
-    async function handleGoogleCredentialResponse(response) {
-      if (!response || !response.credential) {
-        alert("Nenhuma credencial Google recebida.");
-        return;
-      }
-      try {
-        const res = await api('/api/v1/auth/google', 'POST', { credential: response.credential });
-        token = res.access_token;
-        localStorage.setItem("mdm_token", token);
-        closeAuthOverlay();
-        await initDashboard();
-      } catch (err) {
-        alert("Falha na autenticação oficial Google: " + err.message);
-      }
-    }
-
-    async function handleSaveGoogleClientId(e) {
+    async function handleConfirmResetPassword(e) {
       e.preventDefault();
-      const val = document.getElementById("inputGoogleClientIdConfig").value.trim();
-      const alertDiv = document.getElementById("googleSetupAlert");
-      alertDiv.style.display = 'none';
+      const code = document.getElementById("forgotCode").value.trim();
+      const newPassword = document.getElementById("forgotNewPassword").value;
+      const confirmPassword = document.getElementById("forgotConfirmPassword").value;
+      const alert = document.getElementById("forgotAlert");
+      const btn = document.getElementById("btnConfirmReset");
+      alert.style.display = 'none';
 
-      if (!val || val.length < 10) {
-        alertDiv.innerText = "Por favor, digite um Google Client ID válido.";
-        alertDiv.style.display = 'block';
+      if (newPassword !== confirmPassword) {
+        alert.style.background = 'rgba(239, 68, 68, 0.15)';
+        alert.style.borderColor = 'var(--danger)';
+        alert.style.color = 'var(--danger)';
+        alert.innerText = "As senhas digitadas não coincidem. Digite novamente.";
+        alert.style.display = 'block';
         return;
       }
 
+      btn.disabled = true;
+      btn.innerText = "Salvando nova senha...";
+
       try {
-        await api('/api/v1/auth/google/config', 'POST', { google_client_id: val });
-        currentGoogleClientId = val;
-        alertDiv.style.borderColor = 'var(--green)';
-        alertDiv.style.color = 'var(--green)';
-        alertDiv.innerText = "Google Client ID ativado com sucesso! Iniciando autenticação...";
-        alertDiv.style.display = 'block';
+        const res = await api('/api/v1/auth/forgot-password/confirm', 'POST', {
+          email: recoveryEmailCache || document.getElementById("forgotEmail").value.trim(),
+          code: code,
+          new_password: newPassword
+        });
+
+        alert.style.background = 'rgba(0, 230, 118, 0.15)';
+        alert.style.borderColor = 'var(--green)';
+        alert.style.color = 'var(--green)';
+        alert.innerText = res.message;
+        alert.style.display = 'block';
+
         setTimeout(() => {
+          document.getElementById("forgotStep1").style.display = 'block';
+          document.getElementById("forgotStep2").style.display = 'none';
+          document.getElementById("forgotEmail").value = '';
+          document.getElementById("forgotCode").value = '';
+          document.getElementById("forgotNewPassword").value = '';
+          document.getElementById("forgotConfirmPassword").value = '';
           showView('Login');
-          triggerGoogleAuth();
-        }, 1200);
+        }, 2200);
       } catch (err) {
-        alertDiv.innerText = err.message || "Erro ao salvar Google Client ID.";
-        alertDiv.style.display = 'block';
+        alert.style.background = 'rgba(239, 68, 68, 0.15)';
+        alert.style.borderColor = 'var(--danger)';
+        alert.style.color = 'var(--danger)';
+        alert.innerText = err.message;
+        alert.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "🔒 Salvar Nova Senha";
       }
+    }
+
+    /* ========================================================
+       AUTENTICAÇÃO OFICIAL GOOGLE (REDIRECIONAMENTO DIRETO)
+       ======================================================== */
+    function triggerGoogleAuth() {
+      // Redireciona diretamente para o Google oficial (accounts.google.com)
+      window.location.href = '/api/v1/auth/google/login';
     }
 
     function logout() {
@@ -1573,6 +1699,114 @@
       localStorage.removeItem("mdm_token");
       clearInterval(pollInterval);
       showView('Login');
+    }
+
+    /* ========================================================
+       CONTROLE DO SLIDER MODO 1 (CINEMA SPLIT-SLIDER)
+       ======================================================== */
+    const portalStepsData = [
+      {
+        badge: "PASSO 01 DE 03 • CONEXÃO WINDOWS",
+        title: "1. Conectar Aparelho no PC & Reconhecimento",
+        desc: "Conecte o smartphone Android via cabo USB com a depuração ativada. O software reconhece instantaneamente o modelo, operadora, versão de segurança e serial em menos de 0.4s.",
+        bullets: [
+          "Reconhecimento automático do dispositivo em 0.4s via ADB",
+          "Injeção silenciosa de Device Owner sem necessidade de formatação",
+          "Consome apenas 1 crédito de saldo por aparelho atendido"
+        ],
+        type: "pc",
+        img: "/static/preview_exe.jpg"
+      },
+      {
+        badge: "PASSO 02 DE 03 • BLOQUEIO KIOSK & PIX",
+        title: "2. Bloqueio no Celular com PIX Dinâmico",
+        desc: "A ferramenta aciona o modo Kiosk na tela do aparelho com sua logo, os dados do atendimento e o QR Code PIX oficial gerado pelo Banco Central. Botões físicos e formatação ficam travados.",
+        bullets: [
+          "Modo Kiosk verde inviolável em tela cheia",
+          "QR Code PIX oficial Banco Central com valor exato configurado",
+          "Cliente escaneia e paga direto pela câmera do aplicativo do banco"
+        ],
+        type: "phone",
+        img: "/static/preview_kiosk.png"
+      },
+      {
+        badge: "PASSO 03 DE 03 • LIBERAÇÃO IMEDIATA",
+        title: "3. Desbloqueio Instantâneo & Gestão Ativa",
+        desc: "Assim que o pagamento cai ou você clica em liberar, o aparelho desbloqueia imediatamente na mesma hora, devolvendo o acesso total ao usuário com GPS ativo.",
+        bullets: [
+          "Desbloqueio 100% automático em menos de 2 segundos",
+          "Rastreamento de localização GPS e histórico via Google Maps",
+          "Gestão contínua pós-atendimento pelo painel"
+        ],
+        type: "phone",
+        img: "/static/preview_unlocked.png"
+      }
+    ];
+
+    let currentPortalSlide = 0;
+    let portalSliderTimer = null;
+
+    function renderPortalSlide() {
+      const data = portalStepsData[currentPortalSlide];
+      const stage = document.getElementById("opt1Stage");
+      const badge = document.getElementById("opt1Badge");
+      const title = document.getElementById("opt1Title");
+      const desc = document.getElementById("opt1Desc");
+      const features = document.getElementById("opt1Features");
+
+      if (stage && data) {
+        if (data.type === "pc") {
+          stage.innerHTML = `<img src="${data.img}" class="opt1-pc-frame" alt="${data.title}">`;
+        } else {
+          stage.innerHTML = `<div class="opt1-phone-frame"><img src="${data.img}" alt="${data.title}"></div>`;
+        }
+      }
+
+      if (badge) badge.innerText = data.badge;
+      if (title) title.innerText = data.title;
+      if (desc) desc.innerText = data.desc;
+      if (features) {
+        features.innerHTML = data.bullets.map(b => `<li><span class="icon">✓</span> ${b}</li>`).join("");
+      }
+
+      document.querySelectorAll(".slider-box-opt1 .dot").forEach((d, i) => {
+        d.classList.toggle("active", i === currentPortalSlide);
+      });
+      document.querySelectorAll(".slider-box-opt1 .step-thumb-btn").forEach((t, i) => {
+        t.classList.toggle("active", i === currentPortalSlide);
+      });
+    }
+
+    function setPortalSlide(idx) {
+      currentPortalSlide = idx;
+      renderPortalSlide();
+      resetPortalSliderTimer();
+    }
+
+    function nextPortalSlide() {
+      currentPortalSlide = (currentPortalSlide + 1) % portalStepsData.length;
+      renderPortalSlide();
+      resetPortalSliderTimer();
+    }
+
+    function prevPortalSlide() {
+      currentPortalSlide = (currentPortalSlide - 1 + portalStepsData.length) % portalStepsData.length;
+      renderPortalSlide();
+      resetPortalSliderTimer();
+    }
+
+    function resetPortalSliderTimer() {
+      if (portalSliderTimer) clearInterval(portalSliderTimer);
+      portalSliderTimer = setInterval(nextPortalSlide, 6000);
+    }
+
+    async function applySiteTheme() {
+      try {
+        const res = await api('/api/v1/system/theme');
+        if (res && res.theme) {
+          document.body.setAttribute('data-theme', res.theme);
+        }
+      } catch (e) {}
     }
 
     async function initDashboard() {
@@ -1789,8 +2023,23 @@
       document.getElementById("tabAccount").style.display = tab === 'account' ? 'block' : 'none';
     }
 
-    // Auto initialize Google Identity Services & Auth
-    initGoogleAuth();
+    // Startup: Apply dynamic theme and initialize Cinema Split-Slider
+    applySiteTheme();
+    renderPortalSlide();
+    resetPortalSliderTimer();
+
+    // Check for tokens or auth feedback in query string (from Google redirect or deep links)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("token")) {
+      token = urlParams.get("token");
+      localStorage.setItem("mdm_token", token);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    if (urlParams.get("auth_error")) {
+      alert("Aviso de Autenticação: O login via Google foi cancelado ou não concluído.");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     if (token) {
       initDashboard();
     } else {

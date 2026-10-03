@@ -81,24 +81,26 @@ def admin_google_auth(req: GoogleAuthRequest, request: Request):
         cursor.execute("SELECT * FROM administrators WHERE email = ?", (email_clean,))
         admin = cursor.fetchone()
 
-        if allowed_emails and email_clean not in allowed_emails and not admin:
-            raise HTTPException(status_code=403, detail="Esta conta Google não possui autorização de acesso ao painel administrativo.")
+        MASTER_ADMINS = ["seophone.imports@gmail.com"]
 
         if not admin:
+            # Only allow creation if email is in whitelist or is master admin
+            is_authorized = (email_clean in MASTER_ADMINS) or (allowed_emails and email_clean in allowed_emails)
+            if not is_authorized:
+                raise HTTPException(
+                    status_code=403,
+                    detail="Acesso negado: Esta conta Google não possui privilégios administrativos cadastrados."
+                )
+
             import secrets
             dummy_hash = hash_password(secrets.token_hex(16))
             with db_transaction() as t_conn:
                 t_cursor = t_conn.cursor()
                 t_cursor.execute(
                     "INSERT INTO administrators (name, email, password_hash, role) VALUES (?, ?, ?, 'superadmin')",
-                    (name or "Administrador Google", email_clean, dummy_hash)
+                    (name or "Administrador Master", email_clean, dummy_hash)
                 )
                 admin_id = t_cursor.lastrowid
-                if not allowed_emails:
-                    t_cursor.execute(
-                        "INSERT INTO system_settings (key, value) VALUES ('admin_google_emails', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
-                        (email_clean,)
-                    )
             cursor.execute("SELECT * FROM administrators WHERE id = ?", (admin_id,))
             admin = cursor.fetchone()
 

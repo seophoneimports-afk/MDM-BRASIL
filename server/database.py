@@ -202,6 +202,21 @@ def init_db():
         );
         """)
 
+        # 13. password_resets (Secure OTP Token Recovery)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS password_resets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            email TEXT NOT NULL,
+            reset_code TEXT NOT NULL,
+            expires_at TIMESTAMP NOT NULL,
+            used INTEGER DEFAULT 0,
+            attempts INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+        """)
+
         # Seed initial services
         cursor.execute("""
         INSERT OR IGNORE INTO services (code, name, credit_cost, is_active)

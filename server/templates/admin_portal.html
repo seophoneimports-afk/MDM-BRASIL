@@ -138,6 +138,109 @@
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.8);
       display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    /* Theme Cards */
+    .theme-card {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .theme-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .theme-card.active {
+      border-color: var(--green);
+      background: linear-gradient(145deg, rgba(0, 230, 118, 0.05), rgba(10, 15, 29, 0.95));
+      box-shadow: 0 0 25px rgba(0, 230, 118, 0.25);
+    }
+    .theme-card-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .theme-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #FFF;
+    }
+    .theme-badge {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-muted);
+    }
+    .theme-card.active .theme-badge {
+      background: rgba(0, 230, 118, 0.2);
+      color: var(--green);
+      border: 1px solid rgba(0, 230, 118, 0.4);
+    }
+    .theme-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+    .theme-palette {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .theme-meta {
+      font-size: 11.5px;
+      color: #CBD5E1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 16px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .btn-theme-select {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border);
+      color: #FFF;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .theme-card.active .btn-theme-select {
+      background: var(--green);
+      color: #060911;
+      border-color: var(--green);
+    }
+    .btn-theme-select:hover {
+      background: var(--cyan);
+      color: #060911;
+      border-color: var(--cyan);
+    }
       justify-content: center;
       align-items: center;
       z-index: 100;
@@ -303,6 +406,7 @@
         <button class="tab-btn active" onclick="switchTab('users', this)">Clientes & Carteiras</button>
         <button class="tab-btn" onclick="switchTab('payments', this)">Pagamentos PIX</button>
         <button class="tab-btn" onclick="switchTab('audit', this)">Logs de Auditoria</button>
+        <button class="tab-btn" onclick="switchTab('themes', this)">🎨 Modelos de Layout (5)</button>
         <button class="tab-btn" onclick="switchTab('settings', this)">Configurações</button>
       </div>
 
@@ -379,6 +483,125 @@
               <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Carregando logs...</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Tab: Themes (5 Modelos de Layout) -->
+      <div id="tabThemes" class="panel" style="display: none;">
+        <div class="panel-hdr">
+          <div>
+            <h3>🎨 Modelos de Layout & Identidade Visual do Site (5 Estilos)</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              Selecione o modelo visual desejado para a plataforma pública. A troca de cores, tipografia e estilos é instantânea.
+            </p>
+          </div>
+          <div id="themeToast" style="display: none; background: rgba(0,230,118,0.15); border: 1px solid var(--green); color: var(--green); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700;">
+            ✓ Tema ativado com sucesso!
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 14px;">
+          
+          <!-- Tema 1: Cinema Stealth -->
+          <div class="theme-card active" id="themeCard_cinema_stealth" onclick="selectTheme('cinema_stealth')">
+            <div class="theme-card-hdr">
+              <div class="theme-name">1. Cinema Stealth (Padrão Oficial)</div>
+              <span class="theme-badge" id="badge_cinema_stealth">✓ Ativo no Site</span>
+            </div>
+            <p class="theme-desc">Fundo ônix escuro profundo com contrastes em ciano elétrico e verde neon. Acabamento moderno em vidro escuro e badges luminosos.</p>
+            <div class="theme-palette">
+              <div class="swatch" style="background: #060911;" title="Fundo Ônix"></div>
+              <div class="swatch" style="background: #0A0F1D;" title="Cards Slate"></div>
+              <div class="swatch" style="background: #00E5FF;" title="Ciano Neon"></div>
+              <div class="swatch" style="background: #00E676;" title="Verde Esmeralda"></div>
+            </div>
+            <div class="theme-meta">
+              <span><strong>Tipografia:</strong> Inter / Plus Jakarta Sans</span>
+              <span><strong>Estilo:</strong> Glassmorphism Escuro • Alta Densidade</span>
+            </div>
+            <button class="btn-theme-select" onclick="event.stopPropagation(); selectTheme('cinema_stealth')">Aplicar Cinema Stealth</button>
+          </div>
+
+          <!-- Tema 2: Apex Quantum -->
+          <div class="theme-card" id="themeCard_apex_quantum" onclick="selectTheme('apex_quantum')">
+            <div class="theme-card-hdr">
+              <div class="theme-name">2. Apex Quantum</div>
+              <span class="theme-badge" id="badge_apex_quantum">Inativo</span>
+            </div>
+            <p class="theme-desc">Base em azul marinho cósmico com gradientes safira e glow ciano radiante. Estética SaaS Enterprise de alta tecnologia.</p>
+            <div class="theme-palette">
+              <div class="swatch" style="background: #080E1A;" title="Fundo Safira"></div>
+              <div class="swatch" style="background: #0F172A;" title="Cards Slate Navy"></div>
+              <div class="swatch" style="background: #38BDF8;" title="Ciano Quântico"></div>
+              <div class="swatch" style="background: #2563EB;" title="Azul Royal"></div>
+            </div>
+            <div class="theme-meta">
+              <span><strong>Tipografia:</strong> Outfit / Inter</span>
+              <span><strong>Estilo:</strong> Glow Safira & Bordas Angulares</span>
+            </div>
+            <button class="btn-theme-select" onclick="event.stopPropagation(); selectTheme('apex_quantum')">Aplicar Apex Quantum</button>
+          </div>
+
+          <!-- Tema 3: Matrix Cyber -->
+          <div class="theme-card" id="themeCard_matrix_cyber" onclick="selectTheme('matrix_cyber')">
+            <div class="theme-card-hdr">
+              <div class="theme-name">3. Matrix Cyber</div>
+              <span class="theme-badge" id="badge_matrix_cyber">Inativo</span>
+            </div>
+            <p class="theme-desc">Fundo negro absoluto de terminal hacker, verde fósforo militar e tipografia técnica monoespaçada de alta precisão.</p>
+            <div class="theme-palette">
+              <div class="swatch" style="background: #020509;" title="Pitch Black"></div>
+              <div class="swatch" style="background: #061017;" title="Terminal Navy"></div>
+              <div class="swatch" style="background: #10B981;" title="Verde Matrix"></div>
+              <div class="swatch" style="background: #84CC16;" title="Lima Tático"></div>
+            </div>
+            <div class="theme-meta">
+              <span><strong>Tipografia:</strong> JetBrains Mono</span>
+              <span><strong>Estilo:</strong> Terminal Técnico & Scanlines</span>
+            </div>
+            <button class="btn-theme-select" onclick="event.stopPropagation(); selectTheme('matrix_cyber')">Aplicar Matrix Cyber</button>
+          </div>
+
+          <!-- Tema 4: Neon Cyberblade -->
+          <div class="theme-card" id="themeCard_neon_cyberblade" onclick="selectTheme('neon_cyberblade')">
+            <div class="theme-card-hdr">
+              <div class="theme-name">4. Neon Cyberblade</div>
+              <span class="theme-badge" id="badge_neon_cyberblade">Inativo</span>
+            </div>
+            <p class="theme-desc">Obsidiana profunda com roxo ultravioleta fluorescente e detalhes em ouro âmbar. Contraste luxuoso cyberpunk.</p>
+            <div class="theme-palette">
+              <div class="swatch" style="background: #07040E;" title="Obsidiana"></div>
+              <div class="swatch" style="background: #110924;" title="Violeta Escuro"></div>
+              <div class="swatch" style="background: #A855F7;" title="Roxo Neon"></div>
+              <div class="swatch" style="background: #F59E0B;" title="Ouro Âmbar"></div>
+            </div>
+            <div class="theme-meta">
+              <span><strong>Tipografia:</strong> Syne / Inter</span>
+              <span><strong>Estilo:</strong> Luxury Cyberpunk Glow</span>
+            </div>
+            <button class="btn-theme-select" onclick="event.stopPropagation(); selectTheme('neon_cyberblade')">Aplicar Neon Cyberblade</button>
+          </div>
+
+          <!-- Tema 5: HyperSaaS Enterprise -->
+          <div class="theme-card" id="themeCard_hypersaas_enterprise" onclick="selectTheme('hypersaas_enterprise')">
+            <div class="theme-card-hdr">
+              <div class="theme-name">5. HyperSaaS Enterprise</div>
+              <span class="theme-badge" id="badge_hypersaas_enterprise">Inativo</span>
+            </div>
+            <p class="theme-desc">Cinza titânio espacial e azul cobalt executivo. Linhas limpas, bordas discretas e máxima sobriedade institucional.</p>
+            <div class="theme-palette">
+              <div class="swatch" style="background: #090D16;" title="Titânio Escuro"></div>
+              <div class="swatch" style="background: #111827;" title="Charcoal"></div>
+              <div class="swatch" style="background: #3B82F6;" title="Azul Cobalt"></div>
+              <div class="swatch" style="background: #06B6D4;" title="Teal Claro"></div>
+            </div>
+            <div class="theme-meta">
+              <span><strong>Tipografia:</strong> Plus Jakarta Sans</span>
+              <span><strong>Estilo:</strong> Minimal Corporativo</span>
+            </div>
+            <button class="btn-theme-select" onclick="event.stopPropagation(); selectTheme('hypersaas_enterprise')">Aplicar HyperSaaS Enterprise</button>
+          </div>
+
         </div>
       </div>
 
@@ -793,17 +1016,67 @@
       });
     }
 
+    let currentSiteTheme = 'cinema_stealth';
+
+    async function loadThemeSelection() {
+      try {
+        const res = await adminApi('/api/v1/system/theme');
+        if (res && res.theme) {
+          applyThemeActiveState(res.theme);
+        }
+      } catch (e) {
+        applyThemeActiveState('cinema_stealth');
+      }
+    }
+
+    function applyThemeActiveState(themeId) {
+      currentSiteTheme = themeId;
+      const themes = ['cinema_stealth', 'apex_quantum', 'matrix_cyber', 'neon_cyberblade', 'hypersaas_enterprise'];
+      themes.forEach(t => {
+        const card = document.getElementById(`themeCard_${t}`);
+        const badge = document.getElementById(`badge_${t}`);
+        if (card && badge) {
+          if (t === themeId) {
+            card.classList.add('active');
+            badge.innerText = '✓ Ativo no Site';
+          } else {
+            card.classList.remove('active');
+            badge.innerText = 'Inativo';
+          }
+        }
+      });
+    }
+
+    async function selectTheme(themeId) {
+      try {
+        applyThemeActiveState(themeId);
+        await adminApi('/api/v1/admin/settings', 'POST', { key: 'site_theme', value: themeId });
+        const toast = document.getElementById("themeToast");
+        if (toast) {
+          toast.style.display = 'inline-block';
+          setTimeout(() => { toast.style.display = 'none'; }, 4000);
+        }
+      } catch (err) {
+        alert("Erro ao salvar tema: " + err.message);
+      }
+    }
+
     function switchTab(tab, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById("tabUsers").style.display = tab === 'users' ? 'block' : 'none';
       document.getElementById("tabPayments").style.display = tab === 'payments' ? 'block' : 'none';
       document.getElementById("tabAudit").style.display = tab === 'audit' ? 'block' : 'none';
+      document.getElementById("tabThemes").style.display = tab === 'themes' ? 'block' : 'none';
       document.getElementById("tabSettings").style.display = tab === 'settings' ? 'block' : 'none';
+      if (tab === 'themes') {
+        loadThemeSelection();
+      }
     }
 
     if (adminToken) {
       initAdminDashboard();
+      loadThemeSelection();
     }
 
     // ==========================================

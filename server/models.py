@@ -16,6 +16,17 @@ class PasswordResetRequest(BaseModel):
     email: EmailStr
     new_password: str = Field(..., min_length=6)
 
+class PasswordResetInitRequest(BaseModel):
+    email: EmailStr
+
+class PasswordResetConfirmRequest(BaseModel):
+    email: EmailStr
+    code: str = Field(..., min_length=4, max_length=10)
+    new_password: str = Field(..., min_length=6, max_length=100)
+
+class ThemeUpdateRequest(BaseModel):
+    theme: str = Field(..., pattern="^(cinema_stealth|apex_quantum|matrix_cyber|neon_cyberblade|hypersaas_enterprise)$")
+
 class BuyCreditsRequest(BaseModel):
     credits_amount: int = Field(..., ge=1, le=1000)
 

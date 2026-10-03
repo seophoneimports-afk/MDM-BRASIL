@@ -75,15 +75,44 @@ def health_check():
         "database": "sqlite_wal_active"
     }
 
+# Theme API for dynamic layout switching
+@app.get("/api/v1/system/theme")
+def get_system_theme():
+    from server.database import get_db_connection
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'site_theme'")
+        row = cursor.fetchone()
+        theme = row["value"] if row and row["value"] else "cinema_stealth"
+    return {"success": True, "theme": theme}
+
 # Web Portal HTML Views
 @app.get("/client", response_class=HTMLResponse)
 @app.get("/login", response_class=HTMLResponse)
 @app.get("/register", response_class=HTMLResponse)
 @app.get("/", response_class=HTMLResponse)
 def serve_client_portal():
+    from server.database import get_db_connection
+    theme = "cinema_stealth"
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT value FROM system_settings WHERE key = 'site_theme'")
+            row = cursor.fetchone()
+            if row and row["value"]:
+                theme = row["value"]
+    except Exception:
+        pass
+
     path = os.path.join(TEMPLATES_DIR, "client_portal.html")
     with open(path, "r", encoding="utf-8") as f:
-        return f.read()
+        html = f.read()
+
+    # Dynamic server-side injection of active theme
+    html = html.replace('data-theme="cinema_stealth"', f'data-theme="{theme}"')
+    if 'data-theme=' not in html:
+        html = html.replace('<body', f'<body data-theme="{theme}"')
+    return html
 
 @app.get("/headers", response_class=HTMLResponse)
 def serve_headers_showcase():

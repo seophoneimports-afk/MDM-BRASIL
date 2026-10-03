@@ -8,7 +8,31 @@ from fastapi import HTTPException, Security, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from server.database import get_db_connection, db_transaction
 
-SECRET_KEY = os.getenv("MDM_JWT_SECRET", "mdm_frp_brasil_super_secret_jwt_key_2026_production")
+import secrets
+
+def get_secret_key() -> str:
+    env_key = os.getenv("MDM_JWT_SECRET")
+    if env_key and len(env_key) >= 16:
+        return env_key
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT value FROM system_settings WHERE key = 'system_jwt_secret'")
+            row = cursor.fetchone()
+            if row and row["value"]:
+                return row["value"]
+            # Generate new high-entropy secret
+            new_key = secrets.token_hex(32)
+            with db_transaction() as t_conn:
+                t_conn.cursor().execute(
+                    "INSERT INTO system_settings (key, value) VALUES ('system_jwt_secret', ?) ON CONFLICT(key) DO NOTHING",
+                    (new_key,)
+                )
+            return new_key
+    except Exception:
+        return "mdm_frp_brasil_super_secret_jwt_key_2026_production"
+
+SECRET_KEY = get_secret_key()
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 24 * 7  # 7 days
 

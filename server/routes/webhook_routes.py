@@ -1,13 +1,16 @@
+import os
 import json
 import uuid
-from fastapi import APIRouter, Request, HTTPException, Header
+from fastapi import APIRouter, Request, HTTPException, Header, Depends
 from server.pix import process_pix_webhook
 from server.models import PixWebhookSimulationRequest
+from server.auth import get_current_admin
+from server.database import get_db_connection
 
 router = APIRouter(prefix="/api/v1/webhooks", tags=["Webhooks"])
 
 @router.post("/pix")
-async def receive_pix_webhook(request: Request, x_idempotency_key: str = Header(None)):
+async def receive_pix_webhook(request: Request, x_idempotency_key: str = Header(None), x_webhook_secret: str = Header(None)):
     raw_body = await request.body()
     payload_str = raw_body.decode("utf-8")
 
@@ -32,11 +35,33 @@ async def receive_pix_webhook(request: Request, x_idempotency_key: str = Header(
     return result
 
 @router.post("/pix/simulate")
-def simulate_pix_webhook(req: PixWebhookSimulationRequest):
+def simulate_pix_webhook(req: PixWebhookSimulationRequest, request: Request, x_webhook_secret: str = Header(None)):
     """
-    Endpoint para testes locais ou aprovação manual de cobrança PIX.
-    Processa de forma estritamente idempotente.
+    Endpoint para testes ou aprovação manual de cobrança PIX.
+    Protegido: Requer token de administrador ou X-Webhook-Secret válido.
     """
+    secret = os.getenv("WEBHOOK_SECRET")
+    auth_header = request.headers.get("authorization", "")
+    
+    is_authorized = False
+    if secret and x_webhook_secret == secret:
+        is_authorized = True
+    elif auth_header.startswith("Bearer "):
+        # Check if caller has valid admin bearer token
+        from server.auth import decode_token
+        try:
+            payload = decode_token(auth_header.split(" ")[1])
+            if payload.get("role") in ("superadmin", "support") or payload.get("admin_id"):
+                is_authorized = True
+        except Exception:
+            pass
+
+    if not is_authorized:
+        raise HTTPException(
+            status_code=403,
+            detail="Acesso não autorizado: Esta ação de simulação/aprovação exige autenticação administrativa."
+        )
+
     idem_key = req.idempotency_key or f"SIM-{req.txid}-{uuid.uuid4().hex[:6]}"
     raw_payload = json.dumps({"simulated": True, "txid": req.txid, "status": req.status})
 
