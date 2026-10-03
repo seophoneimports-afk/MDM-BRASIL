@@ -1143,14 +1143,14 @@
     }
 
     /* Layout Containers Display Rules */
-    .layout-container { display: none; }
-    body[data-layout="cinema_split"] #layoutCinemaSplit { display: block; }
-    body[data-layout="bento_grid"] #layoutBentoGrid { display: block; }
-    body[data-layout="hero_exe"] #layoutHeroExe { display: block; }
-    body[data-layout="saas_grid"] #layoutSaasGrid { display: block; }
-    body[data-layout="matrix_terminal"] #layoutMatrixTerminal { display: block; }
-    body[data-layout="minimal_fast"] #layoutMinimalFast { display: block; }
-    body:not([data-layout]) #layoutCinemaSplit { display: block; }
+    .layout-container, .layout-mode-view { display: none !important; }
+    body[data-layout="cinema_split"] #layoutCinemaSplit { display: block !important; }
+    body[data-layout="bento_grid"] #layoutBentoGrid { display: block !important; }
+    body[data-layout="hero_exe"] #layoutHeroExe { display: block !important; }
+    body[data-layout="saas_grid"] #layoutSaasGrid { display: block !important; }
+    body[data-layout="matrix_terminal"] #layoutMatrixTerminal { display: block !important; }
+    body[data-layout="minimal_fast"] #layoutMinimalFast { display: block !important; }
+    body:not([data-layout]) #layoutCinemaSplit { display: block !important; }
 
     /* Bento Grid Mode (Modo 2) */
     .bento-grid-wrapper {
