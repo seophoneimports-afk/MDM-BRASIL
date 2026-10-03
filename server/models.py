@@ -44,7 +44,18 @@ class AdminAdjustCreditsRequest(BaseModel):
 class AdminUpdateUserRequest(BaseModel):
     status: Optional[str] = Field(None, pattern="^(active|suspended|pending)$")
     name: Optional[str] = None
+    email: Optional[EmailStr] = None
     whatsapp: Optional[str] = None
+    password: Optional[str] = None
+    set_balance: Optional[int] = None
+
+class AdminCreateUserRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    email: EmailStr
+    whatsapp: str = Field(..., min_length=8, max_length=25)
+    password: str = Field(..., min_length=6, max_length=100)
+    initial_credits: Optional[int] = 5
+    status: Optional[str] = "active"
 
 class AdminSettingRequest(BaseModel):
     key: str

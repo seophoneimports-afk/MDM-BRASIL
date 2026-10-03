@@ -127,10 +127,18 @@
     .badge-paid { background: rgba(0, 230, 118, 0.15); color: var(--green); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
     .badge-pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
 
-    .btn-sm { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-sm { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease; }
     .btn-adjust { background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.3); }
+    .btn-adjust:hover { background: rgba(0, 229, 255, 0.25); color: #FFF; }
+    .btn-edit { background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.35); }
+    .btn-edit:hover { background: rgba(56, 189, 248, 0.25); color: #FFF; }
+    .btn-detail { background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.35); }
+    .btn-detail:hover { background: rgba(168, 85, 247, 0.25); color: #FFF; }
+    .btn-delete { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.35); }
+    .btn-delete:hover { background: rgba(239, 68, 68, 0.25); color: #FFF; }
     .btn-suspend { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
     .btn-activate { background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.3); }
+    .btn-logout.active { background: rgba(56, 189, 248, 0.2); border-color: #38BDF8; color: #38BDF8; }
 
     /* Modal Adjustment */
     .modal-overlay {
@@ -533,9 +541,20 @@
 
       <!-- Tab: Users -->
       <div id="tabUsers" class="panel">
-        <div class="panel-hdr">
-          <h3>👥 Gestão de Clientes e Saldo de Créditos</h3>
-          <input type="text" id="userSearch" class="form-control" placeholder="Buscar por nome, e-mail ou whats..." style="max-width: 320px;" oninput="loadAdminUsers()">
+        <div class="panel-hdr" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3>👥 Gestão de Clientes e Saldo de Créditos</h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 4px;">Cadastre, edite dados, redefina senhas do EXE/Site e gerencie o saldo de cada técnico.</p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="userSearch" class="form-control" placeholder="Buscar por nome, e-mail ou whats..." style="max-width: 250px;" oninput="loadAdminUsers()">
+            <button class="btn-primary" style="width: auto; padding: 9px 16px; font-size: 12.5px; background: var(--green); color: #000; font-weight: 800; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 230, 118, 0.25);" onclick="openCreateUserModal()">
+              ➕ Cadastrar Novo Técnico
+            </button>
+            <button class="btn-logout" style="font-size: 13px; padding: 8px 12px;" onclick="loadAdminUsers()" title="Recarregar Clientes">
+              🔄
+            </button>
+          </div>
         </div>
         <div style="overflow-x: auto;">
           <table>
@@ -549,7 +568,7 @@
                 <th>Comprados</th>
                 <th>Utilizados</th>
                 <th>Status</th>
-                <th>Ações</th>
+                <th style="min-width: 280px; text-align: center;">Configurações &amp; Ações</th>
               </tr>
             </thead>
             <tbody id="tblUsersBody">
@@ -1100,13 +1119,21 @@
 
       <!-- Tab: Settings -->
       <div id="tabSettings" class="panel" style="display: none;">
-        <div class="panel-hdr">
-          <h3>⚙️ Configurações Gerais & PIX da Plataforma</h3>
+        <div class="panel-hdr" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3>⚙️ Configurações Gerais da Plataforma &amp; PIX</h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; margin-top: 4px;">Defina a chave PIX recebedora, WhatsApp oficial, mensagens de atendimento e regras comerciais.</p>
+          </div>
+          <button class="btn-primary" style="width: auto; padding: 10px 22px; background: var(--green); color: #000; font-weight: 800; border-radius: 8px; box-shadow: 0 0 20px rgba(0, 230, 118, 0.3);" onclick="saveSettings()">
+            💾 Salvar Todas as Configurações
+          </button>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
-          <!-- Settings Form -->
-          <div style="background: var(--card-inner); padding: 20px; border-radius: 10px; border: 1px solid var(--border);">
-            <h4 style="font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 14px;">💳 Dados Recebedores do PIX</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;">
+          <!-- Card 1: PIX -->
+          <div style="background: var(--card-inner); padding: 22px; border-radius: 12px; border: 1px solid var(--border);">
+            <h4 style="font-size: 14.5px; font-weight: 700; color: var(--green); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span>💳</span> Recebimento PIX Instantâneo
+            </h4>
 
             <div class="form-group">
               <label>Tipo de Chave PIX</label>
@@ -1121,12 +1148,12 @@
             </div>
 
             <div class="form-group">
-              <label>Chave PIX (qualquer chave de sua escolha)</label>
+              <label>Chave PIX Recebedora</label>
               <input type="text" id="cfgPixKey" class="form-control" placeholder="Digite sua chave PIX...">
             </div>
 
             <div class="form-group">
-              <label>Nome do Titular / Beneficiário (Banco Central)</label>
+              <label>Nome do Titular / Razão Social</label>
               <input type="text" id="cfgPixName" class="form-control" placeholder="MDM FRP BRASIL">
             </div>
 
@@ -1135,48 +1162,86 @@
               <input type="text" id="cfgPixCity" class="form-control" placeholder="AMERICANA">
             </div>
 
-            <h4 style="font-size: 14px; font-weight: 700; color: var(--cyan); margin: 20px 0 14px;">💰 Regras Comerciais &amp; Boas-Vindas</h4>
             <div class="form-group">
               <label>Preço por Crédito (R$)</label>
               <input type="number" step="0.50" id="cfgCreditPrice" class="form-control" value="5.00">
             </div>
 
+            <button type="button" class="btn-primary" style="background: #0284C7; border-color: #38BDF8; margin-top: 10px;" onclick="testPixPreview()">
+              ⚡ Testar QR Code do PIX
+            </button>
+          </div>
+
+          <!-- Card 2: Suporte WhatsApp & Identidade -->
+          <div style="background: var(--card-inner); padding: 22px; border-radius: 12px; border: 1px solid var(--border);">
+            <h4 style="font-size: 14.5px; font-weight: 700; color: #25D366; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span>📞</span> Atendimento WhatsApp &amp; Marca
+            </h4>
+
+            <div class="form-group">
+              <label>WhatsApp de Suporte / Comercial (com DDD)</label>
+              <input type="text" id="cfgSupportPhone" class="form-control" placeholder="(19) 99478-3127">
+              <small style="color: var(--text-muted); font-size: 11px;">Atualiza automaticamente o botão flutuante e todos os links de WhatsApp do site.</small>
+            </div>
+
+            <div class="form-group">
+              <label>Mensagem Padrão do WhatsApp</label>
+              <input type="text" id="cfgSupportMsg" class="form-control" placeholder="Olá, vim pelo site MDM & FRP BRASIL e gostaria de suporte.">
+            </div>
+
+            <div class="form-group">
+              <label>Nome Comercial da Plataforma</label>
+              <input type="text" id="cfgPlatformName" class="form-control" placeholder="MDM & FRP BRASIL">
+            </div>
+
             <div class="form-group">
               <label>🎁 Créditos de Boas-Vindas para Novos Técnicos</label>
               <input type="number" step="1" id="cfgWelcomeCredits" class="form-control" value="5" min="0" max="100">
-              <small style="color: var(--text-muted); font-size: 11px;">Créditos concedidos automaticamente no cadastro para novos técnicos testarem no EXE sem ficarem sem saldo.</small>
+              <small style="color: var(--text-muted); font-size: 11px;">Créditos concedidos no cadastro para testes no EXE.</small>
             </div>
 
-            <h4 style="font-size: 14px; font-weight: 700; color: #38BDF8; margin: 20px 0 14px;">🌐 Integração Google</h4>
             <div class="form-group">
-              <label>Google Client ID (OAuth 2.0)</label>
-              <input type="text" id="cfgGoogleClientId" class="form-control" placeholder="Ex: 123456789-xxxx.apps.googleusercontent.com">
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 18px;">
-              <button class="btn-primary" onclick="saveSettings()">💾 Salvar Configurações</button>
-              <button class="btn-primary" style="background: #0284C7; border-color: #38BDF8;" onclick="testPixPreview()">⚡ Testar QR Code</button>
+              <label>📢 Aviso / Alerta Global do Topo (opcional)</label>
+              <input type="text" id="cfgAnnouncement" class="form-control" placeholder="Ex: Servidor em nuvem 100% online • Atualização 2.2 disponível">
             </div>
           </div>
 
-          <!-- Live PIX Preview Box -->
-          <div style="background: var(--card-inner); padding: 20px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <h4 style="font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 8px;">📱 Pré-visualização do QR Code PIX</h4>
-            <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 14px;">Verifique em tempo real como o QR Code oficial será gerado para seus clientes.</p>
+          <!-- Card 3: Segurança & Preview -->
+          <div style="background: var(--card-inner); padding: 22px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h4 style="font-size: 14.5px; font-weight: 700; color: var(--cyan); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                <span>🔒</span> Acessos Administrativos &amp; QR Code
+              </h4>
 
-            <div id="pixPreviewImgWrap" style="background: #FFF; padding: 10px; border-radius: 8px; width: 170px; height: 170px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
-              <span id="pixPreviewPlaceholder" style="color: #94A3B8; font-size: 11px;">Clique em "Testar QR Code"</span>
-              <img id="pixPreviewImg" style="display: none; width: 150px; height: 150px;" alt="QR Code PIX">
+              <div class="form-group">
+                <label>E-mails com Acesso Admin (separados por vírgula)</label>
+                <input type="text" id="cfgAdminEmails" class="form-control" placeholder="seophone.imports@gmail.com, admin@mdmfrpbrasil.com.br">
+                <small style="color: var(--text-muted); font-size: 11px;">E-mails autorizados a fazer login como administrador master.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Google Client ID (OAuth 2.0)</label>
+                <input type="text" id="cfgGoogleClientId" class="form-control" placeholder="Ex: 123456789-xxxx.apps.googleusercontent.com">
+              </div>
+
+              <!-- Live PIX Box -->
+              <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); text-align: center;">
+                <div id="pixPreviewImgWrap" style="background: #FFF; padding: 10px; border-radius: 8px; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                  <span id="pixPreviewPlaceholder" style="color: #94A3B8; font-size: 10.5px;">Clique em "Testar QR Code"</span>
+                  <img id="pixPreviewImg" style="display: none; width: 120px; height: 120px;" alt="QR Code PIX">
+                </div>
+
+                <div id="pixPreviewKeyInfo" style="font-size: 11.5px; font-weight: 600; color: var(--cyan); margin-bottom: 6px;"></div>
+
+                <textarea id="pixPreviewPayload" class="form-control" rows="2" readonly style="font-size: 9.5px; font-family: monospace; word-break: break-all; resize: none; margin-bottom: 8px;" placeholder="Código Copia e Cola aparecerá aqui..."></textarea>
+                
+                <button type="button" class="btn-logout" style="font-size: 11px; padding: 6px 14px;" onclick="copyPixPreviewCode()">📋 Copiar Código PIX</button>
+              </div>
             </div>
 
-            <div id="pixPreviewKeyInfo" style="font-size: 12px; font-weight: 600; color: var(--cyan); margin-bottom: 8px;"></div>
-
-            <div class="form-group" style="width: 100%; text-align: left;">
-              <label style="font-size: 11px;">Código Copia e Cola Oficial (EMV/BACEN):</label>
-              <textarea id="pixPreviewPayload" class="form-control" rows="3" readonly style="font-size: 10px; font-family: monospace; word-break: break-all; resize: none;"></textarea>
-            </div>
-
-            <button class="btn-primary" style="width: auto; padding: 8px 16px; font-size: 11px;" onclick="copyPixPreviewCode()">📋 Copiar Código Copia e Cola</button>
+            <button type="button" class="btn-primary" style="margin-top: 16px; background: var(--green); color: #000; font-weight: 800;" onclick="saveSettings()">
+              💾 Salvar Todas as Configurações
+            </button>
           </div>
         </div>
       </div>
@@ -1215,11 +1280,243 @@
     </div>
   </div>
 
+  <!-- MODAL EDITAR CLIENTE & SENHA -->
+  <div class="modal-overlay" id="modalEditUser" style="z-index: 10002;">
+    <div class="modal-content" style="max-width: 540px; width: 95%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+        <h3 style="margin: 0; color: #38BDF8; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+          <span>✏️</span> Editar Cliente, Saldo &amp; Senha
+        </h3>
+        <button type="button" onclick="closeEditUserModal()" style="background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 16px;">
+        Altere dados cadastrais, redefina a senha para o EXE / Site e defina diretamente o saldo de créditos.
+      </p>
+
+      <input type="hidden" id="editUserId">
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="form-group">
+          <label>Nome Completo do Técnico</label>
+          <input type="text" id="editUserName" class="form-control" placeholder="Nome do cliente">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>E-mail Cadastrado</label>
+            <input type="email" id="editUserEmail" class="form-control" placeholder="cliente@email.com">
+          </div>
+          <div class="form-group">
+            <label>WhatsApp / Contato</label>
+            <input type="text" id="editUserWhatsapp" class="form-control" placeholder="(19) 99999-9999">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>Status da Conta</label>
+            <select id="editUserStatus" class="form-control">
+              <option value="active">🟢 Ativo (Liberado)</option>
+              <option value="suspended">🔴 Suspenso (Bloqueado)</option>
+              <option value="pending">🟡 Pendente</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Saldo Direto de Créditos</label>
+            <input type="number" id="editUserBalance" class="form-control" min="0" step="1" placeholder="Ex: 5">
+            <small style="color: var(--text-muted); font-size: 10.5px;">Ajusta o saldo imediato na carteira.</small>
+          </div>
+        </div>
+
+        <div class="form-group" style="background: rgba(0, 229, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px dashed rgba(0, 229, 255, 0.35);">
+          <label style="color: var(--cyan); font-weight: 700;">🔑 Redefinir Senha do Cliente (EXE + Site)</label>
+          <input type="text" id="editUserPassword" class="form-control" placeholder="Deixe em branco para manter a senha atual" style="font-family: 'JetBrains Mono', monospace; font-size: 13px;">
+          <small style="color: var(--text-muted); font-size: 11px; margin-top: 5px; display: block; line-height: 1.4;">
+            Ao preencher uma nova senha, o cliente poderá se autenticar imediatamente no painel do site e no aplicativo Windows <code>MDM_FRP_BRASIL.exe</code>.
+          </small>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
+        <button type="button" class="btn-logout" onclick="closeEditUserModal()">Cancelar</button>
+        <button type="button" class="btn-primary" style="width: auto; padding: 10px 22px; background: var(--green); color: #000; font-weight: 800;" onclick="saveEditUser()">
+          💾 Salvar Alterações
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CADASTRAR NOVO TÉCNICO -->
+  <div class="modal-overlay" id="modalCreateUser" style="z-index: 10002;">
+    <div class="modal-content" style="max-width: 520px; width: 95%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+        <h3 style="margin: 0; color: var(--green); font-size: 16px; display: flex; align-items: center; gap: 8px;">
+          <span>➕</span> Cadastrar Novo Técnico
+        </h3>
+        <button type="button" onclick="closeCreateUserModal()" style="background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 16px;">
+        Cadastre um técnico manualmente para acesso imediato ao aplicativo Windows e portal web.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="form-group">
+          <label>Nome Completo do Técnico</label>
+          <input type="text" id="createUserName" class="form-control" placeholder="Ex: Roberto Assistência Cell">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>E-mail de Login</label>
+            <input type="email" id="createUserEmail" class="form-control" placeholder="tecnico@gmail.com">
+          </div>
+          <div class="form-group">
+            <label>WhatsApp (com DDD)</label>
+            <input type="text" id="createUserWhatsapp" class="form-control" placeholder="(19) 99999-9999">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>Senha de Acesso (EXE e Site)</label>
+            <input type="text" id="createUserPassword" class="form-control" placeholder="Mínimo 6 dígitos" value="123456" style="font-family: 'JetBrains Mono', monospace;">
+          </div>
+          <div class="form-group">
+            <label>Créditos Iniciais de Bônus</label>
+            <input type="number" id="createUserCredits" class="form-control" value="5" min="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Status Inicial</label>
+          <select id="createUserStatus" class="form-control">
+            <option value="active">🟢 Ativo (Liberado)</option>
+            <option value="suspended">🔴 Suspenso</option>
+            <option value="pending">🟡 Pendente</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
+        <button type="button" class="btn-logout" onclick="closeCreateUserModal()">Cancelar</button>
+        <button type="button" class="btn-primary" style="width: auto; padding: 10px 22px; background: var(--green); color: #000; font-weight: 800;" onclick="submitCreateUser()">
+          ✓ Cadastrar Técnico
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL RAIO-X DETALHADO DO CLIENTE -->
+  <div class="modal-overlay" id="modalUserDetails" style="z-index: 10002;">
+    <div class="modal-content" style="max-width: 820px; width: 95%; max-height: 88vh; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #A855F7; text-transform: uppercase; letter-spacing: 0.5px;">Raio-X do Técnico</div>
+          <h3 id="detailUserTitle" style="margin: 2px 0 0 0; color: #FFF; font-size: 18px;">Cliente #—</h3>
+          <div id="detailUserMeta" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Carregando detalhes...</div>
+        </div>
+        <button type="button" onclick="closeUserDetailsModal()" style="background: none; border: 1px solid var(--border); color: var(--text-muted); border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+      </div>
+
+      <!-- Mini KPIs do Usuário -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px;">
+        <div style="background: var(--card-inner); padding: 10px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+          <div style="font-size: 11px; color: var(--text-muted);">Saldo Atual</div>
+          <div id="detailKpiBalance" style="font-size: 18px; font-weight: 800; color: var(--green);">0</div>
+        </div>
+        <div style="background: var(--card-inner); padding: 10px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+          <div style="font-size: 11px; color: var(--text-muted);">Total Comprado</div>
+          <div id="detailKpiPurchased" style="font-size: 18px; font-weight: 800; color: var(--cyan);">0</div>
+        </div>
+        <div style="background: var(--card-inner); padding: 10px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+          <div style="font-size: 11px; color: var(--text-muted);">Total Utilizado</div>
+          <div id="detailKpiUsed" style="font-size: 18px; font-weight: 800; color: var(--warning);">0</div>
+        </div>
+        <div style="background: var(--card-inner); padding: 10px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+          <div style="font-size: 11px; color: var(--text-muted);">Status</div>
+          <div id="detailKpiStatus" style="font-size: 14px; font-weight: 800; color: #FFF; margin-top: 3px;">Ativo</div>
+        </div>
+      </div>
+
+      <!-- Sub-tabs do Raio-X -->
+      <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 12px; padding-bottom: 8px;">
+        <button type="button" class="btn-logout active" id="btnSubTabOrders" onclick="switchDetailSubTab('orders')" style="font-size: 11.5px; padding: 6px 12px;">⚡ Ordens de Serviço</button>
+        <button type="button" class="btn-logout" id="btnSubTabDevices" onclick="switchDetailSubTab('devices')" style="font-size: 11.5px; padding: 6px 12px;">📱 Aparelhos Conectados</button>
+        <button type="button" class="btn-logout" id="btnSubTabPayments" onclick="switchDetailSubTab('payments')" style="font-size: 11.5px; padding: 6px 12px;">💳 Cobranças PIX</button>
+        <button type="button" class="btn-logout" id="btnSubTabTxs" onclick="switchDetailSubTab('txs')" style="font-size: 11.5px; padding: 6px 12px;">🪙 Extrato de Créditos</button>
+      </div>
+
+      <!-- Conteúdo Scrollable das Sub-abas -->
+      <div style="overflow-y: auto; flex: 1; min-height: 220px; font-size: 12px;">
+        <!-- SubTab: Orders -->
+        <div id="subTabContentOrders">
+          <table style="width: 100%;">
+            <thead>
+              <tr><th>Data</th><th>Operação</th><th>Aparelho</th><th>Serviço</th><th>Créditos</th><th>Status</th></tr>
+            </thead>
+            <tbody id="tblDetailOrdersBody">
+              <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 16px;">Nenhuma ordem registrada.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SubTab: Devices -->
+        <div id="subTabContentDevices" style="display: none;">
+          <table style="width: 100%;">
+            <thead>
+              <tr><th>Serial</th><th>Modelo</th><th>Fabricante</th><th>Android</th><th>Último Acesso</th></tr>
+            </thead>
+            <tbody id="tblDetailDevicesBody">
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 16px;">Nenhum aparelho registrado.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SubTab: Payments -->
+        <div id="subTabContentPayments" style="display: none;">
+          <table style="width: 100%;">
+            <thead>
+              <tr><th>Data</th><th>TXID</th><th>Créditos</th><th>Valor R$</th><th>Status</th></tr>
+            </thead>
+            <tbody id="tblDetailPaymentsBody">
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 16px;">Nenhum pagamento registrado.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SubTab: Transactions -->
+        <div id="subTabContentTxs" style="display: none;">
+          <table style="width: 100%;">
+            <thead>
+              <tr><th>Data</th><th>Tipo</th><th>Qtd</th><th>Saldo Resultante</th><th>Descrição</th></tr>
+            </thead>
+            <tbody id="tblDetailTxsBody">
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 16px;">Nenhuma movimentação.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 10px;">
+        <button type="button" class="btn-logout" onclick="closeUserDetailsModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    let adminToken = urlParams.get("token") || localStorage.getItem("mdm_admin_token");
+    let adminToken = urlParams.get("token") || localStorage.getItem("mdm_admin_token") || localStorage.getItem("mdm_token");
     if (urlParams.get("token")) localStorage.setItem("mdm_admin_token", adminToken);
     let currentAdjustUserId = null;
+    let allUsersCache = [];
+    let currentDetailUserId = null;
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+      });
+    }
 
     async function adminApi(endpoint, method = 'GET', body = null) {
       const headers = { 'Content-Type': 'application/json' };
@@ -1278,11 +1575,18 @@
     }
 
     async function initAdminDashboard() {
+      try {
+        await loadMetrics();
+      } catch (err) {
+        console.warn("Autenticação admin não aceita token atual:", err);
+        adminLogout();
+        return;
+      }
+
       document.getElementById("viewAdminLogin").style.display = 'none';
       document.getElementById("viewAdminDash").style.display = 'block';
       document.getElementById("adminHeaderArea").style.display = 'flex';
 
-      loadMetrics();
       loadAdminUsers();
       loadPayments();
       loadAudit();
@@ -1299,37 +1603,277 @@
         document.getElementById("metUsed").innerText = m.total_credits_used;
         document.getElementById("metServices").innerText = `${m.total_services_executed} serviços executados`;
         document.getElementById("metCirculating").innerText = m.circulating_credits;
-      } catch (e) {}
+      } catch (e) {
+        throw e;
+      }
     }
 
     async function loadAdminUsers() {
-      const search = document.getElementById("userSearch").value;
-      const users = await adminApi(`/api/v1/admin/users?search=${encodeURIComponent(search)}`);
-      const tbody = document.getElementById("tblUsersBody");
-      tbody.innerHTML = '';
-      if (!users.length) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">Nenhum cliente cadastrado.</td></tr>';
-        return;
+      const search = document.getElementById("userSearch") ? document.getElementById("userSearch").value : '';
+      try {
+        const users = await adminApi(`/api/v1/admin/users?search=${encodeURIComponent(search)}`);
+        allUsersCache = users;
+        const tbody = document.getElementById("tblUsersBody");
+        tbody.innerHTML = '';
+        if (!users.length) {
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted); padding:20px;">Nenhum cliente cadastrado.</td></tr>';
+          return;
+        }
+        users.forEach(u => {
+          const tr = document.createElement("tr");
+          const isActive = u.status === 'active';
+          const safeName = (u.name || '').replace(/'/g, "\\'");
+          tr.innerHTML = `
+            <td class="mono">#${u.id}</td>
+            <td><strong>${escapeHtml(u.name || 'Sem nome')}</strong></td>
+            <td>${escapeHtml(u.email || '—')}</td>
+            <td>${escapeHtml(u.whatsapp || '—')}</td>
+            <td class="mono" style="font-weight:700; color:var(--green); font-size:13px;">${u.balance_credits ?? 0} créd.</td>
+            <td class="mono">${u.total_purchased ?? 0}</td>
+            <td class="mono">${u.total_used ?? 0}</td>
+            <td><span class="${isActive ? 'badge-active' : 'badge-suspended'}">${u.status}</span></td>
+            <td>
+              <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                <button class="btn-sm btn-edit" onclick="openEditUserModal(${u.id})" title="Editar dados cadastrais, saldo direto e nova senha">✏️ Editar</button>
+                <button class="btn-sm btn-detail" onclick="openUserDetailsModal(${u.id})" title="Raio-X: ordens, aparelhos e extrato">🔍 Raio-X</button>
+                <button class="btn-sm btn-adjust" onclick="openAdjustModal(${u.id}, '${safeName}')" title="Ajustar saldo com justificativa para auditoria">🪙 Crédito</button>
+                <button class="btn-sm ${isActive ? 'btn-suspend' : 'btn-activate'}" onclick="toggleUserStatus(${u.id}, '${isActive ? 'suspended' : 'active'}')">${isActive ? 'Suspender' : 'Ativar'}</button>
+                <button class="btn-sm btn-delete" onclick="deleteUser(${u.id}, '${safeName}')" title="Excluir cliente permanentemente">🗑️ Excluir</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Erro ao carregar clientes:", err);
       }
-      users.forEach(u => {
-        const tr = document.createElement("tr");
-        const isActive = u.status === 'active';
-        tr.innerHTML = `
-          <td class="mono">#${u.id}</td>
-          <td><strong>${u.name}</strong></td>
-          <td>${u.email}</td>
-          <td>${u.whatsapp}</td>
-          <td class="mono" style="font-weight:700; color:var(--green);">${u.balance_credits || 0}</td>
-          <td class="mono">${u.total_purchased || 0}</td>
-          <td class="mono">${u.total_used || 0}</td>
-          <td><span class="${isActive ? 'badge-active' : 'badge-suspended'}">${u.status}</span></td>
-          <td style="display:flex; gap:6px;">
-            <button class="btn-sm btn-adjust" onclick="openAdjustModal(${u.id}, '${u.name}')">🪙 Ajustar</button>
-            <button class="btn-sm ${isActive ? 'btn-suspend' : 'btn-activate'}" onclick="toggleUserStatus(${u.id}, '${isActive ? 'suspended' : 'active'}')">${isActive ? 'Suspender' : 'Ativar'}</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
+    }
+
+    function openEditUserModal(userId) {
+      const u = allUsersCache.find(x => x.id === userId);
+      if (!u) return alert("Cliente não encontrado.");
+      document.getElementById("editUserId").value = u.id;
+      document.getElementById("editUserName").value = u.name || '';
+      document.getElementById("editUserEmail").value = u.email || '';
+      document.getElementById("editUserWhatsapp").value = u.whatsapp || '';
+      document.getElementById("editUserStatus").value = u.status || 'active';
+      document.getElementById("editUserBalance").value = u.balance_credits ?? 0;
+      document.getElementById("editUserPassword").value = '';
+      document.getElementById("modalEditUser").style.display = 'flex';
+    }
+
+    function closeEditUserModal() {
+      document.getElementById("modalEditUser").style.display = 'none';
+    }
+
+    async function saveEditUser() {
+      const userId = document.getElementById("editUserId").value;
+      const name = document.getElementById("editUserName").value.trim();
+      const email = document.getElementById("editUserEmail").value.trim();
+      const whatsapp = document.getElementById("editUserWhatsapp").value.trim();
+      const status = document.getElementById("editUserStatus").value;
+      const balanceStr = document.getElementById("editUserBalance").value;
+      const password = document.getElementById("editUserPassword").value.trim();
+
+      if (!name) return alert("Por favor, informe o nome do cliente.");
+      if (!email) return alert("Por favor, informe o e-mail do cliente.");
+      if (password && password.length < 6) return alert("A nova senha deve ter no mínimo 6 dígitos.");
+
+      const payload = {
+        name,
+        email,
+        whatsapp,
+        status
+      };
+      if (balanceStr !== '') {
+        payload.set_balance = parseInt(balanceStr, 10);
+      }
+      if (password) {
+        payload.password = password;
+      }
+
+      try {
+        const res = await adminApi(`/api/v1/admin/users/${userId}`, 'PUT', payload);
+        alert(res.message || "Cliente atualizado com sucesso!");
+        closeEditUserModal();
+        loadAdminUsers();
+        loadMetrics();
+      } catch (err) {
+        alert("Erro ao salvar cliente: " + err.message);
+      }
+    }
+
+    function openCreateUserModal() {
+      document.getElementById("createUserName").value = '';
+      document.getElementById("createUserEmail").value = '';
+      document.getElementById("createUserWhatsapp").value = '';
+      document.getElementById("createUserPassword").value = '123456';
+      document.getElementById("createUserCredits").value = '5';
+      document.getElementById("createUserStatus").value = 'active';
+      document.getElementById("modalCreateUser").style.display = 'flex';
+    }
+
+    function closeCreateUserModal() {
+      document.getElementById("modalCreateUser").style.display = 'none';
+    }
+
+    async function submitCreateUser() {
+      const name = document.getElementById("createUserName").value.trim();
+      const email = document.getElementById("createUserEmail").value.trim();
+      const whatsapp = document.getElementById("createUserWhatsapp").value.trim();
+      const password = document.getElementById("createUserPassword").value.trim();
+      const credits = parseInt(document.getElementById("createUserCredits").value || 5, 10);
+      const status = document.getElementById("createUserStatus").value;
+
+      if (!name) return alert("Informe o nome do técnico.");
+      if (!email) return alert("Informe o e-mail do técnico.");
+      if (!password || password.length < 6) return alert("A senha deve ter no mínimo 6 caracteres.");
+
+      try {
+        const res = await adminApi('/api/v1/admin/users/create', 'POST', {
+          name,
+          email,
+          whatsapp,
+          password,
+          initial_credits: credits,
+          status
+        });
+        alert(res.message || "Técnico cadastrado com sucesso!");
+        closeCreateUserModal();
+        loadAdminUsers();
+        loadMetrics();
+      } catch (err) {
+        alert("Erro ao cadastrar técnico: " + err.message);
+      }
+    }
+
+    async function deleteUser(userId, name) {
+      if (!confirm(`⚠️ ATENÇÃO: Deseja realmente EXCLUIR permanentemente o cliente #${userId} (${name})?\n\nEsta ação removerá a carteira, histórico e aparelhos vinculados.`)) return;
+      try {
+        const res = await adminApi(`/api/v1/admin/users/${userId}`, 'DELETE');
+        alert(res.message || "Cliente excluído.");
+        loadAdminUsers();
+        loadMetrics();
+      } catch (err) {
+        alert("Erro ao excluir cliente: " + err.message);
+      }
+    }
+
+    async function openUserDetailsModal(userId) {
+      currentDetailUserId = userId;
+      document.getElementById("detailUserTitle").innerText = `Cliente #${userId} — Carregando...`;
+      document.getElementById("detailUserMeta").innerText = 'Consultando banco de dados...';
+      document.getElementById("modalUserDetails").style.display = 'flex';
+      switchDetailSubTab('orders');
+
+      try {
+        const data = await adminApi(`/api/v1/admin/users/${userId}`);
+        const u = data.user;
+        const w = data.wallet || {};
+        document.getElementById("detailUserTitle").innerText = `#${u.id} • ${u.name}`;
+        document.getElementById("detailUserMeta").innerText = `E-mail: ${u.email} • WhatsApp: ${u.whatsapp || 'Não informado'} • Cadastrado em: ${new Date(u.created_at).toLocaleString('pt-BR')}`;
+        
+        document.getElementById("detailKpiBalance").innerText = (w.balance_credits ?? 0) + ' créd.';
+        document.getElementById("detailKpiPurchased").innerText = (w.total_purchased ?? 0);
+        document.getElementById("detailKpiUsed").innerText = (w.total_used ?? 0);
+        document.getElementById("detailKpiStatus").innerHTML = `<span class="${u.status === 'active' ? 'badge-active' : 'badge-suspended'}">${u.status}</span>`;
+
+        // Render Orders
+        const tblOrders = document.getElementById("tblDetailOrdersBody");
+        tblOrders.innerHTML = '';
+        if (!data.orders || !data.orders.length) {
+          tblOrders.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:16px;">Nenhum serviço ou desbloqueio realizado.</td></tr>';
+        } else {
+          data.orders.forEach(o => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${new Date(o.created_at).toLocaleDateString('pt-BR')} ${new Date(o.created_at).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</td>
+              <td class="mono" style="font-size:11px; color:var(--cyan);">${escapeHtml(o.operation_id)}</td>
+              <td><strong>${escapeHtml(o.device_model || o.device_serial || 'Aparelho')}</strong></td>
+              <td>${escapeHtml(o.service_name || o.service_code)}</td>
+              <td class="mono" style="color:var(--warning); font-weight:700;">-${o.credit_cost} créd.</td>
+              <td><span class="${o.status === 'COMPLETED' ? 'badge-active' : 'badge-suspended'}">${o.status}</span></td>
+            `;
+            tblOrders.appendChild(tr);
+          });
+        }
+
+        // Render Devices
+        const tblDevs = document.getElementById("tblDetailDevicesBody");
+        tblDevs.innerHTML = '';
+        if (!data.devices || !data.devices.length) {
+          tblDevs.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:16px;">Nenhum aparelho conectado ao executável ainda.</td></tr>';
+        } else {
+          data.devices.forEach(d => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td class="mono" style="font-size:11px; color:var(--cyan);">${escapeHtml(d.serial)}</td>
+              <td><strong>${escapeHtml(d.model || 'Desconhecido')}</strong></td>
+              <td>${escapeHtml(d.manufacturer || '—')}</td>
+              <td>${escapeHtml(d.android_version || '—')}</td>
+              <td>${d.last_seen ? new Date(d.last_seen).toLocaleString('pt-BR') : '—'}</td>
+            `;
+            tblDevs.appendChild(tr);
+          });
+        }
+
+        // Render Payments
+        const tblPays = document.getElementById("tblDetailPaymentsBody");
+        tblPays.innerHTML = '';
+        if (!data.payments || !data.payments.length) {
+          tblPays.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:16px;">Nenhuma cobrança PIX gerada por este cliente.</td></tr>';
+        } else {
+          data.payments.forEach(p => {
+            const isPaid = p.status === 'PAID';
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${new Date(p.created_at).toLocaleString('pt-BR')}</td>
+              <td class="mono" style="font-size:10px; color:var(--cyan);">${escapeHtml(p.pix_txid)}</td>
+              <td class="mono" style="font-weight:700;">+${p.credits_amount}</td>
+              <td class="mono">R$ ${p.amount_brl.toFixed(2).replace('.', ',')}</td>
+              <td><span class="${isPaid ? 'badge-paid' : 'badge-pending'}">${p.status}</span></td>
+            `;
+            tblPays.appendChild(tr);
+          });
+        }
+
+        // Render Transactions
+        const tblTxs = document.getElementById("tblDetailTxsBody");
+        tblTxs.innerHTML = '';
+        if (!data.transactions || !data.transactions.length) {
+          tblTxs.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:16px;">Nenhuma movimentação de crédito.</td></tr>';
+        } else {
+          data.transactions.forEach(t => {
+            const tr = document.createElement("tr");
+            const isAdd = t.amount_credits > 0;
+            tr.innerHTML = `
+              <td>${new Date(t.created_at).toLocaleString('pt-BR')}</td>
+              <td><span class="mono" style="font-size:11px; font-weight:700; color:${isAdd ? 'var(--green)' : 'var(--warning)'};">${t.type}</span></td>
+              <td class="mono" style="font-weight:700; color:${isAdd ? 'var(--green)' : 'var(--danger)'};">${isAdd ? '+' : ''}${t.amount_credits}</td>
+              <td class="mono">${t.new_balance}</td>
+              <td style="font-size:11px; color:var(--text-muted);">${escapeHtml(t.description)}</td>
+            `;
+            tblTxs.appendChild(tr);
+          });
+        }
+
+      } catch (err) {
+        alert("Erro ao buscar detalhes do cliente: " + err.message);
+        closeUserDetailsModal();
+      }
+    }
+
+    function switchDetailSubTab(tab) {
+      ['orders', 'devices', 'payments', 'txs'].forEach(t => {
+        const btn = document.getElementById('btnSubTab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const pane = document.getElementById('subTabContent' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) btn.classList.toggle('active', t === tab);
+        if (pane) pane.style.display = t === tab ? 'block' : 'none';
       });
+    }
+
+    function closeUserDetailsModal() {
+      document.getElementById("modalUserDetails").style.display = 'none';
     }
 
     async function toggleUserStatus(userId, status) {
@@ -1443,34 +1987,66 @@
     }
 
     async function loadSettings() {
-      const cfg = await adminApi('/api/v1/admin/settings');
-      document.getElementById("cfgCreditPrice").value = cfg.credit_price_brl || "5.00";
-      if (document.getElementById("cfgWelcomeCredits")) {
-        document.getElementById("cfgWelcomeCredits").value = cfg.welcome_bonus_credits || "5";
+      try {
+        const cfg = await adminApi('/api/v1/admin/settings');
+        document.getElementById("cfgCreditPrice").value = cfg.credit_price_brl || "5.00";
+        if (document.getElementById("cfgWelcomeCredits")) {
+          document.getElementById("cfgWelcomeCredits").value = cfg.welcome_bonus_credits || "5";
+        }
+        document.getElementById("cfgPixKey").value = cfg.pix_key || '';
+        document.getElementById("cfgPixType").value = cfg.pix_key_type || 'AUTO';
+        document.getElementById("cfgPixName").value = cfg.pix_merchant_name || 'MDM FRP BRASIL';
+        document.getElementById("cfgPixCity").value = cfg.pix_merchant_city || 'AMERICANA';
+        document.getElementById("cfgGoogleClientId").value = cfg.google_client_id || '';
+
+        if (document.getElementById("cfgSupportPhone")) {
+          document.getElementById("cfgSupportPhone").value = cfg.support_phone || cfg.support_whatsapp || '(19) 99478-3127';
+        }
+        if (document.getElementById("cfgSupportMsg")) {
+          document.getElementById("cfgSupportMsg").value = cfg.support_message || cfg.support_whatsapp_msg || 'Olá, vim pelo site MDM & FRP BRASIL e gostaria de suporte.';
+        }
+        if (document.getElementById("cfgPlatformName")) {
+          document.getElementById("cfgPlatformName").value = cfg.platform_name || 'MDM & FRP BRASIL';
+        }
+        if (document.getElementById("cfgAnnouncement")) {
+          document.getElementById("cfgAnnouncement").value = cfg.announcement_banner || '';
+        }
+        if (document.getElementById("cfgAdminEmails")) {
+          document.getElementById("cfgAdminEmails").value = cfg.admin_google_emails || 'seophone.imports@gmail.com, admin@mdmfrpbrasil.com.br';
+        }
+
+        updatePixPlaceholder();
+      } catch (err) {
+        console.error("Erro ao carregar configurações:", err);
       }
-      document.getElementById("cfgPixKey").value = cfg.pix_key || '';
-      document.getElementById("cfgPixType").value = cfg.pix_key_type || 'AUTO';
-      document.getElementById("cfgPixName").value = cfg.pix_merchant_name || 'MDM FRP BRASIL';
-      document.getElementById("cfgPixCity").value = cfg.pix_merchant_city || 'AMERICANA';
-      document.getElementById("cfgGoogleClientId").value = cfg.google_client_id || '';
-      updatePixPlaceholder();
     }
 
     async function saveSettings() {
       try {
-        await adminApi('/api/v1/admin/settings', 'POST', { key: 'credit_price_brl', value: document.getElementById("cfgCreditPrice").value });
-        if (document.getElementById("cfgWelcomeCredits")) {
-          await adminApi('/api/v1/admin/settings', 'POST', { key: 'welcome_bonus_credits', value: document.getElementById("cfgWelcomeCredits").value });
-        }
-        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_key', value: document.getElementById("cfgPixKey").value });
-        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_key_type', value: document.getElementById("cfgPixType").value });
-        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_merchant_name', value: document.getElementById("cfgPixName").value });
-        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_merchant_city', value: document.getElementById("cfgPixCity").value });
-        await adminApi('/api/v1/admin/settings', 'POST', { key: 'google_client_id', value: document.getElementById("cfgGoogleClientId").value });
-        alert("Configurações salvas com sucesso! As novas cobranças PIX e cadastros utilizarão esses dados.");
+        const payload = {
+          credit_price_brl: document.getElementById("cfgCreditPrice").value,
+          welcome_bonus_credits: document.getElementById("cfgWelcomeCredits") ? document.getElementById("cfgWelcomeCredits").value : "5",
+          pix_key: document.getElementById("cfgPixKey").value,
+          pix_key_type: document.getElementById("cfgPixType").value,
+          pix_merchant_name: document.getElementById("cfgPixName").value,
+          pix_merchant_city: document.getElementById("cfgPixCity").value,
+          support_phone: document.getElementById("cfgSupportPhone") ? document.getElementById("cfgSupportPhone").value : "(19) 99478-3127",
+          support_whatsapp: document.getElementById("cfgSupportPhone") ? document.getElementById("cfgSupportPhone").value : "(19) 99478-3127",
+          support_message: document.getElementById("cfgSupportMsg") ? document.getElementById("cfgSupportMsg").value : "",
+          support_whatsapp_msg: document.getElementById("cfgSupportMsg") ? document.getElementById("cfgSupportMsg").value : "",
+          platform_name: document.getElementById("cfgPlatformName") ? document.getElementById("cfgPlatformName").value : "MDM & FRP BRASIL",
+          announcement_banner: document.getElementById("cfgAnnouncement") ? document.getElementById("cfgAnnouncement").value : "",
+          admin_google_emails: document.getElementById("cfgAdminEmails") ? document.getElementById("cfgAdminEmails").value : "seophone.imports@gmail.com",
+          google_client_id: document.getElementById("cfgGoogleClientId") ? document.getElementById("cfgGoogleClientId").value : ""
+        };
+
+        const res = await adminApi('/api/v1/admin/settings/batch', 'POST', payload);
+        alert(res.message || "Configurações salvas com sucesso! O site, WhatsApp oficial e novas cobranças PIX foram atualizados.");
         loadSettings();
         testPixPreview();
-      } catch (e) { alert(e.message); }
+      } catch (e) {
+        alert("Erro ao salvar configurações: " + e.message);
+      }
     }
 
     async function testPixPreview() {

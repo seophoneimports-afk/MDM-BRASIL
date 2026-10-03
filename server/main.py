@@ -104,6 +104,17 @@ def get_public_homepage_layout():
         sections = r2["value"] if r2 and r2["value"] else ""
     return {"success": True, "layout": layout, "sections": sections}
 
+# Public Platform Config API
+@app.get("/api/v1/system/public-config")
+def get_public_config():
+    from server.database import get_db_connection
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT key, value FROM system_settings WHERE key IN ('support_whatsapp', 'support_phone', 'support_message', 'platform_name', 'announcement_banner', 'welcome_bonus_credits', 'credit_price_brl', 'site_theme', 'homepage_layout')")
+        rows = cursor.fetchall()
+        cfg = {r["key"]: r["value"] for r in rows}
+        return {"success": True, "config": cfg}
+
 # Web Portal HTML Views
 @app.get("/client", response_class=HTMLResponse)
 @app.get("/login", response_class=HTMLResponse)
@@ -117,6 +128,8 @@ def serve_client_portal(request: Request):
     from server.database import get_db_connection
     theme = request.query_params.get("preview_theme")
     layout = request.query_params.get("preview_layout") or request.query_params.get("layout")
+    supp_wa = None
+    supp_phone = None
 
     try:
         with get_db_connection() as conn:
@@ -129,6 +142,13 @@ def serve_client_portal(request: Request):
                 cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_layout'")
                 r_lay = cursor.fetchone()
                 layout = r_lay["value"] if r_lay and r_lay["value"] else "cinema_split"
+            
+            cursor.execute("SELECT key, value FROM system_settings WHERE key IN ('support_whatsapp', 'support_phone')")
+            for r in cursor.fetchall():
+                if r["key"] == "support_whatsapp" and r["value"]:
+                    supp_wa = r["value"]
+                elif r["key"] == "support_phone" and r["value"]:
+                    supp_phone = r["value"]
     except Exception:
         theme = theme or "cinema_stealth"
         layout = layout or "cinema_split"
@@ -139,6 +159,16 @@ def serve_client_portal(request: Request):
 
     # Dynamic server-side injection of active theme and homepage layout directly onto <body>
     html = html.replace('<body', f'<body data-theme="{theme}" data-layout="{layout}"', 1)
+    
+    if supp_wa:
+        clean_wa = "".join(filter(str.isdigit, supp_wa))
+        if len(clean_wa) in (10, 11) and not clean_wa.startswith("55"):
+            clean_wa = "55" + clean_wa
+        if clean_wa:
+            html = html.replace("5519994783127", clean_wa)
+    if supp_phone:
+        html = html.replace("(19) 99478-3127", supp_phone)
+
     return html
 
 @app.get("/headers", response_class=HTMLResponse)
