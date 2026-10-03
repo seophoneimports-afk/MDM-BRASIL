@@ -189,13 +189,13 @@
     .auth-floating-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(4, 7, 15, 0.78);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(4, 7, 15, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 999;
+      z-index: 100000;
       padding: 16px;
       overflow-y: auto;
     }
@@ -1113,7 +1113,7 @@
     </div>
 
     <!-- FLOATING AUTH OVERLAY (LOGIN / CADASTRO COM BLUR) -->
-    <div id="authOverlay" class="auth-floating-overlay" style="display: none;">
+    <div id="authOverlay" class="auth-floating-overlay" style="display: none;" onclick="if(event.target===this)closeAuthOverlay()">
       <div class="auth-card">
         <button class="btn-close-auth" onclick="closeAuthOverlay()" title="Fechar e ver imagens da ferramenta">✕</button>
 
@@ -1863,26 +1863,26 @@
     }
 
     function setPortalSlide(idx) {
-      currentPortalSlide = idx;
+      currentPortalSlide = Number(idx);
       renderPortalSlide();
       resetPortalSliderTimer();
     }
 
-    function nextPortalSlide() {
+    function nextPortalSlide(manual = false) {
       currentPortalSlide = (currentPortalSlide + 1) % portalStepsData.length;
       renderPortalSlide();
-      resetPortalSliderTimer();
+      if (manual) resetPortalSliderTimer();
     }
 
-    function prevPortalSlide() {
+    function prevPortalSlide(manual = true) {
       currentPortalSlide = (currentPortalSlide - 1 + portalStepsData.length) % portalStepsData.length;
       renderPortalSlide();
-      resetPortalSliderTimer();
+      if (manual) resetPortalSliderTimer();
     }
 
     function resetPortalSliderTimer() {
       if (portalSliderTimer) clearInterval(portalSliderTimer);
-      portalSliderTimer = setInterval(nextPortalSlide, 6000);
+      portalSliderTimer = setInterval(() => nextPortalSlide(false), 3800);
     }
 
     async function applySiteTheme() {
@@ -2119,12 +2119,6 @@
     resetPortalSliderTimer();
 
     // Check for tokens or auth feedback in query string (from Google redirect or deep links)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("token")) {
-      token = urlParams.get("token");
-      localStorage.setItem("mdm_token", token);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
     if (urlParams.get("auth_error")) {
       alert("Aviso de Autenticação: O login via Google foi cancelado ou não concluído.");
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -2142,8 +2136,6 @@
         openAuthOverlay('Forgot');
       }
     }
-    renderPortalSlide();
-    resetPortalSliderTimer();
 
     // ==========================================
     // ANTI-INSPECT & ANTI-DEVTOOLS PROTECTION
