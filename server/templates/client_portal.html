@@ -335,12 +335,7 @@
       box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
     }
 
-    /* Header Nav Switcher */
-    .header-nav-switcher {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+
     .btn-nav-item {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1347,19 +1342,6 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-      <!-- NAVEGAÇÃO PRINCIPAL DAS 3 TELAS INDEPENDENTES -->
-      <nav class="header-nav-switcher">
-        <button id="btnNavHome" class="btn-nav-item active" onclick="showView('Showcase')">
-          🏠 Início
-        </button>
-        <button id="btnNavDash" class="btn-nav-item" onclick="handleNavTarget('Dashboard')">
-          📊 Meu Painel
-        </button>
-        <button id="btnNavAccount" class="btn-nav-item" onclick="handleNavTarget('Account')">
-          👤 Minha Conta
-        </button>
-      </nav>
-
       <a href="/download/exe?v=2.2" class="btn-download-header" title="Baixar executável MDM & FRP BRASIL para Windows">
         📥 Baixar Ferramenta (.exe)
       </a>
@@ -1370,7 +1352,10 @@
         <a id="linkAdminShortcut" href="/admin" target="_blank" style="display:none; align-items:center; gap:4px; padding: 5px 12px; border-radius: 6px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #000; font-weight: 700; text-decoration: none; font-size: 11px; margin-right: 6px;">
           👑 Painel Admin
         </a>
-        <div onclick="showView('Account')" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;" title="Configurar Minha Conta">
+        <button id="btnHeaderSwitch" class="btn-nav-item" style="font-size: 11.5px; padding: 5px 12px; color: var(--cyan); border-color: rgba(0, 229, 255, 0.4);" onclick="toggleSiteDashboardView()">
+          <span id="btnHeaderSwitchIcon">🏠</span> <span id="btnHeaderSwitchText">Ir para o Site</span>
+        </button>
+        <div onclick="showView('Dashboard'); const pBtn = document.getElementById('tabBtnProfile'); if(pBtn) switchDashTab('profile', pBtn);" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;" title="Meu Perfil">
           <img id="headerUserAvatar" src="" alt="Avatar" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--cyan); display: none;">
           <span id="headerUserName">Cliente</span>
         </div>
@@ -1399,10 +1384,7 @@
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
           <button class="btn-primary" style="font-size: 13px; padding: 9px 18px; width: auto;" onclick="showView('Dashboard')">
-            📊 Abrir Meu Painel ➔
-          </button>
-          <button class="btn-primary" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); font-size: 13px; padding: 9px 18px; width: auto;" onclick="showView('Account')">
-            👤 Minha Conta &amp; Senha ➔
+            📊 Abrir Meu Painel &amp; Perfil ➔
           </button>
         </div>
       </div>
@@ -2128,16 +2110,139 @@
       </div>
 
       <!-- Tabs Nav -->
-      <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchDashTab('history', this)">📜 Extrato Financeiro</button>
-        <button class="tab-btn" onclick="switchDashTab('orders', this)">🛠️ Ordens de Serviço</button>
-        <button class="tab-btn" onclick="switchDashTab('devices', this)">📱 Aparelhos Atendidos</button>
-        <button class="tab-btn" onclick="switchDashTab('software', this)">📥 Baixar Ferramenta (.EXE)</button>
-        <button class="tab-btn" style="color: var(--cyan); border-color: rgba(0, 229, 255, 0.4);" onclick="showView('Account')">👤 Minha Conta (Tela Completa) ➔</button>
+      <div class="tabs-nav" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+        <button id="tabBtnProfile" class="tab-btn active" onclick="switchDashTab('profile', this)">👤 Meu Perfil &amp; Senha do EXE</button>
+        <button id="tabBtnHistory" class="tab-btn" onclick="switchDashTab('history', this)">📜 Extrato Financeiro</button>
+        <button id="tabBtnOrders" class="tab-btn" onclick="switchDashTab('orders', this)">🛠️ Ordens de Serviço</button>
+        <button id="tabBtnDevices" class="tab-btn" onclick="switchDashTab('devices', this)">📱 Aparelhos Atendidos</button>
+        <button id="tabBtnSoftware" class="tab-btn" onclick="switchDashTab('software', this)">📥 Baixar Ferramenta (.EXE)</button>
+        <button type="button" class="tab-btn" style="color: var(--cyan); border-color: rgba(0, 229, 255, 0.45); background: rgba(0, 229, 255, 0.08); margin-left: auto; font-weight: 800;" onclick="showView('Showcase')">🏠 Ir para a Página Inicial do Site ➔</button>
+      </div>
+
+      <!-- Tab: Perfil & Configurações da Conta -->
+      <div id="tabProfile" class="panel-card" style="display: block;">
+        <!-- Hero Banner da Conta com Avatar em Alta Definição e Resumo -->
+        <div class="account-hero-card" style="margin-bottom: 22px;">
+          <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+            <img id="accHeroAvatar" src="/static/logo.png" alt="Avatar" class="acc-profile-glow">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
+                <h2 id="accHeroName" style="font-size: 22px; font-weight: 800; color: #FFF; margin: 0;">Cliente Técnico</h2>
+                <span id="accStatusBadge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;">
+                  ✓ CONTA ATIVA
+                </span>
+              </div>
+              <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
+                E-mail Técnico: <strong style="color: #FFF;" id="accHeroEmail">carregando...</strong> &bull; WhatsApp: <span id="accHeroPhone" style="color: var(--cyan); font-weight: 600;">—</span>
+              </div>
+              <div style="font-size: 12.5px; color: #94A3B8;">
+                Saldo Disponível: <strong id="accHeroBalance" style="color: var(--green); font-size: 16px;">🪙 0 Créditos</strong>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 10px 18px; font-size: 13px;">
+              📥 Baixar MDM &amp; FRP BRASIL (.exe)
+            </a>
+          </div>
+        </div>
+
+        <div id="accAlert" style="display:none; padding:12px; border-radius:8px; font-size:12.5px; margin-bottom:18px; text-align: left;"></div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          <!-- Coluna 1: Foto de Perfil & Dados Pessoais -->
+          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 22px;">
+            <h4 style="font-size: 14.5px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span>🖼️</span> Foto de Perfil &amp; Contato WhatsApp
+            </h4>
+
+            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+              <img id="editAccAvatarPreview" src="/static/logo.png" alt="Prévia da Foto" class="profile-avatar-circle">
+              <div>
+                <button type="button" class="btn-green" style="font-size: 11.5px; padding: 7px 14px; margin-bottom: 6px;" onclick="document.getElementById('accFileInput').click()">
+                  📁 Carregar Imagem
+                </button>
+                <input type="file" id="accFileInput" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
+                <div style="font-size: 11px; color: var(--text-muted);">PNG ou JPG do seu dispositivo</div>
+              </div>
+            </div>
+
+            <!-- Avatares Rápidos Predefinidos -->
+            <div style="margin-bottom: 16px;">
+              <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 6px;">Ou clique para usar um avatar técnico:</label>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="avatar-preset-btn" title="Técnico Especialista" onclick="setPresetAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop')">👨‍🔧</button>
+                <button type="button" class="avatar-preset-btn" title="Líder Tech" onclick="setPresetAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop')">⚡</button>
+                <button type="button" class="avatar-preset-btn" title="Bancada Android" onclick="setPresetAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop')">📱</button>
+                <button type="button" class="avatar-preset-btn" title="Especialista Cyber" onclick="setPresetAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop')">🤖</button>
+                <button type="button" class="avatar-preset-btn" title="Master VIP" onclick="setPresetAvatar('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop')">👑</button>
+              </div>
+            </div>
+
+            <form onsubmit="handleSaveProfileData(event)">
+              <div class="form-group" style="text-align: left;">
+                <label>URL da Imagem de Perfil (opcional)</label>
+                <input type="url" id="editAccAvatarUrl" class="form-control" placeholder="https://exemplo.com/sua-foto.jpg" oninput="previewAvatarUrl(this.value)">
+              </div>
+              <div class="form-group" style="text-align: left;">
+                <label>Nome Completo / Nome da Assistência</label>
+                <input type="text" id="editAccName" class="form-control" required placeholder="Ex: Central Cell Americana">
+              </div>
+              <div class="form-group" style="text-align: left;">
+                <label>WhatsApp / Celular com DDD</label>
+                <input type="text" id="editAccPhone" class="form-control" required placeholder="(19) 99478-3127">
+              </div>
+              <div class="form-group" style="text-align: left;">
+                <label>E-mail Cadastrado (Login)</label>
+                <input type="email" id="editAccEmail" class="form-control" readonly style="opacity: 0.7; cursor: not-allowed; background: rgba(0,0,0,0.25);">
+              </div>
+              <button type="submit" class="btn-green" id="btnSaveProfile" style="margin-top: 14px; width: 100%;">
+                💾 Salvar Alterações de Perfil
+              </button>
+            </form>
+          </div>
+
+          <!-- Coluna 2: Segurança & Senha de Acesso Web + EXE -->
+          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h4 style="font-size: 14.5px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <span>🔒</span> Segurança &amp; Senha do Site e EXE
+              </h4>
+              <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-bottom: 18px;">
+                Defina ou altere a senha utilizada para acessar este portal web e o aplicativo no computador <strong>MDM_FRP_BRASIL.exe</strong> (compatível com a função <em>Lembrar credenciais</em>).
+              </p>
+
+              <form onsubmit="handleUpdatePassword(event)">
+                <div class="form-group" style="text-align: left;">
+                  <label>Nova Senha</label>
+                  <input type="password" id="editAccNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group" style="text-align: left; margin-bottom: 18px;">
+                  <label>Confirmar Nova Senha</label>
+                  <input type="password" id="editAccConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
+                </div>
+
+                <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 12px; font-size: 11.5px; color: #94A3B8; text-align: left; line-height: 1.45; margin-bottom: 16px;">
+                  <span style="color: var(--cyan); font-weight: 700;">🔑 Integração Imediata:</span><br>
+                  A nova senha será salva no banco com criptografia avançada e funcionará imediatamente no login do aplicativo <strong>MDM_FRP_BRASIL.exe</strong> no seu PC.
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnUpdatePassword" style="width: 100%;">
+                  🔒 Salvar Nova Senha
+                </button>
+              </form>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11.5px; color: var(--text-muted); text-align: center;">
+              MDM &amp; FRP BRASIL • Plataforma Oficial de Gestão e Desbloqueios
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Tab: Extrato -->
-      <div id="tabHistory" class="panel-card">
+      <div id="tabHistory" class="panel-card" style="display: none;">
         <h3>📜 Histórico de Movimentações da Carteira</h3>
         <div class="table-responsive">
           <table>
@@ -2250,140 +2355,8 @@
 
     </div>
 
-    <!-- SEÇÃO INDEPENDENTE: 👤 MINHA CONTA & CONFIGURAÇÕES TÉCNICAS -->
-    <div id="viewAccount" class="account-section" style="display: none;">
-      <!-- Hero Banner da Conta com Avatar em Alta Definição e Resumo -->
-      <div class="account-hero-card">
-        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-          <img id="accHeroAvatar" src="/static/logo.png" alt="Avatar" class="acc-profile-glow">
-          <div>
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
-              <h2 id="accHeroName" style="font-size: 22px; font-weight: 800; color: #FFF; margin: 0;">Cliente Técnico</h2>
-              <span id="accStatusBadge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;">
-                ✓ CONTA ATIVA
-              </span>
-            </div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
-              E-mail Técnico: <strong style="color: #FFF;" id="accHeroEmail">carregando...</strong> &bull; WhatsApp: <span id="accHeroPhone" style="color: var(--cyan); font-weight: 600;">—</span>
-            </div>
-            <div style="font-size: 12.5px; color: #94A3B8;">
-              Saldo Disponível: <strong id="accHeroBalance" style="color: var(--green); font-size: 16px;">🪙 0 Créditos</strong>
-            </div>
-          </div>
-        </div>
-
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <button type="button" class="btn-green" style="font-size: 13px; padding: 10px 18px;" onclick="showView('Dashboard')">
-            ⚡ Recarregar Saldo via PIX
-          </button>
-          <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 10px 18px; font-size: 13px;">
-            📥 Baixar MDM & FRP BRASIL (.exe)
-          </a>
-        </div>
-      </div>
-
-      <div id="accAlert" style="display:none; padding:12px; border-radius:8px; font-size:12.5px; margin-bottom:18px; text-align: left;"></div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-        <!-- Coluna 1: Foto de Perfil & Dados Pessoais -->
-        <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 22px;">
-          <h4 style="font-size: 14.5px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-            <span>🖼️</span> Foto de Perfil &amp; Contato WhatsApp
-          </h4>
-
-          <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
-            <img id="editAccAvatarPreview" src="/static/logo.png" alt="Prévia da Foto" class="profile-avatar-circle">
-            <div>
-              <button type="button" class="btn-green" style="font-size: 11.5px; padding: 7px 14px; margin-bottom: 6px;" onclick="document.getElementById('accFileInput').click()">
-                📁 Carregar Imagem
-              </button>
-              <input type="file" id="accFileInput" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
-              <div style="font-size: 11px; color: var(--text-muted);">PNG ou JPG do seu dispositivo</div>
-            </div>
-          </div>
-
-          <!-- Avatares Rápidos Predefinidos -->
-          <div style="margin-bottom: 16px;">
-            <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 6px;">Ou clique para usar um avatar técnico:</label>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button type="button" class="avatar-preset-btn" title="Técnico Especialista" onclick="setPresetAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop')">👨‍🔧</button>
-              <button type="button" class="avatar-preset-btn" title="Líder Tech" onclick="setPresetAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop')">⚡</button>
-              <button type="button" class="avatar-preset-btn" title="Bancada Android" onclick="setPresetAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop')">📱</button>
-              <button type="button" class="avatar-preset-btn" title="Especialista Cyber" onclick="setPresetAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop')">🤖</button>
-              <button type="button" class="avatar-preset-btn" title="Master VIP" onclick="setPresetAvatar('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop')">👑</button>
-            </div>
-          </div>
-
-          <form onsubmit="handleSaveProfileData(event)">
-            <div class="form-group" style="text-align: left;">
-              <label>URL da Imagem de Perfil (opcional)</label>
-              <input type="url" id="editAccAvatarUrl" class="form-control" placeholder="https://exemplo.com/sua-foto.jpg" oninput="previewAvatarUrl(this.value)">
-            </div>
-            <div class="form-group" style="text-align: left;">
-              <label>Nome Completo / Nome da Assistência</label>
-              <input type="text" id="editAccName" class="form-control" required placeholder="Ex: Central Cell Americana">
-            </div>
-            <div class="form-group" style="text-align: left;">
-              <label>WhatsApp / Celular com DDD</label>
-              <input type="text" id="editAccPhone" class="form-control" required placeholder="(19) 99478-3127">
-            </div>
-            <div class="form-group" style="text-align: left;">
-              <label>E-mail Cadastrado (Login)</label>
-              <input type="email" id="editAccEmail" class="form-control" readonly style="opacity: 0.7; cursor: not-allowed; background: rgba(0,0,0,0.25);">
-            </div>
-            <button type="submit" class="btn-green" id="btnSaveProfile" style="margin-top: 14px; width: 100%;">
-              💾 Salvar Alterações de Perfil
-            </button>
-          </form>
-        </div>
-
-        <!-- Coluna 2: Segurança & Senha de Acesso Web + EXE -->
-        <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <h4 style="font-size: 14.5px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-              <span>🔒</span> Segurança &amp; Senha do Site e EXE
-            </h4>
-            <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-bottom: 18px;">
-              Defina ou altere a senha utilizada para acessar este portal web e o aplicativo no computador <strong>MDM_FRP_BRASIL.exe</strong> (compatível com a função <em>Lembrar credenciais</em>).
-            </p>
-
-            <form onsubmit="handleUpdatePassword(event)">
-              <div class="form-group" style="text-align: left;">
-                <label>Nova Senha</label>
-                <input type="password" id="editAccNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
-              </div>
-              <div class="form-group" style="text-align: left; margin-bottom: 18px;">
-                <label>Confirmar Nova Senha</label>
-                <input type="password" id="editAccConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
-              </div>
-
-              <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 12px; font-size: 11.5px; color: #94A3B8; text-align: left; line-height: 1.45; margin-bottom: 16px;">
-                <span style="color: var(--cyan); font-weight: 700;">🔑 Integração Imediata:</span><br>
-                A nova senha será salva no banco com criptografia avançada e funcionará imediatamente no login do aplicativo <strong>MDM_FRP_BRASIL.exe</strong> no seu PC.
-              </div>
-
-              <button type="submit" class="btn-primary" id="btnUpdatePassword" style="width: 100%;">
-                🔒 Salvar Nova Senha
-              </button>
-            </form>
-          </div>
-
-          <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11.5px; color: var(--text-muted); text-align: center;">
-            MDM & FRP BRASIL • Plataforma Oficial de Gestão e Desbloqueios
-          </div>
-        </div>
-      </div>
-
-      <!-- Barra de Navegação no Rodapé da Conta -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 12px;">
-        <button type="button" class="btn-nav-item" onclick="showView('Dashboard')">
-          ← Voltar ao Meu Painel Operacional
-        </button>
-        <button type="button" class="btn-nav-item" onclick="showView('Showcase')">
-          🏠 Ir para a Página Inicial / Vitrine
-        </button>
-      </div>
-    </div>
+    <!-- SEÇÃO MINHA CONTA: Integrada como aba tabProfile dentro do viewDashboard -->
+    <div id="viewAccount" style="display: none;"></div>
   </main>
 
   <!-- MODAL PIX -->
@@ -2517,13 +2490,26 @@
       if (overlay) overlay.style.display = 'none';
     }
 
+    function toggleSiteDashboardView() {
+      const dashEl = document.getElementById("viewDashboard");
+      if (dashEl && dashEl.style.display !== 'none') {
+        showView('Showcase');
+      } else {
+        showView('Dashboard');
+      }
+    }
+
     function handleNavTarget(target) {
       if (target === 'Showcase') {
         showView('Showcase');
         return;
       }
       if (token) {
-        showView(target);
+        showView('Dashboard');
+        if (target === 'Account') {
+          const pBtn = document.getElementById("tabBtnProfile");
+          if (pBtn) switchDashTab('profile', pBtn);
+        }
       } else {
         openAuthOverlay('Login');
       }
@@ -2569,12 +2555,17 @@
     }
 
     function showView(view) {
+      if (view === 'Account') {
+        view = 'Dashboard';
+        const pBtn = document.getElementById("tabBtnProfile");
+        if (pBtn) switchDashTab('profile', pBtn);
+      }
+
       const isLogin = view === 'Login';
       const isReg = view === 'Register';
       const isForgot = view === 'Forgot';
       const isGoogle = view === 'GoogleLink';
       const isDash = view === 'Dashboard';
-      const isAccount = view === 'Account';
       const isShowcase = view === 'Showcase';
 
       const vLogin = document.getElementById("viewLogin");
@@ -2592,19 +2583,21 @@
       const vDash = document.getElementById("viewDashboard");
       if (vDash) vDash.style.display = isDash ? 'block' : 'none';
 
-      const vAccount = document.getElementById("viewAccount");
-      if (vAccount) vAccount.style.display = isAccount ? 'block' : 'none';
-
       const showcaseEl = document.getElementById("viewShowcase");
       if (showcaseEl) showcaseEl.style.display = isShowcase ? 'block' : 'none';
 
-      // Header navigation buttons active states (3 completely separate views)
-      const btnNavHome = document.getElementById("btnNavHome");
-      const btnNavDash = document.getElementById("btnNavDash");
-      const btnNavAccount = document.getElementById("btnNavAccount");
-      if (btnNavHome) btnNavHome.classList.toggle("active", isShowcase || isLogin || isReg || isForgot || isGoogle);
-      if (btnNavDash) btnNavDash.classList.toggle("active", isDash);
-      if (btnNavAccount) btnNavAccount.classList.toggle("active", isAccount);
+      // Toggle contextual switch button in header
+      const switchIcon = document.getElementById("btnHeaderSwitchIcon");
+      const switchText = document.getElementById("btnHeaderSwitchText");
+      if (switchIcon && switchText) {
+        if (isDash) {
+          switchIcon.innerText = "🏠";
+          switchText.innerText = "Ir para o Site";
+        } else {
+          switchIcon.innerText = "📊";
+          switchText.innerText = "Meu Painel & Perfil";
+        }
+      }
 
       // Header user area vs auth button & loggedHomeBanner
       const headerUserArea = document.getElementById("headerUserArea");
@@ -2622,13 +2615,13 @@
       }
 
       const overlay = document.getElementById("authOverlay");
-      if (isDash || isShowcase || isAccount) {
+      if (isDash || isShowcase) {
         if (overlay) overlay.style.display = 'none';
       } else {
         if (overlay) overlay.style.display = 'flex';
       }
 
-      if (isAccount && currentUser) {
+      if (currentUser) {
         populateAccountFields(currentUser);
       }
     }
@@ -2659,7 +2652,8 @@
         const res = await api('/api/v1/auth/login', 'POST', { email, password });
         token = res.access_token;
         localStorage.setItem("mdm_token", token);
-        await initDashboard();
+        closeAuthOverlay();
+        await initDashboard('Dashboard');
       } catch (err) {
         alert.innerText = err.message;
         alert.style.display = 'block';
@@ -2679,7 +2673,8 @@
         const res = await api('/api/v1/auth/register', 'POST', { name, email, whatsapp, password });
         token = res.access_token;
         localStorage.setItem("mdm_token", token);
-        await initDashboard();
+        closeAuthOverlay();
+        await initDashboard('Dashboard');
       } catch (err) {
         alert.innerText = err.message;
         alert.style.display = 'block';
@@ -2849,7 +2844,7 @@
           token = resData.access_token;
           localStorage.setItem("mdm_token", token);
           closeAuthOverlay();
-          await initDashboard();
+          await initDashboard('Dashboard');
           alert("✅ Conta Google vinculada com sucesso!\n\nSua senha do aplicativo EXE foi configurada. Você já pode usar este mesmo e-mail e senha para entrar no MDM_FRP_BRASIL.exe com a opção 'Lembrar credenciais'!");
         } else {
           alertEl.textContent = resData.detail || "Erro ao conectar conta Google.";
@@ -3184,7 +3179,7 @@
       } catch (e) {}
     }
 
-    async function initDashboard() {
+    async function initDashboard(targetView = null) {
       try {
         currentUser = await api('/api/v1/auth/me');
         if (!currentUser) throw new Error("Usuário não encontrado");
@@ -3251,17 +3246,17 @@
         // Fetch monthly ranking
         fetchRanking();
 
-        // Check view based on pathname or query param
-        const currentPath = window.location.pathname;
-        const vParam = urlParams.get("view");
-        if (vParam === "account" || currentPath === "/conta") {
-          showView('Account');
-        } else if (vParam === "dashboard" || currentPath === "/painel" || currentPath === "/dashboard") {
-          showView('Dashboard');
-        } else if (vParam === "home" || vParam === "showcase" || currentPath === "/" || currentPath === "/inicio") {
-          showView('Showcase');
+        // Determine destination view (defaults to Dashboard & Perfil)
+        if (targetView) {
+          showView(targetView);
         } else {
-          showView('Dashboard');
+          const currentPath = window.location.pathname;
+          const vParam = urlParams.get("view");
+          if (vParam === "showcase" || vParam === "home" || currentPath === "/inicio") {
+            showView('Showcase');
+          } else {
+            showView('Dashboard');
+          }
         }
 
         // Support direct tab opening via query param (?tab=account, etc)
@@ -3433,12 +3428,17 @@
 
     function switchDashTab(tab, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById("tabHistory").style.display = tab === 'history' ? 'block' : 'none';
-      document.getElementById("tabOrders").style.display = tab === 'orders' ? 'block' : 'none';
-      document.getElementById("tabDevices").style.display = tab === 'devices' ? 'block' : 'none';
-      document.getElementById("tabSoftware").style.display = tab === 'software' ? 'block' : 'none';
-      document.getElementById("tabAccount").style.display = tab === 'account' ? 'block' : 'none';
+      if (btn) btn.classList.add('active');
+      const tabProf = document.getElementById("tabProfile");
+      const tabHist = document.getElementById("tabHistory");
+      const tabOrd = document.getElementById("tabOrders");
+      const tabDev = document.getElementById("tabDevices");
+      const tabSoft = document.getElementById("tabSoftware");
+      if (tabProf) tabProf.style.display = (tab === 'profile' || tab === 'account') ? 'block' : 'none';
+      if (tabHist) tabHist.style.display = tab === 'history' ? 'block' : 'none';
+      if (tabOrd) tabOrd.style.display = tab === 'orders' ? 'block' : 'none';
+      if (tabDev) tabDev.style.display = tab === 'devices' ? 'block' : 'none';
+      if (tabSoft) tabSoft.style.display = tab === 'software' ? 'block' : 'none';
     }
 
     /* ========================================================
