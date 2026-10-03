@@ -1649,8 +1649,15 @@
       }
     }
 
-    function openEditUserModal(userId) {
-      const u = allUsersCache.find(x => x.id === userId);
+    async function openEditUserModal(userId) {
+      let u = allUsersCache.find(x => x.id === userId);
+      if (!u) {
+        try {
+          const res = await adminApi('/api/v1/admin/users/' + userId);
+          u = res.user;
+          if (res.wallet) u.balance_credits = res.wallet.balance_credits;
+        } catch(e) {}
+      }
       if (!u) return alert("Cliente não encontrado.");
       document.getElementById("editUserId").value = u.id;
       document.getElementById("editUserName").value = u.name || '';
@@ -2361,6 +2368,15 @@
         const targetTab = urlParams.get("tab");
         const btn = document.querySelector(`button[onclick*="'${targetTab}'"]`);
         if (btn) switchTab(targetTab, btn);
+      }
+      if (urlParams.get("open_edit")) {
+        setTimeout(() => openEditUserModal(parseInt(urlParams.get("open_edit"))), 700);
+      }
+      if (urlParams.get("open_details")) {
+        setTimeout(() => openUserDetailsModal(parseInt(urlParams.get("open_details"))), 700);
+      }
+      if (urlParams.get("open_create")) {
+        setTimeout(() => openCreateUserModal(), 700);
       }
     }
 
