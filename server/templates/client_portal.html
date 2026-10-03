@@ -334,6 +334,178 @@
       transform: translateY(-1px);
       box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
     }
+
+    /* Header Nav Switcher */
+    .header-nav-switcher {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-nav-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .btn-nav-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFF;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .btn-nav-item.active {
+      background: rgba(0, 229, 255, 0.15);
+      color: var(--cyan);
+      border-color: rgba(0, 229, 255, 0.5);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
+    }
+
+    /* Podium Ranking Styles */
+    .podium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+      align-items: stretch;
+    }
+    @media (max-width: 768px) {
+      .podium-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .podium-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 22px 18px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .podium-card:hover {
+      transform: translateY(-4px);
+    }
+    .podium-card.rank-1 {
+      border: 2px solid #F59E0B;
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.14) 0%, rgba(12, 18, 32, 0.95) 100%);
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25);
+    }
+    .podium-card.rank-2 {
+      border: 1.5px solid #94A3B8;
+      background: linear-gradient(180deg, rgba(148, 163, 184, 0.12) 0%, rgba(12, 18, 32, 0.95) 100%);
+      box-shadow: 0 10px 25px rgba(148, 163, 184, 0.15);
+    }
+    .podium-card.rank-3 {
+      border: 1.5px solid #CD7F32;
+      background: linear-gradient(180deg, rgba(205, 127, 50, 0.12) 0%, rgba(12, 18, 32, 0.95) 100%);
+      box-shadow: 0 10px 25px rgba(205, 127, 50, 0.15);
+    }
+    .podium-crown {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+    .podium-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      object-fit: cover;
+      display: block;
+      background: #0F172A;
+    }
+    .podium-card.rank-1 .podium-avatar {
+      width: 82px;
+      height: 82px;
+      border: 3px solid #F59E0B;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+    }
+    .podium-card.rank-2 .podium-avatar {
+      border: 2.5px solid #CBD5E1;
+      box-shadow: 0 0 15px rgba(203, 213, 225, 0.3);
+    }
+    .podium-card.rank-3 .podium-avatar {
+      border: 2.5px solid #CD7F32;
+      box-shadow: 0 0 15px rgba(205, 127, 50, 0.3);
+    }
+    .podium-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #FFF;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .podium-credits {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--green);
+      margin: 6px 0;
+    }
+    .podium-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .podium-card.rank-1 .podium-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .podium-card.rank-2 .podium-badge {
+      background: rgba(148, 163, 184, 0.2);
+      color: #E2E8F0;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+    .podium-card.rank-3 .podium-badge {
+      background: rgba(205, 127, 50, 0.2);
+      color: #FFA07A;
+      border: 1px solid rgba(205, 127, 50, 0.4);
+    }
+
+    /* Account Profile Edit Styling */
+    .profile-avatar-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 3px solid var(--cyan);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.35);
+      object-fit: cover;
+      background: #0B1120;
+    }
+    .avatar-preset-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s;
+    }
+    .avatar-preset-btn:hover {
+      border-color: var(--cyan);
+      transform: scale(1.1);
+      background: rgba(0, 229, 255, 0.15);
+    }
+
     .showcase-section {
       max-width: 1100px;
       margin: 40px auto 20px;
@@ -956,7 +1128,7 @@
 
   <!-- Top Header -->
   <header>
-    <div class="brand" onclick="window.location.reload()">
+    <div class="brand" onclick="showView('Showcase')" style="cursor: pointer;" title="Ir para a Página Inicial">
       <img src="/static/logo.png" class="lightning-logo" alt="MDM & FRP BRASIL">
       <div>
         <div class="brand-title">MDM & FRP BRASIL</div>
@@ -974,7 +1146,17 @@
       <span style="font-size: 11px; color: #38BDF8;">Sincronização Ativa</span>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <!-- NAVEGAÇÃO DE TELAS (INÍCIO vs MEU PAINEL) -->
+      <nav class="header-nav-switcher">
+        <button id="btnNavHome" class="btn-nav-item active" onclick="showView('Showcase')">
+          🏠 Início / Vitrine
+        </button>
+        <button id="btnNavDash" class="btn-nav-item" onclick="handleNavDashClick()">
+          📊 Meu Painel
+        </button>
+      </nav>
+
       <a href="/download/exe?v=2.2" class="btn-download-header" title="Baixar executável MDM & FRP BRASIL para Windows">
         📥 Baixar Ferramenta (.exe)
       </a>
@@ -985,6 +1167,7 @@
         <a id="linkAdminShortcut" href="/admin" target="_blank" style="display:none; align-items:center; gap:4px; padding: 5px 12px; border-radius: 6px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #000; font-weight: 700; text-decoration: none; font-size: 11px; margin-right: 6px;">
           👑 Painel Admin
         </a>
+        <img id="headerUserAvatar" src="" alt="Avatar" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--cyan); display: none;">
         <span id="headerUserName">Cliente</span>
         <span class="balance" id="headerBalance">🪙 0 Créditos</span>
         <button class="btn-logout" onclick="logout()">Sair</button>
@@ -995,6 +1178,24 @@
   <main>
     <!-- SHOWCASE & EXE DOWNLOAD SECTION (VISITOR & CLIENTS) -->
     <div id="viewShowcase" class="showcase-section" style="margin-top: 10px;">
+      
+      <!-- WELCOME BANNER FOR LOGGED-IN USERS ON HOMEPAGE -->
+      <div id="loggedHomeBanner" style="display: none; background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(0, 230, 118, 0.08) 100%); border: 1px solid rgba(0, 229, 255, 0.35); border-radius: 14px; padding: 14px 22px; max-width: 980px; margin: 10px auto 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 20px rgba(0, 229, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <img id="bannerUserAvatar" src="" alt="Avatar" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--cyan); display: none;">
+          <div>
+            <div style="font-size: 15px; font-weight: 800; color: #FFF;">
+              👋 Olá, <span id="bannerUserName" style="color: var(--cyan);">Cliente</span>! Você está conectado no site.
+            </div>
+            <div style="font-size: 12.5px; color: #94A3B8; margin-top: 2px;">
+              Saldo disponível na carteira: <strong style="color: var(--green); font-size: 14px;" id="bannerUserBalance">🪙 0 Créditos</strong>
+            </div>
+          </div>
+        </div>
+        <button class="btn-primary" style="font-size: 13px; padding: 9px 20px; width: auto;" onclick="showView('Dashboard')">
+          📊 Abrir Meu Painel do Cliente ➔
+        </button>
+      </div>
       <!-- CLEAN ENTERPRISE SAAS HERO (HYBRID 2+3: CLEAN TITANIUM & NEON) -->
       <div class="hero-clean-container" style="text-align: center; max-width: 980px; margin: 15px auto 35px; padding: 10px 20px 0;">
         <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #00E5FF; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);">
@@ -1110,6 +1311,53 @@
           </div>
         </div>
       </div>
+
+      <!-- SEÇÃO RANKING DESTAQUES DO MÊS (MAIORES RECARGAS) -->
+      <section class="ranking-showcase-section" style="max-width: 1100px; margin: 55px auto 25px; padding: 0 10px;">
+        <div style="text-align: center; margin-bottom: 28px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #F59E0B; margin-bottom: 12px; box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);">
+            <span>🏆 DESTAQUES & TOP ASSISTÊNCIAS</span>
+          </div>
+          <h2 style="font-size: 30px; font-weight: 900; color: #FFF; margin-bottom: 10px; letter-spacing: -0.5px;">
+            Ranking de Recargas do Mês • <span id="rankingMonthLabel" style="background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Outubro de 2026</span>
+          </h2>
+          <p style="color: #94A3B8; font-size: 14px; max-width: 680px; margin: 0 auto; line-height: 1.5;">
+            Parabéns aos profissionais e bancadas técnicas que lideram o volume de créditos e desbloqueios realizados com o MDM & FRP BRASIL!
+          </p>
+        </div>
+
+        <!-- PODIUM TOP 3 CARDS -->
+        <div id="podiumTop3" class="podium-grid">
+          <!-- Populated by renderRanking() -->
+        </div>
+
+        <!-- TABELA LEADERBOARD TOP 4 AO 10 -->
+        <div class="panel-card" style="margin-top: 14px; background: rgba(12, 18, 32, 0.95); border: 1px solid var(--border-green);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+            <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <span>📋</span> Assistências em Destaque no Mês
+            </h4>
+            <span style="font-size: 11px; color: var(--cyan); background: rgba(0, 229, 255, 0.08); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(0, 229, 255, 0.2);">
+              ⚡ Atualização Contínua em Nuvem
+            </span>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 75px; text-align: center;">Posição</th>
+                  <th>Profissional / Assistência</th>
+                  <th>Reconhecimento</th>
+                  <th style="text-align: right;">Créditos no Mês</th>
+                </tr>
+              </thead>
+              <tbody id="tblRankingBody">
+                <!-- Populated by renderRanking() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- FLOATING AUTH OVERLAY (LOGIN / CADASTRO COM BLUR) -->
@@ -1468,37 +1716,109 @@
         </div>
       </div>
 
-      <!-- Tab: Conta -->
+      <!-- Tab: Conta & Configurações de Perfil -->
       <div id="tabAccount" class="panel-card" style="display: none;">
-        <h3>👤 Meus Dados Cadastrais</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px;">
-          <div><label style="color: var(--text-muted); font-size: 12px;">Nome:</label><div id="accName" style="font-weight: 600; font-size: 15px; margin-top: 2px;">—</div></div>
-          <div><label style="color: var(--text-muted); font-size: 12px;">E-mail:</label><div id="accEmail" style="font-weight: 600; font-size: 15px; margin-top: 2px;">—</div></div>
-          <div><label style="color: var(--text-muted); font-size: 12px;">WhatsApp:</label><div id="accPhone" style="font-weight: 600; font-size: 15px; margin-top: 2px;">—</div></div>
-          <div><label style="color: var(--text-muted); font-size: 12px;">Status da Conta:</label><div id="accStatus" style="font-weight: 600; font-size: 15px; margin-top: 2px; color: var(--green);">Ativa</div></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border-green); padding-bottom: 14px;">
+          <div>
+            <h3 style="margin: 0; font-size: 18px; color: #FFF;">👤 Minha Conta & Perfil Técnico</h3>
+            <p style="margin: 4px 0 0; color: var(--text-muted); font-size: 12.5px;">Personalize sua foto de perfil, número de WhatsApp e senha de acesso ao Site e EXE.</p>
+          </div>
+          <div id="accStatusBadge" style="background: rgba(0, 230, 118, 0.12); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.35); padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 800;">
+            ✓ CONTA ATIVA
+          </div>
         </div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border-green); margin: 24px 0;">
-        <h4 style="font-size: 16px; margin-bottom: 8px; color: #FFF; display: flex; align-items: center; gap: 8px;">
-          <span>🔑</span> Senha de Acesso para o Programa no Computador (.EXE)
-        </h4>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px; line-height: 1.4;">
-          Defina ou altere a senha utilizada para fazer login no programa <strong>MDM_FRP_BRASIL.exe</strong>. Ela funciona em conjunto com seu e-mail cadastrado e suporta a função <em>Lembrar credenciais</em> no seu computador.
-        </p>
-        <div id="accPasswordAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:14px; text-align: left;"></div>
-        <form onsubmit="handleUpdateExePassword(event)" style="max-width: 440px;">
-          <div class="form-group" style="text-align: left; margin-bottom: 12px;">
-            <label style="color: var(--text-muted); font-size: 12px;">Nova Senha do EXE</label>
-            <input type="password" id="accNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
+        <div id="accAlert" style="display:none; padding:12px; border-radius:8px; font-size:12.5px; margin-bottom:18px; text-align: left;"></div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          <!-- Coluna 1: Foto de Perfil & Dados Pessoais -->
+          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+            <h4 style="font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span>🖼️</span> Foto de Perfil & Contato WhatsApp
+            </h4>
+
+            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+              <img id="editAccAvatarPreview" src="/static/logo.png" alt="Prévia da Foto" class="profile-avatar-circle">
+              <div>
+                <button type="button" class="btn-green" style="font-size: 11.5px; padding: 7px 14px; margin-bottom: 6px;" onclick="document.getElementById('accFileInput').click()">
+                  📁 Carregar Imagem
+                </button>
+                <input type="file" id="accFileInput" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
+                <div style="font-size: 11px; color: var(--text-muted);">PNG ou JPG do seu dispositivo</div>
+              </div>
+            </div>
+
+            <!-- Avatares Rápidos Predefinidos -->
+            <div style="margin-bottom: 16px;">
+              <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 6px;">Ou clique para usar um avatar técnico:</label>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="avatar-preset-btn" title="Técnico Especialista" onclick="setPresetAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop')">👨‍🔧</button>
+                <button type="button" class="avatar-preset-btn" title="Líder Tech" onclick="setPresetAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop')">⚡</button>
+                <button type="button" class="avatar-preset-btn" title="Bancada Android" onclick="setPresetAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop')">📱</button>
+                <button type="button" class="avatar-preset-btn" title="Especialista Cyber" onclick="setPresetAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop')">🤖</button>
+                <button type="button" class="avatar-preset-btn" title="Master VIP" onclick="setPresetAvatar('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop')">👑</button>
+              </div>
+            </div>
+
+            <form onsubmit="handleSaveProfileData(event)">
+              <div class="form-group" style="text-align: left;">
+                <label>URL da Imagem de Perfil (opcional)</label>
+                <input type="url" id="editAccAvatarUrl" class="form-control" placeholder="https://exemplo.com/sua-foto.jpg" oninput="previewAvatarUrl(this.value)">
+              </div>
+              <div class="form-group" style="text-align: left;">
+                <label>Nome Completo / Nome da Assistência</label>
+                <input type="text" id="editAccName" class="form-control" required placeholder="Ex: Central Cell Americana">
+              </div>
+              <div class="form-group" style="text-align: left;">
+                <label>WhatsApp / Celular com DDD</label>
+                <input type="text" id="editAccPhone" class="form-control" required placeholder="(19) 99478-3127">
+              </div>
+              <div class="form-group" style="text-align: left;">
+                <label>E-mail Cadastrado (Login)</label>
+                <input type="email" id="editAccEmail" class="form-control" readonly style="opacity: 0.7; cursor: not-allowed; background: rgba(0,0,0,0.25);">
+              </div>
+              <button type="submit" class="btn-green" id="btnSaveProfile" style="margin-top: 14px; width: 100%;">
+                💾 Salvar Alterações de Perfil
+              </button>
+            </form>
           </div>
-          <div class="form-group" style="text-align: left; margin-bottom: 14px;">
-            <label style="color: var(--text-muted); font-size: 12px;">Confirmar Nova Senha</label>
-            <input type="password" id="accConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
+
+          <!-- Coluna 2: Segurança & Senha de Acesso Web + EXE -->
+          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h4 style="font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <span>🔒</span> Segurança & Senha do Site e EXE
+              </h4>
+              <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-bottom: 18px;">
+                Defina ou altere a senha utilizada para acessar este portal web e o aplicativo no computador <strong>MDM_FRP_BRASIL.exe</strong> (compatível com a função <em>Lembrar credenciais</em>).
+              </p>
+
+              <form onsubmit="handleUpdatePassword(event)">
+                <div class="form-group" style="text-align: left;">
+                  <label>Nova Senha</label>
+                  <input type="password" id="editAccNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group" style="text-align: left; margin-bottom: 18px;">
+                  <label>Confirmar Nova Senha</label>
+                  <input type="password" id="editAccConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
+                </div>
+
+                <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 12px; font-size: 11.5px; color: #94A3B8; text-align: left; line-height: 1.45; margin-bottom: 16px;">
+                  <span style="color: var(--cyan); font-weight: 700;">🔑 Integração Imediata:</span><br>
+                  A nova senha será salva no banco com criptografia avançada e funcionará imediatamente no login do aplicativo <strong>MDM_FRP_BRASIL.exe</strong> no seu PC.
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnUpdatePassword" style="width: 100%;">
+                  🔒 Salvar Nova Senha
+                </button>
+              </form>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11.5px; color: var(--text-muted); text-align: center;">
+              MDM & FRP BRASIL • Plataforma Oficial de Gestão e Desbloqueios
+            </div>
           </div>
-          <button type="submit" class="btn-green" id="btnUpdateExePw" style="font-size: 13px; padding: 10px 18px;">
-            🔒 Atualizar Senha do EXE
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   </main>
@@ -1634,22 +1954,55 @@
       if (overlay) overlay.style.display = 'none';
     }
 
+    function handleNavDashClick() {
+      if (token) {
+        showView('Dashboard');
+      } else {
+        openAuthOverlay('Login');
+      }
+    }
+
     function showView(view) {
-      document.getElementById("viewLogin").style.display = view === 'Login' ? 'block' : 'none';
-      document.getElementById("viewRegister").style.display = view === 'Register' ? 'block' : 'none';
-      document.getElementById("viewForgot").style.display = view === 'Forgot' ? 'block' : 'none';
+      const isLogin = view === 'Login';
+      const isReg = view === 'Register';
+      const isForgot = view === 'Forgot';
+      const isGoogle = view === 'GoogleLink';
+      const isDash = view === 'Dashboard';
+      const isShowcase = view === 'Showcase';
+
+      document.getElementById("viewLogin").style.display = isLogin ? 'block' : 'none';
+      document.getElementById("viewRegister").style.display = isReg ? 'block' : 'none';
+      document.getElementById("viewForgot").style.display = isForgot ? 'block' : 'none';
       const googleLinkEl = document.getElementById("viewGoogleLink");
-      if (googleLinkEl) googleLinkEl.style.display = view === 'GoogleLink' ? 'block' : 'none';
-      document.getElementById("viewDashboard").style.display = view === 'Dashboard' ? 'block' : 'none';
+      if (googleLinkEl) googleLinkEl.style.display = isGoogle ? 'block' : 'none';
+
+      document.getElementById("viewDashboard").style.display = isDash ? 'block' : 'none';
       const showcaseEl = document.getElementById("viewShowcase");
-      if (showcaseEl) showcaseEl.style.display = view === 'Dashboard' ? 'none' : 'block';
-      document.getElementById("headerUserArea").style.display = view === 'Dashboard' ? 'flex' : 'none';
-      
+      if (showcaseEl) showcaseEl.style.display = isDash ? 'none' : 'block';
+
+      // Header navigation buttons active states
+      const btnNavHome = document.getElementById("btnNavHome");
+      const btnNavDash = document.getElementById("btnNavDash");
+      if (btnNavHome) btnNavHome.classList.toggle("active", isShowcase || isLogin || isReg || isForgot || isGoogle);
+      if (btnNavDash) btnNavDash.classList.toggle("active", isDash);
+
+      // Header user area vs auth button & loggedHomeBanner
+      const headerUserArea = document.getElementById("headerUserArea");
       const btnHeaderAuth = document.getElementById("btnHeaderAuth");
-      if (btnHeaderAuth) btnHeaderAuth.style.display = view === 'Dashboard' ? 'none' : 'inline-flex';
+      const loggedHomeBanner = document.getElementById("loggedHomeBanner");
+
+      if (token) {
+        if (headerUserArea) headerUserArea.style.display = 'flex';
+        if (btnHeaderAuth) btnHeaderAuth.style.display = 'none';
+        if (loggedHomeBanner) loggedHomeBanner.style.display = isShowcase ? 'flex' : 'none';
+      } else {
+        if (headerUserArea) headerUserArea.style.display = 'none';
+        if (btnHeaderAuth) btnHeaderAuth.style.display = 'inline-flex';
+        if (loggedHomeBanner) loggedHomeBanner.style.display = 'none';
+      }
 
       const overlay = document.getElementById("authOverlay");
-      if (view === 'Dashboard' || view === 'Showcase') {
+      if (isDash || isShowcase) {
         if (overlay) overlay.style.display = 'none';
       } else {
         if (overlay) overlay.style.display = 'flex';
@@ -1887,42 +2240,204 @@
       }
     }
 
-    async function handleUpdateExePassword(e) {
-      e.preventDefault();
-      const alertEl = document.getElementById("accPasswordAlert");
-      alertEl.style.display = "none";
-      alertEl.textContent = "";
+    /* ========================================================
+       CONFIGURAÇÃO DE PERFIL, AVATAR, WHATSAPP E SENHA
+       ======================================================== */
+    function previewAvatarUrl(url) {
+      const preview = document.getElementById("editAccAvatarPreview");
+      if (preview && url && url.trim()) {
+        preview.src = url.trim();
+      }
+    }
 
-      const pw = document.getElementById("accNewPassword").value;
-      const pwConf = document.getElementById("accConfirmPassword").value;
+    function setPresetAvatar(url) {
+      const input = document.getElementById("editAccAvatarUrl");
+      if (input) input.value = url;
+      previewAvatarUrl(url);
+    }
+
+    function handleAvatarFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 2 * 1024 * 1024) {
+        alert("A imagem selecionada é muito grande. Escolha uma foto de até 2MB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const dataUrl = evt.target.result;
+        setPresetAvatar(dataUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function handleSaveProfileData(e) {
+      e.preventDefault();
+      const alertEl = document.getElementById("accAlert");
+      alertEl.style.display = "none";
+
+      const name = document.getElementById("editAccName").value.trim();
+      const whatsapp = document.getElementById("editAccPhone").value.trim();
+      const avatar_url = document.getElementById("editAccAvatarUrl").value.trim();
+
+      const btn = document.getElementById("btnSaveProfile");
+      btn.disabled = true;
+      btn.textContent = "Salvando perfil...";
+
+      try {
+        const res = await api('/api/v1/client/profile/update', 'POST', {
+          name,
+          whatsapp,
+          avatar_url
+        });
+        alertEl.style.background = "rgba(0, 230, 118, 0.15)";
+        alertEl.style.border = "1px solid var(--green)";
+        alertEl.style.color = "var(--green)";
+        alertEl.textContent = "✅ " + (res.message || "Dados de perfil e WhatsApp atualizados com sucesso!");
+        alertEl.style.display = "block";
+
+        if (res.user) {
+          currentUser = Object.assign(currentUser || {}, res.user);
+          const firstName = (res.user.name || 'Cliente').split(' ')[0];
+          document.getElementById("headerUserName").innerText = firstName;
+          const bannerUser = document.getElementById("bannerUserName");
+          if (bannerUser) bannerUser.innerText = firstName;
+
+          if (res.user.avatar_url) {
+            const hAvatar = document.getElementById("headerUserAvatar");
+            if (hAvatar) { hAvatar.src = res.user.avatar_url; hAvatar.style.display = 'inline-block'; }
+            const bAvatar = document.getElementById("bannerUserAvatar");
+            if (bAvatar) { bAvatar.src = res.user.avatar_url; bAvatar.style.display = 'inline-block'; }
+          }
+        }
+      } catch (err) {
+        alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+        alertEl.style.border = "1px solid var(--danger)";
+        alertEl.style.color = "var(--danger)";
+        alertEl.textContent = "Erro ao salvar perfil: " + err.message;
+        alertEl.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "💾 Salvar Alterações de Perfil";
+      }
+    }
+
+    async function handleUpdatePassword(e) {
+      e.preventDefault();
+      const alertEl = document.getElementById("accAlert");
+      alertEl.style.display = "none";
+
+      const pw = document.getElementById("editAccNewPassword").value;
+      const pwConf = document.getElementById("editAccConfirmPassword").value;
 
       if (pw.length < 6) {
+        alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+        alertEl.style.border = "1px solid var(--danger)";
+        alertEl.style.color = "var(--danger)";
         alertEl.textContent = "A senha deve ter no mínimo 6 caracteres.";
         alertEl.style.display = "block";
         return;
       }
+
       if (pw !== pwConf) {
+        alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+        alertEl.style.border = "1px solid var(--danger)";
+        alertEl.style.color = "var(--danger)";
         alertEl.textContent = "As senhas não coincidem. Digite a mesma senha nos dois campos.";
         alertEl.style.display = "block";
         return;
       }
 
-      const btn = document.getElementById("btnUpdateExePw");
+      const btn = document.getElementById("btnUpdatePassword");
       btn.disabled = true;
-      btn.textContent = "Salvando...";
+      btn.textContent = "Atualizando senha...";
 
       try {
-        const res = await api('/api/v1/auth/password/update', 'POST', { new_password: pw });
-        alert("✅ " + (res.message || "Senha atualizada com sucesso!"));
-        document.getElementById("accNewPassword").value = "";
-        document.getElementById("accConfirmPassword").value = "";
+        const res = await api('/api/v1/client/profile/update', 'POST', {
+          new_password: pw
+        });
+        alertEl.style.background = "rgba(0, 230, 118, 0.15)";
+        alertEl.style.border = "1px solid var(--green)";
+        alertEl.style.color = "var(--green)";
+        alertEl.textContent = "✅ " + (res.message || "Senha atualizada com sucesso! Ela já está ativa no Site e no EXE.");
+        alertEl.style.display = "block";
+        document.getElementById("editAccNewPassword").value = "";
+        document.getElementById("editAccConfirmPassword").value = "";
       } catch (err) {
-        alertEl.textContent = err.message || "Erro ao atualizar senha.";
+        alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+        alertEl.style.border = "1px solid var(--danger)";
+        alertEl.style.color = "var(--danger)";
+        alertEl.textContent = "Erro ao atualizar senha: " + err.message;
         alertEl.style.display = "block";
       } finally {
         btn.disabled = false;
-        btn.textContent = "🔒 Atualizar Senha do EXE";
+        btn.textContent = "🔒 Salvar Nova Senha";
       }
+    }
+
+    /* ========================================================
+       RANKING MENSAL DE RECARGAS DE CRÉDITOS
+       ======================================================== */
+    async function fetchRanking() {
+      try {
+        const res = await fetch('/api/v1/ranking/monthly');
+        const data = await res.json();
+        if (data && data.ranking) {
+          renderRanking(data);
+        }
+      } catch (err) {
+        console.warn("Ranking:", err);
+      }
+    }
+
+    function renderRanking(data) {
+      const monthEl = document.getElementById("rankingMonthLabel");
+      if (monthEl && data.month_label) monthEl.textContent = data.month_label;
+
+      const podiumEl = document.getElementById("podiumTop3");
+      const tblBody = document.getElementById("tblRankingBody");
+      if (!podiumEl || !tblBody) return;
+
+      podiumEl.innerHTML = "";
+      tblBody.innerHTML = "";
+
+      const ranking = data.ranking || [];
+      const top3 = ranking.slice(0, 3);
+      const others = ranking.slice(3);
+
+      top3.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `podium-card rank-${item.rank}`;
+        const crown = item.rank === 1 ? '👑' : (item.rank === 2 ? '🥈' : '🥉');
+        card.innerHTML = `
+          <div>
+            <div class="podium-crown">${crown}</div>
+            <img src="${item.avatar_url}" alt="${item.name}" class="podium-avatar">
+            <div class="podium-name" title="${item.name}">${item.name}</div>
+            <div class="podium-credits">⚡ ${item.credits} Créditos</div>
+          </div>
+          <div>
+            <span class="podium-badge">${item.badge}</span>
+          </div>
+        `;
+        podiumEl.appendChild(card);
+      });
+
+      others.forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="text-align: center; font-weight: 800; color: var(--cyan); font-size: 13px;">#${item.rank}</td>
+          <td style="display: flex; align-items: center; gap: 10px;">
+            <img src="${item.avatar_url}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+            <strong style="color: #FFF; font-size: 13px;">${item.name}</strong>
+          </td>
+          <td><span style="font-size: 11px; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; color: var(--text-muted);">${item.badge}</span></td>
+          <td style="text-align: right; font-weight: 800; color: var(--green); font-size: 13px;">⚡ ${item.credits} Créditos</td>
+        `;
+        tblBody.appendChild(tr);
+      });
     }
 
     function logout() {
@@ -2054,9 +2569,15 @@
         const userHeaderEl = document.getElementById("headerUserName");
         if (userHeaderEl) userHeaderEl.innerText = firstName;
 
+        const bannerUserEl = document.getElementById("bannerUserName");
+        if (bannerUserEl) bannerUserEl.innerText = firstName;
+
         const bal = (currentUser.wallet && currentUser.wallet.balance_credits !== undefined) ? currentUser.wallet.balance_credits : 0;
         const balHeaderEl = document.getElementById("headerBalance");
         if (balHeaderEl) balHeaderEl.innerText = `🪙 ${bal} Créditos`;
+
+        const bannerBalEl = document.getElementById("bannerUserBalance");
+        if (bannerBalEl) bannerBalEl.innerText = `🪙 ${bal} Créditos`;
 
         const dashBalEl = document.getElementById("dashBalance");
         if (dashBalEl) dashBalEl.innerText = bal;
@@ -2067,15 +2588,28 @@
         const dashUsedEl = document.getElementById("dashUsed");
         if (dashUsedEl) dashUsedEl.innerText = (currentUser.wallet && currentUser.wallet.total_used) || 0;
 
-        // Account tab
-        const accNameEl = document.getElementById("accName");
-        if (accNameEl) accNameEl.innerText = currentUser.name || '';
+        // User Avatar
+        const avatarUrl = currentUser.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'Cliente')}&background=00E5FF&color=000&bold=true`;
+        const hAvatar = document.getElementById("headerUserAvatar");
+        if (hAvatar) { hAvatar.src = avatarUrl; hAvatar.style.display = 'inline-block'; }
+        const bAvatar = document.getElementById("bannerUserAvatar");
+        if (bAvatar) { bAvatar.src = avatarUrl; bAvatar.style.display = 'inline-block'; }
 
-        const accEmailEl = document.getElementById("accEmail");
-        if (accEmailEl) accEmailEl.innerText = currentUser.email || '';
+        // Account tab profile inputs
+        const editAccAvatarPreview = document.getElementById("editAccAvatarPreview");
+        if (editAccAvatarPreview) editAccAvatarPreview.src = avatarUrl;
 
-        const accPhoneEl = document.getElementById("accPhone");
-        if (accPhoneEl) accPhoneEl.innerText = currentUser.whatsapp || 'Não informado';
+        const editAccAvatarUrl = document.getElementById("editAccAvatarUrl");
+        if (editAccAvatarUrl) editAccAvatarUrl.value = currentUser.avatar_url || '';
+
+        const editAccName = document.getElementById("editAccName");
+        if (editAccName) editAccName.value = currentUser.name || '';
+
+        const editAccPhone = document.getElementById("editAccPhone");
+        if (editAccPhone) editAccPhone.value = currentUser.whatsapp || '';
+
+        const editAccEmail = document.getElementById("editAccEmail");
+        if (editAccEmail) editAccEmail.value = currentUser.email || '';
 
         // Check if user is admin
         const adminBtn = document.getElementById("linkAdminShortcut");
@@ -2087,7 +2621,15 @@
           }
         }
 
-        showView('Dashboard');
+        // Fetch monthly ranking
+        fetchRanking();
+
+        // Check if user explicitly asked for home or dashboard view
+        if (urlParams.get("view") === "home") {
+          showView('Showcase');
+        } else {
+          showView('Dashboard');
+        }
 
         // Load background data safely without kicking out if single query fails
         try { await loadPackages(); } catch(e) { console.error('loadPackages', e); }
@@ -2263,6 +2805,7 @@
     applySiteTheme();
     renderPortalSlide();
     resetPortalSliderTimer();
+    fetchRanking();
 
     // Check for tokens or auth feedback in query string (from Google redirect or deep links)
     if (urlParams.get("auth_error")) {

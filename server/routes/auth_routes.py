@@ -246,6 +246,7 @@ def get_me(user: dict = Depends(get_current_user)):
         "name": user["name"],
         "email": user["email"],
         "whatsapp": user["whatsapp"],
+        "avatar_url": user.get("avatar_url") or "",
         "status": user["status"],
         "created_at": user["created_at"],
         "wallet": dict(wallet) if wallet else {"balance_credits": 0, "total_purchased": 0, "total_used": 0}

@@ -74,6 +74,12 @@ class GoogleAuthRequest(BaseModel):
 class UpdateClientPasswordRequest(BaseModel):
     new_password: str = Field(..., min_length=6, max_length=100)
 
+class UpdateProfileRequest(BaseModel):
+    name: Optional[str] = None
+    whatsapp: Optional[str] = None
+    avatar_url: Optional[str] = None
+    new_password: Optional[str] = None
+
 class PixPreviewRequest(BaseModel):
     pix_key: str
     key_type: Optional[str] = "AUTO"

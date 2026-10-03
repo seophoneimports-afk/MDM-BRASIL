@@ -45,6 +45,10 @@ app.include_router(admin_routes.router)
 app.include_router(exe_routes.router)
 app.include_router(webhook_routes.router)
 
+@app.get("/api/v1/ranking/monthly", tags=["Public Ranking"])
+def get_public_monthly_ranking():
+    return client_routes.get_monthly_ranking()
+
 from fastapi.responses import FileResponse
 
 # Direct download endpoint for the Windows EXE
