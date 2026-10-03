@@ -97,6 +97,12 @@ def serve_layouts_showcase():
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
+@app.get("/slider-options", response_class=HTMLResponse)
+def serve_slider_options():
+    path = os.path.join(TEMPLATES_DIR, "slider_options.html")
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
 @app.get("/admin", response_class=HTMLResponse)
 def serve_admin_portal():
     path = os.path.join(TEMPLATES_DIR, "admin_portal.html")
