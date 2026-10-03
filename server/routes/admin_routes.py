@@ -339,19 +339,13 @@ def admin_create_user(req: AdminCreateUserRequest, request: Request, admin: dict
     return {"success": True, "message": f"Cliente '{req.name}' cadastrado com sucesso!", "user_id": user_id}
 
 @router.post("/generate-test-account")
-def generate_test_account(data: dict = None, request: Request = None, admin: dict = Depends(get_current_admin)):
+def generate_test_account(request: Request, admin: dict = Depends(get_current_admin)):
     client_ip = request.client.host if request and request.client else "127.0.0.1"
     code = secrets.token_hex(2).upper()
     test_email = f"teste_{code.lower()}@mdmfrpbrasil.com.br"
     test_name = f"Cliente Teste Bancada #{code}"
     raw_password = f"Teste{code}!"
     test_whatsapp = "(19) 99478-3127"
-
-    if data:
-        if data.get("name"): test_name = str(data["name"]).strip()
-        if data.get("email"): test_email = str(data["email"]).strip().lower()
-        if data.get("password"): raw_password = str(data["password"]).strip()
-        if data.get("whatsapp"): test_whatsapp = str(data["whatsapp"]).strip()
 
     pw_hash = hash_password(raw_password)
     with db_transaction() as conn:
@@ -367,21 +361,23 @@ def generate_test_account(data: dict = None, request: Request = None, admin: dic
         cursor.execute(
             """
             INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used)
-            VALUES (?, 2, 2, 0, 0)
+            VALUES (?, 0, 0, 0, 0)
             """,
             (user_id,)
         )
-        cursor.execute(
-            """
-            INSERT INTO credit_transactions (wallet_id, user_id, type, amount_credits, previous_balance, new_balance, description, reference_id)
-            VALUES (last_insert_rowid(), ?, 'TEST_GRANT', 2, 0, 2, '🧪 Conta de Teste com 2 Créditos liberada pelo Admin', 'TEST_ACC_' || ?)
-            """,
-            (user_id, code)
-        )
+
+    # Credita os 2 créditos de teste usando a função padronizada do wallet
+    add_credits(
+        user_id=user_id,
+        amount=2,
+        tx_type="BONUS",
+        description=f"🧪 Conta de Teste com 2 Créditos liberada pelo Admin ({admin.get('name', 'Admin')})",
+        reference_id=f"TEST_ACC_{code}"
+    )
 
     log_audit_event(
         "TEST_ACCOUNT_CREATED",
-        admin_id=admin["id"],
+        admin_id=admin.get("id"),
         user_id=user_id,
         details={
             "email": test_email,
@@ -394,15 +390,32 @@ def generate_test_account(data: dict = None, request: Request = None, admin: dic
         ip_address=client_ip
     )
 
-    return {
-        "success": True,
-        "message": "Conta de teste gerada com sucesso com 2 créditos!",
+    ready_msg = f"""🧪 *MDM & FRP BRASIL - CONTA DE TESTE LIBERADA* 🧪
+
+Olá, {test_name}! Sua conta de teste com *2 CRÉDITOS* foi provisionada com sucesso:
+
+🌐 *Site / Painel:* https://mdm-brasil.onrender.com
+💻 *Aplicativo Windows:* MDM_FRP_BRASIL.exe
+👤 *Login / E-mail:* {test_email}
+🔑 *Senha:* {raw_password}
+🎁 *Saldo:* 2 Créditos (Cortesia para Testes de Bancada)
+
+Qualquer dúvida ou caso precise de suporte, estamos à disposição!"""
+
+    account_info = {
         "user_id": user_id,
         "name": test_name,
         "email": test_email,
-        "password": raw_password,
-        "credits": 2,
-        "code": code
+        "temporary_password": raw_password,
+        "balance_credits": 2,
+        "code": code,
+        "ready_message": ready_msg
+    }
+
+    return {
+        "success": True,
+        "message": "Conta de teste gerada com sucesso com 2 créditos!",
+        "account": account_info
     }
 
 @router.delete("/users/{user_id}")

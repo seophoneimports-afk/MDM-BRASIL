@@ -48,6 +48,10 @@ async def security_intrusion_middleware(request: Request, call_next):
     if path.startswith("/static") or path == "/favicon.ico":
         return await call_next(request)
 
+    # Direct preview route for admin/security trap demonstration
+    if path == "/security-trap":
+        return await call_next(request)
+
     is_intrusion, attack_type, detail = check_for_intrusion(path, query)
     if is_intrusion:
         # Record immediately into database audit log
@@ -64,7 +68,7 @@ async def security_intrusion_middleware(request: Request, call_next):
             ip_address=client_ip
         )
         accept = request.headers.get("accept", "")
-        if "text/html" in accept or path in ("/security-trap", "/wp-login.php", "/wp-admin", "/phpmyadmin") or "test_hack=1" in query:
+        if "text/html" in accept or path in ("/wp-login.php", "/wp-admin", "/phpmyadmin") or "test_hack=1" in query:
             return HTMLResponse(content=get_hacker_troll_html(client_ip, attack_type, path), status_code=403)
         else:
             return JSONResponse(
@@ -83,7 +87,7 @@ async def security_intrusion_middleware(request: Request, call_next):
 @app.get("/security-trap", response_class=HTMLResponse)
 def serve_security_trap(request: Request):
     client_ip = request.client.host if request.client else "127.0.0.1"
-    return HTMLResponse(content=get_hacker_troll_html(client_ip, "SIMULACAO_TESTE", "/security-trap"), status_code=403)
+    return HTMLResponse(content=get_hacker_troll_html(client_ip, "SIMULACAO_TESTE", "/security-trap"), status_code=200)
 
 # Mount Static Files (Images, Styles, EXE download)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
