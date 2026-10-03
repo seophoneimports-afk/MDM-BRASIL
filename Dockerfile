@@ -1,8 +1,18 @@
-FROM node:20-alpine
+FROM python:3.11-slim
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm install --omit=dev
+
+# Install system dependencies if any
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . .
-ENV NODE_ENV=production
+
+ENV PORT=10000
 EXPOSE 10000
-CMD ["npm", "start"]
+
+CMD ["sh", "-c", "uvicorn server.main:app --host 0.0.0.0 --port ${PORT:-10000}"]

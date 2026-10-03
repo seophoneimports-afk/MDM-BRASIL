@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>MDM & FRP BRASIL — 3 Modelos de Cabeçalho</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060911;
+      --card: #0C1220;
+      --card-inner: #080C16;
+      --border: #14223A;
+      --cyan: #00E5FF;
+      --green: #00E676;
+      --blue: #0284C7;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 30px 20px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .page-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .page-title h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .page-title p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
+    .model-wrapper {
+      margin-bottom: 40px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .model-info-bar {
+      padding: 12px 20px;
+      background: #080D1A;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .model-info-bar h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .model-info-bar span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Common Header styles */
+    .header-box {
+      width: 100%;
+      padding: 14px 28px;
+      background: rgba(10, 16, 29, 0.95);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .brand img {
+      width: 50px;
+      height: 34px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4));
+    }
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: -0.5px;
+    }
+    .brand-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    .btn-download-header {
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      color: var(--cyan);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-download-header:hover {
+      background: var(--cyan);
+      color: #000;
+    }
+    .btn-green {
+      background: #059669;
+      color: #FFF;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* MODELO 1 */
+    .m1-center-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 20px;
+      background: rgba(8, 12, 22, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.08);
+      font-size: 11px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+      display: inline-block;
+    }
+
+    /* MODELO 2: Apex Titanium Navigation */
+    .m2-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .m2-nav-link {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94A3B8;
+      text-decoration: none;
+      background: rgba(20, 34, 58, 0.4);
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .m2-nav-link:hover, .m2-nav-link.active {
+      color: var(--cyan);
+      background: rgba(0, 229, 255, 0.1);
+      border-color: rgba(0, 229, 255, 0.3);
+    }
+
+    /* MODELO 3: Command Matrix HUD */
+    .m3-telemetry-bar {
+      background: #04060B;
+      border-bottom: 1px solid #101B2E;
+      padding: 5px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #64748B;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .m3-telemetry-bar span strong {
+      color: var(--cyan);
+    }
+    .badge-vip {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-title">
+      <h1>⚡ Modelos de Cabeçalho (Navbar) — MDM & FRP BRASIL</h1>
+      <p>Compare os 3 estilos visuais desenhados para a barra superior do site.</p>
+    </div>
+
+    <!-- MODELO 1 -->
+    <div class="model-wrapper">
+      <div class="model-info-bar">
+        <h3>🥇 MODELO 1: Cyber Minimalist (Recomendado — Mais Limpo e Moderno)</h3>
+        <span>Foco no equilíbrio: logotipo limpo à esquerda, pílula de status sem repetição no centro e botões de ação à direita</span>
+      </div>
+      <div class="header-box">
+        <div class="brand">
+          <img src="/static/logo.png" alt="MDM">
+          <div>
+            <div class="brand-title">MDM & FRP BRASIL</div>
+            <div class="brand-sub">Portal Oficial do Cliente • Gestão DPC</div>
+          </div>
+        </div>
+
+        <div class="m1-center-pill">
+          <span class="pulse-dot"></span>
+          <span style="font-weight: 800; color: #00E5FF; letter-spacing: 0.5px;">SERVIDOR EM NUVEM ONLINE</span>
+          <span style="color: #475569;">•</span>
+          <span style="color: #94A3B8;">Latência: <strong style="color: #00E676;">18ms</strong></span>
+          <span style="color: #475569;">•</span>
+          <span style="color: #38BDF8;">Sincronização Ativa</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <a href="#" class="btn-download-header">📥 Baixar Ferramenta (.exe)</a>
+          <button class="btn-green">👤 Entrar / Cadastrar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO 2 -->
+    <div class="model-wrapper">
+      <div class="model-info-bar">
+        <h3>🥈 MODELO 2: Apex Titanium (Menu de Navegação Horizontal Centralizado)</h3>
+        <span>Foco em navegação: menu com links para as seções (Como Funciona, Bônus, Blindagem, Suporte) no centro</span>
+      </div>
+      <div class="header-box">
+        <div class="brand">
+          <img src="/static/logo.png" alt="MDM">
+          <div>
+            <div class="brand-title">MDM & FRP BRASIL</div>
+            <div class="brand-sub">Software Profissional para Assistências</div>
+          </div>
+        </div>
+
+        <div class="m2-nav-links">
+          <a href="#" class="m2-nav-link active">🛠️ Como Funciona</a>
+          <a href="#" class="m2-nav-link">🎁 Tabela de Bônus</a>
+          <a href="#" class="m2-nav-link">📱 Recursos Kiosk</a>
+          <a href="#" class="m2-nav-link">🛡️ Segurança</a>
+          <a href="#" class="m2-nav-link">💬 Suporte WhatsApp</a>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <a href="#" class="btn-download-header">📥 Baixar (.exe)</a>
+          <button class="btn-green">👤 Minha Conta</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELO 3 -->
+    <div class="model-wrapper">
+      <div class="model-info-bar">
+        <h3>🥉 MODELO 3: Command Matrix HUD (Barra Dupla Militar / Telemetria)</h3>
+        <span>Foco tecnológico avançado: micro-barra superior com telemetria ao vivo (Horário, Latência, Status BCB) + barra principal</span>
+      </div>
+      
+      <!-- Top Telemetry Micro-Bar -->
+      <div class="m3-telemetry-bar">
+        <div>
+          <span>SISTEMA: <strong>OPERACIONAL</strong></span> &nbsp;•&nbsp;
+          <span>HORÁRIO BRASÍLIA: <strong>20:30 BRT</strong></span> &nbsp;•&nbsp;
+          <span>PING: <strong>18ms</strong></span>
+        </div>
+        <div>
+          <span>PIX BANCO CENTRAL: <strong style="color: var(--green);">INTEGRADO (EMV)</strong></span> &nbsp;•&nbsp;
+          <span>LOCALIZAÇÃO GPS: <strong>ATIVA</strong></span>
+        </div>
+      </div>
+
+      <!-- Main Bar -->
+      <div class="header-box">
+        <div class="brand">
+          <img src="/static/logo.png" alt="MDM">
+          <div>
+            <div style="display: flex; align-items: center;">
+              <span class="brand-title">MDM & FRP BRASIL</span>
+              <span class="badge-vip">PRO 2026</span>
+            </div>
+            <div class="brand-sub">Central de Operações em Tempo Real</div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.3); padding: 4px 10px; border-radius: 6px; color: var(--green);">
+            <span>🪙 1 Crédito = R$ 5,00</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 10px; border-radius: 6px; color: #F59E0B;">
+            <span>🎁 Bônus: +1 a cada 5</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <a href="#" class="btn-download-header">📥 Baixar EXE</a>
+          <button class="btn-green">🔓 Acessar Painel</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDM & FRP BRASIL — Painel Administrativo Geral</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050811;
+      --card: #0A0F1D;
+      --card-inner: #060A14;
+      --border: #16243C;
+      --green: #00E676;
+      --cyan: #00E5FF;
+      --blue: #0284C7;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    header {
+      background: #080D1A;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-title { font-size: 18px; font-weight: 800; color: #FFF; letter-spacing: 0.5px; }
+    .brand-badge { background: rgba(0, 229, 255, 0.15); color: var(--cyan); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; border: 1px solid rgba(0, 229, 255, 0.3); }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+    main { flex: 1; max-width: 1300px; width: 100%; margin: 0 auto; padding: 24px 16px; }
+
+    /* Auth Box */
+    .auth-wrap {
+      max-width: 400px;
+      margin: 80px auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    .form-control {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #FFF;
+      font-size: 14px;
+      outline: none;
+    }
+    .btn-primary {
+      width: 100%;
+      background: var(--blue);
+      border: none;
+      color: #FFF;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Dashboard Layout */
+    .admin-dash { display: none; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .metric-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-val { font-size: 26px; font-weight: 800; color: #FFF; margin: 6px 0 2px; font-family: 'JetBrains Mono', monospace; }
+    .metric-sub { font-size: 11px; color: var(--text-muted); }
+
+    .nav-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .panel-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .panel-hdr h3 { font-size: 16px; font-weight: 700; color: #FFF; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { padding: 10px 12px; background: var(--card-inner); color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid rgba(22, 36, 60, 0.5); }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .badge-active { background: rgba(0, 230, 118, 0.15); color: var(--green); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+    .badge-suspended { background: rgba(239, 68, 68, 0.15); color: var(--danger); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+    .badge-paid { background: rgba(0, 230, 118, 0.15); color: var(--green); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+    .badge-pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+
+    .btn-sm { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-adjust { background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.3); }
+    .btn-suspend { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-activate { background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.3); }
+
+    /* Modal Adjustment */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 440px;
+      width: 100%;
+      padding: 24px;
+    }
+    .modal-content h3 { font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 14px; }
+    .btn-google {
+      width: 100%;
+      background: #FFFFFF;
+      color: #1F2937;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid #E5E7EB;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .btn-google:hover { background: #F9FAFB; transform: translateY(-1px); }
+    .auth-divider { margin: 14px 0; display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 11px; }
+    .auth-divider hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+    .auth-divider span { padding: 0 10px; }
+
+    @keyframes lightning-pulse {
+      0% {
+        filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.6)) drop-shadow(0 0 16px rgba(0, 229, 255, 0.4));
+        transform: scale(1);
+      }
+      25% {
+        filter: drop-shadow(0 0 14px rgba(0, 255, 200, 0.9)) drop-shadow(0 0 28px rgba(0, 229, 255, 0.8)) drop-shadow(0 0 45px rgba(56, 189, 248, 0.5));
+        transform: scale(1.02);
+      }
+      40% {
+        filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.7)) drop-shadow(0 0 20px rgba(0, 229, 255, 0.5));
+        transform: scale(1);
+      }
+      60% {
+        filter: drop-shadow(0 0 20px rgba(56, 189, 248, 1)) drop-shadow(0 0 35px rgba(0, 229, 255, 0.9)) drop-shadow(0 0 50px rgba(16, 185, 129, 0.6));
+        transform: scale(1.03);
+      }
+      80% {
+        filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.7)) drop-shadow(0 0 18px rgba(0, 229, 255, 0.5));
+        transform: scale(1.01);
+      }
+      100% {
+        filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.6)) drop-shadow(0 0 16px rgba(0, 229, 255, 0.4));
+        transform: scale(1);
+      }
+    }
+
+    .lightning-logo {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      animation: lightning-pulse 2.2s infinite ease-in-out;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .lightning-logo-card {
+      height: 74px;
+      width: auto;
+      object-fit: contain;
+      animation: lightning-pulse 2s infinite ease-in-out;
+      margin: 0 auto 14px;
+      display: block;
+    }
+  </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="brand" onclick="window.location.reload()">
+      <img src="/static/logo.png" class="lightning-logo" alt="MDM & FRP BRASIL">
+      <div class="brand-title">MDM & FRP BRASIL</div>
+      <span class="brand-badge">Painel Administrativo</span>
+    </div>
+    <div id="adminHeaderArea" style="display: none; align-items: center; gap: 14px;">
+      <span id="adminNameDisplay" style="font-size: 13px; color: var(--text-muted);">Admin</span>
+      <button class="btn-logout" onclick="adminLogout()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- LOGIN VIEW -->
+    <div id="viewAdminLogin" class="auth-wrap">
+      <img src="/static/logo.png" class="lightning-logo-card" alt="Logo MDM & FRP BRASIL">
+      <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">Login Administrativo</h2>
+      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Acesso restrito para gestão da plataforma.</p>
+      <div id="adminLoginAlert" style="display:none; padding:10px; border-radius:6px; background:rgba(239,68,68,0.15); border:1px solid var(--danger); color:var(--danger); font-size:12px; margin-bottom:14px;"></div>
+      <form onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label>E-mail Administrativo</label>
+          <input type="email" id="adminEmail" class="form-control" value="seophone.imports@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <label>Senha de Acesso</label>
+          <input type="password" id="adminPassword" class="form-control" value="Seophone@2026!" required>
+        </div>
+        <button type="submit" class="btn-primary">Acessar Painel</button>
+        <div class="auth-divider">
+          <hr><span>OU ACESSE COM GOOGLE</span><hr>
+        </div>
+        <button type="button" class="btn-google" onclick="handleAdminGoogleLogin()">
+          <svg width="18" height="18" viewBox="0 0 18 18">
+            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+            <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
+            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
+          </svg>
+          Conectar com Conta Google Admin
+        </button>
+      </form>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="viewAdminDash" class="admin-dash">
+      <!-- Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Clientes Cadastrados</div>
+          <div class="metric-val" id="metUsers">0</div>
+          <div class="metric-sub" id="metActiveUsers">0 ativos</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Faturamento Total (PIX)</div>
+          <div class="metric-val" id="metRevenue" style="color: var(--green);">R$ 0,00</div>
+          <div class="metric-sub">Pagamentos confirmados</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Créditos Vendidos</div>
+          <div class="metric-val" id="metSold">0</div>
+          <div class="metric-sub">Adquiridos pelos clientes</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Créditos Utilizados</div>
+          <div class="metric-val" id="metUsed" style="color: var(--cyan);">0</div>
+          <div class="metric-sub" id="metServices">0 aparelhos atendidos</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Créditos em Circulação</div>
+          <div class="metric-val" id="metCirculating" style="color: var(--warning);">0</div>
+          <div class="metric-sub">Saldo atual nas carteiras</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('users', this)">Clientes & Carteiras</button>
+        <button class="tab-btn" onclick="switchTab('payments', this)">Pagamentos PIX</button>
+        <button class="tab-btn" onclick="switchTab('audit', this)">Logs de Auditoria</button>
+        <button class="tab-btn" onclick="switchTab('settings', this)">Configurações</button>
+      </div>
+
+      <!-- Tab: Users -->
+      <div id="tabUsers" class="panel">
+        <div class="panel-hdr">
+          <h3>👥 Gestão de Clientes e Saldo de Créditos</h3>
+          <input type="text" id="userSearch" class="form-control" placeholder="Buscar por nome, e-mail ou whats..." style="max-width: 320px;" oninput="loadAdminUsers()">
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>E-mail</th>
+                <th>WhatsApp</th>
+                <th>Saldo Atual</th>
+                <th>Comprados</th>
+                <th>Utilizados</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tblUsersBody">
+              <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Carregando clientes...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab: Payments -->
+      <div id="tabPayments" class="panel" style="display: none;">
+        <div class="panel-hdr">
+          <h3>💳 Cobranças PIX Geradas</h3>
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>TXID</th>
+                <th>Cliente</th>
+                <th>Créditos</th>
+                <th>Valor R$</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tblPaymentsBody">
+              <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Carregando cobranças...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab: Audit -->
+      <div id="tabAudit" class="panel" style="display: none;">
+        <div class="panel-hdr">
+          <h3>📜 Trilha de Auditoria (Audit Logs)</h3>
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Evento</th>
+                <th>Usuário / Admin</th>
+                <th>IP</th>
+                <th>Detalhes</th>
+              </tr>
+            </thead>
+            <tbody id="tblAuditBody">
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Carregando logs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab: Settings -->
+      <div id="tabSettings" class="panel" style="display: none;">
+        <div class="panel-hdr">
+          <h3>⚙️ Configurações Gerais & PIX da Plataforma</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+          <!-- Settings Form -->
+          <div style="background: var(--card-inner); padding: 20px; border-radius: 10px; border: 1px solid var(--border);">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 14px;">💳 Dados Recebedores do PIX</h4>
+
+            <div class="form-group">
+              <label>Tipo de Chave PIX</label>
+              <select id="cfgPixType" class="form-control" onchange="updatePixPlaceholder()">
+                <option value="AUTO">Detecção Automática</option>
+                <option value="TELEFONE">Celular / Telefone (+55)</option>
+                <option value="CPF">CPF (11 dígitos)</option>
+                <option value="CNPJ">CNPJ (14 dígitos)</option>
+                <option value="EMAIL">E-mail</option>
+                <option value="ALEATORIA">Chave Aleatória (EVP / UUID)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Chave PIX (qualquer chave de sua escolha)</label>
+              <input type="text" id="cfgPixKey" class="form-control" placeholder="Digite sua chave PIX...">
+            </div>
+
+            <div class="form-group">
+              <label>Nome do Titular / Beneficiário (Banco Central)</label>
+              <input type="text" id="cfgPixName" class="form-control" placeholder="MDM FRP BRASIL">
+            </div>
+
+            <div class="form-group">
+              <label>Cidade do Titular</label>
+              <input type="text" id="cfgPixCity" class="form-control" placeholder="AMERICANA">
+            </div>
+
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--cyan); margin: 20px 0 14px;">💰 Regras Comerciais</h4>
+            <div class="form-group">
+              <label>Preço por Crédito (R$)</label>
+              <input type="number" step="0.50" id="cfgCreditPrice" class="form-control" value="5.00">
+            </div>
+
+            <h4 style="font-size: 14px; font-weight: 700; color: #38BDF8; margin: 20px 0 14px;">🌐 Integração Google</h4>
+            <div class="form-group">
+              <label>Google Client ID (OAuth 2.0)</label>
+              <input type="text" id="cfgGoogleClientId" class="form-control" placeholder="Ex: 123456789-xxxx.apps.googleusercontent.com">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 18px;">
+              <button class="btn-primary" onclick="saveSettings()">💾 Salvar Configurações</button>
+              <button class="btn-primary" style="background: #0284C7; border-color: #38BDF8;" onclick="testPixPreview()">⚡ Testar QR Code</button>
+            </div>
+          </div>
+
+          <!-- Live PIX Preview Box -->
+          <div style="background: var(--card-inner); padding: 20px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 8px;">📱 Pré-visualização do QR Code PIX</h4>
+            <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 14px;">Verifique em tempo real como o QR Code oficial será gerado para seus clientes.</p>
+
+            <div id="pixPreviewImgWrap" style="background: #FFF; padding: 10px; border-radius: 8px; width: 170px; height: 170px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              <span id="pixPreviewPlaceholder" style="color: #94A3B8; font-size: 11px;">Clique em "Testar QR Code"</span>
+              <img id="pixPreviewImg" style="display: none; width: 150px; height: 150px;" alt="QR Code PIX">
+            </div>
+
+            <div id="pixPreviewKeyInfo" style="font-size: 12px; font-weight: 600; color: var(--cyan); margin-bottom: 8px;"></div>
+
+            <div class="form-group" style="width: 100%; text-align: left;">
+              <label style="font-size: 11px;">Código Copia e Cola Oficial (EMV/BACEN):</label>
+              <textarea id="pixPreviewPayload" class="form-control" rows="3" readonly style="font-size: 10px; font-family: monospace; word-break: break-all; resize: none;"></textarea>
+            </div>
+
+            <button class="btn-primary" style="width: auto; padding: 8px 16px; font-size: 11px;" onclick="copyPixPreviewCode()">📋 Copiar Código Copia e Cola</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL AJUSTE DE CRÉDITO -->
+  <div class="modal-overlay" id="modalAdjust">
+    <div class="modal-content">
+      <h3>Ajuste de Crédito / Bônus</h3>
+      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;" id="adjustTargetUser">Cliente: —</p>
+      
+      <div class="form-group">
+        <label>Tipo de Ajuste</label>
+        <select id="adjType" class="form-control">
+          <option value="ADJUSTMENT">Ajuste Manual</option>
+          <option value="BONUS">Bônus Promocional</option>
+          <option value="REFUND">Estorno de Operação</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Quantidade de Créditos (Positivo adiciona, negativo debita)</label>
+        <input type="number" id="adjAmount" class="form-control" value="5">
+      </div>
+
+      <div class="form-group">
+        <label>Justificativa Obrigatória (Auditoria)</label>
+        <textarea id="adjJustification" class="form-control" rows="3" placeholder="Ex: Bônus de boas-vindas / Suporte técnico"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+        <button class="btn-logout" onclick="closeAdjustModal()">Cancelar</button>
+        <button class="btn-primary" style="width: auto; padding: 10px 18px;" onclick="confirmAdjust()">Salvar Ajuste</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let adminToken = urlParams.get("token") || localStorage.getItem("mdm_admin_token");
+    if (urlParams.get("token")) localStorage.setItem("mdm_admin_token", adminToken);
+    let currentAdjustUserId = null;
+
+    async function adminApi(endpoint, method = 'GET', body = null) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`;
+      const res = await fetch(endpoint, { method, headers, body: body ? JSON.stringify(body) : null });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Erro na requisição.');
+      return data;
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById("adminEmail").value;
+      const password = document.getElementById("adminPassword").value;
+      const alert = document.getElementById("adminLoginAlert");
+      alert.style.display = 'none';
+
+      try {
+        const res = await adminApi('/api/v1/admin/login', 'POST', { email, password });
+        adminToken = res.access_token;
+        localStorage.setItem("mdm_admin_token", adminToken);
+        initAdminDashboard();
+      } catch (err) {
+        alert.innerText = err.message;
+        alert.style.display = 'block';
+      }
+    }
+
+    async function handleAdminGoogleLogin() {
+      const email = document.getElementById("adminEmail").value.trim();
+      const alert = document.getElementById("adminLoginAlert");
+      alert.style.display = 'none';
+
+      try {
+        const res = await adminApi('/api/v1/admin/auth/google', 'POST', {
+          email: email || "seophone.imports@gmail.com",
+          name: "Willian (Admin)",
+          google_id: "google_admin_" + Date.now()
+        });
+        adminToken = res.access_token;
+        localStorage.setItem("mdm_admin_token", adminToken);
+        document.getElementById("adminNameDisplay").innerText = res.admin ? res.admin.name : "Willian (Admin)";
+        initAdminDashboard();
+      } catch (err) {
+        alert.innerText = err.message || "Erro no login Google Admin.";
+        alert.style.display = 'block';
+      }
+    }
+
+    function adminLogout() {
+      adminToken = null;
+      localStorage.removeItem("mdm_admin_token");
+      document.getElementById("viewAdminLogin").style.display = 'block';
+      document.getElementById("viewAdminDash").style.display = 'none';
+      document.getElementById("adminHeaderArea").style.display = 'none';
+    }
+
+    async function initAdminDashboard() {
+      document.getElementById("viewAdminLogin").style.display = 'none';
+      document.getElementById("viewAdminDash").style.display = 'block';
+      document.getElementById("adminHeaderArea").style.display = 'flex';
+
+      loadMetrics();
+      loadAdminUsers();
+      loadPayments();
+      loadAudit();
+      loadSettings();
+    }
+
+    async function loadMetrics() {
+      try {
+        const m = await adminApi('/api/v1/admin/metrics');
+        document.getElementById("metUsers").innerText = m.total_users;
+        document.getElementById("metActiveUsers").innerText = `${m.active_users} ativos`;
+        document.getElementById("metRevenue").innerText = `R$ ${m.total_revenue_brl.toFixed(2).replace('.', ',')}`;
+        document.getElementById("metSold").innerText = m.total_credits_sold;
+        document.getElementById("metUsed").innerText = m.total_credits_used;
+        document.getElementById("metServices").innerText = `${m.total_services_executed} serviços executados`;
+        document.getElementById("metCirculating").innerText = m.circulating_credits;
+      } catch (e) {}
+    }
+
+    async function loadAdminUsers() {
+      const search = document.getElementById("userSearch").value;
+      const users = await adminApi(`/api/v1/admin/users?search=${encodeURIComponent(search)}`);
+      const tbody = document.getElementById("tblUsersBody");
+      tbody.innerHTML = '';
+      if (!users.length) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">Nenhum cliente cadastrado.</td></tr>';
+        return;
+      }
+      users.forEach(u => {
+        const tr = document.createElement("tr");
+        const isActive = u.status === 'active';
+        tr.innerHTML = `
+          <td class="mono">#${u.id}</td>
+          <td><strong>${u.name}</strong></td>
+          <td>${u.email}</td>
+          <td>${u.whatsapp}</td>
+          <td class="mono" style="font-weight:700; color:var(--green);">${u.balance_credits || 0}</td>
+          <td class="mono">${u.total_purchased || 0}</td>
+          <td class="mono">${u.total_used || 0}</td>
+          <td><span class="${isActive ? 'badge-active' : 'badge-suspended'}">${u.status}</span></td>
+          <td style="display:flex; gap:6px;">
+            <button class="btn-sm btn-adjust" onclick="openAdjustModal(${u.id}, '${u.name}')">🪙 Ajustar</button>
+            <button class="btn-sm ${isActive ? 'btn-suspend' : 'btn-activate'}" onclick="toggleUserStatus(${u.id}, '${isActive ? 'suspended' : 'active'}')">${isActive ? 'Suspender' : 'Ativar'}</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function toggleUserStatus(userId, status) {
+      if (!confirm(`Deseja alterar o status deste cliente para ${status}?`)) return;
+      try {
+        await adminApi(`/api/v1/admin/users/${userId}`, 'PUT', { status });
+        loadAdminUsers();
+        loadMetrics();
+      } catch (e) { alert(e.message); }
+    }
+
+    function openAdjustModal(userId, name) {
+      currentAdjustUserId = userId;
+      document.getElementById("adjustTargetUser").innerText = `Cliente: #${userId} — ${name}`;
+      document.getElementById("adjAmount").value = 5;
+      document.getElementById("adjJustification").value = '';
+      document.getElementById("modalAdjust").style.display = 'flex';
+    }
+
+    function closeAdjustModal() {
+      document.getElementById("modalAdjust").style.display = 'none';
+    }
+
+    async function confirmAdjust() {
+      const amount = parseInt(document.getElementById("adjAmount").value);
+      const type = document.getElementById("adjType").value;
+      const justification = document.getElementById("adjJustification").value.trim();
+
+      if (!justification) return alert("A justificativa é obrigatória para fins de auditoria.");
+
+      try {
+        const res = await adminApi('/api/v1/admin/wallets/adjust', 'POST', {
+          user_id: currentAdjustUserId,
+          amount_credits: amount,
+          type,
+          justification
+        });
+        alert(res.message);
+        closeAdjustModal();
+        loadAdminUsers();
+        loadMetrics();
+      } catch (e) { alert(e.message); }
+    }
+
+    async function loadPayments() {
+      const payments = await adminApi('/api/v1/admin/payments');
+      const tbody = document.getElementById("tblPaymentsBody");
+      tbody.innerHTML = '';
+      if (!payments.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Nenhum pagamento registrado.</td></tr>';
+        return;
+      }
+      payments.forEach(p => {
+        const tr = document.createElement("tr");
+        const isPaid = p.status === 'PAID';
+        tr.innerHTML = `
+          <td>${new Date(p.created_at).toLocaleString('pt-BR')}</td>
+          <td class="mono" style="color:var(--cyan); font-size:11px;">${p.pix_txid}</td>
+          <td>${p.user_name} <br><span style="font-size:11px; color:var(--text-muted);">${p.user_email}</span></td>
+          <td class="mono" style="font-weight:700;">+${p.credits_amount}</td>
+          <td class="mono">R$ ${p.amount_brl.toFixed(2).replace('.', ',')}</td>
+          <td><span class="${isPaid ? 'badge-paid' : 'badge-pending'}">${p.status}</span></td>
+          <td>
+            ${!isPaid ? `<button class="btn-sm btn-activate" onclick="approvePix('${p.pix_txid}')">Aprovar Manual</button>` : '—'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function approvePix(txid) {
+      if (!confirm("Deseja aprovar manualmente este pagamento PIX e creditar o cliente?")) return;
+      try {
+        await adminApi('/api/v1/webhooks/pix/simulate', 'POST', { txid, status: 'PAID' });
+        loadPayments();
+        loadMetrics();
+        loadAdminUsers();
+      } catch (e) { alert(e.message); }
+    }
+
+    async function loadAudit() {
+      const logs = await adminApi('/api/v1/admin/audit-logs');
+      const tbody = document.getElementById("tblAuditBody");
+      tbody.innerHTML = '';
+      if (!logs.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Nenhum log registrado.</td></tr>';
+        return;
+      }
+      logs.forEach(l => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${new Date(l.created_at).toLocaleString('pt-BR')}</td>
+          <td class="mono" style="color:var(--cyan); font-weight:600;">${l.event_type}</td>
+          <td>${l.admin_name ? 'Admin: ' + l.admin_name : (l.user_email ? 'Cliente: ' + l.user_email : 'Sistema')}</td>
+          <td class="mono" style="font-size:11px;">${l.ip_address || '127.0.0.1'}</td>
+          <td style="font-size:11px; max-width:300px; word-break:break-all;">${l.details_json}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updatePixPlaceholder() {
+      const type = document.getElementById("cfgPixType").value;
+      const keyInput = document.getElementById("cfgPixKey");
+      if (type === 'TELEFONE') keyInput.placeholder = 'Ex: 19994827743 ou +5519994827743';
+      else if (type === 'CPF') keyInput.placeholder = 'Ex: 12345678900 (apenas números)';
+      else if (type === 'CNPJ') keyInput.placeholder = 'Ex: 12345678000190';
+      else if (type === 'EMAIL') keyInput.placeholder = 'Ex: pix@mdmfrpbrasil.com.br';
+      else if (type === 'ALEATORIA') keyInput.placeholder = 'Ex: 123e4567-e89b-12d3-a456-426614174000';
+      else keyInput.placeholder = 'Digite seu telefone, CPF, CNPJ, e-mail ou EVP...';
+    }
+
+    async function loadSettings() {
+      const cfg = await adminApi('/api/v1/admin/settings');
+      document.getElementById("cfgCreditPrice").value = cfg.credit_price_brl || "5.00";
+      document.getElementById("cfgPixKey").value = cfg.pix_key || '';
+      document.getElementById("cfgPixType").value = cfg.pix_key_type || 'AUTO';
+      document.getElementById("cfgPixName").value = cfg.pix_merchant_name || 'MDM FRP BRASIL';
+      document.getElementById("cfgPixCity").value = cfg.pix_merchant_city || 'AMERICANA';
+      document.getElementById("cfgGoogleClientId").value = cfg.google_client_id || '';
+      updatePixPlaceholder();
+    }
+
+    async function saveSettings() {
+      try {
+        await adminApi('/api/v1/admin/settings', 'POST', { key: 'credit_price_brl', value: document.getElementById("cfgCreditPrice").value });
+        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_key', value: document.getElementById("cfgPixKey").value });
+        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_key_type', value: document.getElementById("cfgPixType").value });
+        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_merchant_name', value: document.getElementById("cfgPixName").value });
+        await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_merchant_city', value: document.getElementById("cfgPixCity").value });
+        await adminApi('/api/v1/admin/settings', 'POST', { key: 'google_client_id', value: document.getElementById("cfgGoogleClientId").value });
+        alert("Configurações salvas com sucesso! As novas cobranças PIX e cadastros utilizarão esses dados.");
+        loadSettings();
+        testPixPreview();
+      } catch (e) { alert(e.message); }
+    }
+
+    async function testPixPreview() {
+      const pixKey = document.getElementById("cfgPixKey").value.trim();
+      if (!pixKey) {
+        alert("Por favor, digite uma chave PIX antes de testar.");
+        return;
+      }
+      const keyType = document.getElementById("cfgPixType").value;
+      const merchantName = document.getElementById("cfgPixName").value.trim() || 'MDM FRP BRASIL';
+      const merchantCity = document.getElementById("cfgPixCity").value.trim() || 'AMERICANA';
+      const amount = parseFloat(document.getElementById("cfgCreditPrice").value) || 5.00;
+
+      try {
+        const res = await adminApi('/api/v1/admin/pix/preview', 'POST', {
+          pix_key: pixKey,
+          key_type: keyType,
+          merchant_name: merchantName,
+          merchant_city: merchantCity,
+          amount: amount
+        });
+
+        const img = document.getElementById("pixPreviewImg");
+        const placeholder = document.getElementById("pixPreviewPlaceholder");
+        img.src = `data:image/png;base64,${res.qr_code_base64}`;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+
+        document.getElementById("pixPreviewKeyInfo").innerText = `✓ Chave Formatada: ${res.formatted_key} (R$ ${res.amount_brl.toFixed(2)})`;
+        document.getElementById("pixPreviewPayload").value = res.copia_e_cola;
+      } catch (e) {
+        alert("Erro ao gerar prévia PIX: " + e.message);
+      }
+    }
+
+    function copyPixPreviewCode() {
+      const ta = document.getElementById("pixPreviewPayload");
+      if (!ta.value) {
+        alert("Nenhum código PIX gerado ainda.");
+        return;
+      }
+      ta.select();
+      navigator.clipboard.writeText(ta.value).then(() => {
+        alert("Código PIX Copia e Cola copiado com sucesso!");
+      }).catch(() => {
+        document.execCommand("copy");
+        alert("Código copiado!");
+      });
+    }
+
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById("tabUsers").style.display = tab === 'users' ? 'block' : 'none';
+      document.getElementById("tabPayments").style.display = tab === 'payments' ? 'block' : 'none';
+      document.getElementById("tabAudit").style.display = tab === 'audit' ? 'block' : 'none';
+      document.getElementById("tabSettings").style.display = tab === 'settings' ? 'block' : 'none';
+    }
+
+    if (adminToken) {
+      initAdminDashboard();
+    }
+
+    // ==========================================
+    // ANTI-INSPECT & ANTI-DEVTOOLS PROTECTION
+    // ==========================================
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.keyCode === 123) { e.preventDefault(); return false; }
+      if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+        e.preventDefault(); return false;
+      }
+      if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) {
+        e.preventDefault(); return false;
+      }
+    });
+  </script>
+</body>
+</html>
