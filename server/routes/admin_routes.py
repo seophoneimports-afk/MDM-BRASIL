@@ -351,3 +351,43 @@ def preview_pix(req: PixPreviewRequest, admin: dict = Depends(get_current_admin)
         "copia_e_cola": copia_e_cola,
         "qr_code_base64": qr_b64
     }
+
+@router.get("/homepage-layout")
+def get_admin_homepage_layout(admin: dict = Depends(get_current_admin)):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_layout'")
+        r1 = cursor.fetchone()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_sections'")
+        r2 = cursor.fetchone()
+        return {
+            "success": True,
+            "layout": r1["value"] if r1 and r1["value"] else "cinema_split",
+            "sections": r2["value"] if r2 and r2["value"] else ""
+        }
+
+@router.post("/homepage-layout")
+def set_admin_homepage_layout(data: dict, request: Request, admin: dict = Depends(get_current_admin)):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    layout = str(data.get("layout", "cinema_split")).strip()
+    sections = str(data.get("sections", "")).strip()
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO system_settings (key, value, updated_at) VALUES ('homepage_layout', ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP
+            """,
+            (layout,)
+        )
+        if sections:
+            cursor.execute(
+                """
+                INSERT INTO system_settings (key, value, updated_at) VALUES ('homepage_sections', ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP
+                """,
+                (sections,)
+            )
+    log_audit_event("ADMIN_CHANGE_HOMEPAGE_LAYOUT", admin_id=admin["id"], details={"layout": layout, "sections": sections}, ip_address=client_ip)
+    return {"success": True, "message": f"Modo de layout '{layout}' ativado com sucesso!", "layout": layout, "sections": sections}
+

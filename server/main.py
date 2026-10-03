@@ -90,32 +90,55 @@ def get_system_theme():
         theme = row["value"] if row and row["value"] else "cinema_stealth"
     return {"success": True, "theme": theme}
 
+# Homepage Layout API
+@app.get("/api/v1/system/homepage-layout")
+def get_public_homepage_layout():
+    from server.database import get_db_connection
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_layout'")
+        r1 = cursor.fetchone()
+        layout = r1["value"] if r1 and r1["value"] else "cinema_split"
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_sections'")
+        r2 = cursor.fetchone()
+        sections = r2["value"] if r2 and r2["value"] else ""
+    return {"success": True, "layout": layout, "sections": sections}
+
 # Web Portal HTML Views
 @app.get("/client", response_class=HTMLResponse)
 @app.get("/login", response_class=HTMLResponse)
 @app.get("/register", response_class=HTMLResponse)
+@app.get("/painel", response_class=HTMLResponse)
+@app.get("/conta", response_class=HTMLResponse)
+@app.get("/dashboard", response_class=HTMLResponse)
+@app.get("/inicio", response_class=HTMLResponse)
 @app.get("/", response_class=HTMLResponse)
 def serve_client_portal(request: Request):
     from server.database import get_db_connection
     theme = request.query_params.get("preview_theme")
-    if not theme:
-        theme = "cinema_stealth"
-        try:
-            with get_db_connection() as conn:
-                cursor = conn.cursor()
+    layout = request.query_params.get("preview_layout") or request.query_params.get("layout")
+
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            if not theme:
                 cursor.execute("SELECT value FROM system_settings WHERE key = 'site_theme'")
                 row = cursor.fetchone()
-                if row and row["value"]:
-                    theme = row["value"]
-        except Exception:
-            pass
+                theme = row["value"] if row and row["value"] else "cinema_stealth"
+            if not layout:
+                cursor.execute("SELECT value FROM system_settings WHERE key = 'homepage_layout'")
+                r_lay = cursor.fetchone()
+                layout = r_lay["value"] if r_lay and r_lay["value"] else "cinema_split"
+    except Exception:
+        theme = theme or "cinema_stealth"
+        layout = layout or "cinema_split"
 
     path = os.path.join(TEMPLATES_DIR, "client_portal.html")
     with open(path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # Dynamic server-side injection of active theme directly onto <body>
-    html = html.replace('<body', f'<body data-theme="{theme}"', 1)
+    # Dynamic server-side injection of active theme and homepage layout directly onto <body>
+    html = html.replace('<body', f'<body data-theme="{theme}" data-layout="{layout}"', 1)
     return html
 
 @app.get("/headers", response_class=HTMLResponse)

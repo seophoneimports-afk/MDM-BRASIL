@@ -232,7 +232,10 @@ def init_db():
             ('pix_merchant_city', 'AMERICANA'),
             ('google_client_id', ''),
             ('platform_name', 'MDM & FRP BRASIL'),
-            ('support_phone', '(19) 99478-3127')
+            ('support_phone', '(19) 99478-3127'),
+            ('welcome_bonus_credits', '5'),
+            ('homepage_layout', 'cinema_split'),
+            ('homepage_sections', '{"hero":true,"slider":true,"ranking":true,"download":true,"pricing":true,"benefits":true}')
         ]
         for k, v in default_settings:
             cursor.execute("INSERT OR IGNORE INTO system_settings (key, value) VALUES (?, ?);", (k, v))
@@ -254,7 +257,73 @@ def init_db():
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_payments_user ON payments(user_id);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_payments_txid ON payments(pix_txid);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_events_type ON events(event_type);")
+        # Auto-restore users & wallets from db_backup.json if needed
+        backup_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "db_backup.json")
+        if os.path.exists(backup_file):
+            try:
+                import json
+                with open(backup_file, "r", encoding="utf-8") as bf:
+                    b_data = json.load(bf)
+                # Restore users
+                for b_user in b_data.get("users", []):
+                    cursor.execute(
+                        """
+                        INSERT OR IGNORE INTO users (id, name, email, whatsapp, password_hash, status, google_id, auth_provider, avatar_url)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            b_user.get("id"), b_user.get("name"), b_user.get("email"),
+                            b_user.get("whatsapp", ""), b_user.get("password_hash"),
+                            b_user.get("status", "active"), b_user.get("google_id"),
+                            b_user.get("auth_provider", "local"), b_user.get("avatar_url")
+                        )
+                    )
+                # Restore wallets
+                for b_wal in b_data.get("wallets", []):
+                    cursor.execute(
+                        """
+                        INSERT OR IGNORE INTO wallets (id, user_id, balance_credits, promotional_credits, total_purchased, total_used)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            b_wal.get("id"), b_wal.get("user_id"), b_wal.get("balance_credits", 5),
+                            b_wal.get("promotional_credits", 0), b_wal.get("total_purchased", 0),
+                            b_wal.get("total_used", 0)
+                        )
+                    )
+            except Exception as e:
+                print("Warning restoring backup:", e)
+
+        # Self-healing: ensure all existing users have wallets and welcome credits so no client is stranded at 0
+        cursor.execute("SELECT id, name, email FROM users")
+        all_users = cursor.fetchall()
+        for u in all_users:
+            cursor.execute("SELECT id, balance_credits FROM wallets WHERE user_id = ?", (u["id"],))
+            w = cursor.fetchone()
+            if not w:
+                cursor.execute(
+                    "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, 5, 5, 0, 0)",
+                    (u["id"],)
+                )
+                cursor.execute(
+                    """
+                    INSERT INTO credit_transactions (wallet_id, user_id, type, amount_credits, previous_balance, new_balance, description, reference_id)
+                    VALUES (last_insert_rowid(), ?, 'BONUS', 5, 0, 5, '🎁 Bônus de Boas-Vindas Técnico (5 créditos grátis)', 'WELCOME_AUTO')
+                    """,
+                    (u["id"],)
+                )
+            elif w["balance_credits"] == 0:
+                cursor.execute("SELECT COUNT(*) as c FROM orders WHERE user_id = ?", (u["id"],))
+                ord_c = cursor.fetchone()["c"]
+                if ord_c == 0:
+                    cursor.execute("UPDATE wallets SET balance_credits = 5, promotional_credits = 5 WHERE id = ?", (w["id"],))
+                    cursor.execute(
+                        """
+                        INSERT INTO credit_transactions (wallet_id, user_id, type, amount_credits, previous_balance, new_balance, description, reference_id)
+                        VALUES (?, ?, 'BONUS', 5, 0, 5, '🎁 Bônus de Boas-Vindas Técnico (5 créditos grátis para teste no EXE)', 'WELCOME_AUTO')
+                        """,
+                        (w["id"], u["id"])
+                    )
 
 if __name__ == "__main__":
     init_db()

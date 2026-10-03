@@ -32,19 +32,31 @@ def register(req: UserRegisterRequest, request: Request):
             (req.name.strip(), email_clean, req.whatsapp.strip(), pw_hash)
         )
         user_id = cursor.lastrowid
+        cursor.execute("SELECT value FROM system_settings WHERE key = 'welcome_bonus_credits'")
+        row_wb = cursor.fetchone()
+        welcome_bonus = int(row_wb["value"]) if row_wb and str(row_wb["value"]).isdigit() else 5
 
-        # Initialize wallet with 0 credits
+        # Initialize wallet with welcome bonus credits so client never connects with 0 balance
         cursor.execute(
-            "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, 0, 0, 0, 0)",
-            (user_id,)
+            "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, ?, ?, 0, 0)",
+            (user_id, welcome_bonus, welcome_bonus)
         )
+        wallet_id = cursor.lastrowid
+        if welcome_bonus > 0:
+            cursor.execute(
+                """
+                INSERT INTO credit_transactions (wallet_id, user_id, type, amount_credits, previous_balance, new_balance, description, reference_id)
+                VALUES (?, ?, 'BONUS', ?, 0, ?, '🎁 Bônus de Boas-Vindas Técnico (créditos grátis para teste no EXE)', 'WELCOME_BONUS')
+                """,
+                (wallet_id, user_id, welcome_bonus, welcome_bonus)
+            )
 
-    log_audit_event("USER_REGISTERED", user_id=user_id, details={"email": email_clean, "name": req.name}, ip_address=client_ip)
+    log_audit_event("USER_REGISTERED", user_id=user_id, details={"email": email_clean, "name": req.name, "welcome_bonus": welcome_bonus}, ip_address=client_ip)
 
     token = create_access_token({"user_id": user_id, "role": "client", "email": email_clean})
     return {
         "success": True,
-        "message": "Conta criada com sucesso!",
+        "message": f"Conta criada com sucesso! Você recebeu {welcome_bonus} créditos de cortesia para testar.",
         "access_token": token,
         "token_type": "bearer",
         "user": {
@@ -52,7 +64,7 @@ def register(req: UserRegisterRequest, request: Request):
             "name": req.name,
             "email": email_clean,
             "whatsapp": req.whatsapp,
-            "balance_credits": 0
+            "balance_credits": welcome_bonus
         }
     }
 
@@ -382,10 +394,22 @@ def google_direct_callback(request: Request, code: str = None, error: str = None
                         (user_name, email_clean, "", dummy_hash, google_id, avatar_url)
                     )
                     user_id = t_cursor.lastrowid
+                    t_cursor.execute("SELECT value FROM system_settings WHERE key = 'welcome_bonus_credits'")
+                    row_wb = t_cursor.fetchone()
+                    welcome_bonus = int(row_wb["value"]) if row_wb and str(row_wb["value"]).isdigit() else 5
                     t_cursor.execute(
-                        "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, 0, 0, 0, 0)",
-                        (user_id,)
+                        "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, ?, ?, 0, 0)",
+                        (user_id, welcome_bonus, welcome_bonus)
                     )
+                    wallet_id = t_cursor.lastrowid
+                    if welcome_bonus > 0:
+                        t_cursor.execute(
+                            """
+                            INSERT INTO credit_transactions (wallet_id, user_id, type, amount_credits, previous_balance, new_balance, description, reference_id)
+                            VALUES (?, ?, 'BONUS', ?, 0, ?, '🎁 Bônus de Boas-Vindas Técnico (créditos grátis para teste no EXE)', 'WELCOME_BONUS')
+                            """,
+                            (wallet_id, user_id, welcome_bonus, welcome_bonus)
+                        )
         jwt_token = create_access_token({"user_id": user_id, "role": "client", "email": email_clean})
         log_audit_event("GOOGLE_LOGIN", user_id=user_id, details={"email": email_clean, "via": "oauth_callback"}, ip_address=client_ip)
         return RedirectResponse(url=f"/client?token={jwt_token}&auth_success=google", status_code=302)
@@ -478,11 +502,23 @@ def google_auth(req: GoogleAuthRequest, request: Request):
                     (user_name, email_clean, user_whatsapp, initial_pw_hash, google_id, avatar_url)
                 )
                 user_id = t_cursor.lastrowid
+                t_cursor.execute("SELECT value FROM system_settings WHERE key = 'welcome_bonus_credits'")
+                row_wb = t_cursor.fetchone()
+                welcome_bonus = int(row_wb["value"]) if row_wb and str(row_wb["value"]).isdigit() else 5
                 t_cursor.execute(
-                    "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, 0, 0, 0, 0)",
-                    (user_id,)
+                    "INSERT INTO wallets (user_id, balance_credits, promotional_credits, total_purchased, total_used) VALUES (?, ?, ?, 0, 0)",
+                    (user_id, welcome_bonus, welcome_bonus)
                 )
-            balance = 0
+                wallet_id = t_cursor.lastrowid
+                if welcome_bonus > 0:
+                    t_cursor.execute(
+                        """
+                        INSERT INTO credit_transactions (wallet_id, user_id, type, amount_credits, previous_balance, new_balance, description, reference_id)
+                        VALUES (?, ?, 'BONUS', ?, 0, ?, '🎁 Bônus de Boas-Vindas Técnico (créditos grátis para teste no EXE)', 'WELCOME_BONUS')
+                        """,
+                        (wallet_id, user_id, welcome_bonus, welcome_bonus)
+                    )
+                balance = welcome_bonus
             action = "GOOGLE_REGISTER"
 
     log_audit_event(action, user_id=user_id, details={"email": email_clean, "google_id": google_id, "has_password": bool(req.password)}, ip_address=client_ip)

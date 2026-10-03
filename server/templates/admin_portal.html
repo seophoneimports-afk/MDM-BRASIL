@@ -270,6 +270,91 @@
     .theme-card-actions .btn-theme-select {
       flex: 1;
     }
+
+    /* Layout Cards & Schematics */
+    .layout-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .layout-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 229, 255, 0.1);
+    }
+    .layout-card.active {
+      border-color: var(--green);
+      box-shadow: 0 0 25px rgba(0, 230, 118, 0.25);
+    }
+    .layout-schematic {
+      background: #080D1A;
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 14px;
+      height: 115px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: center;
+    }
+    .sch-row { display: flex; gap: 6px; width: 100%; height: 26px; }
+    .sch-box {
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 4px;
+      text-align: center;
+    }
+    .sch-hero { background: rgba(0, 229, 255, 0.18); border: 1px solid rgba(0, 229, 255, 0.45); color: #00E5FF; }
+    .sch-slider { background: rgba(0, 230, 118, 0.18); border: 1px solid rgba(0, 230, 118, 0.45); color: #00E676; }
+    .sch-rank { background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.45); color: #F59E0B; }
+    .sch-card { background: rgba(148, 163, 184, 0.15); border: 1px solid rgba(148, 163, 184, 0.35); color: #CBD5E1; }
+    .sch-down { background: rgba(56, 189, 248, 0.22); border: 1px solid rgba(56, 189, 248, 0.5); color: #38BDF8; }
+
+    /* Switch toggles for free organizer */
+    .switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: border-color 0.2s;
+    }
+    .switch-row:hover { border-color: rgba(255,255,255,0.2); }
+    .switch-label { font-size: 13px; font-weight: 600; color: #FFF; display: flex; align-items: center; gap: 10px; }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155; transition: .3s; border-radius: 24px;
+    }
+    .toggle-slider:before {
+      position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+      background-color: white; transition: .3s; border-radius: 50%;
+    }
+    input:checked + .toggle-slider { background-color: var(--green); }
+    input:checked + .toggle-slider:before { transform: translateX(22px); }
+
     .modal-overlay {
       display: none;
       position: fixed;
@@ -438,11 +523,12 @@
 
       <!-- Navigation Tabs -->
       <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('users', this)">Clientes & Carteiras</button>
-        <button class="tab-btn" onclick="switchTab('payments', this)">Pagamentos PIX</button>
-        <button class="tab-btn" onclick="switchTab('audit', this)">Logs de Auditoria</button>
-        <button class="tab-btn" onclick="switchTab('themes', this)">🎨 Modelos de Layout (5)</button>
-        <button class="tab-btn" onclick="switchTab('settings', this)">Configurações</button>
+        <button class="tab-btn active" onclick="switchTab('users', this)">👥 Clientes & Carteiras</button>
+        <button class="tab-btn" onclick="switchTab('payments', this)">💳 Pagamentos PIX</button>
+        <button class="tab-btn" onclick="switchTab('audit', this)">📜 Logs de Auditoria</button>
+        <button class="tab-btn" onclick="switchTab('layouts', this)">📐 Disposição da Página Inicial (6)</button>
+        <button class="tab-btn" onclick="switchTab('themes', this)">🎨 Temas & Cores (5)</button>
+        <button class="tab-btn" onclick="switchTab('settings', this)">⚙️ Configurações</button>
       </div>
 
       <!-- Tab: Users -->
@@ -521,13 +607,309 @@
         </div>
       </div>
 
-      <!-- Tab: Themes (5 Modelos de Layout) -->
+      <!-- Tab: Layouts da Página Inicial (6 Modos & Organizador Livre) -->
+      <div id="tabLayouts" class="panel" style="display: none;">
+        <div class="panel-hdr">
+          <div>
+            <h3>📐 Disposição e Modos de Layout da Página Inicial (6 Estilos)</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              Escolha a organização dos painéis da página inicial ou use o Organizador Livre abaixo para ligar/desligar blocos individualmente.
+            </p>
+          </div>
+          <div id="layoutToast" style="display: none; background: rgba(0,230,118,0.15); border: 1px solid var(--green); color: var(--green); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700;">
+            ✓ Disposição ativada com sucesso!
+          </div>
+        </div>
+
+        <!-- Grade com 6 Modos de Layout -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 14px;">
+          
+          <!-- Layout 1: Cinema Split-Slider -->
+          <div class="layout-card active" id="layoutCard_cinema_split">
+            <div>
+              <div class="theme-card-hdr">
+                <div class="theme-name">1. Cinema Split-Slider (Clássico)</div>
+                <span class="theme-badge" id="layoutBadge_cinema_split">✓ Ativo no Site</span>
+              </div>
+              <p class="theme-desc">Slider interativo em tela dividida com imagem gigante do executável no monitor, Kiosk no celular, pódio do ranking mensal e cards de vantagens.</p>
+              
+              <!-- Miniatura Esquemática -->
+              <div class="layout-schematic">
+                <div class="sch-row"><div class="sch-box sch-hero" style="width: 100%;">HERO PRINCIPAL &amp; KPIs</div></div>
+                <div class="sch-row">
+                  <div class="sch-box sch-slider" style="width: 58%;">TELA MONITOR PC (EXE)</div>
+                  <div class="sch-box sch-card" style="width: 42%;">PASSOS 1, 2, 3</div>
+                </div>
+                <div class="sch-row"><div class="sch-box sch-rank" style="width: 100%;">PÓDIO DO RANKING MENSAL 🥇🥈🥉</div></div>
+              </div>
+
+              <div class="theme-meta">
+                <span><strong>Foco:</strong> Demonstração Operacional Passo a Passo</span>
+                <span><strong>Estrutura:</strong> Split-Slider + Pódio + Download</span>
+              </div>
+            </div>
+            <div class="theme-card-actions">
+              <button type="button" class="btn-theme-preview" onclick="openLayoutPreview('cinema_split')">👁️ Prévia</button>
+              <button type="button" class="btn-theme-select" onclick="selectLayout('cinema_split')">Ativar Modo</button>
+            </div>
+          </div>
+
+          <!-- Layout 2: Bento Grid Modular -->
+          <div class="layout-card" id="layoutCard_bento_grid">
+            <div>
+              <div class="theme-card-hdr">
+                <div class="theme-name">2. Bento Grid Modular (Linear/Apple)</div>
+                <span class="theme-badge" id="layoutBadge_bento_grid">Inativo</span>
+              </div>
+              <p class="theme-desc">Grade assimétrica de blocos modernos: demonstração do sistema, pódio de recargas em evidência ao lado, card de download com indicador de 18ms e métricas.</p>
+              
+              <!-- Miniatura Esquemática -->
+              <div class="layout-schematic">
+                <div class="sch-row">
+                  <div class="sch-box sch-slider" style="width: 65%;">BLOCO GIGANTE DEMO</div>
+                  <div class="sch-box sch-rank" style="width: 35%;">RANKING TOP 3</div>
+                </div>
+                <div class="sch-row">
+                  <div class="sch-box sch-down" style="width: 35%;">DOWNLOAD 18ms</div>
+                  <div class="sch-box sch-hero" style="width: 35%;">BLINDAGEM DPC</div>
+                  <div class="sch-box sch-card" style="width: 30%;">PREÇOS &amp; PIX</div>
+                </div>
+              </div>
+
+              <div class="theme-meta">
+                <span><strong>Foco:</strong> Estética Moderna &amp; Densidade Visual</span>
+                <span><strong>Estrutura:</strong> Blocos Assimétricos Bento Grid</span>
+              </div>
+            </div>
+            <div class="theme-card-actions">
+              <button type="button" class="btn-theme-preview" onclick="openLayoutPreview('bento_grid')">👁️ Prévia</button>
+              <button type="button" class="btn-theme-select" onclick="selectLayout('bento_grid')">Ativar Modo</button>
+            </div>
+          </div>
+
+          <!-- Layout 3: Hero Executável em Destaque -->
+          <div class="layout-card" id="layoutCard_hero_exe">
+            <div>
+              <div class="theme-card-hdr">
+                <div class="theme-name">3. Foco no Executável Windows (Hero Grande)</div>
+                <span class="theme-badge" id="layoutBadge_hero_exe">Inativo</span>
+              </div>
+              <p class="theme-desc">Mockup colossal em tamanho real do software Windows no centro, botão de download 1-clique em destaque, comparação PC vs Celular no Kiosk e ranking.</p>
+              
+              <!-- Miniatura Esquemática -->
+              <div class="layout-schematic">
+                <div class="sch-row"><div class="sch-box sch-hero" style="width: 100%;">HERO COM MOCKUP 3D DO EXE</div></div>
+                <div class="sch-row"><div class="sch-box sch-down" style="width: 100%;">BOTÃO DOWNLOAD 1-CLIQUE (.EXE)</div></div>
+                <div class="sch-row">
+                  <div class="sch-box sch-card" style="width: 50%;">TELA PC WINDOWS</div>
+                  <div class="sch-box sch-slider" style="width: 50%;">CELULAR KIOSK PIX</div>
+                </div>
+              </div>
+
+              <div class="theme-meta">
+                <span><strong>Foco:</strong> Conversão Rápida para Download do EXE</span>
+                <span><strong>Estrutura:</strong> Hero Imponente + Comparativo Lado a Lado</span>
+              </div>
+            </div>
+            <div class="theme-card-actions">
+              <button type="button" class="btn-theme-preview" onclick="openLayoutPreview('hero_exe')">👁️ Prévia</button>
+              <button type="button" class="btn-theme-select" onclick="selectLayout('hero_exe')">Ativar Modo</button>
+            </div>
+          </div>
+
+          <!-- Layout 4: Grid SaaS Titanium -->
+          <div class="layout-card" id="layoutCard_saas_grid">
+            <div>
+              <div class="theme-card-hdr">
+                <div class="theme-name">4. Grid SaaS Titanium (Enterprise)</div>
+                <span class="theme-badge" id="layoutBadge_saas_grid">Inativo</span>
+              </div>
+              <p class="theme-desc">Estrutura em cards técnicos 3D em colunas limpas, tabela de pacotes e preços PIX em evidência com cálculo de bônus, ranking integrado e garantias.</p>
+              
+              <!-- Miniatura Esquemática -->
+              <div class="layout-schematic">
+                <div class="sch-row">
+                  <div class="sch-box sch-card" style="width: 33%;">PACOTE 5 CRÉD</div>
+                  <div class="sch-box sch-hero" style="width: 34%;">PACOTE 10 (+1)</div>
+                  <div class="sch-box sch-down" style="width: 33%;">PACOTE 20 (+4)</div>
+                </div>
+                <div class="sch-row">
+                  <div class="sch-box sch-slider" style="width: 50%;">DEMO FLUXO ADB</div>
+                  <div class="sch-box sch-rank" style="width: 50%;">TOP ASSISTÊNCIAS</div>
+                </div>
+              </div>
+
+              <div class="theme-meta">
+                <span><strong>Foco:</strong> Venda de Créditos &amp; Transparência</span>
+                <span><strong>Estrutura:</strong> Matriz de Pacotes + Métricas SaaS</span>
+              </div>
+            </div>
+            <div class="theme-card-actions">
+              <button type="button" class="btn-theme-preview" onclick="openLayoutPreview('saas_grid')">👁️ Prévia</button>
+              <button type="button" class="btn-theme-select" onclick="selectLayout('saas_grid')">Ativar Modo</button>
+            </div>
+          </div>
+
+          <!-- Layout 5: Cyberpunk Matrix Terminal -->
+          <div class="layout-card" id="layoutCard_matrix_terminal">
+            <div>
+              <div class="theme-card-hdr">
+                <div class="theme-name">5. Cyberpunk Matrix Terminal (Console ADB)</div>
+                <span class="theme-badge" id="layoutBadge_matrix_terminal">Inativo</span>
+              </div>
+              <p class="theme-desc">Terminal de comandos ADB simulado com digitação em tempo real, visual holográfico hacker neon, feed dinâmico de aparelhos liberados e ranking arcade.</p>
+              
+              <!-- Miniatura Esquemática -->
+              <div class="layout-schematic">
+                <div class="sch-row"><div class="sch-box sch-slider" style="width: 100%; font-family: monospace;">&gt; TERMINAL ADB CONSOLE AO VIVO</div></div>
+                <div class="sch-row">
+                  <div class="sch-box sch-rank" style="width: 50%;">LEADERBOARD ARCADE</div>
+                  <div class="sch-box sch-hero" style="width: 50%;">LOGS DE COMANDO</div>
+                </div>
+              </div>
+
+              <div class="theme-meta">
+                <span><strong>Foco:</strong> Estética Técnica Gamer &amp; Terminal Hacker</span>
+                <span><strong>Estrutura:</strong> Console Interativo + Feed ao Vivo</span>
+              </div>
+            </div>
+            <div class="theme-card-actions">
+              <button type="button" class="btn-theme-preview" onclick="openLayoutPreview('matrix_terminal')">👁️ Prévia</button>
+              <button type="button" class="btn-theme-select" onclick="selectLayout('matrix_terminal')">Ativar Modo</button>
+            </div>
+          </div>
+
+          <!-- Layout 6: Minimalista Corporativo -->
+          <div class="layout-card" id="layoutCard_minimal_fast">
+            <div>
+              <div class="theme-card-hdr">
+                <div class="theme-name">6. Minimalista Corporativo (Conversão Rápida)</div>
+                <span class="theme-badge" id="layoutBadge_minimal_fast">Inativo</span>
+              </div>
+              <p class="theme-desc">Layout direto ao ponto, ultraleve e sem distrações. Botões de ação imediata (Download do EXE e Cadastro), tabela simples de preços e WhatsApp 1-clique.</p>
+              
+              <!-- Miniatura Esquemática -->
+              <div class="layout-schematic">
+                <div class="sch-row"><div class="sch-box sch-hero" style="width: 100%;">TÍTULO DIRETO &amp; CHAMADA</div></div>
+                <div class="sch-row">
+                  <div class="sch-box sch-down" style="width: 50%;">BAIXAR EXE</div>
+                  <div class="sch-box sch-slider" style="width: 50%;">ENTRAR / CRIAR</div>
+                </div>
+                <div class="sch-row"><div class="sch-box sch-card" style="width: 100%;">TABELA DE PREÇOS SIMPLIFICADA</div></div>
+              </div>
+
+              <div class="theme-meta">
+                <span><strong>Foco:</strong> Carregamento Rápido &amp; Simplicidade Total</span>
+                <span><strong>Estrutura:</strong> Ultra-Clean &amp; 1-Clique Action</span>
+              </div>
+            </div>
+            <div class="theme-card-actions">
+              <button type="button" class="btn-theme-preview" onclick="openLayoutPreview('minimal_fast')">👁️ Prévia</button>
+              <button type="button" class="btn-theme-select" onclick="selectLayout('minimal_fast')">Ativar Modo</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ORGANIZADOR LIVRE DE PAINÉIS DA PÁGINA INICIAL -->
+        <div style="margin-top: 35px; background: var(--card-inner); border: 1px solid var(--border-green); border-radius: 14px; padding: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h4 style="font-size: 16px; font-weight: 800; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
+                <span>🎛️</span> Organizador Livre de Painéis da Página Inicial
+              </h4>
+              <p style="font-size: 12.5px; color: var(--text-muted); margin: 4px 0 0;">
+                Ligue ou desligue qualquer painel individual da página inicial para personalizar o site de forma totalmente livre.
+              </p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button type="button" class="btn-primary" style="width: auto; padding: 9px 18px; font-size: 12.5px;" onclick="saveCustomSections()">
+                💾 Salvar Painéis Livres
+              </button>
+              <button type="button" class="btn-green" style="font-size: 12.5px; padding: 9px 18px;" onclick="window.open('/', '_blank')">
+                🌐 Ver no Site
+              </button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+            <div class="switch-row">
+              <div class="switch-label">
+                <span>🛡️</span>
+                <span>Hero Principal &amp; Badges DPC</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="chkSecHero" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-label">
+                <span>🖥️</span>
+                <span>Slider / Demonstração Operacional</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="chkSecSlider" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-label">
+                <span>🏆</span>
+                <span>Pódio do Ranking Mensal de Recargas</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="chkSecRanking" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-label">
+                <span>📥</span>
+                <span>Área de Download do Executável Windows</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="chkSecDownload" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-label">
+                <span>💰</span>
+                <span>Tabela de Pacotes &amp; Preços PIX</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="chkSecPricing" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="switch-row">
+              <div class="switch-label">
+                <span>⚡</span>
+                <span>Garantias e Blindagem DPC Knox</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="chkSecBenefits" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tab: Themes (5 Modelos de Identidade Visual / Cores) -->
       <div id="tabThemes" class="panel" style="display: none;">
         <div class="panel-hdr">
           <div>
-            <h3>🎨 Modelos de Layout & Identidade Visual do Site (5 Estilos)</h3>
+            <h3>🎨 Temas Visuais &amp; Paleta de Cores (5 Estilos)</h3>
             <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-              Selecione o modelo visual desejado para a plataforma pública. A troca de cores, tipografia e estilos é instantânea.
+              Selecione o modelo de cores e tipografia para o site. A troca de acabamento visual é instantânea.
             </p>
           </div>
           <div id="themeToast" style="display: none; background: rgba(0,230,118,0.15); border: 1px solid var(--green); color: var(--green); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700;">
@@ -753,10 +1135,16 @@
               <input type="text" id="cfgPixCity" class="form-control" placeholder="AMERICANA">
             </div>
 
-            <h4 style="font-size: 14px; font-weight: 700; color: var(--cyan); margin: 20px 0 14px;">💰 Regras Comerciais</h4>
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--cyan); margin: 20px 0 14px;">💰 Regras Comerciais &amp; Boas-Vindas</h4>
             <div class="form-group">
               <label>Preço por Crédito (R$)</label>
               <input type="number" step="0.50" id="cfgCreditPrice" class="form-control" value="5.00">
+            </div>
+
+            <div class="form-group">
+              <label>🎁 Créditos de Boas-Vindas para Novos Técnicos</label>
+              <input type="number" step="1" id="cfgWelcomeCredits" class="form-control" value="5" min="0" max="100">
+              <small style="color: var(--text-muted); font-size: 11px;">Créditos concedidos automaticamente no cadastro para novos técnicos testarem no EXE sem ficarem sem saldo.</small>
             </div>
 
             <h4 style="font-size: 14px; font-weight: 700; color: #38BDF8; margin: 20px 0 14px;">🌐 Integração Google</h4>
@@ -1057,6 +1445,9 @@
     async function loadSettings() {
       const cfg = await adminApi('/api/v1/admin/settings');
       document.getElementById("cfgCreditPrice").value = cfg.credit_price_brl || "5.00";
+      if (document.getElementById("cfgWelcomeCredits")) {
+        document.getElementById("cfgWelcomeCredits").value = cfg.welcome_bonus_credits || "5";
+      }
       document.getElementById("cfgPixKey").value = cfg.pix_key || '';
       document.getElementById("cfgPixType").value = cfg.pix_key_type || 'AUTO';
       document.getElementById("cfgPixName").value = cfg.pix_merchant_name || 'MDM FRP BRASIL';
@@ -1068,6 +1459,9 @@
     async function saveSettings() {
       try {
         await adminApi('/api/v1/admin/settings', 'POST', { key: 'credit_price_brl', value: document.getElementById("cfgCreditPrice").value });
+        if (document.getElementById("cfgWelcomeCredits")) {
+          await adminApi('/api/v1/admin/settings', 'POST', { key: 'welcome_bonus_credits', value: document.getElementById("cfgWelcomeCredits").value });
+        }
         await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_key', value: document.getElementById("cfgPixKey").value });
         await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_key_type', value: document.getElementById("cfgPixType").value });
         await adminApi('/api/v1/admin/settings', 'POST', { key: 'pix_merchant_name', value: document.getElementById("cfgPixName").value });
@@ -1281,22 +1675,112 @@
       window.open('/?preview_theme=' + currentPreviewingTheme, '_blank');
     }
 
+    let currentHomepageLayout = 'cinema_split';
+
+    async function loadLayoutSelection() {
+      try {
+        const res = await adminApi('/api/v1/admin/homepage-layout');
+        if (res && res.layout) {
+          applyLayoutActiveState(res.layout);
+        }
+        if (res && res.sections) {
+          try {
+            const secs = typeof res.sections === 'string' ? JSON.parse(res.sections) : res.sections;
+            if (document.getElementById("chkSecHero")) document.getElementById("chkSecHero").checked = secs.hero !== false;
+            if (document.getElementById("chkSecSlider")) document.getElementById("chkSecSlider").checked = secs.slider !== false;
+            if (document.getElementById("chkSecRanking")) document.getElementById("chkSecRanking").checked = secs.ranking !== false;
+            if (document.getElementById("chkSecDownload")) document.getElementById("chkSecDownload").checked = secs.download !== false;
+            if (document.getElementById("chkSecPricing")) document.getElementById("chkSecPricing").checked = secs.pricing !== false;
+            if (document.getElementById("chkSecBenefits")) document.getElementById("chkSecBenefits").checked = secs.benefits !== false;
+          } catch(e) {}
+        }
+      } catch (e) {
+        applyLayoutActiveState('cinema_split');
+      }
+    }
+
+    function applyLayoutActiveState(layoutId) {
+      currentHomepageLayout = layoutId;
+      const layouts = ['cinema_split', 'bento_grid', 'hero_exe', 'saas_grid', 'matrix_terminal', 'minimal_fast'];
+      layouts.forEach(l => {
+        const card = document.getElementById(`layoutCard_${l}`);
+        const badge = document.getElementById(`layoutBadge_${l}`);
+        if (card && badge) {
+          if (l === layoutId) {
+            card.classList.add('active');
+            badge.innerText = '✓ Ativo no Site';
+          } else {
+            card.classList.remove('active');
+            badge.innerText = 'Inativo';
+          }
+        }
+      });
+    }
+
+    async function selectLayout(layoutId) {
+      try {
+        await adminApi('/api/v1/admin/homepage-layout', 'POST', { layout: layoutId });
+        applyLayoutActiveState(layoutId);
+        showLayoutToast(`✓ Modo "${layoutId}" ativado com sucesso para a página inicial!`);
+      } catch (e) {
+        alert("Erro ao selecionar layout: " + e.message);
+      }
+    }
+
+    function openLayoutPreview(layoutId) {
+      window.open('/?preview_layout=' + layoutId, '_blank');
+    }
+
+    async function saveCustomSections() {
+      const sections = {
+        hero: document.getElementById("chkSecHero") ? document.getElementById("chkSecHero").checked : true,
+        slider: document.getElementById("chkSecSlider") ? document.getElementById("chkSecSlider").checked : true,
+        ranking: document.getElementById("chkSecRanking") ? document.getElementById("chkSecRanking").checked : true,
+        download: document.getElementById("chkSecDownload") ? document.getElementById("chkSecDownload").checked : true,
+        pricing: document.getElementById("chkSecPricing") ? document.getElementById("chkSecPricing").checked : true,
+        benefits: document.getElementById("chkSecBenefits") ? document.getElementById("chkSecBenefits").checked : true
+      };
+      try {
+        await adminApi('/api/v1/admin/homepage-layout', 'POST', {
+          layout: currentHomepageLayout,
+          sections: JSON.stringify(sections)
+        });
+        showLayoutToast("✓ Disposição de painéis salva com sucesso!");
+      } catch (e) {
+        alert("Erro ao salvar painéis: " + e.message);
+      }
+    }
+
+    function showLayoutToast(msg) {
+      const toast = document.getElementById("layoutToast");
+      if (toast) {
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3500);
+      }
+    }
+
     function switchTab(tab, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById("tabUsers").style.display = tab === 'users' ? 'block' : 'none';
       document.getElementById("tabPayments").style.display = tab === 'payments' ? 'block' : 'none';
       document.getElementById("tabAudit").style.display = tab === 'audit' ? 'block' : 'none';
+      document.getElementById("tabLayouts").style.display = tab === 'layouts' ? 'block' : 'none';
       document.getElementById("tabThemes").style.display = tab === 'themes' ? 'block' : 'none';
       document.getElementById("tabSettings").style.display = tab === 'settings' ? 'block' : 'none';
       if (tab === 'themes') {
         loadThemeSelection();
+      }
+      if (tab === 'layouts') {
+        loadLayoutSelection();
       }
     }
 
     if (adminToken) {
       initAdminDashboard();
       loadThemeSelection();
+      loadLayoutSelection();
       if (urlParams.get("tab")) {
         const targetTab = urlParams.get("tab");
         const btn = document.querySelector(`button[onclick*="'${targetTab}'"]`);

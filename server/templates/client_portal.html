@@ -1114,6 +1114,206 @@
       opacity: 0.35;
     }
 
+    /* Top-Level Minha Conta (viewAccount) Styles */
+    .account-section {
+      max-width: 1100px;
+      margin: 10px auto 40px;
+      width: 100%;
+    }
+    .account-hero-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(6, 11, 23, 0.98) 100%);
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    }
+    .acc-profile-glow {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--cyan);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.45);
+    }
+
+    /* Layout Containers Display Rules */
+    .layout-container { display: none; }
+    body[data-layout="cinema_split"] #layoutCinemaSplit { display: block; }
+    body[data-layout="bento_grid"] #layoutBentoGrid { display: block; }
+    body[data-layout="hero_exe"] #layoutHeroExe { display: block; }
+    body[data-layout="saas_grid"] #layoutSaasGrid { display: block; }
+    body[data-layout="matrix_terminal"] #layoutMatrixTerminal { display: block; }
+    body[data-layout="minimal_fast"] #layoutMinimalFast { display: block; }
+    body:not([data-layout]) #layoutCinemaSplit { display: block; }
+
+    /* Bento Grid Mode (Modo 2) */
+    .bento-grid-wrapper {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 900px) {
+      .bento-grid-wrapper { grid-template-columns: 1fr; }
+      .bento-col-8, .bento-col-4, .bento-col-6, .bento-col-12 { grid-column: span 1 !important; }
+    }
+    .bento-col-8 { grid-column: span 8; }
+    .bento-col-4 { grid-column: span 4; }
+    .bento-col-6 { grid-column: span 6; }
+    .bento-col-12 { grid-column: span 12; }
+    .bento-card {
+      background: rgba(12, 18, 32, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+    }
+    .bento-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 10px 30px rgba(0, 229, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Executável Mode (Modo 3) */
+    .hero-exe-stage {
+      background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.12) 0%, rgba(6, 9, 17, 0.98) 70%);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 24px;
+      padding: 40px 24px;
+      text-align: center;
+      margin-bottom: 35px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    }
+    .hero-exe-mockup-wrap {
+      max-width: 780px;
+      margin: 24px auto;
+      position: relative;
+    }
+    .hero-exe-mockup-img {
+      width: 100%;
+      border-radius: 14px;
+      border: 2px solid rgba(0, 229, 255, 0.5);
+      box-shadow: 0 15px 50px rgba(0, 229, 255, 0.25), 0 0 40px rgba(0, 230, 118, 0.15);
+    }
+
+    /* SaaS Grid Mode (Modo 4) */
+    .saas-grid-3col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 35px;
+    }
+    .saas-plan-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .saas-plan-card.featured {
+      border-color: var(--green);
+      background: linear-gradient(180deg, rgba(0, 230, 118, 0.08) 0%, rgba(12, 18, 32, 0.98) 100%);
+      box-shadow: 0 10px 35px rgba(0, 230, 118, 0.2);
+    }
+    .saas-plan-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--cyan);
+    }
+
+    /* Matrix Terminal Mode (Modo 5) */
+    .matrix-terminal-window {
+      background: #02060B;
+      border: 1px solid #10B981;
+      border-radius: 14px;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.25);
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+    .matrix-terminal-bar {
+      background: #06121C;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: #10B981;
+    }
+    .matrix-terminal-body {
+      padding: 20px;
+      color: #34D399;
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 200px;
+    }
+
+    /* Minimal Fast Mode (Modo 6) */
+    .minimal-fast-hero {
+      background: #0C1220;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 38px 28px;
+      text-align: center;
+      max-width: 820px;
+      margin: 15px auto 35px;
+    }
+
+    /* Live Layout Switcher Toolbar (Bottom Preview Pill) */
+    .layout-switcher-pill {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(8, 13, 24, 0.95);
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 30px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 99992;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.85), 0 0 20px rgba(0, 229, 255, 0.15);
+      font-size: 11px;
+    }
+    .btn-layout-chip {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .btn-layout-chip:hover {
+      background: rgba(0, 229, 255, 0.15);
+      color: #FFF;
+      border-color: var(--cyan);
+    }
+    .btn-layout-chip.active {
+      background: var(--cyan);
+      color: #060911;
+      border-color: var(--cyan);
+      font-weight: 800;
+    }
+
     /* Security: disable selection */
     body {
       user-select: none;
@@ -1147,13 +1347,16 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-      <!-- NAVEGAÇÃO DE TELAS (INÍCIO vs MEU PAINEL) -->
+      <!-- NAVEGAÇÃO PRINCIPAL DAS 3 TELAS INDEPENDENTES -->
       <nav class="header-nav-switcher">
         <button id="btnNavHome" class="btn-nav-item active" onclick="showView('Showcase')">
-          🏠 Início / Vitrine
+          🏠 Início
         </button>
-        <button id="btnNavDash" class="btn-nav-item" onclick="handleNavDashClick()">
+        <button id="btnNavDash" class="btn-nav-item" onclick="handleNavTarget('Dashboard')">
           📊 Meu Painel
+        </button>
+        <button id="btnNavAccount" class="btn-nav-item" onclick="handleNavTarget('Account')">
+          👤 Minha Conta
         </button>
       </nav>
 
@@ -1167,9 +1370,11 @@
         <a id="linkAdminShortcut" href="/admin" target="_blank" style="display:none; align-items:center; gap:4px; padding: 5px 12px; border-radius: 6px; background: linear-gradient(135deg, #F59E0B, #D97706); color: #000; font-weight: 700; text-decoration: none; font-size: 11px; margin-right: 6px;">
           👑 Painel Admin
         </a>
-        <img id="headerUserAvatar" src="" alt="Avatar" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--cyan); display: none;">
-        <span id="headerUserName">Cliente</span>
-        <span class="balance" id="headerBalance">🪙 0 Créditos</span>
+        <div onclick="showView('Account')" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;" title="Configurar Minha Conta">
+          <img id="headerUserAvatar" src="" alt="Avatar" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--cyan); display: none;">
+          <span id="headerUserName">Cliente</span>
+        </div>
+        <span class="balance" id="headerBalance" onclick="showView('Dashboard')" style="cursor: pointer;" title="Ver Carteira e Recarregar">🪙 0 Créditos</span>
         <button class="btn-logout" onclick="logout()">Sair</button>
       </div>
     </div>
@@ -1192,128 +1397,455 @@
             </div>
           </div>
         </div>
-        <button class="btn-primary" style="font-size: 13px; padding: 9px 20px; width: auto;" onclick="showView('Dashboard')">
-          📊 Abrir Meu Painel do Cliente ➔
-        </button>
-      </div>
-      <!-- CLEAN ENTERPRISE SAAS HERO (HYBRID 2+3: CLEAN TITANIUM & NEON) -->
-      <div class="hero-clean-container" style="text-align: center; max-width: 980px; margin: 15px auto 35px; padding: 10px 20px 0;">
-        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #00E5FF; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);">
-          <span class="pulse-indicator"></span>
-          <span>🛡️ TECNOLOGIA CORPORATIVA DPC PERSISTENTE • PROTOCOLO EMV PIX</span>
-        </div>
-        
-        <h1 style="font-size: 40px; font-weight: 900; line-height: 1.15; letter-spacing: -1px; color: #FFFFFF; margin-bottom: 18px;">
-          A Plataforma Definitiva para Gestão e <br>
-          <span style="background: linear-gradient(135deg, #00E5FF 0%, #00E676 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Recuperação de Aparelhos Android</span>
-        </h1>
-        
-        <p style="font-size: 15px; line-height: 1.6; color: #94A3B8; max-width: 760px; margin: 0 auto 28px;">
-          Ambiente completo para bancadas e laboratórios técnicos de alta rotatividade. Provisionamento de políticas DPC em segundos via USB, modo Kiosk inviolável com QR Code oficial Banco Central e liberação 100% automática pós-pagamento.
-        </p>
-        
-        <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 34px;">
-          <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.35);">
-            📥 Baixar MDM & FRP BRASIL (.exe)
-          </a>
-          <button class="btn-green" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 230, 118, 0.35);" onclick="openAuthOverlay('Register')">
-            ⚡ Entrar / Criar Conta & Comprar Créditos
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-primary" style="font-size: 13px; padding: 9px 18px; width: auto;" onclick="showView('Dashboard')">
+            📊 Abrir Meu Painel ➔
+          </button>
+          <button class="btn-primary" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); font-size: 13px; padding: 9px 18px; width: auto;" onclick="showView('Account')">
+            👤 Minha Conta &amp; Senha ➔
           </button>
         </div>
+      </div>
+      <!-- ========================================================
+           MODO 1: CINEMA SPLIT-SLIDER (APPLE PRO / STRIPE HIGH-TECH)
+           ======================================================== -->
+      <div id="layoutCinemaSplit" class="layout-mode-view">
+        <!-- CLEAN ENTERPRISE SAAS HERO -->
+        <div data-section="sec_hero" class="hero-clean-container" style="text-align: center; max-width: 980px; margin: 15px auto 35px; padding: 10px 20px 0;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #00E5FF; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);">
+            <span class="pulse-indicator"></span>
+            <span>🛡️ TECNOLOGIA CORPORATIVA DPC PERSISTENTE • PROTOCOLO EMV PIX</span>
+          </div>
+          
+          <h1 style="font-size: 40px; font-weight: 900; line-height: 1.15; letter-spacing: -1px; color: #FFFFFF; margin-bottom: 18px;">
+            A Plataforma Definitiva para Gestão e <br>
+            <span style="background: linear-gradient(135deg, #00E5FF 0%, #00E676 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Recuperação de Aparelhos Android</span>
+          </h1>
+          
+          <p style="font-size: 15px; line-height: 1.6; color: #94A3B8; max-width: 760px; margin: 0 auto 28px;">
+            Ambiente completo para bancadas e laboratórios técnicos de alta rotatividade. Provisionamento de políticas DPC em segundos via USB, modo Kiosk inviolável com QR Code oficial Banco Central e liberação 100% automática pós-pagamento.
+          </p>
+          
+          <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 34px;">
+            <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.35);">
+              📥 Baixar MDM & FRP BRASIL (.exe)
+            </a>
+            <button class="btn-green" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 230, 118, 0.35);" onclick="openAuthOverlay('Register')">
+              ⚡ Entrar / Criar Conta & Comprar Créditos
+            </button>
+          </div>
 
-        <!-- 4 SLEEK KPI METRIC PILLS -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 8px;">
-          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-            <div style="font-size: 24px; font-weight: 900; color: #00E676;">99.98%</div>
-            <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">DISPONIBILIDADE CLOUD</div>
+          <!-- 4 SLEEK KPI METRIC PILLS -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 8px;">
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #00E676;">99.98%</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">DISPONIBILIDADE CLOUD</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #00E5FF;">18ms</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">LATÊNCIA MÉDIA PIX</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #38BDF8;">+12.400</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">APARELHOS ATENDIDOS</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #C084FC;">100%</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">BLINDAGEM DPC OFICIAL</div>
+            </div>
           </div>
-          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-            <div style="font-size: 24px; font-weight: 900; color: #00E5FF;">18ms</div>
-            <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">LATÊNCIA MÉDIA PIX</div>
+        </div>
+
+        <!-- Como Funciona na Prática: OPÇÃO 1 CINEMA SPLIT-SLIDER -->
+        <div data-section="sec_slider">
+          <div style="margin: 20px 0 10px 0; text-align: center;">
+            <h2 style="font-size: 26px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px; margin-bottom: 6px;">
+              🛠️ Como Funciona na Prática (Modo Cinema Split-Slider)
+            </h2>
+            <p style="font-size: 14px; color: var(--text-muted); max-width: 680px; margin: 0 auto 20px;">
+              Fluxo profissional completo: do atendimento do cliente no computador até a tela verde de bloqueio Kiosk e a liberação imediata pós-pagamento.
+            </p>
           </div>
-          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-            <div style="font-size: 24px; font-weight: 900; color: #38BDF8;">+12.400</div>
-            <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">APARELHOS ATENDIDOS</div>
+
+          <!-- Option 1: Cinema Split-Slider Box -->
+          <div class="slider-box-opt1">
+            <!-- Lado Esquerdo: Imagem Gigante e Nítida -->
+            <div class="opt1-stage" id="opt1Stage">
+              <img src="/static/preview_exe.jpg" class="opt1-pc-frame" alt="Passo 01 PC">
+            </div>
+
+            <!-- Lado Direito: Descrição e Controles -->
+            <div class="opt1-content">
+              <div class="opt1-step-pill" id="opt1Badge">PASSO 01 DE 03 • CONEXÃO WINDOWS</div>
+              <h2 class="opt1-title" id="opt1Title">1. Conectar Aparelho & Reconhecimento Automático</h2>
+              <p class="opt1-desc" id="opt1Desc">
+                Conecte o smartphone Android via cabo USB com a depuração ativada. O software reconhece instantaneamente o modelo, operadora, versão de segurança e serial.
+              </p>
+
+              <ul class="opt1-features" id="opt1Features">
+                <li><span class="icon">✓</span> Reconhecimento automático do dispositivo em 0.4s via ADB</li>
+                <li><span class="icon">✓</span> Injeção silenciosa de Device Owner sem formatação prévia</li>
+                <li><span class="icon">✓</span> Consome apenas 1 crédito de saldo por aparelho provisionado</li>
+              </ul>
+
+              <!-- Navigation Controls -->
+              <div class="opt1-controls">
+                <button class="btn-nav" onclick="prevPortalSlide()">←</button>
+                <div class="dots-indicator">
+                  <span class="dot active" onclick="setPortalSlide(0)"></span>
+                  <span class="dot" onclick="setPortalSlide(1)"></span>
+                  <span class="dot" onclick="setPortalSlide(2)"></span>
+                </div>
+                <button class="btn-nav" onclick="nextPortalSlide()">→</button>
+              </div>
+
+              <!-- 3 Quick Step Buttons (Thumbnails com Imagens Reais) -->
+              <div class="step-thumbs-row">
+                <div class="step-thumb-btn active" onclick="setPortalSlide(0)" title="Clique para ver Passo 1: PC Windows">
+                  <img src="/static/preview_exe.jpg" class="step-thumb-preview" alt="Miniatura Passo 1 PC">
+                  <div class="s-info">
+                    <div class="s-num">01. PC WINDOWS</div>
+                    <div class="s-title">Conexão ADB</div>
+                  </div>
+                </div>
+                <div class="step-thumb-btn" onclick="setPortalSlide(1)" title="Clique para ver Passo 2: Kiosk Celular">
+                  <img src="/static/preview_kiosk.png" class="step-thumb-preview" alt="Miniatura Passo 2 Kiosk Celular">
+                  <div class="s-info">
+                    <div class="s-num">02. KIOSK CELULAR</div>
+                    <div class="s-title">Bloqueio & PIX</div>
+                  </div>
+                </div>
+                <div class="step-thumb-btn" onclick="setPortalSlide(2)" title="Clique para ver Passo 3: Liberação Total">
+                  <img src="/static/preview_unlocked.png" class="step-thumb-preview" alt="Miniatura Passo 3 Liberado">
+                  <div class="s-info">
+                    <div class="s-num">03. LIBERAÇÃO</div>
+                    <div class="s-title">Desbloqueio Total</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-            <div style="font-size: 24px; font-weight: 900; color: #C084FC;">100%</div>
-            <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">BLINDAGEM DPC OFICIAL</div>
+        </div>
+
+        <!-- Download Banner -->
+        <div data-section="sec_download" class="showcase-banner" style="margin-top: 25px;">
+          <div>
+            <h2>📥 Pronto para começar na sua bancada técnica?</h2>
+            <p>Baixe agora o aplicativo oficial para Windows e conecte seus aparelhos Android via USB com depuração ativa.</p>
+          </div>
+          <a href="/download/exe?v=2.2" class="btn-download-big">
+            📥 Baixar MDM & FRP BRASIL (.exe)
+          </a>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           MODO 2: BENTO GRID MODERNO (MODULAR HIGH-TECH)
+           ======================================================== -->
+      <div id="layoutBentoGrid" class="layout-mode-view">
+        <div data-section="sec_hero" style="text-align: center; max-width: 980px; margin: 15px auto 25px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.4); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #38BDF8; margin-bottom: 14px;">
+            <span class="pulse-indicator"></span>
+            <span>🍱 MODO BENTO GRID • VISÃO MODULAR INTEGRADA</span>
+          </div>
+          <h1 style="font-size: 38px; font-weight: 900; color: #FFF; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px;">
+            Tecnologia de Desbloqueio e Kiosk <br>
+            <span style="background: linear-gradient(135deg, #38BDF8 0%, #00E676 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Organizada em Módulos de Alta Performance</span>
+          </h1>
+          <p style="color: var(--text-muted); font-size: 14px; max-width: 700px; margin: 0 auto 24px;">
+            Monitore, gerencie e libere dispositivos Android em um fluxo contínuo. Conexão USB ultra-rápida e confirmação bancária instantânea.
+          </p>
+        </div>
+
+        <div data-section="sec_slider" class="bento-grid-wrapper">
+          <!-- Bento 1: Software Windows Preview (Largo Col 8) -->
+          <div class="bento-card bento-col-8">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <span style="font-size: 11px; font-weight: 800; color: var(--cyan); background: rgba(0, 229, 255, 0.12); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(0, 229, 255, 0.3);">
+                  🖥️ MDM_FRP_BRASIL.exe v2.2
+                </span>
+                <h3 style="font-size: 20px; font-weight: 800; color: #FFF; margin: 8px 0 4px;">Software de Bancada Windows</h3>
+                <p style="color: var(--text-muted); font-size: 13px;">Injeção de DPC via ADB em 0.4 segundos sem necessidade de formatar o aparelho.</p>
+              </div>
+              <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 10px 18px; font-size: 12px;">
+                📥 Baixar .EXE (47 MB)
+              </a>
+            </div>
+            <div style="background: #020617; border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center;">
+              <img src="/static/preview_exe.jpg" style="max-height: 280px; width: auto; max-width: 100%; border-radius: 8px; object-fit: contain;" alt="MDM Windows Software">
+            </div>
+          </div>
+
+          <!-- Bento 2: Kiosk com PIX (Col 4) -->
+          <div class="bento-card bento-col-4">
+            <span style="font-size: 11px; font-weight: 800; color: var(--green); background: rgba(0, 230, 118, 0.12); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(0, 230, 118, 0.3); align-self: flex-start;">
+              📱 Modo Kiosk Verde
+            </span>
+            <h3 style="font-size: 18px; font-weight: 800; color: #FFF; margin: 12px 0 6px;">Bloqueio & PIX Dinâmico</h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.4; margin-bottom: 12px;">
+              Geração de QR Code PIX oficial Banco Central direto na tela do cliente.
+            </p>
+            <div style="background: #000; border: 4px solid #1E293B; border-radius: 20px; padding: 8px; text-align: center; max-height: 250px; overflow: hidden;">
+              <img src="/static/preview_kiosk.png" style="max-height: 230px; width: auto; object-fit: contain;" alt="Kiosk Celular">
+            </div>
+          </div>
+
+          <!-- Bento 3: Calculadora & Saldo (Col 4) -->
+          <div class="bento-card bento-col-4">
+            <div style="font-size: 28px; margin-bottom: 8px;">🪙</div>
+            <h3 style="font-size: 17px; font-weight: 800; color: #FFF; margin-bottom: 6px;">Consumo Econômico</h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.4; margin-bottom: 16px;">
+              1 crédito por aparelho provisionado com sucesso. Bônus de 5 créditos gratuitos no cadastro!
+            </p>
+            <button class="btn-green" style="width: 100%; font-size: 13px;" onclick="showView('Dashboard')">
+              ⚡ Comprar Créditos via PIX
+            </button>
+          </div>
+
+          <!-- Bento 4: Blindagem Jurídica +18 (Col 4) -->
+          <div class="bento-card bento-col-4">
+            <div style="font-size: 28px; margin-bottom: 8px;">🛡️</div>
+            <h3 style="font-size: 17px; font-weight: 800; color: #FFF; margin-bottom: 6px;">Conformidade Jurídica</h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.4; margin-bottom: 16px;">
+              Exclusivo para maiores de 18 anos e técnicos autorizados. Termos e auditoria integrada.
+            </p>
+            <button class="btn-primary" style="background: rgba(255,255,255,0.06); width: 100%; font-size: 12px;" onclick="document.getElementById('termsComplianceModal').style.display='flex'">
+              📄 Ver Termos de Responsabilidade
+            </button>
+          </div>
+
+          <!-- Bento 5: Suporte WhatsApp Oficial (Col 4) -->
+          <div class="bento-card bento-col-4">
+            <div style="font-size: 28px; margin-bottom: 8px;">💬</div>
+            <h3 style="font-size: 17px; font-weight: 800; color: #FFF; margin-bottom: 6px;">Suporte Direto WhatsApp</h3>
+            <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.4; margin-bottom: 16px;">
+              Atendimento técnico dedicado para dúvidas e ativação de bancada: (19) 99478-3127.
+            </p>
+            <a href="https://wa.me/5519994783127" target="_blank" class="btn-green" style="display: block; text-align: center; text-decoration: none; font-size: 12.5px;">
+              📲 Chamar no WhatsApp
+            </a>
           </div>
         </div>
       </div>
 
-
-      <!-- Como Funciona na Prática: OPÇÃO 1 CINEMA SPLIT-SLIDER -->
-      <div style="margin: 20px 0 10px 0; text-align: center;">
-        <h2 style="font-size: 26px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px; margin-bottom: 6px;">
-          🛠️ Como Funciona na Prática (Modo Cinema Split-Slider)
-        </h2>
-        <p style="font-size: 14px; color: var(--text-muted); max-width: 680px; margin: 0 auto 20px;">
-          Fluxo profissional completo: do atendimento do cliente no computador até a tela verde de bloqueio Kiosk e a liberação imediata pós-pagamento.
-        </p>
-      </div>
-
-      <!-- Option 1: Cinema Split-Slider -->
-      <div class="slider-box-opt1">
-        <!-- Lado Esquerdo: Imagem Gigante e Nítida -->
-        <div class="opt1-stage" id="opt1Stage">
-          <img src="/static/preview_exe.jpg" class="opt1-pc-frame" alt="Passo 01 PC">
-        </div>
-
-        <!-- Lado Direito: Descrição e Controles -->
-        <div class="opt1-content">
-          <div class="opt1-step-pill" id="opt1Badge">PASSO 01 DE 03 • CONEXÃO WINDOWS</div>
-          <h2 class="opt1-title" id="opt1Title">1. Conectar Aparelho & Reconhecimento Automático</h2>
-          <p class="opt1-desc" id="opt1Desc">
-            Conecte o smartphone Android via cabo USB com a depuração ativada. O software reconhece instantaneamente o modelo, operadora, versão de segurança e serial.
+      <!-- ========================================================
+           MODO 3: HERO EXECUTÁVEL WINDOWS (FOCO NO APLICATIVO)
+           ======================================================== -->
+      <div id="layoutHeroExe" class="layout-mode-view">
+        <div data-section="sec_hero" class="hero-exe-stage">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.12); border: 1px solid rgba(0, 229, 255, 0.4); padding: 6px 20px; border-radius: 30px; font-size: 11.5px; font-weight: 800; color: var(--cyan); margin-bottom: 18px;">
+            <span class="pulse-indicator"></span>
+            <span>🖥️ SOFTWARE OFICIAL PARA WINDOWS 10 / 11 • VERSÃO 2.2</span>
+          </div>
+          
+          <h1 style="font-size: 42px; font-weight: 900; color: #FFF; margin-bottom: 14px; letter-spacing: -1px;">
+            MDM & FRP BRASIL Desktop
+          </h1>
+          <p style="color: #94A3B8; font-size: 15px; max-width: 680px; margin: 0 auto 28px; line-height: 1.6;">
+            O software definitivo para bancada técnica. Reconhecimento automático de dispositivos Android via USB, injeção de DPC em 0.4s e modo Kiosk com PIX oficial.
           </p>
 
-          <ul class="opt1-features" id="opt1Features">
-            <li><span class="icon">✓</span> Reconhecimento automático do dispositivo em 0.4s via ADB</li>
-            <li><span class="icon">✓</span> Injeção silenciosa de Device Owner sem formatação prévia</li>
-            <li><span class="icon">✓</span> Consome apenas 1 crédito de saldo por aparelho provisionado</li>
-          </ul>
-
-          <!-- Navigation Controls -->
-          <div class="opt1-controls">
-            <button class="btn-nav" onclick="prevPortalSlide()">←</button>
-            <div class="dots-indicator">
-              <span class="dot active" onclick="setPortalSlide(0)"></span>
-              <span class="dot" onclick="setPortalSlide(1)"></span>
-              <span class="dot" onclick="setPortalSlide(2)"></span>
-            </div>
-            <button class="btn-nav" onclick="nextPortalSlide()">→</button>
+          <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 30px;">
+            <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 14px 32px; font-size: 15px;">
+              📥 Baixar MDM & FRP BRASIL (.exe) - 47 MB
+            </a>
+            <button class="btn-green" style="padding: 14px 28px; font-size: 15px;" onclick="showView('Dashboard')">
+              ⚡ Acessar Meu Painel & Recarregar
+            </button>
           </div>
 
-          <!-- 3 Quick Step Buttons (Thumbnails com Imagens Reais) -->
-          <div class="step-thumbs-row">
-            <div class="step-thumb-btn active" onclick="setPortalSlide(0)" title="Clique para ver Passo 1: PC Windows">
-              <img src="/static/preview_exe.jpg" class="step-thumb-preview" alt="Miniatura Passo 1 PC">
-              <div class="s-info">
-                <div class="s-num">01. PC WINDOWS</div>
-                <div class="s-title">Conexão ADB</div>
-              </div>
+          <!-- Mockup Grande em Destaque -->
+          <div class="hero-exe-mockup-wrap">
+            <img src="/static/preview_exe.jpg" alt="Software Windows MDM" class="hero-exe-mockup-img">
+          </div>
+
+          <!-- 3 Etapas Rápidas -->
+          <div data-section="sec_slider" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 35px; text-align: left;">
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border); border-radius: 14px; padding: 20px;">
+              <div style="font-size: 13px; font-weight: 800; color: var(--cyan); margin-bottom: 6px;">01. CONEXÃO USB</div>
+              <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin-bottom: 6px;">Detecção Instantânea</h4>
+              <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin: 0;">Conecte o smartphone Android com depuração USB. O software identifica modelo, operadora e segurança em 0.4s.</p>
             </div>
-            <div class="step-thumb-btn" onclick="setPortalSlide(1)" title="Clique para ver Passo 2: Kiosk Celular">
-              <img src="/static/preview_kiosk.png" class="step-thumb-preview" alt="Miniatura Passo 2 Kiosk Celular">
-              <div class="s-info">
-                <div class="s-num">02. KIOSK CELULAR</div>
-                <div class="s-title">Bloqueio & PIX</div>
-              </div>
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border-green); border-radius: 14px; padding: 20px;">
+              <div style="font-size: 13px; font-weight: 800; color: var(--green); margin-bottom: 6px;">02. KIOSK & PIX</div>
+              <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin-bottom: 6px;">Bloqueio Inviolável</h4>
+              <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin: 0;">Ativa tela de bloqueio com QR Code PIX oficial Banco Central. O cliente paga direto no celular.</p>
             </div>
-            <div class="step-thumb-btn" onclick="setPortalSlide(2)" title="Clique para ver Passo 3: Liberação Total">
-              <img src="/static/preview_unlocked.png" class="step-thumb-preview" alt="Miniatura Passo 3 Liberado">
-              <div class="s-info">
-                <div class="s-num">03. LIBERAÇÃO</div>
-                <div class="s-title">Desbloqueio Total</div>
-              </div>
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border); border-radius: 14px; padding: 20px;">
+              <div style="font-size: 13px; font-weight: 800; color: #C084FC; margin-bottom: 6px;">03. LIBERAÇÃO</div>
+              <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin-bottom: 6px;">Desbloqueio Imediato</h4>
+              <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin: 0;">Liberação 100% automática pós-pagamento em menos de 2 segundos com rastreamento GPS.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- SEÇÃO RANKING DESTAQUES DO MÊS (MAIORES RECARGAS) -->
-      <section class="ranking-showcase-section" style="max-width: 1100px; margin: 55px auto 25px; padding: 0 10px;">
+      <!-- ========================================================
+           MODO 4: SAAS GRID CORPORATIVO (3 PILARES DE AUTOMAÇÃO)
+           ======================================================== -->
+      <div id="layoutSaasGrid" class="layout-mode-view">
+        <div data-section="sec_hero" style="text-align: center; max-width: 980px; margin: 15px auto 30px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.4); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: var(--green); margin-bottom: 14px;">
+            <span>💼 SAAS EMPRESARIAL • 3 PILARES DE AUTOMAÇÃO</span>
+          </div>
+          <h1 style="font-size: 38px; font-weight: 900; color: #FFF; margin-bottom: 12px; letter-spacing: -0.5px;">
+            Gestão de Bancada em Escala
+          </h1>
+          <p style="color: var(--text-muted); font-size: 14px; max-width: 680px; margin: 0 auto;">
+            Três módulos integrados para acelerar atendimentos, garantir recebimentos e fidelizar seus clientes técnicos.
+          </p>
+        </div>
+
+        <div data-section="sec_slider" class="saas-grid-3col">
+          <!-- Coluna 1 -->
+          <div class="saas-plan-card">
+            <div style="font-size: 32px; margin-bottom: 12px;">🖥️</div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #FFF; margin-bottom: 10px;">1. Módulo Bancada USB</h3>
+            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 18px;">
+              Ferramenta Windows portátil. Conectou o celular via USB, aplicou a política DPC em segundos.
+            </p>
+            <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; text-align: left; font-size: 12.5px; color: #CBD5E1; line-height: 2;">
+              <li><span style="color: var(--cyan);">✓</span> Detecção ADB em 0.4 segundos</li>
+              <li><span style="color: var(--cyan);">✓</span> Injeção Device Owner persistente</li>
+              <li><span style="color: var(--cyan);">✓</span> Compatível com Android 8 ao 15</li>
+            </ul>
+            <a href="/download/exe?v=2.2" class="btn-download-big" style="width: 100%; justify-content: center; font-size: 13px;">
+              📥 Baixar Software .EXE
+            </a>
+          </div>
+
+          <!-- Coluna 2 (Featured) -->
+          <div class="saas-plan-card featured">
+            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--green); color: #060911; font-weight: 800; font-size: 10.5px; padding: 3px 12px; border-radius: 20px; text-transform: uppercase;">
+              MAIS UTILIZADO
+            </div>
+            <div style="font-size: 32px; margin-bottom: 12px;">📱</div>
+            <h3 style="font-size: 18px; font-weight: 800; color: var(--green); margin-bottom: 10px;">2. Módulo Kiosk & PIX</h3>
+            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 18px;">
+              Tela de bloqueio verde com QR Code dinâmico do Banco Central gerado com a sua chave.
+            </p>
+            <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; text-align: left; font-size: 12.5px; color: #CBD5E1; line-height: 2;">
+              <li><span style="color: var(--green);">✓</span> QR Code EMV Banco Central</li>
+              <li><span style="color: var(--green);">✓</span> Bloqueio de botões e formatação</li>
+              <li><span style="color: var(--green);">✓</span> Liberação automática pós-PIX</li>
+            </ul>
+            <button class="btn-green" style="width: 100%; font-size: 13px;" onclick="showView('Dashboard')">
+              ⚡ Recarregar Créditos PIX
+            </button>
+          </div>
+
+          <!-- Coluna 3 -->
+          <div class="saas-plan-card">
+            <div style="font-size: 32px; margin-bottom: 12px;">🛡️</div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #FFF; margin-bottom: 10px;">3. Gestão em Nuvem & GPS</h3>
+            <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 18px;">
+              Extrato completo, acompanhamento de ordens, mapa GPS de dispositivos e controle multi-bancada.
+            </p>
+            <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; text-align: left; font-size: 12.5px; color: #CBD5E1; line-height: 2;">
+              <li><span style="color: var(--cyan);">✓</span> Extrato financeiro em tempo real</li>
+              <li><span style="color: var(--cyan);">✓</span> Histórico de ordens de serviço</li>
+              <li><span style="color: var(--cyan);">✓</span> Mapa de localização do aparelho</li>
+            </ul>
+            <button class="btn-primary" style="width: 100%; font-size: 13px;" onclick="showView('Account')">
+              👤 Minha Conta & Perfil
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           MODO 5: MATRIX CYBER TERMINAL (ESTILO CONSOLE HACKER)
+           ======================================================== -->
+      <div id="layoutMatrixTerminal" class="layout-mode-view">
+        <div data-section="sec_hero" style="text-align: center; max-width: 980px; margin: 15px auto 25px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #10B981; margin-bottom: 14px; font-family: 'JetBrains Mono', monospace;">
+            <span>> PROTOCOLO MDM-CORE // LIVE ADB CONSOLE</span>
+          </div>
+          <h1 style="font-size: 36px; font-weight: 900; color: #FFF; font-family: 'JetBrains Mono', monospace; margin-bottom: 10px;">
+            SYSTEM_TERMINAL::ONLINE
+          </h1>
+          <p style="color: #6EE7B7; font-size: 13.5px; font-family: 'JetBrains Mono', monospace; max-width: 680px; margin: 0 auto 20px;">
+            Injeção DPC de baixo nível • Comunicação direta com barramento ADB • EMV Gateway Banco Central
+          </p>
+        </div>
+
+        <div data-section="sec_slider" class="matrix-terminal-window">
+          <div class="matrix-terminal-bar">
+            <span>● ● ● terminal@mdm-cloud-node-01:~/system_core</span>
+            <span>STATUS: ACTIVE [PORT: 5037]</span>
+          </div>
+          <div class="matrix-terminal-body">
+            <div>[03:12:45] [SYS_INIT] Carregando modulos do kernel DPC... [OK]</div>
+            <div>[03:12:46] [ADB_DAEMON] Escaneando portas USB ativas... Dispositivo encontrado [SM-A145M / Serial: R58X90L23]</div>
+            <div>[03:12:47] [SECURITY] Aplicando política Device Owner persistente... [INJETADO COM SUCESSO]</div>
+            <div>[03:12:48] [KIOSK_ENGINE] Travamento de botões físicos e interface ativa com QR Code PIX Banco Central [ONLINE]</div>
+            <div>[03:12:49] [WEBHOOK] Monitorando chave PIX no servidor do Banco Central... [LATÊNCIA: 18ms]</div>
+            <div style="color: #FBBF24; margin-top: 10px;">> COMANDO: ./mdm_frp_brasil.exe --ready --credits=ACTIVE</div>
+            <div style="color: #38BDF8; margin-top: 4px;">> PROVEDOR: MDM & FRP BRASIL CLOUD SYSTEMS</div>
+          </div>
+          <div style="padding: 16px 20px; background: #06121C; border-top: 1px solid rgba(16, 185, 129, 0.3); display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #10B981;">
+              > Aguardando acao do operador...
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="/download/exe?v=2.2" class="btn-download-big" style="font-size: 12.5px; padding: 10px 18px; font-family: 'JetBrains Mono', monospace;">
+                > DOWNLOAD .EXE
+              </a>
+              <button class="btn-green" style="font-size: 12.5px; padding: 10px 18px; font-family: 'JetBrains Mono', monospace;" onclick="showView('Dashboard')">
+                > RECARREGAR PIX
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           MODO 6: ULTRA RÁPIDO & MINIMALISTA (FOCO EM CONVERSÃO)
+           ======================================================== -->
+      <div id="layoutMinimalFast" class="layout-mode-view">
+        <div data-section="sec_hero" class="minimal-fast-hero">
+          <div style="font-size: 12px; font-weight: 800; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+            Plataforma Técnica Oficial
+          </div>
+          <h1 style="font-size: 38px; font-weight: 900; color: #FFF; margin-bottom: 14px;">
+            MDM & FRP BRASIL
+          </h1>
+          <p style="color: var(--text-muted); font-size: 15px; line-height: 1.6; max-width: 620px; margin: 0 auto 28px;">
+            Gestão rápida e inviolável de aparelhos Android. Injeção de políticas DPC via USB e modo Kiosk com PIX oficial.
+          </p>
+
+          <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;">
+            <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 13px 26px; font-size: 14px;">
+              📥 Baixar Ferramenta (.exe)
+            </a>
+            <button class="btn-green" style="padding: 13px 26px; font-size: 14px;" onclick="showView('Dashboard')">
+              ⚡ Acessar Meu Painel
+            </button>
+          </div>
+        </div>
+
+        <div data-section="sec_slider" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; max-width: 980px; margin: 0 auto 35px;">
+          <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 6px;">🔌</div>
+            <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin-bottom: 4px;">1. Conecte no PC</h4>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Reconhecimento ADB em 0.4s via USB.</p>
+          </div>
+          <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 6px;">📱</div>
+            <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin-bottom: 4px;">2. Bloqueio com PIX</h4>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Modo Kiosk inviolável com QR Code oficial.</p>
+          </div>
+          <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 6px;">🔓</div>
+            <h4 style="font-size: 15px; font-weight: 700; color: #FFF; margin-bottom: 4px;">3. Liberação Imediata</h4>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Desbloqueio 100% automático pós-pagamento.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO RANKING DESTAQUES DO MÊS (COMPARTILHADA POR TODOS OS MODOS) -->
+      <section id="secRanking" data-section="sec_ranking" class="ranking-showcase-section" style="max-width: 1100px; margin: 45px auto 25px; padding: 0 10px;">
         <div style="text-align: center; margin-bottom: 28px;">
           <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #F59E0B; margin-bottom: 12px; box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);">
             <span>🏆 DESTAQUES & TOP ASSISTÊNCIAS</span>
@@ -1597,11 +2129,11 @@
 
       <!-- Tabs Nav -->
       <div class="tabs-nav">
-        <button class="tab-btn active" onclick="switchDashTab('history', this)">Extrato Financeiro</button>
-        <button class="tab-btn" onclick="switchDashTab('orders', this)">Ordens de Serviço</button>
-        <button class="tab-btn" onclick="switchDashTab('devices', this)">Aparelhos Atendidos</button>
+        <button class="tab-btn active" onclick="switchDashTab('history', this)">📜 Extrato Financeiro</button>
+        <button class="tab-btn" onclick="switchDashTab('orders', this)">🛠️ Ordens de Serviço</button>
+        <button class="tab-btn" onclick="switchDashTab('devices', this)">📱 Aparelhos Atendidos</button>
         <button class="tab-btn" onclick="switchDashTab('software', this)">📥 Baixar Ferramenta (.EXE)</button>
-        <button class="tab-btn" onclick="switchDashTab('account', this)">Dados da Conta</button>
+        <button class="tab-btn" style="color: var(--cyan); border-color: rgba(0, 229, 255, 0.4);" onclick="showView('Account')">👤 Minha Conta (Tela Completa) ➔</button>
       </div>
 
       <!-- Tab: Extrato -->
@@ -1716,109 +2248,140 @@
         </div>
       </div>
 
-      <!-- Tab: Conta & Configurações de Perfil -->
-      <div id="tabAccount" class="panel-card" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border-green); padding-bottom: 14px;">
+    </div>
+
+    <!-- SEÇÃO INDEPENDENTE: 👤 MINHA CONTA & CONFIGURAÇÕES TÉCNICAS -->
+    <div id="viewAccount" class="account-section" style="display: none;">
+      <!-- Hero Banner da Conta com Avatar em Alta Definição e Resumo -->
+      <div class="account-hero-card">
+        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+          <img id="accHeroAvatar" src="/static/logo.png" alt="Avatar" class="acc-profile-glow">
           <div>
-            <h3 style="margin: 0; font-size: 18px; color: #FFF;">👤 Minha Conta & Perfil Técnico</h3>
-            <p style="margin: 4px 0 0; color: var(--text-muted); font-size: 12.5px;">Personalize sua foto de perfil, número de WhatsApp e senha de acesso ao Site e EXE.</p>
-          </div>
-          <div id="accStatusBadge" style="background: rgba(0, 230, 118, 0.12); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.35); padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 800;">
-            ✓ CONTA ATIVA
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;">
+              <h2 id="accHeroName" style="font-size: 22px; font-weight: 800; color: #FFF; margin: 0;">Cliente Técnico</h2>
+              <span id="accStatusBadge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;">
+                ✓ CONTA ATIVA
+              </span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
+              E-mail Técnico: <strong style="color: #FFF;" id="accHeroEmail">carregando...</strong> &bull; WhatsApp: <span id="accHeroPhone" style="color: var(--cyan); font-weight: 600;">—</span>
+            </div>
+            <div style="font-size: 12.5px; color: #94A3B8;">
+              Saldo Disponível: <strong id="accHeroBalance" style="color: var(--green); font-size: 16px;">🪙 0 Créditos</strong>
+            </div>
           </div>
         </div>
 
-        <div id="accAlert" style="display:none; padding:12px; border-radius:8px; font-size:12.5px; margin-bottom:18px; text-align: left;"></div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button type="button" class="btn-green" style="font-size: 13px; padding: 10px 18px;" onclick="showView('Dashboard')">
+            ⚡ Recarregar Saldo via PIX
+          </button>
+          <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 10px 18px; font-size: 13px;">
+            📥 Baixar MDM & FRP BRASIL (.exe)
+          </a>
+        </div>
+      </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-          <!-- Coluna 1: Foto de Perfil & Dados Pessoais -->
-          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
-            <h4 style="font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-              <span>🖼️</span> Foto de Perfil & Contato WhatsApp
+      <div id="accAlert" style="display:none; padding:12px; border-radius:8px; font-size:12.5px; margin-bottom:18px; text-align: left;"></div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+        <!-- Coluna 1: Foto de Perfil & Dados Pessoais -->
+        <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 22px;">
+          <h4 style="font-size: 14.5px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <span>🖼️</span> Foto de Perfil &amp; Contato WhatsApp
+          </h4>
+
+          <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+            <img id="editAccAvatarPreview" src="/static/logo.png" alt="Prévia da Foto" class="profile-avatar-circle">
+            <div>
+              <button type="button" class="btn-green" style="font-size: 11.5px; padding: 7px 14px; margin-bottom: 6px;" onclick="document.getElementById('accFileInput').click()">
+                📁 Carregar Imagem
+              </button>
+              <input type="file" id="accFileInput" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
+              <div style="font-size: 11px; color: var(--text-muted);">PNG ou JPG do seu dispositivo</div>
+            </div>
+          </div>
+
+          <!-- Avatares Rápidos Predefinidos -->
+          <div style="margin-bottom: 16px;">
+            <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 6px;">Ou clique para usar um avatar técnico:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="avatar-preset-btn" title="Técnico Especialista" onclick="setPresetAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop')">👨‍🔧</button>
+              <button type="button" class="avatar-preset-btn" title="Líder Tech" onclick="setPresetAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop')">⚡</button>
+              <button type="button" class="avatar-preset-btn" title="Bancada Android" onclick="setPresetAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop')">📱</button>
+              <button type="button" class="avatar-preset-btn" title="Especialista Cyber" onclick="setPresetAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop')">🤖</button>
+              <button type="button" class="avatar-preset-btn" title="Master VIP" onclick="setPresetAvatar('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop')">👑</button>
+            </div>
+          </div>
+
+          <form onsubmit="handleSaveProfileData(event)">
+            <div class="form-group" style="text-align: left;">
+              <label>URL da Imagem de Perfil (opcional)</label>
+              <input type="url" id="editAccAvatarUrl" class="form-control" placeholder="https://exemplo.com/sua-foto.jpg" oninput="previewAvatarUrl(this.value)">
+            </div>
+            <div class="form-group" style="text-align: left;">
+              <label>Nome Completo / Nome da Assistência</label>
+              <input type="text" id="editAccName" class="form-control" required placeholder="Ex: Central Cell Americana">
+            </div>
+            <div class="form-group" style="text-align: left;">
+              <label>WhatsApp / Celular com DDD</label>
+              <input type="text" id="editAccPhone" class="form-control" required placeholder="(19) 99478-3127">
+            </div>
+            <div class="form-group" style="text-align: left;">
+              <label>E-mail Cadastrado (Login)</label>
+              <input type="email" id="editAccEmail" class="form-control" readonly style="opacity: 0.7; cursor: not-allowed; background: rgba(0,0,0,0.25);">
+            </div>
+            <button type="submit" class="btn-green" id="btnSaveProfile" style="margin-top: 14px; width: 100%;">
+              💾 Salvar Alterações de Perfil
+            </button>
+          </form>
+        </div>
+
+        <!-- Coluna 2: Segurança & Senha de Acesso Web + EXE -->
+        <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <h4 style="font-size: 14.5px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span>🔒</span> Segurança &amp; Senha do Site e EXE
             </h4>
+            <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-bottom: 18px;">
+              Defina ou altere a senha utilizada para acessar este portal web e o aplicativo no computador <strong>MDM_FRP_BRASIL.exe</strong> (compatível com a função <em>Lembrar credenciais</em>).
+            </p>
 
-            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
-              <img id="editAccAvatarPreview" src="/static/logo.png" alt="Prévia da Foto" class="profile-avatar-circle">
-              <div>
-                <button type="button" class="btn-green" style="font-size: 11.5px; padding: 7px 14px; margin-bottom: 6px;" onclick="document.getElementById('accFileInput').click()">
-                  📁 Carregar Imagem
-                </button>
-                <input type="file" id="accFileInput" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
-                <div style="font-size: 11px; color: var(--text-muted);">PNG ou JPG do seu dispositivo</div>
+            <form onsubmit="handleUpdatePassword(event)">
+              <div class="form-group" style="text-align: left;">
+                <label>Nova Senha</label>
+                <input type="password" id="editAccNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
               </div>
-            </div>
+              <div class="form-group" style="text-align: left; margin-bottom: 18px;">
+                <label>Confirmar Nova Senha</label>
+                <input type="password" id="editAccConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
+              </div>
 
-            <!-- Avatares Rápidos Predefinidos -->
-            <div style="margin-bottom: 16px;">
-              <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 6px;">Ou clique para usar um avatar técnico:</label>
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button type="button" class="avatar-preset-btn" title="Técnico Especialista" onclick="setPresetAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop')">👨‍🔧</button>
-                <button type="button" class="avatar-preset-btn" title="Líder Tech" onclick="setPresetAvatar('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop')">⚡</button>
-                <button type="button" class="avatar-preset-btn" title="Bancada Android" onclick="setPresetAvatar('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop')">📱</button>
-                <button type="button" class="avatar-preset-btn" title="Especialista Cyber" onclick="setPresetAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop')">🤖</button>
-                <button type="button" class="avatar-preset-btn" title="Master VIP" onclick="setPresetAvatar('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop')">👑</button>
+              <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 12px; font-size: 11.5px; color: #94A3B8; text-align: left; line-height: 1.45; margin-bottom: 16px;">
+                <span style="color: var(--cyan); font-weight: 700;">🔑 Integração Imediata:</span><br>
+                A nova senha será salva no banco com criptografia avançada e funcionará imediatamente no login do aplicativo <strong>MDM_FRP_BRASIL.exe</strong> no seu PC.
               </div>
-            </div>
 
-            <form onsubmit="handleSaveProfileData(event)">
-              <div class="form-group" style="text-align: left;">
-                <label>URL da Imagem de Perfil (opcional)</label>
-                <input type="url" id="editAccAvatarUrl" class="form-control" placeholder="https://exemplo.com/sua-foto.jpg" oninput="previewAvatarUrl(this.value)">
-              </div>
-              <div class="form-group" style="text-align: left;">
-                <label>Nome Completo / Nome da Assistência</label>
-                <input type="text" id="editAccName" class="form-control" required placeholder="Ex: Central Cell Americana">
-              </div>
-              <div class="form-group" style="text-align: left;">
-                <label>WhatsApp / Celular com DDD</label>
-                <input type="text" id="editAccPhone" class="form-control" required placeholder="(19) 99478-3127">
-              </div>
-              <div class="form-group" style="text-align: left;">
-                <label>E-mail Cadastrado (Login)</label>
-                <input type="email" id="editAccEmail" class="form-control" readonly style="opacity: 0.7; cursor: not-allowed; background: rgba(0,0,0,0.25);">
-              </div>
-              <button type="submit" class="btn-green" id="btnSaveProfile" style="margin-top: 14px; width: 100%;">
-                💾 Salvar Alterações de Perfil
+              <button type="submit" class="btn-primary" id="btnUpdatePassword" style="width: 100%;">
+                🔒 Salvar Nova Senha
               </button>
             </form>
           </div>
 
-          <!-- Coluna 2: Segurança & Senha de Acesso Web + EXE -->
-          <div style="background: var(--card-inner); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <h4 style="font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                <span>🔒</span> Segurança & Senha do Site e EXE
-              </h4>
-              <p style="color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-bottom: 18px;">
-                Defina ou altere a senha utilizada para acessar este portal web e o aplicativo no computador <strong>MDM_FRP_BRASIL.exe</strong> (compatível com a função <em>Lembrar credenciais</em>).
-              </p>
-
-              <form onsubmit="handleUpdatePassword(event)">
-                <div class="form-group" style="text-align: left;">
-                  <label>Nova Senha</label>
-                  <input type="password" id="editAccNewPassword" class="form-control" minlength="6" required placeholder="Mínimo 6 caracteres">
-                </div>
-                <div class="form-group" style="text-align: left; margin-bottom: 18px;">
-                  <label>Confirmar Nova Senha</label>
-                  <input type="password" id="editAccConfirmPassword" class="form-control" minlength="6" required placeholder="Repita a nova senha">
-                </div>
-
-                <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 8px; padding: 12px; font-size: 11.5px; color: #94A3B8; text-align: left; line-height: 1.45; margin-bottom: 16px;">
-                  <span style="color: var(--cyan); font-weight: 700;">🔑 Integração Imediata:</span><br>
-                  A nova senha será salva no banco com criptografia avançada e funcionará imediatamente no login do aplicativo <strong>MDM_FRP_BRASIL.exe</strong> no seu PC.
-                </div>
-
-                <button type="submit" class="btn-primary" id="btnUpdatePassword" style="width: 100%;">
-                  🔒 Salvar Nova Senha
-                </button>
-              </form>
-            </div>
-
-            <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11.5px; color: var(--text-muted); text-align: center;">
-              MDM & FRP BRASIL • Plataforma Oficial de Gestão e Desbloqueios
-            </div>
+          <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11.5px; color: var(--text-muted); text-align: center;">
+            MDM & FRP BRASIL • Plataforma Oficial de Gestão e Desbloqueios
           </div>
         </div>
+      </div>
+
+      <!-- Barra de Navegação no Rodapé da Conta -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 12px;">
+        <button type="button" class="btn-nav-item" onclick="showView('Dashboard')">
+          ← Voltar ao Meu Painel Operacional
+        </button>
+        <button type="button" class="btn-nav-item" onclick="showView('Showcase')">
+          🏠 Ir para a Página Inicial / Vitrine
+        </button>
       </div>
     </div>
   </main>
@@ -1954,12 +2517,55 @@
       if (overlay) overlay.style.display = 'none';
     }
 
-    function handleNavDashClick() {
+    function handleNavTarget(target) {
+      if (target === 'Showcase') {
+        showView('Showcase');
+        return;
+      }
       if (token) {
-        showView('Dashboard');
+        showView(target);
       } else {
         openAuthOverlay('Login');
       }
+    }
+
+    function populateAccountFields(u) {
+      if (!u) return;
+      const avatar = u.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || 'Cliente')}&background=00E5FF&color=000&bold=true`;
+      const name = u.name || 'Cliente Técnico';
+      const email = u.email || '';
+      const phone = u.whatsapp || 'Não informado';
+      const balance = (u.wallet && u.wallet.balance_credits !== undefined) ? u.wallet.balance_credits : 0;
+
+      const heroAvatar = document.getElementById("accHeroAvatar");
+      if (heroAvatar) heroAvatar.src = avatar;
+
+      const heroName = document.getElementById("accHeroName");
+      if (heroName) heroName.innerText = name;
+
+      const heroEmail = document.getElementById("accHeroEmail");
+      if (heroEmail) heroEmail.innerText = email;
+
+      const heroPhone = document.getElementById("accHeroPhone");
+      if (heroPhone) heroPhone.innerText = phone;
+
+      const heroBalance = document.getElementById("accHeroBalance");
+      if (heroBalance) heroBalance.innerText = `🪙 ${balance} Créditos`;
+
+      const editAvatarPreview = document.getElementById("editAccAvatarPreview");
+      if (editAvatarPreview) editAvatarPreview.src = avatar;
+
+      const editAvatarUrl = document.getElementById("editAccAvatarUrl");
+      if (editAvatarUrl) editAvatarUrl.value = u.avatar_url || '';
+
+      const editName = document.getElementById("editAccName");
+      if (editName) editName.value = u.name || '';
+
+      const editPhone = document.getElementById("editAccPhone");
+      if (editPhone) editPhone.value = u.whatsapp || '';
+
+      const editEmail = document.getElementById("editAccEmail");
+      if (editEmail) editEmail.value = email;
     }
 
     function showView(view) {
@@ -1968,23 +2574,37 @@
       const isForgot = view === 'Forgot';
       const isGoogle = view === 'GoogleLink';
       const isDash = view === 'Dashboard';
+      const isAccount = view === 'Account';
       const isShowcase = view === 'Showcase';
 
-      document.getElementById("viewLogin").style.display = isLogin ? 'block' : 'none';
-      document.getElementById("viewRegister").style.display = isReg ? 'block' : 'none';
-      document.getElementById("viewForgot").style.display = isForgot ? 'block' : 'none';
+      const vLogin = document.getElementById("viewLogin");
+      if (vLogin) vLogin.style.display = isLogin ? 'block' : 'none';
+
+      const vReg = document.getElementById("viewRegister");
+      if (vReg) vReg.style.display = isReg ? 'block' : 'none';
+
+      const vForgot = document.getElementById("viewForgot");
+      if (vForgot) vForgot.style.display = isForgot ? 'block' : 'none';
+
       const googleLinkEl = document.getElementById("viewGoogleLink");
       if (googleLinkEl) googleLinkEl.style.display = isGoogle ? 'block' : 'none';
 
-      document.getElementById("viewDashboard").style.display = isDash ? 'block' : 'none';
-      const showcaseEl = document.getElementById("viewShowcase");
-      if (showcaseEl) showcaseEl.style.display = isDash ? 'none' : 'block';
+      const vDash = document.getElementById("viewDashboard");
+      if (vDash) vDash.style.display = isDash ? 'block' : 'none';
 
-      // Header navigation buttons active states
+      const vAccount = document.getElementById("viewAccount");
+      if (vAccount) vAccount.style.display = isAccount ? 'block' : 'none';
+
+      const showcaseEl = document.getElementById("viewShowcase");
+      if (showcaseEl) showcaseEl.style.display = isShowcase ? 'block' : 'none';
+
+      // Header navigation buttons active states (3 completely separate views)
       const btnNavHome = document.getElementById("btnNavHome");
       const btnNavDash = document.getElementById("btnNavDash");
+      const btnNavAccount = document.getElementById("btnNavAccount");
       if (btnNavHome) btnNavHome.classList.toggle("active", isShowcase || isLogin || isReg || isForgot || isGoogle);
       if (btnNavDash) btnNavDash.classList.toggle("active", isDash);
+      if (btnNavAccount) btnNavAccount.classList.toggle("active", isAccount);
 
       // Header user area vs auth button & loggedHomeBanner
       const headerUserArea = document.getElementById("headerUserArea");
@@ -2002,10 +2622,14 @@
       }
 
       const overlay = document.getElementById("authOverlay");
-      if (isDash || isShowcase) {
+      if (isDash || isShowcase || isAccount) {
         if (overlay) overlay.style.display = 'none';
       } else {
         if (overlay) overlay.style.display = 'flex';
+      }
+
+      if (isAccount && currentUser) {
+        populateAccountFields(currentUser);
       }
     }
 
@@ -2611,6 +3235,9 @@
         const editAccEmail = document.getElementById("editAccEmail");
         if (editAccEmail) editAccEmail.value = currentUser.email || '';
 
+        // Populate dedicated account view
+        populateAccountFields(currentUser);
+
         // Check if user is admin
         const adminBtn = document.getElementById("linkAdminShortcut");
         if (adminBtn) {
@@ -2624,8 +3251,14 @@
         // Fetch monthly ranking
         fetchRanking();
 
-        // Check if user explicitly asked for home or dashboard view
-        if (urlParams.get("view") === "home") {
+        // Check view based on pathname or query param
+        const currentPath = window.location.pathname;
+        const vParam = urlParams.get("view");
+        if (vParam === "account" || currentPath === "/conta") {
+          showView('Account');
+        } else if (vParam === "dashboard" || currentPath === "/painel" || currentPath === "/dashboard") {
+          showView('Dashboard');
+        } else if (vParam === "home" || vParam === "showcase" || currentPath === "/" || currentPath === "/inicio") {
           showView('Showcase');
         } else {
           showView('Dashboard');
@@ -2808,8 +3441,64 @@
       document.getElementById("tabAccount").style.display = tab === 'account' ? 'block' : 'none';
     }
 
-    // Startup: Apply dynamic theme and initialize Cinema Split-Slider
+    /* ========================================================
+       CONTROLE E SELEÇÃO DE LAYOUT DA PÁGINA INICIAL
+       ======================================================== */
+    function setPortalLayout(layout, btn) {
+      document.body.setAttribute('data-layout', layout);
+      document.querySelectorAll('.btn-layout-chip').forEach(b => b.classList.remove('active'));
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        const matching = document.querySelector(`.btn-layout-chip[data-layout-target="${layout}"]`);
+        if (matching) matching.classList.add('active');
+      }
+      localStorage.setItem('mdm_preview_layout', layout);
+    }
+
+    async function applyHomepageSectionsAndLayout() {
+      const urlLayout = urlParams.get("layout") || urlParams.get("preview_layout") || localStorage.getItem('mdm_preview_layout');
+      if (urlLayout) {
+        setPortalLayout(urlLayout);
+      }
+
+      try {
+        const res = await api('/api/v1/system/homepage-layout');
+        if (res && res.layout && !urlLayout) {
+          setPortalLayout(res.layout);
+        }
+
+        if (res && res.sections) {
+          let secs = null;
+          try {
+            secs = typeof res.sections === 'string' ? JSON.parse(res.sections) : res.sections;
+          } catch(e) {
+            console.warn("Could not parse layout sections:", e);
+          }
+
+          if (secs) {
+            const secKeys = ['hero', 'slider', 'ranking', 'download', 'pricing', 'benefits'];
+            secKeys.forEach(k => {
+              const domSecName = 'sec_' + k;
+              const els = document.querySelectorAll(`[data-section="${domSecName}"]`);
+              els.forEach(el => {
+                if (secs[k] === false) {
+                  el.style.display = 'none';
+                } else {
+                  el.style.display = '';
+                }
+              });
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("Homepage layout check:", err);
+      }
+    }
+
+    // Startup: Apply dynamic theme, layout, slider and ranking
     applySiteTheme();
+    applyHomepageSectionsAndLayout();
     renderPortalSlide();
     resetPortalSliderTimer();
     fetchRanking();
@@ -2961,6 +3650,17 @@
       draw();
     })();
   </script>
+
+  <!-- Live Layout Switcher Toolbar (Bottom Preview Pill) -->
+  <div class="layout-switcher-pill" id="layoutSwitcherPill">
+    <span style="color: #94A3B8; font-weight: 700; margin-right: 4px;">📐 Disposição:</span>
+    <button type="button" class="btn-layout-chip active" data-layout-target="cinema_split" onclick="setPortalLayout('cinema_split', this)">1. Cinema Split</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="bento_grid" onclick="setPortalLayout('bento_grid', this)">2. Bento Grid</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="hero_exe" onclick="setPortalLayout('hero_exe', this)">3. Hero EXE</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="saas_grid" onclick="setPortalLayout('saas_grid', this)">4. SaaS 3 Colunas</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="matrix_terminal" onclick="setPortalLayout('matrix_terminal', this)">5. Terminal Cyber</button>
+    <button type="button" class="btn-layout-chip" data-layout-target="minimal_fast" onclick="setPortalLayout('minimal_fast', this)">6. Minimalista</button>
+  </div>
 
   <!-- Live Social Proof Ticker (Rodapé) -->
   <div class="social-proof-ticker">

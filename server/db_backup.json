@@ -1,0 +1,456 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Mestre dos Desbloqueios SP",
+      "email": "cliente_teste_1790965885@gmail.com",
+      "whatsapp": "(11) 98888-7777",
+      "password_hash": "$2b$12$lAz/RF6WO5rbtJfauyZYi.jtGYNpx5N6IP2wF5qrk4sQkY5COqGbu",
+      "status": "active",
+      "created_at": "2026-10-02 18:31:26",
+      "updated_at": "2026-10-03 05:37:09",
+      "google_id": null,
+      "auth_provider": "local",
+      "avatar_url": "https://example.com/avatar.png"
+    },
+    {
+      "id": 2,
+      "name": "Cliente Google Silva",
+      "email": "cliente.google.1_476@gmail.com",
+      "whatsapp": "",
+      "password_hash": "$2b$12$M0DhYpUUZJiQCLJzJQ4GPeLX6NIkLr6qTG6nRQ4KbJzUeSQ2tlaqq",
+      "status": "active",
+      "created_at": "2026-10-02 20:57:14",
+      "updated_at": "2026-10-02 20:57:14",
+      "google_id": "google_sub_987654321",
+      "auth_provider": "google",
+      "avatar_url": null
+    },
+    {
+      "id": 3,
+      "name": "Cliente Google Silva",
+      "email": "cliente.google.1_1833@gmail.com",
+      "whatsapp": "",
+      "password_hash": "$2b$12$OhlW9QrPIMCzYSMjg4IApO5x5djFRise65/GDSCuzhDbD3uZIv3ka",
+      "status": "active",
+      "created_at": "2026-10-02 21:16:59",
+      "updated_at": "2026-10-02 21:16:59",
+      "google_id": "google_sub_987654321",
+      "auth_provider": "google",
+      "avatar_url": null
+    },
+    {
+      "id": 4,
+      "name": "Cliente Google Silva",
+      "email": "cliente.google.1_3775@gmail.com",
+      "whatsapp": "",
+      "password_hash": "$2b$12$MGzdPb8n/ztWUOMqdsUFzOTVWRGSKAWJnZJVfvIRVo35l9/tyf9oK",
+      "status": "active",
+      "created_at": "2026-10-02 21:32:54",
+      "updated_at": "2026-10-02 21:32:54",
+      "google_id": "google_sub_987654321",
+      "auth_provider": "google",
+      "avatar_url": null
+    },
+    {
+      "id": 5,
+      "name": "Cliente Google Silva",
+      "email": "cliente.google.1_1244@gmail.com",
+      "whatsapp": "",
+      "password_hash": "$2b$12$AcfGhapfzqXm5L/6eyIPOuijvT72.af.9HQY9qp8h.dN7sSpoE.OW",
+      "status": "active",
+      "created_at": "2026-10-02 21:44:20",
+      "updated_at": "2026-10-02 21:44:20",
+      "google_id": "google_sub_987654321",
+      "auth_provider": "google",
+      "avatar_url": null
+    },
+    {
+      "id": 6,
+      "name": "seophone.imports",
+      "email": "seophone.imports@gmail.com",
+      "whatsapp": "",
+      "password_hash": "$2b$12$yXU6z3BCbBgkmhl0iIjIoOL3F3wo1NLIMuReHHviUevVxml79/J/u",
+      "status": "active",
+      "created_at": "2026-10-02 22:16:02",
+      "updated_at": "2026-10-02 23:30:55",
+      "google_id": "google_1790979361810",
+      "auth_provider": "google",
+      "avatar_url": null
+    },
+    {
+      "id": 7,
+      "name": "Audit Tecnico",
+      "email": "audit.tecnico.2026@gmail.com",
+      "whatsapp": "(19) 99888-2222",
+      "password_hash": "$2b$12$GURAcEvGIqlb6OUL7c4.2e.4tW17beZbqxPBfFadDSLvmdzfbJuQu",
+      "status": "active",
+      "created_at": "2026-10-03 03:14:24",
+      "updated_at": "2026-10-03 03:14:25",
+      "google_id": null,
+      "auth_provider": "local",
+      "avatar_url": null
+    },
+    {
+      "id": 8,
+      "name": "Audit Tecnico Fresh",
+      "email": "audit.user.1790997360@gmail.com",
+      "whatsapp": "(19) 99888-2222",
+      "password_hash": "$2b$12$E16ufW5IETI5WbVARmulGOz/0YWrhO.iX5t5HjWscMHStInckhfme",
+      "status": "active",
+      "created_at": "2026-10-03 03:16:00",
+      "updated_at": "2026-10-03 03:16:01",
+      "google_id": null,
+      "auth_provider": "local",
+      "avatar_url": null
+    },
+    {
+      "id": 9,
+      "name": "Tecnico Especialista",
+      "email": "test.google.vinculo@gmail.com",
+      "whatsapp": "",
+      "password_hash": "$2b$12$Qx94rwM8epVFoV6qG3MVnOHGE0qMvDp6uKILxE.cE4apPXflyJNAu",
+      "status": "active",
+      "created_at": "2026-10-03 05:29:16",
+      "updated_at": "2026-10-03 05:29:39",
+      "google_id": "google_415d61411f427646",
+      "auth_provider": "google",
+      "avatar_url": "https://ui-avatars.com/api/?name=Tecnico%20Especialista&background=00E5FF&color=000"
+    }
+  ],
+  "administrators": [
+    {
+      "id": 1,
+      "name": "Administrador Geral",
+      "email": "admin@mdmfrpbrasil.com.br",
+      "password_hash": "$2b$12$zaBsO5/fKKfSfd0FDPq6aOx5Q1NREXpbbvewlXqDD6WVAk2WOVmPW",
+      "role": "superadmin",
+      "created_at": "2026-10-02 18:31:27"
+    },
+    {
+      "id": 2,
+      "name": "Willian (Admin)",
+      "email": "seophone.imports@gmail.com",
+      "password_hash": "$2b$12$s4s5dxSQDvoqcfxgZ51iIOqUZa3lL8fBk9bxsPJQdnhBkGtsHp/ma",
+      "role": "superadmin",
+      "created_at": "2026-10-02 22:24:26"
+    }
+  ],
+  "wallets": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "balance_credits": 14,
+      "promotional_credits": 0,
+      "total_purchased": 10,
+      "total_used": 1,
+      "updated_at": "2026-10-02 18:31:27"
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "balance_credits": 5,
+      "promotional_credits": 5,
+      "total_purchased": 0,
+      "total_used": 0,
+      "updated_at": "2026-10-02 20:57:14"
+    },
+    {
+      "id": 3,
+      "user_id": 3,
+      "balance_credits": 10,
+      "promotional_credits": 0,
+      "total_purchased": 10,
+      "total_used": 0,
+      "updated_at": "2026-10-02 21:16:59"
+    },
+    {
+      "id": 4,
+      "user_id": 4,
+      "balance_credits": 9,
+      "promotional_credits": 0,
+      "total_purchased": 10,
+      "total_used": 1,
+      "updated_at": "2026-10-02 21:32:54"
+    },
+    {
+      "id": 5,
+      "user_id": 5,
+      "balance_credits": 9,
+      "promotional_credits": 0,
+      "total_purchased": 10,
+      "total_used": 1,
+      "updated_at": "2026-10-02 21:44:20"
+    },
+    {
+      "id": 6,
+      "user_id": 6,
+      "balance_credits": 10,
+      "promotional_credits": 0,
+      "total_purchased": 10,
+      "total_used": 0,
+      "updated_at": "2026-10-02 22:56:47"
+    },
+    {
+      "id": 7,
+      "user_id": 7,
+      "balance_credits": 5,
+      "promotional_credits": 5,
+      "total_purchased": 0,
+      "total_used": 0,
+      "updated_at": "2026-10-03 03:14:24"
+    },
+    {
+      "id": 8,
+      "user_id": 8,
+      "balance_credits": 5,
+      "promotional_credits": 5,
+      "total_purchased": 0,
+      "total_used": 0,
+      "updated_at": "2026-10-03 03:16:00"
+    },
+    {
+      "id": 9,
+      "user_id": 9,
+      "balance_credits": 5,
+      "promotional_credits": 5,
+      "total_purchased": 0,
+      "total_used": 0,
+      "updated_at": "2026-10-03 05:29:16"
+    }
+  ],
+  "credit_transactions": [
+    {
+      "id": 1,
+      "wallet_id": 1,
+      "user_id": 1,
+      "type": "PURCHASE",
+      "amount_credits": 10,
+      "previous_balance": 0,
+      "new_balance": 10,
+      "description": "Recarga PIX (10 créditos) - TXID: MDM1790965886BB6EF2",
+      "reference_id": "MDM1790965886BB6EF2",
+      "created_at": "2026-10-02 18:31:26"
+    },
+    {
+      "id": 2,
+      "wallet_id": 1,
+      "user_id": 1,
+      "type": "CONSUMPTION",
+      "amount_credits": 1,
+      "previous_balance": 10,
+      "new_balance": 9,
+      "description": "Serviço Desbloqueio e Gestão MDM/FRP Oficial (Samsung Galaxy S21 FE 5G / Serial: RQCTA06T67T)",
+      "reference_id": "OP-1790965886-86C1",
+      "created_at": "2026-10-02 18:31:27"
+    },
+    {
+      "id": 3,
+      "wallet_id": 1,
+      "user_id": 1,
+      "type": "BONUS",
+      "amount_credits": 5,
+      "previous_balance": 9,
+      "new_balance": 14,
+      "description": "Ajuste Administrativo (BONUS): Bônus promocional de boas-vindas aprovado pela diretoria (Por: Administrador Geral)",
+      "reference_id": null,
+      "created_at": "2026-10-02 18:31:27"
+    },
+    {
+      "id": 4,
+      "wallet_id": 3,
+      "user_id": 3,
+      "type": "PURCHASE",
+      "amount_credits": 10,
+      "previous_balance": 0,
+      "new_balance": 10,
+      "description": "Recarga PIX (10 créditos) - TXID: MDM1790975819B6D13D",
+      "reference_id": "MDM1790975819B6D13D",
+      "created_at": "2026-10-02 21:16:59"
+    },
+    {
+      "id": 5,
+      "wallet_id": 4,
+      "user_id": 4,
+      "type": "PURCHASE",
+      "amount_credits": 10,
+      "previous_balance": 0,
+      "new_balance": 10,
+      "description": "Recarga PIX (10 créditos) - TXID: MDM1790976774EFF48D",
+      "reference_id": "MDM1790976774EFF48D",
+      "created_at": "2026-10-02 21:32:54"
+    },
+    {
+      "id": 6,
+      "wallet_id": 4,
+      "user_id": 4,
+      "type": "CONSUMPTION",
+      "amount_credits": 1,
+      "previous_balance": 10,
+      "new_balance": 9,
+      "description": "Serviço Liberação MDM (Samsung Galaxy S21 / Serial: TEST_SERIAL_GOOGLE_01)",
+      "reference_id": "OP-1790976774-BDBE",
+      "created_at": "2026-10-02 21:32:54"
+    },
+    {
+      "id": 7,
+      "wallet_id": 5,
+      "user_id": 5,
+      "type": "PURCHASE",
+      "amount_credits": 10,
+      "previous_balance": 0,
+      "new_balance": 10,
+      "description": "Recarga PIX (10 créditos) - TXID: MDM179097746043E510",
+      "reference_id": "MDM179097746043E510",
+      "created_at": "2026-10-02 21:44:20"
+    },
+    {
+      "id": 8,
+      "wallet_id": 5,
+      "user_id": 5,
+      "type": "CONSUMPTION",
+      "amount_credits": 1,
+      "previous_balance": 10,
+      "new_balance": 9,
+      "description": "Serviço Liberação MDM (Samsung Galaxy S21 / Serial: TEST_SERIAL_GOOGLE_01)",
+      "reference_id": "OP-1790977460-351A",
+      "created_at": "2026-10-02 21:44:20"
+    },
+    {
+      "id": 9,
+      "wallet_id": 6,
+      "user_id": 6,
+      "type": "PURCHASE",
+      "amount_credits": 10,
+      "previous_balance": 0,
+      "new_balance": 10,
+      "description": "Recarga PIX (10 créditos) - TXID: MDM179098178073714D",
+      "reference_id": "MDM179098178073714D",
+      "created_at": "2026-10-02 22:56:47"
+    },
+    {
+      "id": 10,
+      "wallet_id": 2,
+      "user_id": 2,
+      "type": "BONUS",
+      "amount_credits": 5,
+      "previous_balance": 0,
+      "new_balance": 5,
+      "description": "🎁 Bônus de Boas-Vindas Técnico (5 créditos grátis para teste no EXE)",
+      "reference_id": "WELCOME_AUTO",
+      "created_at": "2026-10-03 06:03:23"
+    },
+    {
+      "id": 11,
+      "wallet_id": 7,
+      "user_id": 7,
+      "type": "BONUS",
+      "amount_credits": 5,
+      "previous_balance": 0,
+      "new_balance": 5,
+      "description": "🎁 Bônus de Boas-Vindas Técnico (5 créditos grátis para teste no EXE)",
+      "reference_id": "WELCOME_AUTO",
+      "created_at": "2026-10-03 06:03:23"
+    },
+    {
+      "id": 12,
+      "wallet_id": 8,
+      "user_id": 8,
+      "type": "BONUS",
+      "amount_credits": 5,
+      "previous_balance": 0,
+      "new_balance": 5,
+      "description": "🎁 Bônus de Boas-Vindas Técnico (5 créditos grátis para teste no EXE)",
+      "reference_id": "WELCOME_AUTO",
+      "created_at": "2026-10-03 06:03:23"
+    },
+    {
+      "id": 13,
+      "wallet_id": 9,
+      "user_id": 9,
+      "type": "BONUS",
+      "amount_credits": 5,
+      "previous_balance": 0,
+      "new_balance": 5,
+      "description": "🎁 Bônus de Boas-Vindas Técnico (5 créditos grátis para teste no EXE)",
+      "reference_id": "WELCOME_AUTO",
+      "created_at": "2026-10-03 06:03:23"
+    }
+  ],
+  "system_settings": [
+    {
+      "key": "credit_price_brl",
+      "value": "5.00",
+      "updated_at": "2026-10-02 22:57:27"
+    },
+    {
+      "key": "pix_key",
+      "value": "19994783127",
+      "updated_at": "2026-10-02 22:57:27"
+    },
+    {
+      "key": "pix_merchant_name",
+      "value": "MDM BR",
+      "updated_at": "2026-10-02 22:57:27"
+    },
+    {
+      "key": "pix_merchant_city",
+      "value": "AMERICANA",
+      "updated_at": "2026-10-02 22:57:27"
+    },
+    {
+      "key": "platform_name",
+      "value": "MDM & FRP BRASIL",
+      "updated_at": "2026-10-02 18:28:02"
+    },
+    {
+      "key": "support_phone",
+      "value": "(19) 99478-3127",
+      "updated_at": "2026-10-02 18:28:02"
+    },
+    {
+      "key": "pix_key_type",
+      "value": "AUTO",
+      "updated_at": "2026-10-02 22:57:27"
+    },
+    {
+      "key": "google_client_id",
+      "value": "",
+      "updated_at": "2026-10-02 22:57:27"
+    },
+    {
+      "key": "admin_google_emails",
+      "value": "seophone.imports@gmail.com,admin@mdmfrpbrasil.com.br",
+      "updated_at": "2026-10-02 22:24:26"
+    },
+    {
+      "key": "system_jwt_secret",
+      "value": "e2b97978d3be3dd279fd08352b5b919906319cf4d9901a374638a2c3cb20b156",
+      "updated_at": "2026-10-03 03:13:07"
+    },
+    {
+      "key": "welcome_bonus_credits",
+      "value": "5",
+      "updated_at": "2026-10-03 06:03:23"
+    },
+    {
+      "key": "homepage_layout",
+      "value": "cinema_split",
+      "updated_at": "2026-10-03 06:03:23"
+    },
+    {
+      "key": "homepage_sections",
+      "value": "{\"hero\":true,\"slider\":true,\"ranking\":true,\"download\":true,\"pricing\":true,\"benefits\":true}",
+      "updated_at": "2026-10-03 06:03:23"
+    }
+  ],
+  "services": [
+    {
+      "id": 1,
+      "code": "FRP_MDM_UNLOCK",
+      "name": "Desbloqueio & Gestão MDM/FRP (1 Aparelho)",
+      "credit_cost": 1,
+      "is_active": 1
+    }
+  ]
+}
