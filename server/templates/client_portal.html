@@ -1013,7 +1013,7 @@
       <div class="slider-box-opt1">
         <!-- Lado Esquerdo: Imagem Gigante e Nítida -->
         <div class="opt1-stage" id="opt1Stage">
-          <!-- Rendered via JS -->
+          <img src="/static/preview_exe.jpg" class="opt1-pc-frame" alt="Passo 01 PC">
         </div>
 
         <!-- Lado Direito: Descrição e Controles -->
@@ -1061,7 +1061,7 @@
     </div>
 
     <!-- FLOATING AUTH OVERLAY (LOGIN / CADASTRO COM BLUR) -->
-    <div id="authOverlay" class="auth-floating-overlay">
+    <div id="authOverlay" class="auth-floating-overlay" style="display: none;">
       <div class="auth-card">
         <button class="btn-close-auth" onclick="closeAuthOverlay()" title="Fechar e ver imagens da ferramenta">✕</button>
 
@@ -1498,9 +1498,6 @@
     }
 
     function openAuthOverlay(view = 'Login') {
-      if (!checkComplianceTerms(() => openAuthOverlay(view))) {
-        return;
-      }
       const overlay = document.getElementById("authOverlay");
       if (overlay) overlay.style.display = 'flex';
       showView(view);
@@ -2044,14 +2041,16 @@
       initDashboard();
     } else {
       showView('Showcase');
-      if (localStorage.getItem("mdm_terms_accepted") !== "true") {
-        checkComplianceTerms();
-      } else if (window.location.pathname === '/login' || window.location.search.includes('auth=login')) {
+      if (window.location.pathname === '/login' || window.location.search.includes('auth=login')) {
         openAuthOverlay('Login');
       } else if (window.location.pathname === '/register' || window.location.search.includes('auth=register')) {
         openAuthOverlay('Register');
+      } else if (window.location.search.includes('auth=forgot')) {
+        openAuthOverlay('Forgot');
       }
     }
+    renderPortalSlide();
+    resetPortalSliderTimer();
 
     // ==========================================
     // ANTI-INSPECT & ANTI-DEVTOOLS PROTECTION

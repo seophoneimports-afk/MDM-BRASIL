@@ -1077,6 +1077,11 @@
     if (adminToken) {
       initAdminDashboard();
       loadThemeSelection();
+      if (urlParams.get("tab")) {
+        const targetTab = urlParams.get("tab");
+        const btn = document.querySelector(`button[onclick*="'${targetTab}'"]`);
+        if (btn) switchTab(targetTab, btn);
+      }
     }
 
     // ==========================================
