@@ -125,10 +125,10 @@ class DeviceServiceManagerApp:
         self.cloud_filter_status = "TODOS"
         self.cloud_polling_active = False
 
-        # Visual Themes & Dynamic Palette
-        self.current_theme_key = self.saved_config.get("ui_theme", "cyber_dark")
+        # Visual Themes & Dynamic Palette (Default: Modelo 2 Titanium Slate Studio)
+        self.current_theme_key = self.saved_config.get("ui_theme", "titanium_slate")
         if self.current_theme_key not in THEMES:
-            self.current_theme_key = "cyber_dark"
+            self.current_theme_key = "titanium_slate"
         thm = THEMES[self.current_theme_key]
 
         self.CLR_BG = thm["bg"]
@@ -2028,7 +2028,8 @@ class DeviceServiceManagerApp:
             "value": "150.00",
             "pix": "19994783127",
             "merchant": "MDM FRP BRASIL",
-            "city": "AMERICANA"
+            "city": "AMERICANA",
+            "ui_theme": "titanium_slate"
         }
 
     def _save_current_config(self):
@@ -2038,7 +2039,8 @@ class DeviceServiceManagerApp:
             "value": self.ent_value.get().strip(),
             "pix": self.ent_pix.get().strip(),
             "merchant": self.ent_merchant.get().strip(),
-            "city": self.ent_city.get().strip()
+            "city": self.ent_city.get().strip(),
+            "ui_theme": getattr(self, 'current_theme_key', 'titanium_slate')
         }
         try:
             os.makedirs(os.path.dirname(CONFIG_FILE), exist_ok=True)
