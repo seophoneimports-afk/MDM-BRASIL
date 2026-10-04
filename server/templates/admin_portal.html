@@ -86,8 +86,405 @@
       cursor: pointer;
     }
 
-    /* Dashboard Layout */
+    /* Dashboard Layout & Shell */
     .admin-dash { display: none; }
+    .app-dash-container {
+      display: flex !important;
+      align-items: stretch;
+      min-height: calc(100vh - 70px);
+      width: 100%;
+      margin: 0 !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+
+    /* LEFT SIDEBAR NAVIGATION */
+    .sidebar-portal-nav {
+      width: 270px;
+      min-width: 270px;
+      max-width: 270px;
+      background: #090E1D;
+      border-right: 1px solid rgba(0, 229, 255, 0.18);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px 14px;
+      position: sticky;
+      top: 70px;
+      height: calc(100vh - 70px);
+      overflow-y: auto;
+      z-index: 100;
+      transition: all 0.25s ease;
+    }
+
+    .sidebar-portal-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 4px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-brand-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #F59E0B, #EF4444);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.3);
+    }
+
+    .sidebar-brand-name {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #FFF;
+      line-height: 1.2;
+    }
+
+    .sidebar-brand-role {
+      font-size: 10px;
+      font-weight: 700;
+      color: #F59E0B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* REFINED COMPACT WALLET / REVENUE MODULE */
+    .sidebar-wallet-module {
+      background: linear-gradient(145deg, #0C1628 0%, #081B18 100%);
+      border: 1px solid rgba(0, 230, 118, 0.35);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .wallet-module-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .wallet-module-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .wallet-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    .wallet-module-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .wallet-coin { font-size: 15px; }
+
+    .wallet-module-row .wallet-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .wallet-unit {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .wallet-module-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /* SIDEBAR NAVIGATION ITEMS */
+    .sidebar-nav-section-title {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 10px 8px 4px;
+    }
+
+    .sidebar-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      border-left: 3px solid transparent;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      width: 100%;
+    }
+
+    .sidebar-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #FFF;
+    }
+
+    .sidebar-nav-btn.active {
+      background: rgba(0, 229, 255, 0.12);
+      border-left-color: var(--cyan);
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .snav-icon {
+      font-size: 15px;
+      width: 18px;
+      text-align: center;
+    }
+
+    .snav-label { flex: 1; }
+
+    .snav-badge-green {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--green);
+    }
+
+    .snav-badge-cyan {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(0, 229, 255, 0.15);
+      color: var(--cyan);
+    }
+
+    /* SIDEBAR FOOTER (4 THEMES & ADMIN) */
+    .sidebar-portal-footer {
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-theme-selector {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .theme-sel-title {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .theme-sel-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    .btn-dash-theme {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94A3B8;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-dash-theme.active {
+      background: var(--cyan);
+      color: #000;
+      border-color: var(--cyan);
+    }
+
+    .sidebar-user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px;
+    }
+
+    .sidebar-user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid #F59E0B;
+      object-fit: cover;
+    }
+
+    .sidebar-user-meta { flex: 1; overflow: hidden; }
+
+    .sidebar-user-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #FFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-user-status {
+      font-size: 10px;
+      color: #F59E0B;
+      font-weight: 600;
+    }
+
+    .sidebar-user-logout {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      border-radius: 6px;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+    }
+    .sidebar-user-logout:hover { color: #EF4444; border-color: #EF4444; }
+
+    /* MAIN CONTENT AREA ON THE RIGHT */
+    .dashboard-main-area {
+      flex: 1;
+      padding: 24px 30px;
+      overflow-y: auto;
+      max-width: 1400px;
+      width: calc(100% - 270px);
+    }
+
+    .dash-inner-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .dash-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .bc-current { color: #FFF; font-weight: 700; font-size: 14.5px; }
+
+    .dash-topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .topbar-balance-badge {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 5px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    /* THEMES (OPÇÕES 1, 2, 3, 4) */
+    [data-dash-theme="cyber-dark"] .sidebar-portal-nav {
+      background: #080D1C;
+      border-right-color: rgba(0, 229, 255, 0.2);
+    }
+
+    [data-dash-theme="titanium-slate"] .sidebar-portal-nav {
+      background: #1E293B;
+      border-right-color: #334155;
+    }
+    [data-dash-theme="titanium-slate"] .dashboard-main-area {
+      background: #0F172A;
+    }
+    [data-dash-theme="titanium-slate"] .panel,
+    [data-dash-theme="titanium-slate"] .metric-card {
+      background: #1E293B;
+      border-color: #334155;
+      border-radius: 6px;
+    }
+
+    [data-dash-theme="glass-bento"] .sidebar-portal-nav {
+      background: rgba(18, 24, 48, 0.72);
+      backdrop-filter: blur(25px);
+      border-right-color: rgba(255, 255, 255, 0.1);
+    }
+    [data-dash-theme="glass-bento"] .dashboard-main-area {
+      background: radial-gradient(circle at 10% 15%, rgba(99, 102, 241, 0.18) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 75%, rgba(6, 182, 212, 0.15) 0%, transparent 45%),
+                  #070A18;
+    }
+    [data-dash-theme="glass-bento"] .panel,
+    [data-dash-theme="glass-bento"] .metric-card {
+      background: rgba(22, 30, 58, 0.65);
+      backdrop-filter: blur(20px);
+      border-color: rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+    }
+
+    [data-dash-theme="minimal-fintech"] .sidebar-portal-nav {
+      background: #0E121B;
+      border-right-color: #1C2333;
+    }
+    [data-dash-theme="minimal-fintech"] .dashboard-main-area {
+      background: #0A0D14;
+    }
+    [data-dash-theme="minimal-fintech"] .panel,
+    [data-dash-theme="minimal-fintech"] .metric-card {
+      background: #121724;
+      border-color: #1E283A;
+      border-radius: 8px;
+    }
+
     .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .metric-card {
       background: var(--card);
@@ -498,46 +895,145 @@
       </form>
     </div>
 
-    <!-- ADMIN DASHBOARD -->
-    <div id="viewAdminDash" class="admin-dash">
-      <!-- Metrics Grid -->
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-title">Clientes Cadastrados</div>
-          <div class="metric-val" id="metUsers">0</div>
-          <div class="metric-sub" id="metActiveUsers">0 ativos</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Faturamento Total (PIX)</div>
-          <div class="metric-val" id="metRevenue" style="color: var(--green);">R$ 0,00</div>
-          <div class="metric-sub">Pagamentos confirmados</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Créditos Vendidos</div>
-          <div class="metric-val" id="metSold">0</div>
-          <div class="metric-sub">Adquiridos pelos clientes</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Créditos Utilizados</div>
-          <div class="metric-val" id="metUsed" style="color: var(--cyan);">0</div>
-          <div class="metric-sub" id="metServices">0 aparelhos atendidos</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-title">Créditos em Circulação</div>
-          <div class="metric-val" id="metCirculating" style="color: var(--warning);">0</div>
-          <div class="metric-sub">Saldo atual nas carteiras</div>
-        </div>
-      </div>
+    <!-- ADMIN DASHBOARD COM SIDEBAR LATERAL ESQUERDA -->
+    <div id="viewAdminDash" class="admin-dash app-dash-container" data-dash-theme="cyber-dark">
+      <!-- LEFT SIDEBAR ADMIN -->
+      <aside class="sidebar-portal-nav">
+        <div>
+          <div class="sidebar-portal-header">
+            <div class="sidebar-brand-badge">👑</div>
+            <div class="sidebar-brand-info">
+              <div class="sidebar-brand-name">MDM &amp; FRP BRASIL</div>
+              <div class="sidebar-brand-role">PAINEL ADMIN • MASTER</div>
+            </div>
+          </div>
 
-      <!-- Navigation Tabs -->
-      <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('users', this)">👥 Clientes & Carteiras</button>
-        <button class="tab-btn" onclick="switchTab('payments', this)">💳 Pagamentos PIX</button>
-        <button class="tab-btn" onclick="switchTab('audit', this)">📜 Logs de Auditoria</button>
-        <button class="tab-btn" onclick="switchTab('layouts', this)">📐 Disposição da Página Inicial (6)</button>
-        <button class="tab-btn" onclick="switchTab('themes', this)">🎨 Temas & Cores (5)</button>
-        <button class="tab-btn" onclick="switchTab('settings', this)">⚙️ Configurações</button>
-      </div>
+          <!-- FATURAMENTO PIX COMPACTO -->
+          <div class="sidebar-wallet-module">
+            <div class="wallet-module-header">
+              <span class="wallet-module-title">FATURAMENTO TOTAL PIX</span>
+              <span class="wallet-live-dot"></span>
+            </div>
+            <div class="wallet-module-row">
+              <span class="wallet-val" id="sideAdminRevenue" style="color: var(--green);">R$ 0,00</span>
+            </div>
+            <div class="wallet-module-sub" id="sideAdminRevenueSub">Pagamentos confirmados</div>
+          </div>
+
+          <!-- NAVEGAÇÃO ADMIN DO LADO ESQUERDO -->
+          <div class="sidebar-nav-section-title">GESTÃO OPERACIONAL</div>
+          <div class="sidebar-links-list">
+            <button type="button" class="sidebar-nav-btn active" data-tab="overview" onclick="switchTab('overview', this)">
+              <span class="snav-icon">📊</span>
+              <span class="snav-label">Visão Geral &amp; Métricas</span>
+            </button>
+            <button type="button" class="sidebar-nav-btn" data-tab="users" onclick="switchTab('users', this)">
+              <span class="snav-icon">👥</span>
+              <span class="snav-label">Clientes &amp; Carteiras</span>
+              <span class="snav-badge-cyan" id="sideAdminUsersCount">Técnicos</span>
+            </button>
+            <button type="button" class="sidebar-nav-btn" data-tab="payments" onclick="switchTab('payments', this)">
+              <span class="snav-icon">💳</span>
+              <span class="snav-label">Cobranças PIX</span>
+            </button>
+          </div>
+
+          <div class="sidebar-nav-section-title">SISTEMA &amp; AUDITORIA</div>
+          <div class="sidebar-links-list">
+            <button type="button" class="sidebar-nav-btn" data-tab="audit" onclick="switchTab('audit', this)">
+              <span class="snav-icon">📜</span>
+              <span class="snav-label">Logs de Auditoria</span>
+            </button>
+            <button type="button" class="sidebar-nav-btn" data-tab="layouts" onclick="switchTab('layouts', this)">
+              <span class="snav-icon">📐</span>
+              <span class="snav-label">Disposição da Vitrine (6)</span>
+            </button>
+            <button type="button" class="sidebar-nav-btn" data-tab="themes" onclick="switchTab('themes', this)">
+              <span class="snav-icon">🎨</span>
+              <span class="snav-label">Temas &amp; Cores (5)</span>
+            </button>
+            <button type="button" class="sidebar-nav-btn" data-tab="settings" onclick="switchTab('settings', this)">
+              <span class="snav-icon">⚙️</span>
+              <span class="snav-label">Configurações do Servidor</span>
+            </button>
+            <a href="https://wa.me/5519994783127" target="_blank" class="sidebar-nav-btn snav-whatsapp" style="text-decoration:none; color: #00E676;">
+              <span class="snav-icon">💬</span>
+              <span class="snav-label">WhatsApp Admin</span>
+              <span class="snav-badge-green">19 99478-3127</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- FOOTER ADMIN -->
+        <div class="sidebar-portal-footer">
+          <div class="sidebar-theme-selector">
+            <span class="theme-sel-title">Estilo (4 Opções):</span>
+            <div class="theme-sel-btn-group">
+              <button type="button" class="btn-dash-theme active" data-dash-opt="cyber-dark" onclick="setDashboardVisualTheme('cyber-dark', this)" title="Opção 1: Cyber Dark">1</button>
+              <button type="button" class="btn-dash-theme" data-dash-opt="titanium-slate" onclick="setDashboardVisualTheme('titanium-slate', this)" title="Opção 2: Titanium Slate">2</button>
+              <button type="button" class="btn-dash-theme" data-dash-opt="glass-bento" onclick="setDashboardVisualTheme('glass-bento', this)" title="Opção 3: Glassmorphism Bento">3</button>
+              <button type="button" class="btn-dash-theme" data-dash-opt="minimal-fintech" onclick="setDashboardVisualTheme('minimal-fintech', this)" title="Opção 4: Minimalist Fintech">4</button>
+            </div>
+          </div>
+
+          <div class="sidebar-user-card">
+            <div class="sidebar-brand-badge" style="width:32px; height:32px; font-size:16px;">👑</div>
+            <div class="sidebar-user-meta">
+              <div class="sidebar-user-name">Administrador Geral</div>
+              <div class="sidebar-user-status" style="color: #F59E0B;">● Master Root</div>
+            </div>
+            <button type="button" class="sidebar-user-logout" onclick="adminLogout()" title="Sair do Admin">🚪</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ÁREA PRINCIPAL DO ADMIN (DIREITA) -->
+      <div class="dashboard-main-area">
+        <div class="dash-inner-topbar">
+          <div class="dash-breadcrumbs">
+            <span class="bc-home">Administração Master</span>
+            <span class="bc-divider">/</span>
+            <strong class="bc-current" id="adminBreadcrumbCurrent">Visão Geral &amp; Métricas</strong>
+          </div>
+          <div class="dash-topbar-actions">
+            <div class="topbar-balance-badge" style="border-color: rgba(245, 158, 11, 0.4);">
+              <span class="wallet-live-dot" style="background:#F59E0B; box-shadow: 0 0 8px #F59E0B;"></span>
+              <span class="tb-balance-lbl">Servidor:</span>
+              <strong style="color: #F59E0B; font-family: 'JetBrains Mono';">ONLINE (99.98%)</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 1: VISÃO GERAL (OVERVIEW) -->
+        <div id="tabOverviewAdmin" class="dash-tab-pane" style="display: block;">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-title">Clientes Cadastrados</div>
+              <div class="metric-val" id="metUsers">0</div>
+              <div class="metric-sub" id="metActiveUsers">0 ativos</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Faturamento Total (PIX)</div>
+              <div class="metric-val" id="metRevenue" style="color: var(--green);">R$ 0,00</div>
+              <div class="metric-sub">Pagamentos confirmados</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Créditos Vendidos</div>
+              <div class="metric-val" id="metSold">0</div>
+              <div class="metric-sub">Adquiridos pelos clientes</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Créditos Utilizados</div>
+              <div class="metric-val" id="metUsed" style="color: var(--cyan);">0</div>
+              <div class="metric-sub" id="metServices">0 aparelhos atendidos</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Créditos em Circulação</div>
+              <div class="metric-val" id="metCirculating" style="color: var(--warning);">0</div>
+              <div class="metric-sub">Saldo atual nas carteiras</div>
+            </div>
+          </div>
+        </div>
 
       <!-- Tab: Users -->
       <div id="tabUsers" class="panel">
@@ -1479,8 +1975,8 @@
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      </div> <!-- /dashboard-main-area -->
+    </div> <!-- /viewAdminDash -->
   </main>
 
   <!-- MODAL AJUSTE DE CRÉDITO -->
@@ -1879,9 +2375,16 @@
     async function loadMetrics() {
       try {
         const m = await adminApi('/api/v1/admin/metrics');
+        const revFormatted = `R$ ${m.total_revenue_brl.toFixed(2).replace('.', ',')}`;
         document.getElementById("metUsers").innerText = m.total_users;
         document.getElementById("metActiveUsers").innerText = `${m.active_users} ativos`;
-        document.getElementById("metRevenue").innerText = `R$ ${m.total_revenue_brl.toFixed(2).replace('.', ',')}`;
+        document.getElementById("metRevenue").innerText = revFormatted;
+
+        const sideAdminRev = document.getElementById("sideAdminRevenue");
+        if (sideAdminRev) sideAdminRev.innerText = revFormatted;
+        const sideUsersCount = document.getElementById("sideAdminUsersCount");
+        if (sideUsersCount) sideUsersCount.innerText = `${m.total_users} Técnicos`;
+
         document.getElementById("metSold").innerText = m.total_credits_sold;
         document.getElementById("metUsed").innerText = m.total_credits_used;
         document.getElementById("metServices").innerText = `${m.total_services_executed} serviços executados`;
@@ -2850,14 +3353,44 @@
     }
 
     function switchTab(tab, btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById("tabUsers").style.display = tab === 'users' ? 'block' : 'none';
-      document.getElementById("tabPayments").style.display = tab === 'payments' ? 'block' : 'none';
-      document.getElementById("tabAudit").style.display = tab === 'audit' ? 'block' : 'none';
-      document.getElementById("tabLayouts").style.display = tab === 'layouts' ? 'block' : 'none';
-      document.getElementById("tabThemes").style.display = tab === 'themes' ? 'block' : 'none';
-      document.getElementById("tabSettings").style.display = tab === 'settings' ? 'block' : 'none';
+      document.querySelectorAll('.tab-btn, .sidebar-nav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        const matching = document.querySelector(`.sidebar-nav-btn[data-tab="${tab}"]`);
+        if (matching) matching.classList.add('active');
+        const matchingTop = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
+        if (matchingTop) matchingTop.classList.add('active');
+      }
+
+      const tabOver = document.getElementById("tabOverviewAdmin");
+      const tabUsers = document.getElementById("tabUsers");
+      const tabPayments = document.getElementById("tabPayments");
+      const tabAudit = document.getElementById("tabAudit");
+      const tabLayouts = document.getElementById("tabLayouts");
+      const tabThemes = document.getElementById("tabThemes");
+      const tabSettings = document.getElementById("tabSettings");
+
+      if (tabOver) tabOver.style.display = tab === 'overview' ? 'block' : 'none';
+      if (tabUsers) tabUsers.style.display = tab === 'users' ? 'block' : 'none';
+      if (tabPayments) tabPayments.style.display = tab === 'payments' ? 'block' : 'none';
+      if (tabAudit) tabAudit.style.display = tab === 'audit' ? 'block' : 'none';
+      if (tabLayouts) tabLayouts.style.display = tab === 'layouts' ? 'block' : 'none';
+      if (tabThemes) tabThemes.style.display = tab === 'themes' ? 'block' : 'none';
+      if (tabSettings) tabSettings.style.display = tab === 'settings' ? 'block' : 'none';
+
+      const bcEl = document.getElementById("adminBreadcrumbCurrent");
+      const titles = {
+        overview: 'Visão Geral & Métricas',
+        users: 'Gestão de Clientes & Saldo',
+        payments: 'Cobranças & Pagamentos PIX',
+        audit: 'Logs de Auditoria do Sistema',
+        layouts: 'Disposição da Vitrine (6 Opções)',
+        themes: 'Temas & Cores do Portal (5 Opções)',
+        settings: 'Configurações Gerais do Servidor'
+      };
+      if (bcEl && titles[tab]) bcEl.innerText = titles[tab];
+
       if (tab === 'themes') {
         loadThemeSelection();
       }
@@ -2866,10 +3399,21 @@
       }
     }
 
+    function setDashboardVisualTheme(theme, btn) {
+      const vAdmin = document.getElementById("viewAdminDash");
+      if (vAdmin) vAdmin.setAttribute('data-dash-theme', theme);
+      document.querySelectorAll('.btn-dash-theme').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-dash-opt') === theme);
+      });
+      localStorage.setItem('mdm_dash_visual_theme_admin', theme);
+    }
+
     if (adminToken) {
       initAdminDashboard();
       loadThemeSelection();
       loadLayoutSelection();
+      const savedThemeAdmin = localStorage.getItem('mdm_dash_visual_theme_admin') || 'cyber-dark';
+      setDashboardVisualTheme(savedThemeAdmin);
       if (urlParams.get("tab")) {
         const targetTab = urlParams.get("tab");
         const btn = document.querySelector(`button[onclick*="'${targetTab}'"]`);
