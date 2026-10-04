@@ -208,6 +208,27 @@ class ApiClient:
             return True, res
         return False, []
 
+    def register_device_remote(self, serial: str, model: str, manufacturer: str = "Android", lock_status: str = "LOCKED") -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para registrar aparelho."}
+        payload = {"serial": serial.strip(), "model": model.strip(), "manufacturer": manufacturer.strip(), "lock_status": lock_status}
+        return self._request("POST", "/api/v1/client/devices/register", payload)
+
+    def send_device_alarm_remote(self, serial: str) -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para disparar alarme sonoro."}
+        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/alarm")
+
+    def send_device_message_remote(self, serial: str, message: str) -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para enviar mensagem."}
+        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/message", {"message": message})
+
+    def delete_device_remote(self, serial: str) -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para remover aparelho."}
+        return self._request("DELETE", f"/api/v1/client/devices/{urllib.parse.quote(serial)}")
+
     def save_session(self):
         try:
             cipher = _get_encryption_cipher()

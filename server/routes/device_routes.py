@@ -22,11 +22,21 @@ def get_device_state(
         if row:
             lock_status = (row["lock_status"] or "LOCKED").upper()
             op_id = row["operation_id"] or f"OP-ONLINE-{row['id']}"
-            cursor.execute(
-                "UPDATE devices SET last_seen = CURRENT_TIMESTAMP, last_sync = CURRENT_TIMESTAMP WHERE serial = ?",
-                (dev_id,)
-            )
+            cmd = row["pending_command"] if "pending_command" in row.keys() else None
+            msg = row["pending_message"] if "pending_message" in row.keys() else None
+            if cmd:
+                cursor.execute(
+                    "UPDATE devices SET pending_command = NULL, last_seen = CURRENT_TIMESTAMP, last_sync = CURRENT_TIMESTAMP WHERE serial = ?",
+                    (dev_id,)
+                )
+            else:
+                cursor.execute(
+                    "UPDATE devices SET last_seen = CURRENT_TIMESTAMP, last_sync = CURRENT_TIMESTAMP WHERE serial = ?",
+                    (dev_id,)
+                )
         else:
+            cmd = None
+            msg = None
             # Register newly discovered device in default locked state
             cursor.execute("SELECT id FROM users ORDER BY id ASC LIMIT 1")
             u = cursor.fetchone()
@@ -54,6 +64,8 @@ def get_device_state(
         "authorizedBy": "MDM_CLOUD_AUTHORITY",
         "deviceId": dev_id,
         "lock_status": lock_status,
+        "command": cmd,
+        "message": msg,
         "timestamp": int(time.time() * 1000)
     }
 

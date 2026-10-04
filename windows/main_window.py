@@ -31,8 +31,8 @@ class DeviceServiceManagerApp:
         self.root = root
         self.WIN_LOGIN_W = 440
         self.WIN_LOGIN_H = 630
-        self.WIN_MAIN_W = 1120
-        self.WIN_MAIN_H = 670
+        self.WIN_MAIN_W = 1180
+        self.WIN_MAIN_H = 720
 
         # Start application exclusively in compact login gate mode, centered on user monitor
         self.root.update_idletasks()
@@ -71,6 +71,13 @@ class DeviceServiceManagerApp:
         self.current_location = None
         self.location_history = []
         self.map_zoom_level = 1.0
+
+        # Cloud Devices Management State
+        self.cloud_devices_cache = []
+        self.cloud_selected_device = None
+        self.cloud_filter_text = ""
+        self.cloud_filter_status = "TODOS"
+        self.cloud_polling_active = False
 
         # Colors Palette (Cyber Tech Modern)
         self.CLR_BG = "#060911"
@@ -229,9 +236,11 @@ class DeviceServiceManagerApp:
         )
 
         self.tab_gestao = self.tabview.add("⚡ GESTÃO & LIBERAÇÃO")
+        self.tab_cloud = self.tabview.add("☁️ APARELHOS NA NUVEM")
         self.tab_loc = self.tabview.add("📍 LOCALIZAÇÃO & GOOGLE MAPS")
 
         self._build_tab_gestao()
+        self._build_tab_cloud()
         self._build_tab_location()
 
         # Inicializa exibindo exclusivamente o painel de login na frente
@@ -712,6 +721,915 @@ class DeviceServiceManagerApp:
         self._draw_tactical_map(None, None, 0, "", "OFFLINE")
 
     # ========================================================
+    # TAB 2: APARELHOS NA NUVEM (GESTÃO REMOTA DO LOGISTA)
+    # ========================================================
+    def _build_tab_cloud(self):
+        container = ctk.CTkFrame(self.tab_cloud, fg_color="transparent")
+        container.pack(fill="both", expand=True, padx=2, pady=2)
+        container.rowconfigure(1, weight=1)
+        container.columnconfigure(0, weight=1)
+
+        # --- TOP HEADER BAR: INFO DO LOGISTA & FILTROS ---
+        top_bar = ctk.CTkFrame(container, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
+        top_bar.grid(row=0, column=0, sticky="ew", pady=(0, 6))
+
+        # Row 1: Logista Info & Resumo de Aparelhos
+        r1 = ctk.CTkFrame(top_bar, fg_color="transparent")
+        r1.pack(fill="x", padx=12, pady=(8, 4))
+
+        self.lbl_cloud_user_info = ctk.CTkLabel(
+            r1,
+            text="👤 Logista: Faça login para sincronizar | 🪙 Saldo: — | 🌐 Nuvem: CONECTADA",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=self.CLR_CYAN,
+            anchor="w"
+        )
+        self.lbl_cloud_user_info.pack(side="left", fill="x", expand=True)
+
+        self.lbl_cloud_stats_badge = ctk.CTkLabel(
+            r1,
+            text="📱 Total: 0  |  🔒 Bloqueados: 0  |  🟢 Liberados: 0",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#0F1F35",
+            text_color="#38BDF8",
+            corner_radius=6,
+            padx=10,
+            pady=3
+        )
+        self.lbl_cloud_stats_badge.pack(side="right")
+
+        # Row 2: Busca, Filtros e Botões de Ação
+        r2 = ctk.CTkFrame(top_bar, fg_color="transparent")
+        r2.pack(fill="x", padx=12, pady=(0, 8))
+
+        self.ent_cloud_search = ctk.CTkEntry(
+            r2,
+            placeholder_text="🔍 Filtrar por Modelo, Serial/IMEI, Logista ou Cidade...",
+            font=ctk.CTkFont(size=11),
+            fg_color="#0A101D",
+            border_color="#1E293B",
+            corner_radius=6,
+            height=28
+        )
+        self.ent_cloud_search.pack(side="left", fill="x", expand=True, padx=(0, 6))
+        self.ent_cloud_search.bind("<KeyRelease>", lambda e: self._filter_cloud_devices())
+
+        self.combo_cloud_filter = ctk.CTkOptionMenu(
+            r2,
+            values=["Todos os Status", "🔒 Apenas Bloqueados", "🟢 Apenas Liberados", "📍 Apenas com GPS"],
+            font=ctk.CTkFont(size=11),
+            fg_color="#0F172A",
+            button_color=self.CLR_BLUE,
+            button_hover_color=self.CLR_BLUE_HOVER,
+            corner_radius=6,
+            height=28,
+            width=160,
+            command=lambda v: self._filter_cloud_devices()
+        )
+        self.combo_cloud_filter.pack(side="left", padx=(0, 6))
+
+        btn_cloud_refresh = ctk.CTkButton(
+            r2,
+            text="🔄 Atualizar Nuvem",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color=self.CLR_BLUE,
+            hover_color=self.CLR_BLUE_HOVER,
+            corner_radius=6,
+            height=28,
+            width=130,
+            command=self.refresh_cloud_devices_async
+        )
+        btn_cloud_refresh.pack(side="left", padx=(0, 6))
+
+        btn_cloud_add = ctk.CTkButton(
+            r2,
+            text="➕ Cadastrar Aparelho",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="#059669",
+            hover_color=self.CLR_GREEN,
+            corner_radius=6,
+            height=28,
+            width=140,
+            command=self.open_register_cloud_device_dialog
+        )
+        btn_cloud_add.pack(side="left")
+
+        # --- MAIN SPLIT CONTAINER (2 COLUMNS) ---
+        main_split = ctk.CTkFrame(container, fg_color="transparent")
+        main_split.grid(row=1, column=0, sticky="nsew")
+        main_split.columnconfigure(0, weight=5)  # Lista (55%)
+        main_split.columnconfigure(1, weight=4)  # Painel de Comandos (45%)
+        main_split.rowconfigure(0, weight=1)
+
+        # LEFT: Scrollable list of cloud devices
+        left_box = ctk.CTkFrame(main_split, fg_color="transparent")
+        left_box.grid(row=0, column=0, sticky="nsew", padx=(0, 6))
+
+        hdr_list = ctk.CTkFrame(left_box, fg_color="transparent")
+        hdr_list.pack(fill="x", pady=(0, 4))
+        ctk.CTkLabel(
+            hdr_list,
+            text="📱 DISPOSITIVOS VINCULADOS NA NUVEM",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            text_color=self.CLR_CYAN
+        ).pack(side="left")
+
+        self.lbl_cloud_device_count = ctk.CTkLabel(
+            hdr_list,
+            text="0 encontrados",
+            font=ctk.CTkFont(size=10),
+            text_color=self.CLR_TEXT_MUTED
+        )
+        self.lbl_cloud_device_count.pack(side="right")
+
+        self.cloud_scroll = ctk.CTkScrollableFrame(
+            left_box,
+            fg_color="#060C16",
+            corner_radius=8,
+            border_width=1,
+            border_color=self.CLR_BORDER
+        )
+        self.cloud_scroll.pack(fill="both", expand=True)
+
+        # RIGHT: Command and Telemetry Panel
+        right_box = ctk.CTkFrame(main_split, fg_color="transparent")
+        right_box.grid(row=0, column=1, sticky="nsew", padx=(6, 0))
+
+        card_cmd = ctk.CTkFrame(right_box, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
+        card_cmd.pack(fill="both", expand=True)
+
+        ctk.CTkLabel(
+            card_cmd,
+            text="🎯  CENTRO DE COMANDOS DO APARELHO (ONLINE)",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            text_color=self.CLR_CYAN
+        ).pack(anchor="w", padx=12, pady=(8, 4))
+
+        # Selected Device Summary
+        sel_info_box = ctk.CTkFrame(card_cmd, fg_color=self.CLR_CARD_INNER, corner_radius=8, border_width=1, border_color="#101C30")
+        sel_info_box.pack(fill="x", padx=12, pady=(0, 6))
+
+        self.lbl_cloud_sel_model = ctk.CTkLabel(
+            sel_info_box,
+            text="📱 Selecione um aparelho na lista",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color="#FFFFFF",
+            anchor="w"
+        )
+        self.lbl_cloud_sel_model.pack(fill="x", padx=10, pady=(6, 2))
+
+        self.lbl_cloud_sel_serial = ctk.CTkLabel(
+            sel_info_box,
+            text="Serial / IMEI: —",
+            font=ctk.CTkFont(family="Consolas", size=10),
+            text_color=self.CLR_CYAN,
+            anchor="w"
+        )
+        self.lbl_cloud_sel_serial.pack(fill="x", padx=10, pady=1)
+
+        self.lbl_cloud_sel_owner = ctk.CTkLabel(
+            sel_info_box,
+            text="Logista: —",
+            font=ctk.CTkFont(size=10),
+            text_color=self.CLR_TEXT_MUTED,
+            anchor="w"
+        )
+        self.lbl_cloud_sel_owner.pack(fill="x", padx=10, pady=1)
+
+        row_stat = ctk.CTkFrame(sel_info_box, fg_color="transparent")
+        row_stat.pack(fill="x", padx=10, pady=2)
+
+        self.lbl_cloud_sel_status = ctk.CTkLabel(
+            row_stat,
+            text="Status: —",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            text_color="#FFFFFF",
+            anchor="w"
+        )
+        self.lbl_cloud_sel_status.pack(side="left")
+
+        self.lbl_cloud_sel_battery = ctk.CTkLabel(
+            row_stat,
+            text="🔋 —%",
+            font=ctk.CTkFont(size=10),
+            text_color="#94A3B8"
+        )
+        self.lbl_cloud_sel_battery.pack(side="right")
+
+        self.lbl_cloud_sel_loc = ctk.CTkLabel(
+            sel_info_box,
+            text="📍 Localização: —",
+            font=ctk.CTkFont(size=9),
+            text_color="#64748B",
+            anchor="w"
+        )
+        self.lbl_cloud_sel_loc.pack(fill="x", padx=10, pady=(1, 6))
+
+        # Command Action Buttons Grid
+        f_actions = ctk.CTkFrame(card_cmd, fg_color="transparent")
+        f_actions.pack(fill="x", padx=12, pady=(0, 6))
+        f_actions.columnconfigure(0, weight=1)
+        f_actions.columnconfigure(1, weight=1)
+
+        # 1. BLOQUEAR REMOTO
+        self.btn_cloud_cmd_lock = ctk.CTkButton(
+            f_actions,
+            text="🔒 BLOQUEAR (NUVEM)",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#991B1B",
+            hover_color="#DC2626",
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=30,
+            command=self.cloud_action_lock
+        )
+        self.btn_cloud_cmd_lock.grid(row=0, column=0, sticky="ew", padx=(0, 3), pady=2)
+
+        # 2. LIBERAR REMOTO
+        self.btn_cloud_cmd_unlock = ctk.CTkButton(
+            f_actions,
+            text="🔓 LIBERAR (NUVEM)",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#047857",
+            hover_color="#059669",
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=30,
+            command=self.cloud_action_unlock
+        )
+        self.btn_cloud_cmd_unlock.grid(row=0, column=1, sticky="ew", padx=(3, 0), pady=2)
+
+        # 3. RASTREAR GPS
+        self.btn_cloud_cmd_loc = ctk.CTkButton(
+            f_actions,
+            text="📍 SOLICITAR GPS",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#0284C7",
+            hover_color="#0369A1",
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=30,
+            command=self.cloud_action_request_location
+        )
+        self.btn_cloud_cmd_loc.grid(row=1, column=0, sticky="ew", padx=(0, 3), pady=2)
+
+        # 4. ABRIR MAPS
+        self.btn_cloud_cmd_maps = ctk.CTkButton(
+            f_actions,
+            text="🗺️ GOOGLE MAPS",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#1E293B",
+            hover_color="#334155",
+            text_color="#38BDF8",
+            corner_radius=6,
+            height=30,
+            command=self.cloud_action_open_maps
+        )
+        self.btn_cloud_cmd_maps.grid(row=1, column=1, sticky="ew", padx=(3, 0), pady=2)
+
+        # 5. ALARME / SIRENE
+        self.btn_cloud_cmd_alarm = ctk.CTkButton(
+            f_actions,
+            text="🚨 DISPARAR ALARME",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#C2410C",
+            hover_color="#EA580C",
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=30,
+            command=self.cloud_action_trigger_alarm
+        )
+        self.btn_cloud_cmd_alarm.grid(row=2, column=0, sticky="ew", padx=(0, 3), pady=2)
+
+        # 6. ENVIAR MENSAGEM
+        self.btn_cloud_cmd_msg = ctk.CTkButton(
+            f_actions,
+            text="✉️ ENVIAR MENSAGEM",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#4F46E5",
+            hover_color="#6366F1",
+            text_color="#FFFFFF",
+            corner_radius=6,
+            height=30,
+            command=self.cloud_action_send_message
+        )
+        self.btn_cloud_cmd_msg.grid(row=2, column=1, sticky="ew", padx=(3, 0), pady=2)
+
+        # 7. CARREGAR NA BANCADA (USB)
+        self.btn_cloud_load_bench = ctk.CTkButton(
+            card_cmd,
+            text="⚡ CARREGAR NA BANCADA USB (IR PARA GESTÃO)",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="#0F243A",
+            hover_color="#1E3A8A",
+            text_color=self.CLR_CYAN,
+            corner_radius=6,
+            border_width=1,
+            border_color="#0284C7",
+            height=32,
+            command=self.cloud_action_load_to_bench
+        )
+        self.btn_cloud_load_bench.pack(fill="x", padx=12, pady=(2, 6))
+
+        # Cloud Command Output Log
+        ctk.CTkLabel(
+            card_cmd,
+            text="📜 RETORNO DOS COMANDOS CLOUD",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            text_color=self.CLR_TEXT_MUTED
+        ).pack(anchor="w", padx=12, pady=(4, 2))
+
+        self.txt_cloud_log = ctk.CTkTextbox(
+            card_cmd,
+            fg_color=self.CLR_CARD_INNER,
+            border_color="#101C30",
+            corner_radius=6,
+            font=ctk.CTkFont(family="Consolas", size=9),
+            text_color="#E2E8F0"
+        )
+        self.txt_cloud_log.pack(fill="both", expand=True, padx=12, pady=(0, 8))
+        self.cloud_log("[NUVEM] Centro de Dispositivos e Comandos pronto.")
+
+    def cloud_log(self, message):
+        try:
+            ts = datetime.now().strftime("%H:%M:%S")
+            line = f"[{ts}] {message}\n"
+            if hasattr(self, 'txt_cloud_log') and self.txt_cloud_log:
+                self.txt_cloud_log.insert(tk.END, line)
+                self.txt_cloud_log.see(tk.END)
+        except Exception:
+            pass
+
+    def refresh_cloud_devices_async(self):
+        if not self.api_client.is_logged_in():
+            self.cloud_log("[AVISO] Faça login para carregar os aparelhos da sua conta.")
+            return
+
+        def work():
+            ok, devices = self.api_client.get_client_devices()
+            def done():
+                if ok and isinstance(devices, list):
+                    self.cloud_devices_cache = devices
+                    user = self.api_client.user or {}
+                    name = user.get("name", "Logista")
+                    email = user.get("email", "")
+                    bal = user.get("balance_credits", 0)
+                    if hasattr(self, 'lbl_cloud_user_info') and self.lbl_cloud_user_info:
+                        self.lbl_cloud_user_info.configure(
+                            text=f"👤 Logista: {name} ({email}) | 🪙 Saldo: {bal} Créditos | 🌐 Nuvem: SINCRONIZADA"
+                        )
+
+                    total = len(devices)
+                    locked = sum(1 for d in devices if (d.get("lock_status") or "").upper() == "LOCKED")
+                    unlocked = total - locked
+                    if hasattr(self, 'lbl_cloud_stats_badge') and self.lbl_cloud_stats_badge:
+                        self.lbl_cloud_stats_badge.configure(
+                            text=f"📱 Total: {total}  |  🔒 Bloqueados: {locked}  |  🟢 Liberados: {unlocked}"
+                        )
+                    self._filter_cloud_devices()
+                    self.cloud_log(f"[SYNC] {total} aparelho(s) sincronizado(s) da nuvem com sucesso.")
+                else:
+                    self.cloud_log("[ERRO] Falha ao sincronizar aparelhos da nuvem.")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def _filter_cloud_devices(self):
+        query = self.ent_cloud_search.get().strip().lower() if hasattr(self, 'ent_cloud_search') else ""
+        filt = self.combo_cloud_filter.get() if hasattr(self, 'combo_cloud_filter') else "Todos os Status"
+
+        filtered = []
+        for d in self.cloud_devices_cache:
+            st = (d.get("lock_status") or "").upper()
+            if "Bloqueados" in filt and st != "LOCKED":
+                continue
+            if "Liberados" in filt and st not in ("UNLOCKED", "PAID"):
+                continue
+            if "GPS" in filt and (d.get("latitude") is None or d.get("longitude") is None):
+                continue
+
+            if query:
+                haystack = f"{d.get('serial', '')} {d.get('model', '')} {d.get('manufacturer', '')} {d.get('owner_name', '')} {d.get('owner_email', '')} {d.get('city', '')} {d.get('neighborhood', '')}".lower()
+                if query not in haystack:
+                    continue
+
+            filtered.append(d)
+
+        self._render_cloud_device_cards(filtered)
+
+    def _render_cloud_device_cards(self, devices):
+        if not hasattr(self, 'cloud_scroll') or not self.cloud_scroll:
+            return
+        # Limpar widgets anteriores no scrollable frame
+        for child in self.cloud_scroll.winfo_children():
+            child.destroy()
+
+        if not devices:
+            self.lbl_cloud_device_count.configure(text="0 encontrados")
+            empty_box = ctk.CTkFrame(self.cloud_scroll, fg_color="transparent")
+            empty_box.pack(fill="both", expand=True, pady=40)
+            ctk.CTkLabel(
+                empty_box,
+                text="☁️ Nenhum aparelho encontrado na nuvem",
+                font=ctk.CTkFont(size=14, weight="bold"),
+                text_color=self.CLR_TEXT_MUTED
+            ).pack(pady=(0, 6))
+            ctk.CTkLabel(
+                empty_box,
+                text="Os aparelhos vinculados ao seu login aparecerão aqui em tempo real assim que o APK for ativado.\nVocê também pode cadastrar um aparelho manualmente clicando abaixo.",
+                font=ctk.CTkFont(size=10),
+                text_color="#64748B",
+                justify="center"
+            ).pack(pady=(0, 14))
+            ctk.CTkButton(
+                empty_box,
+                text="➕ Cadastrar Aparelho na Nuvem",
+                font=ctk.CTkFont(size=11, weight="bold"),
+                fg_color="#059669",
+                hover_color=self.CLR_GREEN,
+                corner_radius=6,
+                height=30,
+                width=200,
+                command=self.open_register_cloud_device_dialog
+            ).pack()
+            return
+
+        self.lbl_cloud_device_count.configure(text=f"{len(devices)} aparelho(s)")
+
+        # Manter seleção se possível ou selecionar o primeiro
+        if not self.cloud_selected_device or not any(d.get("serial") == self.cloud_selected_device.get("serial") for d in devices):
+            self.cloud_selected_device = devices[0]
+            self._update_selected_cloud_panel(devices[0])
+
+        for dev in devices:
+            serial = dev.get("serial", "DESCONHECIDO")
+            is_sel = (self.cloud_selected_device and self.cloud_selected_device.get("serial") == serial)
+            st = (dev.get("lock_status") or "LOCKED").upper()
+            is_locked = (st == "LOCKED")
+
+            card = ctk.CTkFrame(
+                self.cloud_scroll,
+                fg_color="#0A182E" if is_sel else self.CLR_CARD,
+                corner_radius=8,
+                border_width=2 if is_sel else 1,
+                border_color="#00E5FF" if is_sel else self.CLR_BORDER
+            )
+            card.pack(fill="x", pady=3, padx=2)
+
+            # Clique no card seleciona
+            card.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            # Header do Card: Modelo & Badge
+            c_hdr = ctk.CTkFrame(card, fg_color="transparent")
+            c_hdr.pack(fill="x", padx=10, pady=(6, 2))
+            c_hdr.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            model_txt = f"📱 {dev.get('model', 'Smartphone')} ({dev.get('manufacturer', 'Android')})"
+            lbl_m = ctk.CTkLabel(
+                c_hdr,
+                text=model_txt,
+                font=ctk.CTkFont(size=11, weight="bold"),
+                text_color="#FFFFFF" if is_sel else "#E2E8F0",
+                anchor="w"
+            )
+            lbl_m.pack(side="left")
+            lbl_m.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            badge_text = "🔒 BLOQUEADO" if is_locked else "🟢 LIBERADO"
+            badge_fg = "#450A0A" if is_locked else "#022C22"
+            badge_text_clr = "#F87171" if is_locked else "#34D399"
+            lbl_badge = ctk.CTkLabel(
+                c_hdr,
+                text=badge_text,
+                font=ctk.CTkFont(size=9, weight="bold"),
+                fg_color=badge_fg,
+                text_color=badge_text_clr,
+                corner_radius=4,
+                padx=6,
+                pady=1
+            )
+            lbl_badge.pack(side="right")
+
+            # Linha 2: Serial / Logista
+            c_row2 = ctk.CTkFrame(card, fg_color="transparent")
+            c_row2.pack(fill="x", padx=10, pady=1)
+            c_row2.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            lbl_s = ctk.CTkLabel(
+                c_row2,
+                text=f"Serial: {serial}",
+                font=ctk.CTkFont(family="Consolas", size=9),
+                text_color=self.CLR_CYAN,
+                anchor="w"
+            )
+            lbl_s.pack(side="left")
+            lbl_s.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            owner_str = f"👤 {dev.get('owner_name', 'Logista')} ({dev.get('owner_email', '')})"
+            lbl_o = ctk.CTkLabel(
+                c_row2,
+                text=owner_str,
+                font=ctk.CTkFont(size=9),
+                text_color=self.CLR_TEXT_MUTED,
+                anchor="e"
+            )
+            lbl_o.pack(side="right")
+            lbl_o.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            # Linha 3: Telemetria (Bateria, Rede, Local)
+            c_row3 = ctk.CTkFrame(card, fg_color="transparent")
+            c_row3.pack(fill="x", padx=10, pady=1)
+            c_row3.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            bat = dev.get("battery_level")
+            bat_str = f"🔋 {bat}%" if bat is not None else "🔋 —"
+            net_str = dev.get("network_status") or "Online"
+            loc_str = dev.get("city") or "Localização gravada"
+
+            lbl_t = ctk.CTkLabel(
+                c_row3,
+                text=f"{bat_str} | {net_str} | 📍 {loc_str}",
+                font=ctk.CTkFont(size=9),
+                text_color="#94A3B8",
+                anchor="w"
+            )
+            lbl_t.pack(side="left")
+            lbl_t.bind("<Button-1>", lambda e, d=dev: self._select_cloud_device(d))
+
+            # Linha 4: Botões Rápidos Inline
+            c_btns = ctk.CTkFrame(card, fg_color="transparent")
+            c_btns.pack(fill="x", padx=10, pady=(3, 6))
+
+            btn_l = ctk.CTkButton(
+                c_btns,
+                text="🔒 Bloquear",
+                font=ctk.CTkFont(size=9, weight="bold"),
+                fg_color="#7F1D1D",
+                hover_color="#DC2626",
+                text_color="#FFFFFF",
+                corner_radius=4,
+                height=22,
+                width=75,
+                command=lambda d=dev: self.cloud_quick_lock(d)
+            )
+            btn_l.pack(side="left", padx=(0, 4))
+
+            btn_u = ctk.CTkButton(
+                c_btns,
+                text="🔓 Liberar",
+                font=ctk.CTkFont(size=9, weight="bold"),
+                fg_color="#064E3B",
+                hover_color="#059669",
+                text_color="#FFFFFF",
+                corner_radius=4,
+                height=22,
+                width=75,
+                command=lambda d=dev: self.cloud_quick_unlock(d)
+            )
+            btn_u.pack(side="left", padx=(0, 4))
+
+            btn_gps = ctk.CTkButton(
+                c_btns,
+                text="📍 GPS",
+                font=ctk.CTkFont(size=9),
+                fg_color="#075985",
+                hover_color="#0284C7",
+                corner_radius=4,
+                height=22,
+                width=60,
+                command=lambda d=dev: self.cloud_quick_gps(d)
+            )
+            btn_gps.pack(side="left", padx=(0, 4))
+
+            btn_b = ctk.CTkButton(
+                c_btns,
+                text="⚡ Bancada",
+                font=ctk.CTkFont(size=9),
+                fg_color="#1E293B",
+                hover_color="#334155",
+                text_color=self.CLR_CYAN,
+                corner_radius=4,
+                height=22,
+                width=75,
+                command=lambda d=dev: self.cloud_quick_bench(d)
+            )
+            btn_b.pack(side="right")
+
+    def _select_cloud_device(self, dev):
+        self.cloud_selected_device = dev
+        self._update_selected_cloud_panel(dev)
+        self._filter_cloud_devices()
+
+    def _update_selected_cloud_panel(self, dev):
+        if not dev:
+            return
+        model = dev.get("model", "Android")
+        mfg = dev.get("manufacturer", "")
+        self.lbl_cloud_sel_model.configure(text=f"📱 {model} ({mfg})")
+        self.lbl_cloud_sel_serial.configure(text=f"Serial / IMEI: {dev.get('serial', '—')}")
+        self.lbl_cloud_sel_owner.configure(text=f"Logista: {dev.get('owner_name', '—')} ({dev.get('owner_email', '')})")
+
+        st = (dev.get("lock_status") or "LOCKED").upper()
+        if st == "LOCKED":
+            self.lbl_cloud_sel_status.configure(text="Status: 🔒 BLOQUEADO (KIOSK ATIVO)", text_color="#EF4444")
+        else:
+            self.lbl_cloud_sel_status.configure(text="Status: 🟢 LIBERADO (USO NORMAL)", text_color="#10B981")
+
+        bat = dev.get("battery_level")
+        bat_str = f"🔋 {bat}%" if bat is not None else "🔋 —"
+        net_str = dev.get("network_status") or "Wi-Fi / 4G"
+        self.lbl_cloud_sel_battery.configure(text=f"{bat_str} | {net_str}")
+
+        addr = dev.get("address_formatted") or dev.get("city") or "Coordenadas não registradas"
+        self.lbl_cloud_sel_loc.configure(text=f"📍 {addr}")
+
+    # ========================================================
+    # AÇÕES DO PAINEL REMOTO DE NUVEM
+    # ========================================================
+    def cloud_action_lock(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
+            return
+        self.cloud_quick_lock(self.cloud_selected_device)
+
+    def cloud_quick_lock(self, dev):
+        serial = dev.get("serial")
+        if not serial:
+            return
+        if not self.api_client.is_logged_in():
+            messagebox.showwarning("Login Necessário", "Faça login no sistema para enviar comandos na nuvem.")
+            return
+
+        res = messagebox.askyesno(
+            "Confirmar Bloqueio Online",
+            f"Deseja enviar comando de BLOQUEIO ONLINE para o aparelho:\n\n"
+            f"Aparelho: {dev.get('model', 'Smartphone')}\n"
+            f"Serial / IMEI: {serial}\n"
+            f"Logista: {dev.get('owner_name', '')}\n\n"
+            f"O celular travará imediatamente na tela Kiosk com sua chave PIX via internet (sem precisar de USB)."
+        )
+        if not res:
+            return
+
+        self.cloud_log(f"[ORDEM] Enviando BLOQUEIO REMOTO para {serial}...")
+        def work():
+            ok, resp = self.api_client.lock_device_remote(serial)
+            def done():
+                if ok:
+                    self.cloud_log(f"[SUCESSO] 🔒 Aparelho {serial} BLOQUEADO VIA NUVEM!")
+                    dev["lock_status"] = "LOCKED"
+                    if self.cloud_selected_device and self.cloud_selected_device.get("serial") == serial:
+                        self._update_selected_cloud_panel(dev)
+                    self._filter_cloud_devices()
+                    messagebox.showinfo("Bloqueio Enviado", f"Comando de bloqueio enviado com sucesso para {serial}!\nO celular bloqueará imediatamente via Wi-Fi/4G.")
+                else:
+                    self.cloud_log(f"[ERRO] Falha no bloqueio: {resp.get('error', '')}")
+                    messagebox.showerror("Erro", f"Falha no bloqueio remoto: {resp.get('error', '')}")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def cloud_action_unlock(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
+            return
+        self.cloud_quick_unlock(self.cloud_selected_device)
+
+    def cloud_quick_unlock(self, dev):
+        serial = dev.get("serial")
+        if not serial:
+            return
+        if not self.api_client.is_logged_in():
+            messagebox.showwarning("Login Necessário", "Faça login no sistema para enviar comandos na nuvem.")
+            return
+
+        res = messagebox.askyesno(
+            "Confirmar Liberação Online",
+            f"Deseja enviar comando de LIBERAÇÃO / DESBLOQUEIO para o aparelho:\n\n"
+            f"Aparelho: {dev.get('model', 'Smartphone')}\n"
+            f"Serial / IMEI: {serial}\n"
+            f"Logista: {dev.get('owner_name', '')}\n\n"
+            f"O celular será destravado imediatamente via internet (sem precisar de USB)."
+        )
+        if not res:
+            return
+
+        self.cloud_log(f"[ORDEM] Enviando LIBERAÇÃO REMOTA para {serial}...")
+        def work():
+            ok, resp = self.api_client.unlock_device_remote(serial)
+            def done():
+                if ok:
+                    self.cloud_log(f"[SUCESSO] 🔓 Aparelho {serial} LIBERADO VIA NUVEM!")
+                    dev["lock_status"] = "UNLOCKED"
+                    if self.cloud_selected_device and self.cloud_selected_device.get("serial") == serial:
+                        self._update_selected_cloud_panel(dev)
+                    self._filter_cloud_devices()
+                    messagebox.showinfo("Liberação Enviada", f"Comando de liberação enviado com sucesso para {serial}!\nO aparelho foi destravado via Wi-Fi/4G.")
+                else:
+                    self.cloud_log(f"[ERRO] Falha na liberação: {resp.get('error', '')}")
+                    messagebox.showerror("Erro", f"Falha na liberação remota: {resp.get('error', '')}")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def cloud_action_request_location(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
+            return
+        self.cloud_quick_gps(self.cloud_selected_device)
+
+    def cloud_quick_gps(self, dev):
+        serial = dev.get("serial")
+        if not serial:
+            return
+        self.cloud_log(f"[ORDEM] Solicitando atualização de GPS para {serial}...")
+        def work():
+            ok, resp = self.api_client.request_device_location_remote(serial)
+            def done():
+                if ok:
+                    self.cloud_log(f"[SUCESSO] 📡 Sinal de rastreamento enviado para {serial}. Aguardando coordenadas...")
+                    self.safe_after(3000, self.refresh_cloud_devices_async)
+                else:
+                    self.cloud_log(f"[ERRO] Falha ao solicitar GPS: {resp.get('error', '')}")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def cloud_action_open_maps(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
+            return
+        dev = self.cloud_selected_device
+        lat = dev.get("latitude")
+        lon = dev.get("longitude")
+        if lat is not None and lon is not None:
+            url = f"https://www.google.com/maps?q={lat},{lon}"
+            webbrowser.open(url)
+            self.cloud_log(f"[MAPS] Abrindo Google Maps: {url}")
+        else:
+            messagebox.showinfo("Localização", "Este aparelho ainda não enviou coordenadas GPS.\nClique em 'SOLICITAR GPS' para requisitar.")
+
+    def cloud_action_trigger_alarm(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
+            return
+        serial = self.cloud_selected_device.get("serial")
+        res = messagebox.askyesno(
+            "Disparar Alarme Sonoro",
+            f"Deseja acionar o alarme / sirene sonora no smartphone:\n\n"
+            f"Serial: {serial}\n\n"
+            f"O aparelho tocará um bipe de localização em volume alto."
+        )
+        if not res:
+            return
+
+        self.cloud_log(f"[ORDEM] Disparando ALARME SONORO para {serial}...")
+        def work():
+            ok, resp = self.api_client.send_device_alarm_remote(serial)
+            def done():
+                if ok:
+                    self.cloud_log(f"[SUCESSO] 🚨 Ordem de ALARME enviada com sucesso para {serial}!")
+                    messagebox.showinfo("Alarme Enviado", f"Ordem de alarme sonoro enviada para {serial}!\nO smartphone emitirá o som assim que sincronizar com a nuvem.")
+                else:
+                    self.cloud_log(f"[ERRO] Falha ao disparar alarme: {resp.get('error', '')}")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def cloud_action_send_message(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
+            return
+        serial = self.cloud_selected_device.get("serial")
+        msg = simpledialog.askstring(
+            "Enviar Mensagem Remota na Tela",
+            f"Digite o texto do aviso que será exibido no aparelho {serial}:",
+            initialvalue="Aviso MDM: Favor entrar em contato com a loja para regularizar seu aparelho."
+        )
+        if not msg or not msg.strip():
+            return
+
+        self.cloud_log(f"[ORDEM] Enviando mensagem de tela para {serial}: '{msg.strip()}'...")
+        def work():
+            ok, resp = self.api_client.send_device_message_remote(serial, msg.strip())
+            def done():
+                if ok:
+                    self.cloud_log(f"[SUCESSO] ✉️ Mensagem entregue na nuvem para {serial}!")
+                    messagebox.showinfo("Mensagem Enviada", f"Mensagem enviada com sucesso para {serial}!\nSerá exibida na tela do smartphone.")
+                else:
+                    self.cloud_log(f"[ERRO] Falha ao enviar mensagem: {resp.get('error', '')}")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def cloud_action_load_to_bench(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
+            return
+        self.cloud_quick_bench(self.cloud_selected_device)
+
+    def cloud_quick_bench(self, dev):
+        serial = dev.get("serial")
+        model = dev.get("model", "Android Device")
+        self.selected_device_serial = serial
+        try:
+            self.combo_devices.set(f"{model} ({serial})")
+        except Exception:
+            pass
+        self.tabview.set("⚡ GESTÃO & LIBERAÇÃO")
+        self.log(f"[BANCADA] Aparelho da nuvem {serial} ({model}) carregado para operações de bancada!")
+        self.cloud_log(f"[BANCADA] Aparelho {serial} transferido para a aba de bancada local USB.")
+
+    def open_register_cloud_device_dialog(self):
+        if not self.api_client.is_logged_in():
+            messagebox.showwarning("Login Necessário", "Faça login na sua conta para cadastrar aparelhos na nuvem.")
+            return
+
+        dialog = ctk.CTkToplevel(self.root)
+        dialog.title("Cadastrar Aparelho na Nuvem — MDM & FRP BRASIL")
+        dialog.geometry("450x380")
+        dialog.resizable(False, False)
+        dialog.transient(self.root)
+        dialog.grab_set()
+
+        # Center on parent
+        self.root.update_idletasks()
+        rx = self.root.winfo_x()
+        ry = self.root.winfo_y()
+        rw = self.root.winfo_width()
+        rh = self.root.winfo_height()
+        pos_x = max(0, rx + (rw - 450) // 2)
+        pos_y = max(0, ry + (rh - 380) // 2)
+        dialog.geometry(f"450x380+{pos_x}+{pos_y}")
+
+        f = ctk.CTkFrame(dialog, fg_color=self.CLR_CARD, corner_radius=12)
+        f.pack(fill="both", expand=True, padx=16, pady=16)
+
+        ctk.CTkLabel(f, text="📱 CADASTRAR NOVO APARELHO NA NUVEM", font=ctk.CTkFont(size=12, weight="bold"), text_color=self.CLR_CYAN).pack(pady=(12, 12))
+
+        ctk.CTkLabel(f, text="Modelo do Aparelho (ex: Samsung Galaxy A15):", font=ctk.CTkFont(size=10, weight="bold"), text_color=self.CLR_TEXT_MUTED, anchor="w").pack(fill="x", padx=16, pady=(0, 2))
+        ent_mod = ctk.CTkEntry(f, placeholder_text="Samsung Galaxy A15 5G", font=ctk.CTkFont(size=11), fg_color="#0A101D", height=30)
+        ent_mod.pack(fill="x", padx=16, pady=(0, 8))
+
+        ctk.CTkLabel(f, text="Serial / IMEI / Device ID:", font=ctk.CTkFont(size=10, weight="bold"), text_color=self.CLR_TEXT_MUTED, anchor="w").pack(fill="x", padx=16, pady=(0, 2))
+        ent_ser = ctk.CTkEntry(f, placeholder_text="R58X12345ABC", font=ctk.CTkFont(family="Consolas", size=11), fg_color="#0A101D", height=30)
+        ent_ser.pack(fill="x", padx=16, pady=(0, 8))
+
+        ctk.CTkLabel(f, text="Status Inicial de Segurança:", font=ctk.CTkFont(size=10, weight="bold"), text_color=self.CLR_TEXT_MUTED, anchor="w").pack(fill="x", padx=16, pady=(0, 2))
+        combo_st = ctk.CTkOptionMenu(
+            f,
+            values=["LOCKED (Bloqueado / Kiosk Ativo)", "UNLOCKED (Liberado / Uso Normal)"],
+            font=ctk.CTkFont(size=11),
+            fg_color="#0F172A",
+            button_color=self.CLR_BLUE,
+            height=30
+        )
+        combo_st.pack(fill="x", padx=16, pady=(0, 16))
+
+        def submit():
+            mod = ent_mod.get().strip() or "Android Smartphone"
+            ser = ent_ser.get().strip()
+            st_raw = combo_st.get()
+            st_val = "LOCKED" if "LOCKED" in st_raw else "UNLOCKED"
+
+            if not ser:
+                messagebox.showwarning("Aviso", "Digite o Serial ou IMEI do aparelho.")
+                return
+
+            def work():
+                ok, res = self.api_client.register_device_remote(ser, mod, "Android", st_val)
+                def done():
+                    if ok:
+                        messagebox.showinfo("Sucesso", f"Aparelho {mod} ({ser}) cadastrado na sua conta com sucesso!")
+                        dialog.destroy()
+                        self.refresh_cloud_devices_async()
+                    else:
+                        messagebox.showerror("Erro", f"Falha ao cadastrar: {res.get('error', '')}")
+                self.safe_after(0, done)
+            threading.Thread(target=work, daemon=True).start()
+
+        btn_save = ctk.CTkButton(
+            f,
+            text="💾 Salvar Aparelho na Nuvem",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="#059669",
+            hover_color=self.CLR_GREEN,
+            height=34,
+            command=submit
+        )
+        btn_save.pack(fill="x", padx=16, pady=(0, 6))
+
+    def _start_cloud_polling(self):
+        if getattr(self, 'cloud_polling_active', False):
+            return
+        self.cloud_polling_active = True
+
+        def poll_loop():
+            while getattr(self, 'cloud_polling_active', False):
+                time.sleep(18)  # Atualização periódica a cada 18 segundos
+                if hasattr(self, 'api_client') and self.api_client.is_logged_in():
+                    try:
+                        self.refresh_cloud_devices_async()
+                    except Exception:
+                        pass
+
+        threading.Thread(target=poll_loop, daemon=True).start()
+
+    # ========================================================
     # LOGO LOADER
     # ========================================================
     def _load_header_logo(self):
@@ -999,6 +1917,10 @@ class DeviceServiceManagerApp:
             self.lbl_wallet_badge.configure(text=f"🪙 {bal} Créditos")
             self.lbl_wallet_badge.pack(side="left", padx=(0, 6), before=self.lbl_connection_badge)
             self.btn_recharge.pack(side="left", padx=(0, 6), before=self.lbl_connection_badge)
+            if hasattr(self, 'lbl_cloud_user_info') and self.lbl_cloud_user_info:
+                self.lbl_cloud_user_info.configure(
+                    text=f"👤 Logista: {user.get('name', 'Logista')} ({user.get('email', '')}) | 🪙 Saldo: {bal} Créditos | 🌐 Nuvem: SINCRONIZADA"
+                )
         else:
             self.btn_account.configure(text="👤 Entrar / Login", command=self.show_login_gate)
             self.lbl_wallet_badge.pack_forget()
@@ -1234,6 +2156,8 @@ class DeviceServiceManagerApp:
         self._update_auth_ui()
         self.sync_official_pix()
         self.refresh_devices_async()
+        self.refresh_cloud_devices_async()
+        self._start_cloud_polling()
 
     def sync_official_pix(self):
         def work():

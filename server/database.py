@@ -296,6 +296,10 @@ def init_db():
             cursor.execute("ALTER TABLE devices ADD COLUMN state TEXT;")
         if "last_sync" not in dev_cols:
             cursor.execute("ALTER TABLE devices ADD COLUMN last_sync TIMESTAMP;")
+        if "pending_command" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN pending_command TEXT;")
+        if "pending_message" not in dev_cols:
+            cursor.execute("ALTER TABLE devices ADD COLUMN pending_message TEXT;")
 
         # Create indexes
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);")
