@@ -205,7 +205,7 @@
     .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
 
     /* Main Container */
-    main { flex: 1; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; display: flex; min-height: calc(100vh - 64px); }
+    main { flex: 1; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; display: flex; min-height: 100vh; }
     
     /* Floating Auth Overlay with Blur */
     .auth-floating-overlay {
@@ -629,7 +629,7 @@
       display: flex !important;
       width: 100% !important;
       max-width: 100% !important;
-      min-height: calc(100vh - 64px);
+      min-height: 100vh !important;
       margin: 0 !important;
       padding: 0 !important;
       position: relative;
@@ -639,66 +639,50 @@
       display: none;
     }
 
-    /* BARRA LATERAL FIXADA PERMANENTEMENTE À ESQUERDA */
+    /* BARRA LATERAL FIXADA PERMANENTEMENTE À ESQUERDA (LINEAR STUDIO) */
     .sidebar-portal-nav {
-      width: 270px;
-      min-width: 270px;
-      max-width: 270px;
-      background: #080D1A;
-      border-right: 1px solid rgba(0, 229, 255, 0.14);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 18px 12px 20px;
+      width: 250px !important;
+      min-width: 250px !important;
+      max-width: 250px !important;
+      background: #080D1A !important;
+      border-right: 1px solid rgba(0, 229, 255, 0.12) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      padding: 20px 14px !important;
       position: fixed !important;
-      top: 64px !important;
+      top: 0 !important;
       left: 0 !important;
       bottom: 0 !important;
-      height: calc(100vh - 64px) !important;
+      height: 100vh !important;
       overflow-y: auto !important;
-      z-index: 950 !important;
-      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45);
-      transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000 !important;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+      transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
     .sidebar-portal-nav::-webkit-scrollbar {
-      width: 5px;
+      width: 4px;
     }
     .sidebar-portal-nav::-webkit-scrollbar-track {
       background: transparent;
     }
     .sidebar-portal-nav::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 4px;
     }
 
-    /* ÁREA PRINCIPAL DO DASHBOARD */
+    /* ÁREA PRINCIPAL DO DASHBOARD (LINEAR STUDIO) */
     .dashboard-main-area {
-      margin-left: 270px !important;
-      width: calc(100% - 270px) !important;
+      margin-left: 250px !important;
+      width: calc(100% - 250px) !important;
       min-width: 0 !important;
       flex: 1 !important;
       display: flex !important;
       flex-direction: column !important;
       background: #060913 !important;
-      min-height: calc(100vh - 64px) !important;
+      min-height: 100vh !important;
       padding: 0 0 60px 0 !important;
-    }
-
-    .dash-inner-topbar {
-      position: sticky !important;
-      top: 64px !important;
-      z-index: 850 !important;
-      background: rgba(8, 13, 26, 0.96) !important;
-      backdrop-filter: blur(14px) !important;
-      -webkit-backdrop-filter: blur(14px) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      padding: 12px 32px !important;
-      display: flex !important;
-      justify-content: space-between !important;
-      align-items: center !important;
-      gap: 16px !important;
-      flex-wrap: wrap !important;
     }
 
     /* PADRONIZAÇÃO DE TODAS AS ABAS */
@@ -3230,6 +3214,11 @@
               <span class="ln-icon">🎮</span>
               <span class="ln-label">Guia de Comandos</span>
             </button>
+            <button type="button" class="linear-nav-btn" data-tab="software" onclick="switchDashTab('software', this)">
+              <span class="ln-icon">💻</span>
+              <span class="ln-label">Baixar Software (.EXE)</span>
+              <span class="ln-badge">v2.2</span>
+            </button>
             <button type="button" class="linear-nav-btn" data-tab="orders" onclick="switchDashTab('orders', this)">
               <span class="ln-icon">🛠️</span>
               <span class="ln-label">Ordens de Serviço</span>
@@ -3957,7 +3946,6 @@
 
         </div>
           </div>
-        </div>
 
 <!-- Tab: Aparelhos & Gestão Remota Online -->
       <div id="tabDevices" class="dash-tab-pane" style="display: none;">
@@ -4608,8 +4596,10 @@
 
       </div> <!-- /dashboard-main-area -->
     </div> <!-- /viewDashboard -->
+  </main>
 
-<div id="authOverlay" class="auth-floating-overlay" style="display: none;" onclick="if(event.target===this)closeAuthOverlay()">
+  <!-- AUTH MODAL OVERLAY -->
+  <div id="authOverlay" class="auth-floating-overlay" style="display: none;" onclick="if(event.target===this)closeAuthOverlay()">
       <div class="auth-card">
         <button class="btn-close-auth" onclick="closeAuthOverlay()" title="Fechar e ver imagens da ferramenta">✕</button>
 
@@ -4799,7 +4789,9 @@
             <a onclick="showView('Login')">← Voltar ao Login</a> &bull; 
             <a onclick="closeAuthOverlay()" style="color:var(--text-muted); font-size:12px;">✕ Fechar</a>
           </div>
-  </main>
+        </div> <!-- /viewGoogleLink -->
+      </div> <!-- /auth-card -->
+    </div> <!-- /authOverlay -->
 
   <!-- MODAL PIX -->
   <div class="modal-overlay" id="modalPix">
@@ -4997,17 +4989,22 @@
     }
 
     function showView(view) {
+      const overlay = document.getElementById("authOverlay");
+
       if (view === 'Account' || view === 'profile') {
+        if (overlay) overlay.style.display = 'none';
         switchDashTab('profile');
         return;
       }
 
       if (view === 'Showcase' || view === 'overview') {
+        if (overlay) overlay.style.display = 'none';
         switchDashTab('overview');
         return;
       }
 
       if (view === 'Dashboard') {
+        if (overlay) overlay.style.display = 'none';
         const vDash = document.getElementById("viewDashboard");
         if (vDash) vDash.style.display = 'flex';
         return;
@@ -5030,23 +5027,10 @@
       const googleLinkEl = document.getElementById("viewGoogleLink");
       if (googleLinkEl) googleLinkEl.style.display = isGoogle ? 'block' : 'none';
 
-      const overlay = document.getElementById("authOverlay");
       if (isLogin || isReg || isForgot || isGoogle) {
         if (overlay) overlay.style.display = 'flex';
       } else {
         if (overlay) overlay.style.display = 'none';
-      }
-
-      // Header user area vs auth button
-      const headerUserArea = document.getElementById("headerUserArea");
-      const btnHeaderAuth = document.getElementById("btnHeaderAuth");
-
-      if (token) {
-        if (headerUserArea) headerUserArea.style.display = 'flex';
-        if (btnHeaderAuth) btnHeaderAuth.style.display = 'none';
-      } else {
-        if (headerUserArea) headerUserArea.style.display = 'none';
-        if (btnHeaderAuth) btnHeaderAuth.style.display = 'inline-block';
       }
 
       if (currentUser) {
@@ -5550,103 +5534,13 @@
     }
 
     /* ========================================================
-       CONTROLE DO SLIDER MODO 1 (CINEMA SPLIT-SLIDER)
+       CONTROLE DO SLIDER MODO 1 (COMPATIBILIDADE RETROATIVA)
        ======================================================== */
-    const portalStepsData = [
-      {
-        badge: "PASSO 01 DE 03 • CONEXÃO WINDOWS",
-        title: "1. Conectar Aparelho no PC & Reconhecimento",
-        desc: "Conecte o smartphone Android via cabo USB com a depuração ativada. O software reconhece instantaneamente o modelo, operadora, versão de segurança e serial em menos de 0.4s.",
-        bullets: [
-          "Reconhecimento automático do dispositivo em 0.4s via ADB",
-          "Injeção silenciosa de Device Owner sem necessidade de formatação",
-          "Consome apenas 1 crédito de saldo por aparelho atendido"
-        ],
-        type: "pc",
-        img: "/static/preview_exe.jpg"
-      },
-      {
-        badge: "PASSO 02 DE 03 • BLOQUEIO KIOSK & PIX",
-        title: "2. Bloqueio no Celular com PIX Dinâmico",
-        desc: "A ferramenta aciona o modo Kiosk na tela do aparelho com sua logo, os dados do atendimento e o QR Code PIX oficial gerado pelo Banco Central. Botões físicos e formatação ficam travados.",
-        bullets: [
-          "Modo Kiosk verde inviolável em tela cheia",
-          "QR Code PIX oficial Banco Central com valor exato configurado",
-          "Cliente escaneia e paga direto pela câmera do aplicativo do banco"
-        ],
-        type: "phone",
-        img: "/static/preview_kiosk.png"
-      },
-      {
-        badge: "PASSO 03 DE 03 • LIBERAÇÃO IMEDIATA",
-        title: "3. Desbloqueio Instantâneo & Gestão Ativa",
-        desc: "Assim que o pagamento cai ou você clica em liberar, o aparelho desbloqueia imediatamente na mesma hora, devolvendo o acesso total ao usuário com GPS ativo.",
-        bullets: [
-          "Desbloqueio 100% automático em menos de 2 segundos",
-          "Rastreamento de localização GPS e histórico via Google Maps",
-          "Gestão contínua pós-atendimento pelo painel"
-        ],
-        type: "phone",
-        img: "/static/preview_unlocked.png"
-      }
-    ];
-
-    let currentPortalSlide = 0;
-    let portalSliderTimer = null;
-
-    function renderPortalSlide() {
-      const data = portalStepsData[currentPortalSlide];
-      const stage = document.getElementById("opt1Stage");
-      const badge = document.getElementById("opt1Badge");
-      const title = document.getElementById("opt1Title");
-      const desc = document.getElementById("opt1Desc");
-      const features = document.getElementById("opt1Features");
-
-      if (stage && data) {
-        if (data.type === "pc") {
-          stage.innerHTML = `<img src="${data.img}" class="opt1-pc-frame" alt="${data.title}">`;
-        } else {
-          stage.innerHTML = `<div class="opt1-phone-frame"><img src="${data.img}" alt="${data.title}"></div>`;
-        }
-      }
-
-      if (badge) badge.innerText = data.badge;
-      if (title) title.innerText = data.title;
-      if (desc) desc.innerText = data.desc;
-      if (features) {
-        features.innerHTML = data.bullets.map(b => `<li><span class="icon">✓</span> ${b}</li>`).join("");
-      }
-
-      document.querySelectorAll(".slider-box-opt1 .dot").forEach((d, i) => {
-        d.classList.toggle("active", i === currentPortalSlide);
-      });
-      document.querySelectorAll(".slider-box-opt1 .step-thumb-btn").forEach((t, i) => {
-        t.classList.toggle("active", i === currentPortalSlide);
-      });
-    }
-
-    function setPortalSlide(idx) {
-      currentPortalSlide = Number(idx);
-      renderPortalSlide();
-      resetPortalSliderTimer();
-    }
-
-    function nextPortalSlide(manual = false) {
-      currentPortalSlide = (currentPortalSlide + 1) % portalStepsData.length;
-      renderPortalSlide();
-      if (manual) resetPortalSliderTimer();
-    }
-
-    function prevPortalSlide(manual = true) {
-      currentPortalSlide = (currentPortalSlide - 1 + portalStepsData.length) % portalStepsData.length;
-      renderPortalSlide();
-      if (manual) resetPortalSliderTimer();
-    }
-
-    function resetPortalSliderTimer() {
-      if (portalSliderTimer) clearInterval(portalSliderTimer);
-      portalSliderTimer = setInterval(() => nextPortalSlide(false), 3800);
-    }
+    function renderPortalSlide() {}
+    function setPortalSlide(idx) {}
+    function nextPortalSlide() {}
+    function prevPortalSlide() {}
+    function resetPortalSliderTimer() {}
 
     async function applySiteTheme() {
       const pTheme = urlParams.get("preview_theme");
@@ -6295,7 +6189,13 @@ async function initDashboard(targetView = null) {
       }
     }
 
+    function toggleMobileSidebar() {
+      const side = document.querySelector('.sidebar-portal-nav');
+      if (side) side.classList.toggle('open-mobile');
+    }
+
     function switchDashTab(tab, btn) {
+      // 1. Update navigation active state
       document.querySelectorAll('.tab-btn, .sidebar-nav-btn, .linear-nav-btn').forEach(b => b.classList.remove('active'));
       if (btn) {
         btn.classList.add('active');
@@ -6306,128 +6206,89 @@ async function initDashboard(targetView = null) {
         if (matchingTop) matchingTop.classList.add('active');
       }
 
-      const tabOver = document.getElementById("tabOverview");
-      const tabRech = document.getElementById("tabRecharge");
-      const tabProf = document.getElementById("tabProfile");
-      const tabHist = document.getElementById("tabHistory");
-      const tabOrd = document.getElementById("tabOrders");
-      const tabDev = document.getElementById("tabDevices");
-      const tabSoft = document.getElementById("tabSoftware");
-      const tabApk = document.getElementById("tabApkStudio");
-      const tabBSteps = document.getElementById("tabBenchSteps");
-      const tabBCmds = document.getElementById("tabBenchCommands");
+      // Close mobile sidebar if open
+      const sideNav = document.querySelector('.sidebar-portal-nav');
+      if (sideNav) sideNav.classList.remove('open-mobile');
 
-      if (tabOver) tabOver.style.display = tab === 'overview' ? 'block' : 'none';
-      if (tabRech) tabRech.style.display = tab === 'recharge' ? 'block' : 'none';
-      if (tabProf) tabProf.style.display = (tab === 'profile' || tab === 'account') ? 'block' : 'none';
-      if (tabHist) tabHist.style.display = tab === 'history' ? 'block' : 'none';
-      if (tabOrd) tabOrd.style.display = tab === 'orders' ? 'block' : 'none';
-      if (tabDev) tabDev.style.display = tab === 'devices' ? 'block' : 'none';
-      if (tabSoft) tabSoft.style.display = tab === 'software' ? 'block' : 'none';
-      if (tabApk) tabApk.style.display = tab === 'apk_studio' ? 'block' : 'none';
-      if (tabBSteps) tabBSteps.style.display = tab === 'bench_steps' ? 'block' : 'none';
-      if (tabBCmds) tabBCmds.style.display = tab === 'bench_commands' ? 'block' : 'none';
-      const tabRank = document.getElementById("tabRanking");
-      const tabBene = document.getElementById("tabBenefits");
-      if (tabRank) tabRank.style.display = tab === 'ranking' ? 'block' : 'none';
-      if (tabBene) tabBene.style.display = tab === 'benefits' ? 'block' : 'none';
+      // 2. Hide all tab panes strictly
+      document.querySelectorAll('.dash-tab-pane').forEach(p => {
+        p.style.display = 'none';
+      });
 
-      if (tab === 'bench_steps') {
-        const b = document.getElementById("sharedBenchStepsEl");
-        const t = document.getElementById("tabBenchSteps");
-        if (b && t && !t.contains(b)) t.appendChild(b);
-      }
-      if (tab === 'bench_commands') {
-        const c = document.getElementById("sharedBenchCommandsEl");
-        const t = document.getElementById("tabBenchCommands");
-        if (c && t && !t.contains(c)) t.appendChild(c);
+      // 3. Map tab slug to container ID
+      const tabMap = {
+        overview: 'tabOverview',
+        devices: 'tabDevices',
+        recharge: 'tabRecharge',
+        apk_studio: 'tabApkStudio',
+        bench_steps: 'tabBenchSteps',
+        bench_commands: 'tabBenchCommands',
+        orders: 'tabOrders',
+        software: 'tabSoftware',
+        ranking: 'tabRanking',
+        benefits: 'tabBenefits',
+        history: 'tabHistory',
+        profile: 'tabProfile',
+        account: 'tabProfile'
+      };
+
+      const activeId = tabMap[tab] || ('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      const activeEl = document.getElementById(activeId);
+      if (activeEl) {
+        activeEl.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'instant' });
       }
 
+      // 4. Update breadcrumb
       const bcEl = document.getElementById("dashBreadcrumbCurrent");
       const titles = {
         overview: 'Bancada USB & Diagnósticos',
-        recharge: 'Recarga de Saldo (PIX)',
-        devices: 'Dispositivos na Nuvem (GPS)',
+        devices: 'Dispositivos na Nuvem (GPS Real)',
+        recharge: 'Planos & Recarga de Saldo (PIX)',
         apk_studio: 'Personalizar APK (White-Label)',
         bench_steps: 'Bancada Passo a Passo (USB)',
         bench_commands: 'Guia de Comandos (Cloud/EXE)',
         orders: 'Ordens de Serviço',
         software: 'Baixar Software (.EXE)',
         ranking: 'Ranking do Mês',
-        benefits: 'Vantagens & Blindagem',
+        benefits: 'Vantagens & Blindagem Knox',
         history: 'Extrato Financeiro',
         profile: 'Meu Perfil & Senha EXE'
       };
       if (bcEl && titles[tab]) bcEl.innerText = titles[tab];
 
+      // 5. Trigger on-demand loaders for selected tab
       if (tab === 'apk_studio') {
         loadTechnicianBranding();
-      }
-
-      if (tab === 'devices') {
+      } else if (tab === 'devices') {
         setTimeout(() => {
           initDeviceMap();
           if (deviceMapInstance) {
             deviceMapInstance.invalidateSize(true);
           }
         }, 120);
+      } else if (tab === 'orders') {
+        loadOrders();
+      } else if (tab === 'history') {
+        loadHistory();
+      } else if (tab === 'ranking') {
+        fetchRanking();
+      } else if (tab === 'recharge') {
+        loadPackages();
       }
     }
 
-
     function switchShowcaseSection(sectionId, btn) {
-      showView('Showcase');
-
-      document.querySelectorAll('.sc-pill').forEach(p => p.classList.remove('active'));
-      if (btn) {
-        btn.classList.add('active');
-      } else {
-        const matching = document.querySelector(`.sc-pill[data-sec="${sectionId}"]`);
-        if (matching) matching.classList.add('active');
-      }
-
-      if (sectionId === 'bench') {
-        const b = document.getElementById("sharedBenchStepsEl");
-        const t = document.getElementById("secShowcaseBench");
-        if (b && t && !t.contains(b)) t.appendChild(b);
-      }
-      if (sectionId === 'commands') {
-        const c = document.getElementById("sharedBenchCommandsEl");
-        const t = document.getElementById("secShowcaseCommands");
-        if (c && t && !t.contains(c)) t.appendChild(c);
-      }
-
-      const panes = [
-        'secShowcaseOverview',
-        'secShowcaseBench',
-        'secShowcaseCommands',
-        'secShowcasePricing',
-        'secShowcaseRanking',
-        'secShowcaseBenefits'
-      ];
-      panes.forEach(pid => {
-        const el = document.getElementById(pid);
-        if (el) el.style.display = 'none';
-      });
-
+      // Legacy alias safely routed to unified Linear Studio tabs
       const map = {
-        'overview': 'secShowcaseOverview',
-        'bench': 'secShowcaseBench',
-        'commands': 'secShowcaseCommands',
-        'pricing': 'secShowcasePricing',
-        'ranking': 'secShowcaseRanking',
-        'benefits': 'secShowcaseBenefits'
+        overview: 'overview',
+        bench: 'bench_steps',
+        commands: 'bench_commands',
+        pricing: 'recharge',
+        ranking: 'ranking',
+        benefits: 'benefits'
       };
-
-      const targetId = map[sectionId] || sectionId;
-      const targetPane = document.getElementById(targetId);
-      if (targetPane) {
-        targetPane.style.display = 'block';
-        const pillBar = document.getElementById("showcaseNavPillsBar");
-        if (pillBar && window.scrollY > 350) {
-          pillBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
+      switchDashTab(map[sectionId] || sectionId);
     }
 
     /* ========================================================
@@ -6652,11 +6513,9 @@ async function initDashboard(targetView = null) {
       }
     }
 
-    // Startup: Apply dynamic theme, layout, slider and ranking
+    // Startup: Apply dynamic theme, layout and ranking
     applySiteTheme();
     applyHomepageSectionsAndLayout();
-    renderPortalSlide();
-    resetPortalSliderTimer();
     fetchRanking();
 
     const savedDashTheme = localStorage.getItem('mdm_dash_visual_theme') || 'titanium-slate';
