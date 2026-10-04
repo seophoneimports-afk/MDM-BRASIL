@@ -273,6 +273,12 @@ def serve_slider_options():
     path = os.path.join(TEMPLATES_DIR, "slider_options.html")
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+@app.get("/dashboards", response_class=HTMLResponse)
+@app.get("/dashboard-options", response_class=HTMLResponse)
+def serve_dashboard_options():
+    path = os.path.join(TEMPLATES_DIR, "dashboard_options_showcase.html")
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
 
 @app.get("/admin", response_class=HTMLResponse)
 def serve_admin_portal():
