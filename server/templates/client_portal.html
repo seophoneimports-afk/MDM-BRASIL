@@ -139,17 +139,20 @@
     h1, h2, h3, .brand-title { font-family: var(--font-heading, 'Inter', sans-serif); }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s ease, color 0.3s ease; }
     
-    /* Top Header */
+    /* Top Header - Fixed Topbar */
     header {
-      background: #0A101D;
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
+      background: #080D1A;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+      padding: 10px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 50;
+      height: 64px;
+      z-index: 1000;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
     .brand { display: flex; align-items: center; gap: 12px; }
     .brand-icon { font-size: 26px; }
@@ -187,7 +190,7 @@
     .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
 
     /* Main Container */
-    main { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 24px 16px; }
+    main { flex: 1; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; display: flex; min-height: calc(100vh - 64px); }
     
     /* Floating Auth Overlay with Blur */
     .auth-floating-overlay {
@@ -605,64 +608,156 @@
     .showcase-card h3 { font-size: 16px; font-weight: 700; color: #FFF; margin-bottom: 8px; }
     .showcase-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
-    /* Dashboard Layout & Shell */
+    /* Dashboard Layout & Shell - True Fixed Sidebar & Fluid Workspace */
     .dashboard { display: flex !important; }
     .app-dash-container {
       display: flex !important;
-      align-items: stretch;
-      min-height: calc(100vh - 70px);
-      width: 100%;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-height: calc(100vh - 64px);
       margin: 0 !important;
       padding: 0 !important;
-      max-width: 100% !important;
+      position: relative;
     }
 
     .btn-mobile-sidebar-toggle {
       display: none;
     }
 
-    @media (max-width: 900px) {
-      .btn-mobile-sidebar-toggle {
-        display: inline-flex !important;
-      }
-      .app-dash-container {
-        flex-direction: column !important;
-      }
-      .sidebar-portal-nav {
-        display: none !important;
-        width: 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        position: relative !important;
-        top: 0 !important;
-      }
-      .sidebar-portal-nav.open-mobile {
-        display: flex !important;
-      }
-      .dashboard-main-area {
-        width: 100% !important;
-        padding: 16px 12px !important;
-      }
-    }
-
-    /* LEFT SIDEBAR NAVIGATION */
+    /* BARRA LATERAL FIXADA PERMANENTEMENTE À ESQUERDA */
     .sidebar-portal-nav {
       width: 270px;
       min-width: 270px;
       max-width: 270px;
-      background: #090E1D;
-      border-right: 1px solid rgba(0, 229, 255, 0.18);
+      background: #080D1A;
+      border-right: 1px solid rgba(0, 229, 255, 0.14);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 20px 14px;
-      position: sticky;
-      top: 70px;
-      height: calc(100vh - 70px);
-      overflow-y: auto;
-      z-index: 100;
-      transition: all 0.25s ease;
+      padding: 18px 12px 20px;
+      position: fixed !important;
+      top: 64px !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      height: calc(100vh - 64px) !important;
+      overflow-y: auto !important;
+      z-index: 950 !important;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45);
+      transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sidebar-portal-nav::-webkit-scrollbar {
+      width: 5px;
+    }
+    .sidebar-portal-nav::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .sidebar-portal-nav::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+    }
+
+    /* ÁREA PRINCIPAL DO DASHBOARD */
+    .dashboard-main-area {
+      margin-left: 270px !important;
+      width: calc(100% - 270px) !important;
+      min-width: 0 !important;
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      background: #060913 !important;
+      min-height: calc(100vh - 64px) !important;
+      padding: 0 0 60px 0 !important;
+    }
+
+    .dash-inner-topbar {
+      position: sticky !important;
+      top: 64px !important;
+      z-index: 850 !important;
+      background: rgba(8, 13, 26, 0.96) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      padding: 12px 32px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      gap: 16px !important;
+      flex-wrap: wrap !important;
+    }
+
+    /* PADRONIZAÇÃO DE TODAS AS ABAS */
+    .dash-tab-pane {
+      width: 100% !important;
+      max-width: 1360px !important;
+      margin: 0 auto !important;
+      padding: 28px 32px 50px !important;
+      box-sizing: border-box !important;
+      animation: fadeInTab 0.25s ease-out !important;
+    }
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tab-header-banner {
+      margin-bottom: 24px;
+    }
+    .tab-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .tab-header-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #FFF;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.5px;
+    }
+    .tab-header-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .tab-content-card {
+      background: #0B1120;
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      border-radius: 16px;
+      padding: 26px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    @media (max-width: 900px) {
+      .btn-mobile-sidebar-toggle {
+        display: inline-flex !important;
+      }
+      .sidebar-portal-nav {
+        left: -290px !important;
+      }
+      .sidebar-portal-nav.open-mobile {
+        left: 0 !important;
+      }
+      .dashboard-main-area {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+      .dash-inner-topbar {
+        padding: 12px 16px !important;
+      }
+      .dash-tab-pane {
+        padding: 16px 14px 40px !important;
+      }
     }
 
     .sidebar-portal-header {
@@ -2939,7 +3034,7 @@
         </div>
 
         <!-- ABA 3: BANCADA PASSO A PASSO (USB) -->
-        <div id="tabBenchSteps" class="dash-tab-pane panel-card" style="display: none; padding: 0; background: transparent; border: none;">
+        <div id="tabBenchSteps" class="dash-tab-pane" style="display: none;">
           <div id="sharedBenchStepsEl">
             <div id="viewBenchSteps" style="display: block; background: #0A0F1D; border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 20px; padding: 30px 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.6);">
             
@@ -3137,7 +3232,7 @@
         </div>
 
         <!-- ABA 4: GUIA DE COMANDOS (CLOUD/EXE) -->
-        <div id="tabBenchCommands" class="dash-tab-pane panel-card" style="display: none; padding: 0; background: transparent; border: none;">
+        <div id="tabBenchCommands" class="dash-tab-pane" style="display: none;">
           <div id="sharedBenchCommandsEl">
             <div id="viewBenchCommands" style="display: block; background: #0A0F1D; border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 20px; padding: 30px 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.6);">
             
@@ -3256,17 +3351,16 @@
         </div>
 
 <!-- Tab: Aparelhos & Gestão Remota Online -->
-      <div id="tabDevices" class="panel-card" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+      <div id="tabDevices" class="dash-tab-pane" style="display: none;">
+        <div class="tab-header-banner" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
           <div>
-            <h3 style="margin: 0; color: #FFF; display: flex; align-items: center; gap: 8px;">
-              <span>📱</span> Aparelhos Vinculados &amp; Gestão Online (Sem Necessidade de Cabo USB)
-            </h3>
-            <p style="color: var(--text-muted); font-size: 12.5px; margin: 4px 0 0 0;">
-              Bloqueie novamente ou libere qualquer dispositivo remotamente pela nuvem. O APK instalado no aparelho executa os comandos instantaneamente via Wi-Fi ou dados móveis.
-            </p>
+            <div class="tab-header-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.3);">
+              📱 DISPOSITIVOS VINCULADOS
+            </div>
+            <h2 class="tab-header-title">Aparelhos na Nuvem &amp; Gestão Remota Online</h2>
+            <p class="tab-header-desc">Bloqueie, libere ou rastreie via GPS qualquer dispositivo remotamente pela nuvem sem necessidade de cabo USB.</p>
           </div>
-          <button class="btn-primary" style="padding: 8px 14px; font-size: 11.5px;" onclick="loadDevices()">
+          <button class="btn-primary" style="padding: 10px 18px; font-size: 12.5px; font-weight: 700;" onclick="loadDevices()">
             🔄 Atualizar Aparelhos
           </button>
         </div>
@@ -3356,17 +3450,16 @@
       </div>
 
 <!-- Tab: Personalizador White-Label de APK & Celular ao Vivo -->
-      <div id="tabApkStudio" class="panel-card" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+      <div id="tabApkStudio" class="dash-tab-pane" style="display: none;">
+        <div class="tab-header-banner" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
           <div>
-            <h3 style="color: var(--green); margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
-              <span>✨</span> Personalizador White-Label do APK &amp; Tela de Bloqueio
-            </h3>
-            <p style="color: var(--text-muted); font-size: 13px;">
-              Configure a marca da sua loja antes de instalar nos celulares dos clientes. As alterações aparecem no celular ao lado em tempo real!
-            </p>
+            <div class="tab-header-badge" style="background: rgba(192, 132, 252, 0.15); color: #C084FC; border: 1px solid rgba(192, 132, 252, 0.3);">
+              ✨ MARCA PRÓPRIA • WHITE-LABEL
+            </div>
+            <h2 class="tab-header-title">Personalizador White-Label do APK &amp; Tela de Bloqueio</h2>
+            <p class="tab-header-desc">Defina a logo, nome da sua assistência e chave PIX antes de instalar no celular do cliente. Veja a prévia em tempo real ao lado!</p>
           </div>
-          <button type="button" class="btn-green" onclick="savePortalBranding()" style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="btn-green" onclick="savePortalBranding()" style="display: flex; align-items: center; gap: 8px; padding: 10px 20px; font-weight: 800;">
             <span>💾</span> Salvar Personalização do APK
           </button>
         </div>
@@ -3497,14 +3590,21 @@
       </div>
 
 <!-- Tab: Software Download & Preview -->
-      <div id="tabSoftware" class="panel-card" style="display: none;">
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; background: var(--card-inner); padding: 20px; border-radius: 12px; border: 1px solid var(--border-green);">
-          <div>
-            <h3 style="margin-bottom: 6px; color: var(--green);">📥 MDM & FRP BRASIL v2.2 (Windows .EXE) • Modelo 2 Titanium Slate</h3>
-            <p style="color: var(--text-muted); font-size: 13px;">Execute no seu computador para gerenciar dispositivos Android via USB e utilizar seus créditos.</p>
+      <div id="tabSoftware" class="dash-tab-pane" style="display: none;">
+        <div class="tab-header-banner">
+          <div class="tab-header-badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.3);">
+            💻 SOFTWARE WINDOWS (.EXE)
           </div>
-          <a href="/download/exe?v=2.2" class="btn-download-big">
-            📥 Baixar MDM & FRP BRASIL.exe (47 MB)
+          <h2 class="tab-header-title">Download Oficial • MDM &amp; FRP BRASIL (Modelo 2 Titanium Slate)</h2>
+          <p class="tab-header-desc">Instale o executável oficial para Windows e conecte seus aparelhos via USB para desbloqueios instantâneos na bancada.</p>
+        </div>
+        <div class="tab-content-card" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; border-color: rgba(0, 230, 118, 0.4); background: linear-gradient(135deg, rgba(11, 21, 40, 0.8) 0%, rgba(6, 32, 23, 0.8) 100%);">
+          <div>
+            <h3 style="margin-bottom: 6px; color: #FFF; font-size: 18px; font-weight: 800;">⚡ MDM &amp; FRP BRASIL v2.2 • Modelo 2 Ativo</h3>
+            <p style="color: #94A3B8; font-size: 13.5px; margin: 0; max-width: 600px;">Inclui reconhecimento USB em 0.4s, visualização de satélite/rua com Google Maps real, sincronização com saldo em nuvem e comandos diretos.</p>
+          </div>
+          <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 14px 28px; font-size: 14px;">
+            📥 Baixar MDM & FRP BRASIL.exe (45.9 MB)
           </a>
         </div>
 
@@ -3544,24 +3644,32 @@
       </div>
 
 <!-- Tab: Ordens -->
-      <div id="tabOrders" class="panel-card" style="display: none;">
-        <h3>🛠️ Ordens de Serviço Executadas no EXE</h3>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>ID Operação</th>
-                <th>Dispositivo</th>
-                <th>Serviço</th>
-                <th>Custo</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="tblOrdersBody">
-              <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhuma ordem de serviço registrada ainda.</td></tr>
-            </tbody>
-          </table>
+      <div id="tabOrders" class="dash-tab-pane" style="display: none;">
+        <div class="tab-header-banner">
+          <div class="tab-header-badge" style="background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3);">
+            🛠️ HISTÓRICO DE BANCADA
+          </div>
+          <h2 class="tab-header-title">Ordens de Serviço Executadas no EXE &amp; Nuvem</h2>
+          <p class="tab-header-desc">Registro em tempo real de desbloqueios, sincronizações ADB e procedimentos aplicados nos aparelhos.</p>
+        </div>
+        <div class="tab-content-card">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>ID Operação</th>
+                  <th>Dispositivo</th>
+                  <th>Serviço</th>
+                  <th>Custo</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tblOrdersBody">
+                <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">Nenhuma ordem de serviço registrada ainda.</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -3688,29 +3796,37 @@
         </div>
 
 <!-- Tab: Extrato -->
-      <div id="tabHistory" class="panel-card" style="display: none;">
-        <h3>📜 Histórico de Movimentações da Carteira</h3>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Créditos</th>
-                <th>Saldo Anterior</th>
-                <th>Saldo Novo</th>
-                <th>Descrição / Referência</th>
-              </tr>
-            </thead>
-            <tbody id="tblHistoryBody">
-              <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Carregando movimentações...</td></tr>
-            </tbody>
-          </table>
+      <div id="tabHistory" class="dash-tab-pane" style="display: none;">
+        <div class="tab-header-banner">
+          <div class="tab-header-badge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.3);">
+            📜 EXTRATO DA CARTEIRA
+          </div>
+          <h2 class="tab-header-title">Histórico de Movimentações da Carteira</h2>
+          <p class="tab-header-desc">Extrato financeiro com depósitos PIX automáticos, créditos adquiridos, bônus e consumo nas bancadas.</p>
+        </div>
+        <div class="tab-content-card">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Tipo</th>
+                  <th>Créditos</th>
+                  <th>Saldo Anterior</th>
+                  <th>Saldo Novo</th>
+                  <th>Descrição / Referência</th>
+                </tr>
+              </thead>
+              <tbody id="tblHistoryBody">
+                <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">Carregando movimentações...</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
 <!-- Tab: Perfil & Configurações da Conta -->
-      <div id="tabProfile" class="dash-tab-pane panel-card" style="display: none;">
+      <div id="tabProfile" class="dash-tab-pane" style="display: none;">
         <!-- Hero Banner da Conta com Avatar em Alta Definição e Resumo -->
         <div class="account-hero-card" style="margin-bottom: 22px;">
           <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
