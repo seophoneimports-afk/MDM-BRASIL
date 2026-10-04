@@ -25,6 +25,9 @@ public class ServiceConfigReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Log.i(TAG, "Received broadcast action: " + action);
 
+        // Garante que o serviço de sincronização e trava remota está sempre ativo
+        DeviceOnlineSyncService.start(context);
+
         ConfigManager configManager = new ConfigManager(context);
 
         // 1. COMANDO EXPLÍCITO DE LIBERAÇÃO E RESTAURAÇÃO DA BARRA DE STATUS / NOTIFICAÇÕES
@@ -153,7 +156,7 @@ public class ServiceConfigReceiver extends BroadcastReceiver {
         }
     }
 
-    private void enableMainActivity(Context context) {
+    public static void enableMainActivity(Context context) {
         try {
             android.content.pm.PackageManager pm = context.getPackageManager();
             android.content.ComponentName cn = new android.content.ComponentName(context, MainActivity.class);

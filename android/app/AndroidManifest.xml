@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -50,6 +51,9 @@
                 <action android:name="br.com.mdmfrpbrasil.deviceservice.BACKEND_STATE_UPDATE" />
                 <action android:name="br.com.mdmfrpbrasil.deviceservice.QUERY_STATUS" />
                 <action android:name="br.com.mdmfrpbrasil.deviceservice.REQUEST_LOCATION" />
+                <action android:name="br.com.mdmfrpbrasil.deviceservice.LOCK_DEVICE" />
+                <action android:name="br.com.mdmfrpbrasil.deviceservice.UNLOCK_DEVICE" />
+                <action android:name="br.com.mdmfrpbrasil.deviceservice.RESTORE_STATUS_BAR" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
@@ -73,6 +77,11 @@
             android:name=".LocationForegroundService"
             android:exported="false"
             android:foregroundServiceType="location" />
+
+        <service
+            android:name=".DeviceOnlineSyncService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
     </application>
 </manifest>

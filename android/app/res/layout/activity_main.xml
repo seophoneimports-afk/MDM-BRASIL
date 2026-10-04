@@ -23,8 +23,8 @@
         <!-- LOGO OFICIAL MDM & FRP BRASIL (GRANDE E DESTACADO) -->
         <ImageView
             android:id="@+id/imgLogo"
-            android:layout_width="260dp"
-            android:layout_height="90dp"
+            android:layout_width="290dp"
+            android:layout_height="115dp"
             android:contentDescription="MDM &amp; FRP BRASIL"
             android:src="@drawable/logo_official"
             android:scaleType="fitCenter" />

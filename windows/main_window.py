@@ -96,6 +96,13 @@ class DeviceServiceManagerApp:
         self.poll_thread = threading.Thread(target=self._device_polling_worker, daemon=True)
         self.poll_thread.start()
 
+    def safe_after(self, ms, func, *args):
+        try:
+            if hasattr(self, 'root') and self.root and self.root.winfo_exists():
+                return self.root.after(ms, func, *args)
+        except Exception:
+            return None
+
     # ========================================================
     # MODERN UI BUILDER (COMPACT & RESPONSIVE)
     # ========================================================
@@ -789,7 +796,7 @@ class DeviceServiceManagerApp:
     def log(self, message):
         timestamp = datetime.now().strftime("%H:%M:%S")
         line = f"[{timestamp}] {message}\n"
-        self.root.after(0, self._append_log, line)
+        self.safe_after(0, self._append_log, line)
 
     def _append_log(self, text):
         self.txt_log.insert(tk.END, text)
@@ -903,7 +910,7 @@ class DeviceServiceManagerApp:
                 fingerprint = ";".join([f"{d['serial']}:{d['status']}" for d in devices])
                 if fingerprint != self.last_devices_fingerprint:
                     self.last_devices_fingerprint = fingerprint
-                    self.root.after(0, self._update_devices_ui, devices)
+                    self.safe_after(0, self._update_devices_ui, devices)
             except Exception:
                 pass
             time.sleep(2.0)
@@ -911,7 +918,7 @@ class DeviceServiceManagerApp:
     def refresh_devices_async(self):
         def work():
             devices = self.adb.detectDevices()
-            self.root.after(0, self._update_devices_ui, devices)
+            self.safe_after(0, self._update_devices_ui, devices)
         threading.Thread(target=work, daemon=True).start()
 
     def _update_devices_ui(self, devices):
@@ -1042,10 +1049,10 @@ class DeviceServiceManagerApp:
                     c = self._pulse_colors[self._pulse_idx % len(self._pulse_colors)]
                     self.center_login_card.configure(border_color=c)
                     self._pulse_idx += 1
-                    self.root.after(350, _animate_pulse)
+                    self.safe_after(350, _animate_pulse)
             except Exception:
                 pass
-        self.root.after(350, _animate_pulse)
+        self.safe_after(350, _animate_pulse)
 
         # Load and display official Phantom Logo with unified typography
         logo_loaded = False
@@ -1280,7 +1287,7 @@ class DeviceServiceManagerApp:
                         self.log(f"[PIX TÉCNICO] ✓ Chave Pix configurada: {key} ({mer} / {city})")
                     except Exception:
                         pass
-                self.root.after(0, apply_ui)
+                self.safe_after(0, apply_ui)
         threading.Thread(target=work, daemon=True).start()
 
     def action_save_custom_pix(self):
@@ -1316,7 +1323,7 @@ class DeviceServiceManagerApp:
                         )
                     else:
                         self.log(f"[AVISO] Chave salva no PC, pendente de sincronização: {res.get('error', '')}")
-                self.root.after(0, done)
+                self.safe_after(0, done)
             threading.Thread(target=work, daemon=True).start()
         else:
             messagebox.showinfo(
@@ -1370,7 +1377,7 @@ class DeviceServiceManagerApp:
                 else:
                     self.log(f"[ERRO REMOTO] Falha ao enviar bloqueio remoto: {resp.get('error', '')}")
                     messagebox.showerror("Erro", f"Falha ao enviar bloqueio remoto: {resp.get('error', '')}")
-            self.root.after(0, done)
+            self.safe_after(0, done)
         threading.Thread(target=work, daemon=True).start()
 
     def action_remote_unlock_cloud(self):
@@ -1413,7 +1420,7 @@ class DeviceServiceManagerApp:
                 else:
                     self.log(f"[ERRO REMOTO] Falha ao enviar liberação: {resp.get('error', '')}")
                     messagebox.showerror("Erro", f"Falha ao enviar liberação: {resp.get('error', '')}")
-            self.root.after(0, done)
+            self.safe_after(0, done)
         threading.Thread(target=work, daemon=True).start()
 
     def do_gate_login(self):
@@ -1447,7 +1454,7 @@ class DeviceServiceManagerApp:
                     self.log(f"[AUTENTICAÇÃO] Login efetuado com sucesso! Cliente: {self.api_client.user.get('name')}.")
                 else:
                     self.lbl_gate_status.configure(text=msg, text_color="#EF4444")
-            self.root.after(0, done)
+            self.safe_after(0, done)
 
         threading.Thread(target=work, daemon=True).start()
 
@@ -1469,9 +1476,9 @@ class DeviceServiceManagerApp:
                 self.api_client.logout()
                 self.show_login_gate()
                 self.lbl_gate_status.configure(text="Sessão anterior expirada. Por favor faça login novamente.", text_color="#EF4444")
-            self.root.after(0, on_expire)
+            self.safe_after(0, on_expire)
         else:
-            self.root.after(0, self._update_auth_ui)
+            self.safe_after(0, self._update_auth_ui)
 
     def open_login_dialog(self):
         self.show_login_gate()
@@ -1615,13 +1622,13 @@ class DeviceServiceManagerApp:
                                         dialog.destroy()
                                     else:
                                         poll_timer[0] = dialog.after(3000, check_payment)
-                                self.root.after(0, st_done)
+                                self.safe_after(0, st_done)
                             threading.Thread(target=check_work, daemon=True).start()
 
                         poll_timer[0] = dialog.after(3000, check_payment)
                     else:
                         lbl_status.configure(text=res.get("error", "Erro ao gerar PIX."), text_color="#EF4444")
-                self.root.after(0, on_done)
+                self.safe_after(0, on_done)
             threading.Thread(target=work, daemon=True).start()
 
         btn_gen = ctk.CTkButton(
@@ -1664,7 +1671,7 @@ class DeviceServiceManagerApp:
                 self.record_audit("INSTALAR_APK", "Instalado com sucesso")
             else:
                 self.log(f"[ERRO] Falha ao instalar APK: {msg}")
-            self.root.after(0, self._refresh_selected_device_info)
+            self.safe_after(0, self._refresh_selected_device_info)
         threading.Thread(target=work, daemon=True).start()
 
     def action_set_active(self):
@@ -1755,7 +1762,7 @@ class DeviceServiceManagerApp:
                 self.record_audit("ENVIAR_BLOQUEIO_PENDENTE", f"Tela Kiosk ativada (OP: {op_id})")
             else:
                 self.log(f"[ERRO] Falha ao enviar bloqueio: {msg}")
-            self.root.after(0, self._refresh_selected_device_info)
+            self.safe_after(0, self._refresh_selected_device_info)
         threading.Thread(target=work, daemon=True).start()
 
     def action_confirm_operation(self):
@@ -1794,7 +1801,7 @@ class DeviceServiceManagerApp:
             self.log("[DEVICE] APARELHO LIBERADO COM SUCESSO (STATUS: PAGO / LIBERADO)")
             self.log("[ADMIN] APK ocultado da gaveta de aplicativos e mantido como Administrador / Device Owner ativo.")
             self.record_audit("CONFIRMAR_PAGAMENTO", f"Aparelho {serial} (OP: {op_id}) autorizado; tela desbloqueada; APK mantido ativo em Administrador.")
-            self.root.after(0, self._show_release_success_ui)
+            self.safe_after(0, self._show_release_success_ui)
 
         threading.Thread(target=work, daemon=True).start()
 
@@ -1833,7 +1840,7 @@ class DeviceServiceManagerApp:
                 cur = loc_data.get("current") if isinstance(loc_data, dict) else None
                 if cur and cur.get("latitude") is not None:
                     break
-            self.root.after(0, self.refresh_location_display)
+            self.safe_after(0, self.refresh_location_display)
 
         threading.Thread(target=run_req, daemon=True).start()
 

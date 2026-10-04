@@ -4285,20 +4285,63 @@
 
     function initDeviceMap() {
       const mapContainer = document.getElementById("liveDeviceMap");
-      if (!mapContainer || deviceMapInstance || typeof L === 'undefined') return;
+      if (!mapContainer || typeof L === 'undefined') return;
+      if (deviceMapInstance) {
+        deviceMapInstance.invalidateSize(true);
+        return;
+      }
       try {
         deviceMapInstance = L.map('liveDeviceMap', {
           zoomControl: true,
           attributionControl: false
-        }).setView([-22.7394, -47.3314], 13);
+        }).setView([-22.7394, -47.3314], 14);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Google Maps Tiles Oficiais (Padrão e Satélite)
+        const googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+          attribution: 'Google Maps'
+        });
+
+        const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+          attribution: 'Google Maps Satélite'
+        });
+
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19
-        }).addTo(deviceMapInstance);
+        });
 
-        setTimeout(() => {
-          if (deviceMapInstance) deviceMapInstance.invalidateSize();
-        }, 350);
+        googleStreets.addTo(deviceMapInstance);
+
+        // Controle para alternar entre Mapa e Satélite Google
+        L.control.layers({
+          "Google Maps": googleStreets,
+          "Google Satélite": googleHybrid,
+          "OpenStreetMap": osmLayer
+        }, null, { position: 'topright' }).addTo(deviceMapInstance);
+
+        // Invalidate size múltiplo para garantir renderização 100% preenchida
+        [50, 200, 500, 1000].forEach(delay => {
+          setTimeout(() => {
+            if (deviceMapInstance) deviceMapInstance.invalidateSize(true);
+          }, delay);
+        });
+
+        // ResizeObserver para ajuste dinâmico automático se container mudar de tamanho
+        if (window.ResizeObserver) {
+          const ro = new ResizeObserver(() => {
+            if (deviceMapInstance) deviceMapInstance.invalidateSize(true);
+          });
+          ro.observe(mapContainer);
+          const tabDev = document.getElementById("tabDevices");
+          if (tabDev) ro.observe(tabDev);
+        }
+
+        window.addEventListener('resize', () => {
+          if (deviceMapInstance) deviceMapInstance.invalidateSize(true);
+        });
       } catch (e) {
         console.warn("Leaflet init note:", e);
       }
@@ -4350,12 +4393,18 @@
         gmapsBtn.href = gmapsUrl;
       }
 
-      // Pan map
+      // Pan map com invalidateSize garantido
       if (deviceMapInstance && typeof L !== 'undefined') {
-        deviceMapInstance.setView([lat, lon], 16, { animate: true });
-        if (deviceMapMarkers[d.serial]) {
-          deviceMapMarkers[d.serial].openPopup();
-        }
+        deviceMapInstance.invalidateSize(true);
+        setTimeout(() => {
+          if (deviceMapInstance) {
+            deviceMapInstance.invalidateSize(true);
+            deviceMapInstance.setView([lat, lon], 16, { animate: true });
+            if (deviceMapMarkers[d.serial]) {
+              deviceMapMarkers[d.serial].openPopup();
+            }
+          }
+        }, 60);
       }
     }
 
@@ -4440,7 +4489,7 @@
           }
           const teleHtml = telemetry.length > 0 
             ? `<div style="font-size: 11.5px; color: #CBD5E1; font-weight: 600;">${telemetry.join(' &bull; ')}</div>`
-            : `<span style="font-size: 11px; color: var(--text-muted);">Sincronização em espera</span>`;
+            : `<span style="font-size: 11px; color: #38BDF8;">🛰️ Ativo • Aguardando coordenadas</span>`;
 
           const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
           const lastSeenFormatted = lastSeenText ? new Date(lastSeenText).toLocaleString('pt-BR') : '—';
@@ -4597,6 +4646,15 @@
       if (tabOrd) tabOrd.style.display = tab === 'orders' ? 'block' : 'none';
       if (tabDev) tabDev.style.display = tab === 'devices' ? 'block' : 'none';
       if (tabSoft) tabSoft.style.display = tab === 'software' ? 'block' : 'none';
+
+      if (tab === 'devices') {
+        setTimeout(() => {
+          initDeviceMap();
+          if (deviceMapInstance) {
+            deviceMapInstance.invalidateSize(true);
+          }
+        }, 120);
+      }
     }
 
     /* ========================================================

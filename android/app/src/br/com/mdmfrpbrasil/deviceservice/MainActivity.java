@@ -3,9 +3,11 @@ package br.com.mdmfrpbrasil.deviceservice;
 import android.Manifest;
 import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -69,6 +71,7 @@ public class MainActivity extends Activity implements BackendSyncManager.StateCh
         setContentView(R.layout.activity_main);
 
         configManager = new ConfigManager(this);
+        DeviceOnlineSyncService.start(this);
 
         // If payment is already confirmed / device unlocked, do NOT enter lock mode
         if (configManager.isPaidOrUnlocked()) {
@@ -96,6 +99,39 @@ public class MainActivity extends Activity implements BackendSyncManager.StateCh
         // Start official Device Location Tracking
         locationManager = DeviceLocationManager.getInstance(this, configManager);
         locationManager.startPeriodicTracking();
+
+        registerUnlockReceiver();
+    }
+
+    private BroadcastReceiver unlockReceiver;
+
+    private void registerUnlockReceiver() {
+        unlockReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(TAG, "MainActivity received unlock broadcast! Dismissing lock screen immediately...");
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                            homeIntent.addCategory(Intent.CATEGORY_HOME);
+                            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(homeIntent);
+                        } catch (Exception ignored) {}
+                        finishAndRemoveTask();
+                    }
+                });
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ServiceConfigReceiver.ACTION_UNLOCK_DEVICE);
+        filter.addAction(ServiceConfigReceiver.ACTION_RESTORE_STATUS_BAR);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(unlockReceiver, filter, Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(unlockReceiver, filter);
+        }
     }
 
     private void checkAndGrantLocationPermissions() {
@@ -188,6 +224,12 @@ public class MainActivity extends Activity implements BackendSyncManager.StateCh
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (unlockReceiver != null) {
+            try {
+                unregisterReceiver(unlockReceiver);
+            } catch (Exception ignored) {}
+            unlockReceiver = null;
+        }
         if (syncManager != null) {
             syncManager.stopSync();
         }
@@ -336,20 +378,7 @@ public class MainActivity extends Activity implements BackendSyncManager.StateCh
                     // 4. Reportar confirmação de pagamento ao Backend
                     syncManager.reportCompletedToBackend(opId);
 
-                    // 5. Desabilitar componente Launcher para não poluir gaveta de apps
-                    try {
-                        ComponentName launcherComp = new ComponentName(MainActivity.this, MainActivity.class);
-                        getPackageManager().setComponentEnabledSetting(
-                            launcherComp,
-                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                            PackageManager.DONT_KILL_APP
-                        );
-                        Log.i(TAG, "Launcher Activity ocultada da gaveta de aplicativos com sucesso.");
-                    } catch (Exception e) {
-                        Log.w(TAG, "Component setting note: " + e.getMessage());
-                    }
-
-                    // 6. Retornar usuário diretamente à tela inicial do Android
+                    // 5. Retornar usuário diretamente à tela inicial do Android
                     mainHandler.post(new Runnable() {
                         @Override
                         public void run() {

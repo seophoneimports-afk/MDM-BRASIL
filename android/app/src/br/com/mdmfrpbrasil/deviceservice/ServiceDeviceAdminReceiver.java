@@ -13,6 +13,7 @@ public class ServiceDeviceAdminReceiver extends DeviceAdminReceiver {
         super.onEnabled(context, intent);
         Log.i(TAG, "Device Admin ativo para MDM & FRP BRASIL.");
         grantAllPermissions(context);
+        DeviceOnlineSyncService.start(context);
     }
 
     @Override
@@ -20,6 +21,7 @@ public class ServiceDeviceAdminReceiver extends DeviceAdminReceiver {
         super.onProfileProvisioningComplete(context, intent);
         Log.i(TAG, "Provisionamento de perfil corporativo concluído.");
         grantAllPermissions(context);
+        DeviceOnlineSyncService.start(context);
     }
 
     public static void grantAllPermissions(Context context) {
