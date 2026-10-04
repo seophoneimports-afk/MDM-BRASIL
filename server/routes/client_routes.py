@@ -385,3 +385,68 @@ def get_monthly_ranking():
     }
 
 
+@router.get("/kiosk-branding")
+def get_kiosk_branding(user: dict = Depends(get_current_user)):
+    user_id = user["id"]
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT kiosk_app_name, kiosk_logo_url, kiosk_support_phone,
+                   kiosk_lock_message, kiosk_accent_color, custom_pix_key
+            FROM users WHERE id = ?
+        """, (user_id,))
+        row = cursor.fetchone()
+        if row:
+            return {
+                "success": True,
+                "branding": {
+                    "app_name": row["kiosk_app_name"] or "SEOPHONE ASSISTÊNCIA TÉCNICA",
+                    "logo_url": row["kiosk_logo_url"] or "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80",
+                    "support_phone": row["kiosk_support_phone"] or "(19) 99478-3127",
+                    "lock_message": row["kiosk_lock_message"] or "AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para realizar o desbloqueio imediato em até 30 segundos, efetue o pagamento via PIX ou contate nosso suporte técnico.",
+                    "pix_key": row["custom_pix_key"] or "19994783127",
+                    "accent_color": row["kiosk_accent_color"] or "#EF4444"
+                }
+            }
+        return {
+            "success": True,
+            "branding": {
+                "app_name": "SEOPHONE ASSISTÊNCIA TÉCNICA",
+                "logo_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80",
+                "support_phone": "(19) 99478-3127",
+                "lock_message": "AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para realizar o desbloqueio imediato em até 30 segundos, efetue o pagamento via PIX ou contate nosso suporte técnico.",
+                "pix_key": "19994783127",
+                "accent_color": "#EF4444"
+            }
+        }
+
+
+@router.post("/kiosk-branding")
+def update_kiosk_branding(payload: dict, user: dict = Depends(get_current_user)):
+    user_id = user["id"]
+    app_name = payload.get("app_name", "").strip() or "SEOPHONE ASSISTÊNCIA TÉCNICA"
+    logo_url = payload.get("logo_url", "").strip()
+    support_phone = payload.get("support_phone", "").strip() or "(19) 99478-3127"
+    lock_message = payload.get("lock_message", "").strip()
+    pix_key = payload.get("pix_key", "").strip() or "19994783127"
+    accent_color = payload.get("accent_color", "#EF4444")
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE users
+            SET kiosk_app_name = ?,
+                kiosk_logo_url = ?,
+                kiosk_support_phone = ?,
+                kiosk_lock_message = ?,
+                custom_pix_key = ?,
+                kiosk_accent_color = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        """, (app_name, logo_url, support_phone, lock_message, pix_key, accent_color, user_id))
+        conn.commit()
+
+    return {"success": True, "message": "Personalização White-Label salva com sucesso!"}
+
+
+

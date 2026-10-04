@@ -275,6 +275,8 @@ def serve_slider_options():
         return f.read()
 @app.get("/dashboards", response_class=HTMLResponse)
 @app.get("/dashboard-options", response_class=HTMLResponse)
+@app.get("/white-label", response_class=HTMLResponse)
+@app.get("/personalizar-apk", response_class=HTMLResponse)
 def serve_dashboard_options():
     path = os.path.join(TEMPLATES_DIR, "dashboard_options_showcase.html")
     with open(path, "r", encoding="utf-8") as f:

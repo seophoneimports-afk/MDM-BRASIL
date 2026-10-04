@@ -258,6 +258,16 @@ def init_db():
             cursor.execute("ALTER TABLE users ADD COLUMN custom_pix_name TEXT;")
         if "custom_pix_city" not in cols:
             cursor.execute("ALTER TABLE users ADD COLUMN custom_pix_city TEXT;")
+        if "kiosk_app_name" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN kiosk_app_name TEXT DEFAULT 'SEOPHONE ASSISTÊNCIA TÉCNICA';")
+        if "kiosk_logo_url" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN kiosk_logo_url TEXT;")
+        if "kiosk_support_phone" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN kiosk_support_phone TEXT DEFAULT '(19) 99478-3127';")
+        if "kiosk_lock_message" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN kiosk_lock_message TEXT;")
+        if "kiosk_accent_color" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN kiosk_accent_color TEXT DEFAULT '#EF4444';")
 
         # Check and migrate columns for devices
         cursor.execute("PRAGMA table_info(devices)")
