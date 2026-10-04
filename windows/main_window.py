@@ -18,6 +18,52 @@ from AdbManager import AdbManager
 from pix_generator import generate_pix_emv, parse_currency
 from ApiClient import ApiClient
 
+try:
+    import tkintermapview
+    HAS_MAPVIEW = True
+except Exception:
+    tkintermapview = None
+    HAS_MAPVIEW = False
+
+THEMES = {
+    "cyber_dark": {
+        "name": "1. Cyber Tactical (NOC Pro)",
+        "bg": "#060911",
+        "card": "#0C1220",
+        "card_inner": "#080C16",
+        "border": "#14223A",
+        "accent": "#00E676",
+        "cyan": "#00E5FF",
+        "blue": "#0284C7",
+        "map_layer": "carto_dark",
+        "label": "1. CYBER DARK"
+    },
+    "titanium_slate": {
+        "name": "2. Titanium Slate (Studio Clean)",
+        "bg": "#0B1120",
+        "card": "#1E293B",
+        "card_inner": "#0F172A",
+        "border": "#334155",
+        "accent": "#38BDF8",
+        "cyan": "#38BDF8",
+        "blue": "#2563EB",
+        "map_layer": "google_normal",
+        "label": "2. SLATE STUDIO"
+    },
+    "gold_executive": {
+        "name": "3. Gold Executive (VIP Fintech)",
+        "bg": "#070B18",
+        "card": "#111827",
+        "card_inner": "#0B0F19",
+        "border": "#374151",
+        "accent": "#F59E0B",
+        "cyan": "#10B981",
+        "blue": "#D97706",
+        "map_layer": "google_satellite",
+        "label": "3. GOLD VIP"
+    }
+}
+
 # Setup CustomTkinter Theme
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
@@ -79,19 +125,25 @@ class DeviceServiceManagerApp:
         self.cloud_filter_status = "TODOS"
         self.cloud_polling_active = False
 
-        # Colors Palette (Cyber Tech Modern)
-        self.CLR_BG = "#060911"
-        self.CLR_CARD = "#0C1220"
-        self.CLR_CARD_INNER = "#080C16"
-        self.CLR_BORDER = "#14223A"
-        self.CLR_BORDER_GREEN = "#00E676"
-        self.CLR_GREEN = "#00E676"
+        # Visual Themes & Dynamic Palette
+        self.current_theme_key = self.saved_config.get("ui_theme", "cyber_dark")
+        if self.current_theme_key not in THEMES:
+            self.current_theme_key = "cyber_dark"
+        thm = THEMES[self.current_theme_key]
+
+        self.CLR_BG = thm["bg"]
+        self.CLR_CARD = thm["card"]
+        self.CLR_CARD_INNER = thm["card_inner"]
+        self.CLR_BORDER = thm["border"]
+        self.CLR_BORDER_GREEN = thm["accent"]
+        self.CLR_GREEN = thm["accent"]
         self.CLR_GREEN_HOVER = "#00C853"
-        self.CLR_CYAN = "#00E5FF"
-        self.CLR_BLUE = "#0284C7"
+        self.CLR_CYAN = thm["cyan"]
+        self.CLR_BLUE = thm["blue"]
         self.CLR_BLUE_HOVER = "#0369A1"
         self.CLR_TEXT_WHITE = "#F8FAFC"
         self.CLR_TEXT_MUTED = "#94A3B8"
+        self.current_map_marker = None
 
         self.root.configure(fg_color=self.CLR_BG)
 
@@ -191,6 +243,47 @@ class DeviceServiceManagerApp:
             width=110,
             command=self.open_inapp_recharge_dialog
         )
+
+        # Visual Theme Selector (3 Options)
+        theme_box = ctk.CTkFrame(status_box, fg_color="transparent")
+        theme_box.pack(side="left", padx=(0, 8))
+
+        ctk.CTkLabel(
+            theme_box,
+            text="Estilo:",
+            font=ctk.CTkFont(family="Segoe UI", size=9, weight="bold"),
+            text_color=self.CLR_TEXT_MUTED
+        ).pack(side="left", padx=(0, 3))
+
+        self.btn_thm_cyber = ctk.CTkButton(
+            theme_box, text="1. Cyber", width=62, height=24,
+            font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#00E676" if self.current_theme_key == "cyber_dark" else "#0F172A",
+            text_color="#000000" if self.current_theme_key == "cyber_dark" else "#94A3B8",
+            hover_color="#00C853", corner_radius=5,
+            command=lambda: self.apply_ui_theme("cyber_dark")
+        )
+        self.btn_thm_cyber.pack(side="left", padx=1)
+
+        self.btn_thm_slate = ctk.CTkButton(
+            theme_box, text="2. Slate", width=58, height=24,
+            font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#38BDF8" if self.current_theme_key == "titanium_slate" else "#0F172A",
+            text_color="#000000" if self.current_theme_key == "titanium_slate" else "#94A3B8",
+            hover_color="#0284C7", corner_radius=5,
+            command=lambda: self.apply_ui_theme("titanium_slate")
+        )
+        self.btn_thm_slate.pack(side="left", padx=1)
+
+        self.btn_thm_gold = ctk.CTkButton(
+            theme_box, text="3. Gold", width=55, height=24,
+            font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#F59E0B" if self.current_theme_key == "gold_executive" else "#0F172A",
+            text_color="#000000" if self.current_theme_key == "gold_executive" else "#94A3B8",
+            hover_color="#D97706", corner_radius=5,
+            command=lambda: self.apply_ui_theme("gold_executive")
+        )
+        self.btn_thm_gold.pack(side="left", padx=1)
 
         self.lbl_connection_badge = ctk.CTkLabel(
             status_box,
@@ -703,20 +796,83 @@ class DeviceServiceManagerApp:
         )
         self.btn_loc_maps.pack(fill="x")
 
-        # --- RIGHT CARD: MAPA TÁTICO & RADAR ---
+        # --- RIGHT CARD: MAPA DE PRECISÃO & GOOGLE MAPS REAL ---
         card_map = ctk.CTkFrame(right_col, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
         card_map.pack(fill="both", expand=True)
 
-        ctk.CTkLabel(card_map, text="🎯  RADAR TÁTICO & MAPA DE POSIÇÃO", font=ctk.CTkFont(size=11, weight="bold"), text_color=self.CLR_CYAN).pack(anchor="w", padx=12, pady=(8, 4))
+        map_hdr = ctk.CTkFrame(card_map, fg_color="transparent")
+        map_hdr.pack(fill="x", padx=10, pady=(6, 4))
 
-        self.map_canvas = tk.Canvas(
-            card_map,
-            bg="#020804",
-            bd=0,
-            highlightthickness=1,
-            highlightbackground="#0A3319"
+        ctk.CTkLabel(
+            map_hdr,
+            text="📍 MAPA DE PRECISÃO GPS (GOOGLE MAPS & SATÉLITE)",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            text_color=self.CLR_CYAN
+        ).pack(side="left")
+
+        # Map layer toggle buttons
+        layer_box = ctk.CTkFrame(map_hdr, fg_color="transparent")
+        layer_box.pack(side="right")
+
+        btn_layer_g = ctk.CTkButton(
+            layer_box, text="🗺️ Ruas", width=54, height=22, font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#0F172A", hover_color="#1E293B",
+            command=lambda: self.set_map_layer("google_normal")
         )
-        self.map_canvas.pack(fill="both", expand=True, padx=12, pady=(0, 8))
+        btn_layer_g.pack(side="left", padx=2)
+
+        btn_layer_s = ctk.CTkButton(
+            layer_box, text="🛰️ Satélite", width=62, height=22, font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#0F172A", hover_color="#1E293B",
+            command=lambda: self.set_map_layer("google_satellite")
+        )
+        btn_layer_s.pack(side="left", padx=2)
+
+        btn_layer_d = ctk.CTkButton(
+            layer_box, text="🌙 Dark", width=50, height=22, font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#0F172A", hover_color="#1E293B",
+            command=lambda: self.set_map_layer("carto_dark")
+        )
+        btn_layer_d.pack(side="left", padx=2)
+
+        btn_center = ctk.CTkButton(
+            layer_box, text="🎯 Focar", width=52, height=22, font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#052E16", hover_color=self.CLR_GREEN, text_color=self.CLR_GREEN,
+            command=self.center_map_on_device
+        )
+        btn_center.pack(side="left", padx=(4, 0))
+
+        if HAS_MAPVIEW:
+            self.map_widget = tkintermapview.TkinterMapView(
+                card_map,
+                corner_radius=8,
+                bg_color=self.CLR_CARD
+            )
+            self.map_widget.pack(fill="both", expand=True, padx=8, pady=(0, 4))
+            # Set default tile server based on active theme
+            init_layer = THEMES.get(self.current_theme_key, {}).get("map_layer", "google_normal")
+            self.set_map_layer(init_layer)
+            self.map_widget.set_position(-22.9068, -47.0616) # Campinas, SP
+            self.map_widget.set_zoom(14)
+            self.map_canvas = None
+        else:
+            self.map_widget = None
+            self.map_canvas = tk.Canvas(
+                card_map,
+                bg="#020804",
+                bd=0,
+                highlightthickness=1,
+                highlightbackground="#0A3319"
+            )
+            self.map_canvas.pack(fill="both", expand=True, padx=8, pady=(0, 4))
+
+        self.lbl_map_status_bar = ctk.CTkLabel(
+            card_map,
+            text="🛰️ GPS Pronto • Arraste para navegar no mapa • Role o mouse para Zoom",
+            font=ctk.CTkFont(size=9),
+            text_color=self.CLR_TEXT_MUTED
+        )
+        self.lbl_map_status_bar.pack(anchor="w", padx=10, pady=(0, 4))
 
         self._draw_tactical_map(None, None, 0, "", "OFFLINE")
 
@@ -1459,6 +1615,17 @@ class DeviceServiceManagerApp:
         lat = dev.get("latitude")
         lon = dev.get("longitude")
         if lat is not None and lon is not None:
+            try:
+                self.tabview.set("📍 LOCALIZAÇÃO")
+                self.current_location = {
+                    "latitude": lat,
+                    "longitude": lon,
+                    "street": dev.get("model", "Aparelho na Nuvem"),
+                    "city": dev.get("owner_name", "")
+                }
+                self._draw_tactical_map(lat, lon, 15, "NUVEM", "ONLINE" if dev.get("is_online") else "OFFLINE")
+            except Exception:
+                pass
             url = f"https://www.google.com/maps?q={lat},{lon}"
             webbrowser.open(url)
             self.cloud_log(f"[MAPS] Abrindo Google Maps: {url}")
@@ -1650,63 +1817,174 @@ class DeviceServiceManagerApp:
             pass
 
     # ========================================================
-    # TACTICAL MAP RENDERER
+    # REAL GOOGLE MAPS / SATELLITE & TACTICAL MAP RENDERER
     # ========================================================
-    def _draw_tactical_map(self, lat, lon, acc, provider="GPS", status="ONLINE"):
-        self.map_canvas.delete("all")
-        w = self.map_canvas.winfo_width() or 500
-        h = self.map_canvas.winfo_height() or 340
-        cx = w // 2
-        cy = h // 2
+    def set_map_layer(self, layer_type):
+        if not HAS_MAPVIEW or not hasattr(self, 'map_widget') or not self.map_widget:
+            return
+        try:
+            if layer_type == "google_normal":
+                self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=pt-BR&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+            elif layer_type == "google_satellite":
+                self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=y&hl=pt-BR&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+            elif layer_type == "carto_dark":
+                self.map_widget.set_tile_server("https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png", max_zoom=19)
+            elif layer_type == "osm":
+                self.map_widget.set_tile_server("https://a.tile.openstreetmap.org/{z}/{x}/{y}.png", max_zoom=19)
+        except Exception as e:
+            print(f"Set map layer error: {e}")
 
-        # Draw dark grid
-        grid_step = 36
-        for x in range(0, w, grid_step):
-            self.map_canvas.create_line(x, 0, x, h, fill="#041E0F", width=1)
-        for y in range(0, h, grid_step):
-            self.map_canvas.create_line(0, y, w, y, fill="#041E0F", width=1)
-
-        # Concentric distance / radar rings
-        r1 = int(50 * self.map_zoom_level)
-        r2 = int(100 * self.map_zoom_level)
-        r3 = int(150 * self.map_zoom_level)
-        self.map_canvas.create_oval(cx - r1, cy - r1, cx + r1, cy + r1, outline="#0A3319", width=1)
-        self.map_canvas.create_oval(cx - r2, cy - r2, cx + r2, cy + r2, outline="#0A3319", width=1)
-        self.map_canvas.create_oval(cx - r3, cy - r3, cx + r3, cy + r3, outline="#0A3319", width=1)
-
-        # Crosshairs
-        self.map_canvas.create_line(cx - 20, cy, cx + 20, cy, fill="#00E676", width=1)
-        self.map_canvas.create_line(cx, cy - 20, cx, cy + 20, fill="#00E676", width=1)
-
-        if lat is not None and lon is not None:
-            acc_r = max(16, min(120, int(acc * 1.5 * self.map_zoom_level)))
-            self.map_canvas.create_oval(cx - acc_r, cy - acc_r, cx + acc_r, cy + acc_r, fill="#00E676", stipple="gray25", outline="#00E676", width=2)
-
-            self.map_canvas.create_oval(cx - 7, cy - 7, cx + 7, cy + 7, fill="#00E676", outline="#FFFFFF", width=2)
-            self.map_canvas.create_oval(cx - 3, cy - 3, cx + 3, cy + 3, fill="#FFFFFF")
-
-            self.map_canvas.create_text(cx, cy - 20, text="📍 DISPOSITIVO GERENCIADO", fill="#00E676", font=("Segoe UI", 9, "bold"))
-            self.map_canvas.create_text(cx, cy + 20, text=f"{lat:.6f}, {lon:.6f}", fill="#FFFFFF", font=("Consolas", 9, "bold"))
-
-            self.map_canvas.create_text(12, 14, anchor="w", text=f"LATITUDE: {lat:.6f}", fill="#00E676", font=("Consolas", 10, "bold"))
-            self.map_canvas.create_text(12, 32, anchor="w", text=f"LONGITUDE: {lon:.6f}", fill="#00E676", font=("Consolas", 10, "bold"))
-            self.map_canvas.create_text(12, 50, anchor="w", text=f"PRECISÃO: ±{acc:.1f}m  |  PROVEDOR: {provider.upper()}", fill="#A7F3D0", font=("Segoe UI", 8, "bold"))
-            self.map_canvas.create_text(w - 12, 14, anchor="e", text=f"STATUS: {status}", fill="#00E676" if "ONLINE" in status or "ACQUIRED" in status else "#EF4444", font=("Segoe UI", 9, "bold"))
-
-            if self.current_location:
-                street = self.current_location.get("street", "")
-                number = self.current_location.get("number", "")
-                neighborhood = self.current_location.get("neighborhood", "")
-                city = self.current_location.get("city", "")
-                if street:
-                    addr_line1 = f"📬 {street}, {number}" if number else f"📬 {street}"
-                    addr_line2 = f"{neighborhood} — {city}" if neighborhood and city else (neighborhood or city or "")
-                    self.map_canvas.create_text(cx, cy + 38, text=addr_line1, fill="#A7F3D0", font=("Segoe UI", 8, "bold"))
-                    if addr_line2:
-                        self.map_canvas.create_text(cx, cy + 52, text=addr_line2, fill="#94A3B8", font=("Segoe UI", 8))
+    def center_map_on_device(self):
+        if not HAS_MAPVIEW or not hasattr(self, 'map_widget') or not self.map_widget:
+            return
+        if self.current_location and self.current_location.get("latitude"):
+            lat = self.current_location["latitude"]
+            lon = self.current_location["longitude"]
+            self.map_widget.set_position(lat, lon)
+            self.map_widget.set_zoom(17)
+        elif hasattr(self, 'cloud_selected_device') and self.cloud_selected_device and self.cloud_selected_device.get("latitude"):
+            lat = self.cloud_selected_device["latitude"]
+            lon = self.cloud_selected_device["longitude"]
+            self.map_widget.set_position(lat, lon)
+            self.map_widget.set_zoom(17)
         else:
-            self.map_canvas.create_text(cx, cy - 10, text="📡 AGUARDANDO COORDENADAS DO APARELHO...", fill="#94A3B8", font=("Segoe UI", 11, "bold"))
-            self.map_canvas.create_text(cx, cy + 16, text="Clique em 'ATUALIZAR LOCALIZAÇÃO' para solicitar agora via GPS.", fill="#475569", font=("Segoe UI", 9))
+            self.map_widget.set_position(-22.9068, -47.0616)
+
+    def apply_ui_theme(self, theme_key):
+        if theme_key not in THEMES:
+            return
+        self.current_theme_key = theme_key
+        thm = THEMES[theme_key]
+        self.CLR_BG = thm["bg"]
+        self.CLR_CARD = thm["card"]
+        self.CLR_CARD_INNER = thm["card_inner"]
+        self.CLR_BORDER = thm["border"]
+        self.CLR_GREEN = thm["accent"]
+        self.CLR_CYAN = thm["cyan"]
+        self.CLR_BLUE = thm["blue"]
+
+        # Update root and header background
+        try:
+            self.root.configure(fg_color=self.CLR_BG)
+            if hasattr(self, 'header_frame') and self.header_frame:
+                self.header_frame.configure(fg_color=self.CLR_CARD, border_color=self.CLR_BORDER)
+        except Exception:
+            pass
+
+        # Update theme switcher buttons active style
+        try:
+            if hasattr(self, 'btn_thm_cyber'):
+                self.btn_thm_cyber.configure(
+                    fg_color="#00E676" if theme_key == "cyber_dark" else "#0F172A",
+                    text_color="#000000" if theme_key == "cyber_dark" else "#94A3B8"
+                )
+            if hasattr(self, 'btn_thm_slate'):
+                self.btn_thm_slate.configure(
+                    fg_color="#38BDF8" if theme_key == "titanium_slate" else "#0F172A",
+                    text_color="#000000" if theme_key == "titanium_slate" else "#94A3B8"
+                )
+            if hasattr(self, 'btn_thm_gold'):
+                self.btn_thm_gold.configure(
+                    fg_color="#F59E0B" if theme_key == "gold_executive" else "#0F172A",
+                    text_color="#000000" if theme_key == "gold_executive" else "#94A3B8"
+                )
+        except Exception:
+            pass
+
+        # Switch map layer automatically to match theme style
+        self.set_map_layer(thm["map_layer"])
+
+        # Save to persistent config
+        try:
+            self.saved_config["ui_theme"] = theme_key
+            self._save_current_config()
+        except Exception:
+            pass
+
+    def _draw_tactical_map(self, lat, lon, acc, provider="GPS", status="ONLINE"):
+        # 1. Real interactive Google Maps / Satellite mode
+        if HAS_MAPVIEW and hasattr(self, 'map_widget') and self.map_widget:
+            if lat is not None and lon is not None and (lat != 0 or lon != 0):
+                try:
+                    if hasattr(self, 'current_map_marker') and self.current_map_marker:
+                        self.current_map_marker.delete()
+                        self.current_map_marker = None
+                except Exception:
+                    pass
+
+                dev_name = "Dispositivo Android"
+                try:
+                    txt = self.lbl_loc_device.cget("text").replace("Dispositivo: ", "").strip()
+                    if txt and txt != "—":
+                        dev_name = txt
+                except Exception:
+                    pass
+
+                marker_text = f"📍 {dev_name}\n±{acc:.0f}m ({provider.upper()})"
+                if self.current_location and self.current_location.get("street"):
+                    st = self.current_location.get("street")
+                    num = self.current_location.get("number", "")
+                    marker_text = f"📍 {dev_name}\n{st}, {num}"
+
+                try:
+                    self.current_map_marker = self.map_widget.set_marker(
+                        lat, lon,
+                        text=marker_text,
+                        font=("Segoe UI", 9, "bold")
+                    )
+                    self.map_widget.set_position(lat, lon)
+                    if self.map_widget.zoom < 15:
+                        self.map_widget.set_zoom(16)
+                except Exception as e:
+                    print(f"Map marker error: {e}")
+
+                if hasattr(self, 'lbl_map_status_bar') and self.lbl_map_status_bar:
+                    self.lbl_map_status_bar.configure(
+                        text=f"🎯 Localizado no Mapa: {lat:.6f}, {lon:.6f} | Precisão: ±{acc:.1f}m | Google Maps OK",
+                        text_color=self.CLR_GREEN
+                    )
+            else:
+                if hasattr(self, 'lbl_map_status_bar') and self.lbl_map_status_bar:
+                    self.lbl_map_status_bar.configure(
+                        text="📡 Aguardando coordenadas do aparelho... Clique em 'ATUALIZAR LOCALIZAÇÃO'",
+                        text_color=self.CLR_TEXT_MUTED
+                    )
+            return
+
+        # 2. Fallback to canvas if map_widget is not available
+        if hasattr(self, 'map_canvas') and self.map_canvas:
+            self.map_canvas.delete("all")
+            w = self.map_canvas.winfo_width() or 500
+            h = self.map_canvas.winfo_height() or 340
+            cx = w // 2
+            cy = h // 2
+
+            grid_step = 36
+            for x in range(0, w, grid_step):
+                self.map_canvas.create_line(x, 0, x, h, fill="#041E0F", width=1)
+            for y in range(0, h, grid_step):
+                self.map_canvas.create_line(0, y, w, y, fill="#041E0F", width=1)
+
+            r1 = int(50 * self.map_zoom_level)
+            r2 = int(100 * self.map_zoom_level)
+            r3 = int(150 * self.map_zoom_level)
+            self.map_canvas.create_oval(cx - r1, cy - r1, cx + r1, cy + r1, outline="#0A3319", width=1)
+            self.map_canvas.create_oval(cx - r2, cy - r2, cx + r2, cy + r2, outline="#0A3319", width=1)
+            self.map_canvas.create_oval(cx - r3, cy - r3, cx + r3, cy + r3, outline="#0A3319", width=1)
+
+            self.map_canvas.create_line(cx - 20, cy, cx + 20, cy, fill="#00E676", width=1)
+            self.map_canvas.create_line(cx, cy - 20, cx, cy + 20, fill="#00E676", width=1)
+
+            if lat is not None and lon is not None:
+                acc_r = max(16, min(120, int(acc * 1.5 * self.map_zoom_level)))
+                self.map_canvas.create_oval(cx - acc_r, cy - acc_r, cx + acc_r, cy + acc_r, fill="#00E676", stipple="gray25", outline="#00E676", width=2)
+                self.map_canvas.create_oval(cx - 7, cy - 7, cx + 7, cy + 7, fill="#00E676", outline="#FFFFFF", width=2)
+                self.map_canvas.create_oval(cx - 3, cy - 3, cx + 3, cy + 3, fill="#FFFFFF")
+                self.map_canvas.create_text(cx, cy - 20, text="📍 DISPOSITIVO GERENCIADO", fill="#00E676", font=("Segoe UI", 9, "bold"))
+                self.map_canvas.create_text(cx, cy + 20, text=f"{lat:.6f}, {lon:.6f}", fill="#FFFFFF", font=("Consolas", 9, "bold"))
+            else:
+                self.map_canvas.create_text(cx, cy - 10, text="📡 AGUARDANDO COORDENADAS DO APARELHO...", fill="#94A3B8", font=("Segoe UI", 11, "bold"))
+                self.map_canvas.create_text(cx, cy + 16, text="Clique em 'ATUALIZAR LOCALIZAÇÃO' para solicitar agora via GPS.", fill="#475569", font=("Segoe UI", 9))
 
     # ========================================================
     # LOGGING & AUDIT

@@ -2,13 +2,14 @@ from PyInstaller.utils.hooks import collect_all
 
 ctk_datas, ctk_binaries, ctk_hiddenimports = collect_all('customtkinter')
 crypto_datas, crypto_binaries, crypto_hiddenimports = collect_all('cryptography')
+map_datas, map_binaries, map_hiddenimports = collect_all('tkintermapview')
 
 a = Analysis(
-    ['C:/Users/seoph/.gemini/antigravity/scratch/mdm-frp-brasil-device-service-manager/windows/main_window.py'],
+    ['C:/Users/seoph/.gemini/antigravity/scratch/mdm_repo_clone/windows/main_window.py'],
     pathex=[],
-    binaries=ctk_binaries + crypto_binaries,
-    datas=[('resources', 'resources'), ('logo.png', '.'), ('app_icon.ico', '.')] + ctk_datas + crypto_datas,
-    hiddenimports=ctk_hiddenimports + crypto_hiddenimports + ['PIL', 'PIL._tkinter_finder', 'qrcode', 'darkdetect', 'urllib.request', 'urllib.parse', 'ApiClient', 'cryptography', 'cryptography.fernet'],
+    binaries=ctk_binaries + crypto_binaries + map_binaries,
+    datas=[('resources', 'resources'), ('logo.png', '.'), ('app_icon.ico', '.')] + ctk_datas + crypto_datas + map_datas,
+    hiddenimports=ctk_hiddenimports + crypto_hiddenimports + map_hiddenimports + ['PIL', 'PIL._tkinter_finder', 'qrcode', 'darkdetect', 'urllib.request', 'urllib.parse', 'ApiClient', 'cryptography', 'cryptography.fernet', 'tkintermapview', 'geopy'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
