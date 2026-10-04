@@ -2797,6 +2797,7 @@
             📥 Baixar MDM & FRP BRASIL (.exe)
           </a>
         </div>
+      </div> <!-- /tabOverview -->
 
         <!-- ABA 2: RECARGA PIX & PLANOS -->
         <div id="tabRecharge" class="dash-tab-pane" style="display: none;">
@@ -3134,7 +3135,6 @@
           <!-- PARTE 2: GUIA DE COMANDOS & COMPORTAMENTO DE CADA BOTÃO -->
           </div>
         </div>
-        </div>
 
         <!-- ABA 4: GUIA DE COMANDOS (CLOUD/EXE) -->
         <div id="tabBenchCommands" class="dash-tab-pane panel-card" style="display: none; padding: 0; background: transparent; border: none;">
@@ -3253,7 +3253,6 @@
 
         </div>
           </div>
-        </div>
         </div>
 
 <!-- Tab: Aparelhos & Gestão Remota Online -->
@@ -5603,6 +5602,10 @@ async function initDashboard(targetView = null) {
       if (tabApk) tabApk.style.display = tab === 'apk_studio' ? 'block' : 'none';
       if (tabBSteps) tabBSteps.style.display = tab === 'bench_steps' ? 'block' : 'none';
       if (tabBCmds) tabBCmds.style.display = tab === 'bench_commands' ? 'block' : 'none';
+      const tabRank = document.getElementById("tabRanking");
+      const tabBene = document.getElementById("tabBenefits");
+      if (tabRank) tabRank.style.display = tab === 'ranking' ? 'block' : 'none';
+      if (tabBene) tabBene.style.display = tab === 'benefits' ? 'block' : 'none';
 
       if (tab === 'bench_steps') {
         const b = document.getElementById("sharedBenchStepsEl");
@@ -5625,6 +5628,8 @@ async function initDashboard(targetView = null) {
         bench_commands: 'Guia de Comandos (Cloud/EXE)',
         orders: 'Ordens de Serviço',
         software: 'Baixar Software (.EXE)',
+        ranking: 'Ranking do Mês',
+        benefits: 'Vantagens & Blindagem',
         history: 'Extrato Financeiro',
         profile: 'Meu Perfil & Senha EXE'
       };

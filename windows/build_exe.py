@@ -28,21 +28,23 @@ for c in candidates:
         break
 
 desktop_exe = os.path.join(os.path.expanduser("~"), "Desktop", "MDM & FRP BRASIL.exe")
+anydesk_exe = r"C:\Users\seoph\Documents\MDM\Anydesk varios pc\MDM_FRP_BRASIL.exe"
 server_exe = os.path.abspath(os.path.join(WINDOWS_DIR, "..", "server", "static", "MDM_FRP_BRASIL.exe"))
 
 import shutil
 if out_exe and os.path.exists(out_exe):
-    try:
-        shutil.copy2(out_exe, desktop_exe)
-        print(f"[OK] Atualizado no Desktop: {desktop_exe}")
-    except Exception as e:
-        print(f"[AVISO] Desktop copy: {e}")
-    try:
-        os.makedirs(os.path.dirname(server_exe), exist_ok=True)
-        shutil.copy2(out_exe, server_exe)
-        print(f"[OK] Atualizado no Server Static: {server_exe}")
-    except Exception as e:
-        print(f"[AVISO] Server copy: {e}")
+    targets = [
+        (desktop_exe, "Desktop"),
+        (anydesk_exe, "Documents (Anydesk varios pc)"),
+        (server_exe, "Server Static")
+    ]
+    for target, label in targets:
+        try:
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            shutil.copy2(out_exe, target)
+            print(f"[OK] Atualizado em {label}: {target}")
+        except Exception as e:
+            print(f"[AVISO] {label} copy: {e}")
 
 print("\n" + "=" * 60)
 print("[SUCESSO] EXECUTÁVEL COM NOVA INTERFACE GERADO!")

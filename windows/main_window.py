@@ -77,8 +77,8 @@ class DeviceServiceManagerApp:
         self.root = root
         self.WIN_LOGIN_W = 440
         self.WIN_LOGIN_H = 630
-        self.WIN_MAIN_W = 1180
-        self.WIN_MAIN_H = 720
+        self.WIN_MAIN_W = 1220
+        self.WIN_MAIN_H = 750
 
         # Start application exclusively in compact login gate mode, centered on user monitor
         self.root.update_idletasks()
@@ -166,55 +166,144 @@ class DeviceServiceManagerApp:
     # MODERN UI BUILDER (COMPACT & RESPONSIVE)
     # ========================================================
     def _build_modern_ui(self):
-        # 1. TOP HEADER BAR (COMPACT)
+        # 1. MAIN SHELL (REVEALED AFTER LOGIN)
+        self.main_shell = ctk.CTkFrame(self.root, fg_color=self.CLR_BG)
+
+        # 2. LEFT SIDEBAR NAVIGATION (MODELO 2: TITANIUM SLATE STUDIO RAIL)
+        self.sidebar_nav = ctk.CTkFrame(
+            self.main_shell,
+            width=200,
+            fg_color="#0F172A",
+            corner_radius=12,
+            border_width=1,
+            border_color="#334155"
+        )
+        self.sidebar_nav.pack(side="left", fill="y", padx=(6, 6), pady=6)
+        self.sidebar_nav.pack_propagate(False)
+
+        # Brand header in sidebar
+        brand_frame = ctk.CTkFrame(self.sidebar_nav, fg_color="transparent")
+        brand_frame.pack(fill="x", padx=14, pady=(16, 18))
+
+        lbl_b_title = ctk.CTkLabel(
+            brand_frame,
+            text="🛡️ MDM & FRP",
+            font=ctk.CTkFont(family="Segoe UI", size=16, weight="bold"),
+            text_color="#FFFFFF"
+        )
+        lbl_b_title.pack(anchor="w")
+
+        lbl_b_sub = ctk.CTkLabel(
+            brand_frame,
+            text="SLATE STUDIO V2.2",
+            font=ctk.CTkFont(family="Segoe UI", size=9, weight="bold"),
+            text_color="#38BDF8"
+        )
+        lbl_b_sub.pack(anchor="w")
+
+        # Sidebar navigation buttons
+        self.nav_buttons = {}
+        nav_items = [
+            ("bench", "⚡ Bancada USB", lambda: self._switch_view("bench")),
+            ("cloud", "☁️ Aparelhos Nuvem", lambda: self._switch_view("cloud")),
+            ("maps", "📍 Google Maps", lambda: self._switch_view("maps")),
+            ("pix", "⚙️ Chave PIX & Loja", lambda: self._switch_view("pix")),
+        ]
+
+        for key, label, cmd in nav_items:
+            btn = ctk.CTkButton(
+                self.sidebar_nav,
+                text=label,
+                font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+                fg_color="#1E293B" if key == "bench" else "transparent",
+                hover_color="#334155",
+                text_color="#38BDF8" if key == "bench" else "#94A3B8",
+                anchor="w",
+                corner_radius=8,
+                height=38,
+                command=cmd
+            )
+            btn.pack(fill="x", padx=10, pady=4)
+            self.nav_buttons[key] = btn
+
+        # Spacer in sidebar
+        sidebar_spacer = ctk.CTkFrame(self.sidebar_nav, fg_color="transparent")
+        sidebar_spacer.pack(fill="both", expand=True)
+
+        # Bottom sidebar buttons
+        btn_site = ctk.CTkButton(
+            self.sidebar_nav,
+            text="🌐 Abrir Site Cloud",
+            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            fg_color="#1E293B",
+            hover_color="#334155",
+            text_color="#00E5FF",
+            anchor="w",
+            height=32,
+            command=self.open_client_portal_in_browser
+        )
+        btn_site.pack(fill="x", padx=10, pady=(0, 6))
+
+        btn_wa = ctk.CTkButton(
+            self.sidebar_nav,
+            text="💬 WhatsApp Suporte",
+            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            fg_color="#022414",
+            hover_color="#059669",
+            text_color="#00E676",
+            anchor="w",
+            height=32,
+            command=self.open_whatsapp_support
+        )
+        btn_wa.pack(fill="x", padx=10, pady=(0, 14))
+
+        # 3. MAIN CONTENT AREA (TO THE RIGHT OF THE SIDEBAR)
+        self.main_content_frame = ctk.CTkFrame(self.main_shell, fg_color="transparent")
+        self.main_content_frame.pack(side="left", fill="both", expand=True, padx=(0, 6), pady=6)
+
+        # Header Frame inside main content
         self.header_frame = ctk.CTkFrame(
-            self.root,
-            fg_color="#0A101D",
+            self.main_content_frame,
+            fg_color="#0F172A",
             corner_radius=10,
             border_width=1,
-            border_color=self.CLR_BORDER
+            border_color="#334155"
         )
-        # Note: self.header_frame is revealed only after user authentication
+        self.header_frame.pack(fill="x", pady=(0, 8))
 
         header_inner = ctk.CTkFrame(self.header_frame, fg_color="transparent")
         header_inner.pack(fill="x", padx=12, pady=8)
 
-        # Logo on left
-        self.lbl_header_logo = ctk.CTkLabel(header_inner, text="", fg_color="transparent")
-        self.lbl_header_logo.pack(side="left", padx=(0, 10))
-        self._load_header_logo()
-
-        # Title and subtitle
+        # Left: Breadcrumbs / Title
         title_box = ctk.CTkFrame(header_inner, fg_color="transparent")
         title_box.pack(side="left", fill="y")
 
-        lbl_title = ctk.CTkLabel(
+        self.lbl_view_title = ctk.CTkLabel(
             title_box,
-            text="MDM & FRP BRASIL",
-            font=ctk.CTkFont(family="Segoe UI", size=18, weight="bold"),
+            text="⚡ BANCADA USB • GESTÃO & DESBLOQUEIO",
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color="#FFFFFF"
         )
-        lbl_title.pack(anchor="w")
+        self.lbl_view_title.pack(anchor="w")
 
-        lbl_sub = ctk.CTkLabel(
+        self.lbl_view_sub = ctk.CTkLabel(
             title_box,
-            text="DEVICE SERVICE MANAGER • GESTÃO, BLOQUEIO & LOCALIZAÇÃO (DPC PERSISTENTE)",
+            text="Reconhecimento ADB em tempo real e injeção DPC Knox",
             font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
-            text_color=self.CLR_GREEN
+            text_color=self.CLR_CYAN
         )
-        lbl_sub.pack(anchor="w")
+        self.lbl_view_sub.pack(anchor="w")
 
-        # Connection status badge on right
+        # Right: Account & Telemetry
         status_box = ctk.CTkFrame(header_inner, fg_color="transparent")
         status_box.pack(side="right")
 
-        # Client Account & Wallet Area
         self.btn_account = ctk.CTkButton(
             status_box,
             text="👤 Entrar / Login",
             font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
-            fg_color="#0F172A",
-            hover_color="#1E293B",
+            fg_color="#1E293B",
+            hover_color="#334155",
             corner_radius=6,
             height=28,
             command=self.open_login_dialog
@@ -231,6 +320,7 @@ class DeviceServiceManagerApp:
             padx=10,
             pady=5
         )
+        self.lbl_wallet_badge.pack(side="left", padx=(0, 6))
 
         self.btn_recharge = ctk.CTkButton(
             status_box,
@@ -243,47 +333,7 @@ class DeviceServiceManagerApp:
             width=110,
             command=self.open_inapp_recharge_dialog
         )
-
-        # Visual Theme Selector (3 Options)
-        theme_box = ctk.CTkFrame(status_box, fg_color="transparent")
-        theme_box.pack(side="left", padx=(0, 8))
-
-        ctk.CTkLabel(
-            theme_box,
-            text="Estilo:",
-            font=ctk.CTkFont(family="Segoe UI", size=9, weight="bold"),
-            text_color=self.CLR_TEXT_MUTED
-        ).pack(side="left", padx=(0, 3))
-
-        self.btn_thm_cyber = ctk.CTkButton(
-            theme_box, text="1. Cyber", width=62, height=24,
-            font=ctk.CTkFont(size=9, weight="bold"),
-            fg_color="#00E676" if self.current_theme_key == "cyber_dark" else "#0F172A",
-            text_color="#000000" if self.current_theme_key == "cyber_dark" else "#94A3B8",
-            hover_color="#00C853", corner_radius=5,
-            command=lambda: self.apply_ui_theme("cyber_dark")
-        )
-        self.btn_thm_cyber.pack(side="left", padx=1)
-
-        self.btn_thm_slate = ctk.CTkButton(
-            theme_box, text="2. Slate", width=58, height=24,
-            font=ctk.CTkFont(size=9, weight="bold"),
-            fg_color="#38BDF8" if self.current_theme_key == "titanium_slate" else "#0F172A",
-            text_color="#000000" if self.current_theme_key == "titanium_slate" else "#94A3B8",
-            hover_color="#0284C7", corner_radius=5,
-            command=lambda: self.apply_ui_theme("titanium_slate")
-        )
-        self.btn_thm_slate.pack(side="left", padx=1)
-
-        self.btn_thm_gold = ctk.CTkButton(
-            theme_box, text="3. Gold", width=55, height=24,
-            font=ctk.CTkFont(size=9, weight="bold"),
-            fg_color="#F59E0B" if self.current_theme_key == "gold_executive" else "#0F172A",
-            text_color="#000000" if self.current_theme_key == "gold_executive" else "#94A3B8",
-            hover_color="#D97706", corner_radius=5,
-            command=lambda: self.apply_ui_theme("gold_executive")
-        )
-        self.btn_thm_gold.pack(side="left", padx=1)
+        self.btn_recharge.pack(side="left", padx=(0, 8))
 
         self.lbl_connection_badge = ctk.CTkLabel(
             status_box,
@@ -310,38 +360,159 @@ class DeviceServiceManagerApp:
         )
         btn_refresh.pack(side="left")
 
-        # 2. LOGIN GATE (MANDATÓRIO ANTES DO ACESSO À FERRAMENTA)
+        # 4. VIEWS CONTAINER
+        self.views_container = ctk.CTkFrame(self.main_content_frame, fg_color="transparent")
+        self.views_container.pack(fill="both", expand=True)
+
+        self.view_bench = ctk.CTkFrame(self.views_container, fg_color="transparent")
+        self.view_cloud = ctk.CTkFrame(self.views_container, fg_color="transparent")
+        self.view_maps = ctk.CTkFrame(self.views_container, fg_color="transparent")
+        self.view_pix = ctk.CTkFrame(self.views_container, fg_color="transparent")
+
+        # Compatibility aliases so existing builder methods work seamlessly
+        self.tab_gestao = self.view_bench
+        self.tab_cloud = self.view_cloud
+        self.tab_loc = self.view_maps
+        self.tabview = self
+
+        # 5. LOGIN GATE
         self._build_login_gate_ui()
 
-        # 3. MAIN TABVIEW
-        self.tabview = ctk.CTkTabview(
-            self.root,
-            fg_color=self.CLR_BG,
-            segmented_button_fg_color="#0A101D",
-            segmented_button_selected_color=self.CLR_BLUE,
-            segmented_button_selected_hover_color=self.CLR_BLUE_HOVER,
-            segmented_button_unselected_color="#0A101D",
-            segmented_button_unselected_hover_color="#14223A",
-            text_color="#FFFFFF",
-            corner_radius=10,
-            border_width=1,
-            border_color=self.CLR_BORDER
-        )
-
-        self.tab_gestao = self.tabview.add("⚡ GESTÃO & LIBERAÇÃO")
-        self.tab_cloud = self.tabview.add("☁️ APARELHOS NA NUVEM")
-        self.tab_loc = self.tabview.add("📍 LOCALIZAÇÃO & GOOGLE MAPS")
-
+        # 6. BUILD EACH VIEW
         self._build_tab_gestao()
         self._build_tab_cloud()
         self._build_tab_location()
+        self._build_tab_pix()
 
-        # Inicializa exibindo exclusivamente o painel de login na frente
+        # Start with login gate
         self.show_login_gate()
 
-    # ========================================================
-    # TAB 1: GESTÃO & LIBERAÇÃO (COMPACT DUAL-COLUMN GRID)
-    # ========================================================
+    def set(self, tab_name):
+        """Compatibility shim for old tabview.set() calls."""
+        if "LOCALIZ" in tab_name or "MAP" in tab_name:
+            self._switch_view("maps")
+        elif "CLOUD" in tab_name or "NUVEM" in tab_name:
+            self._switch_view("cloud")
+        elif "PIX" in tab_name:
+            self._switch_view("pix")
+        else:
+            self._switch_view("bench")
+
+    def _switch_view(self, target_key):
+        self.current_view_key = target_key
+        for key, btn in self.nav_buttons.items():
+            if key == target_key:
+                btn.configure(fg_color="#1E293B", text_color="#38BDF8")
+            else:
+                btn.configure(fg_color="transparent", text_color="#94A3B8")
+
+        for f in [self.view_bench, self.view_cloud, self.view_maps, self.view_pix]:
+            f.pack_forget()
+
+        if target_key == "bench":
+            self.view_bench.pack(fill="both", expand=True)
+            self.lbl_view_title.configure(text="⚡ BANCADA USB • GESTÃO & DESBLOQUEIO")
+            self.lbl_view_sub.configure(text="Reconhecimento ADB em tempo real e injeção DPC Knox")
+        elif target_key == "cloud":
+            self.view_cloud.pack(fill="both", expand=True)
+            self.lbl_view_title.configure(text="☁️ APARELHOS NA NUVEM • CONTROLE REMOTO")
+            self.lbl_view_sub.configure(text="Dispositivos sincronizados na conta do lojista sem necessidade de cabo")
+            self.refresh_cloud_devices_async()
+        elif target_key == "maps":
+            self.view_maps.pack(fill="both", expand=True)
+            self.lbl_view_title.configure(text="📍 GOOGLE MAPS • LOCALIZAÇÃO REAL")
+            self.lbl_view_sub.configure(text="Rastreamento GPS via hardware com visualização de ruas e satélite")
+        elif target_key == "pix":
+            self.view_pix.pack(fill="both", expand=True)
+            self.lbl_view_title.configure(text="⚙️ CONFIGURAÇÃO DE CHAVE PIX & LOJA")
+            self.lbl_view_sub.configure(text="Defina seus dados para recebimento direto de pagamentos nos aparelhos")
+
+    def _build_tab_pix(self):
+        container = ctk.CTkFrame(self.view_pix, fg_color="transparent")
+        container.pack(fill="both", expand=True, padx=2, pady=2)
+
+        card = ctk.CTkFrame(container, fg_color=self.CLR_CARD, corner_radius=12, border_width=1, border_color=self.CLR_BORDER)
+        card.pack(fill="both", expand=True, padx=8, pady=8)
+
+        ctk.CTkLabel(
+            card,
+            text="⚙️  CONFIGURAÇÃO DE RECEBIMENTO PIX PESSOAL",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            text_color=self.CLR_CYAN
+        ).pack(anchor="w", padx=20, pady=(16, 6))
+
+        ctk.CTkLabel(
+            card,
+            text="Configure a sua própria chave PIX. Quando você emitir uma ordem de serviço ou bloquear um aparelho,\no cliente final pagará diretamente na sua conta bancária sem intermediários.",
+            font=ctk.CTkFont(size=11),
+            text_color=self.CLR_TEXT_MUTED,
+            justify="left"
+        ).pack(anchor="w", padx=20, pady=(0, 16))
+
+        form_box = ctk.CTkFrame(card, fg_color="transparent")
+        form_box.pack(fill="x", padx=20, pady=8)
+
+        # Chave PIX
+        ctk.CTkLabel(form_box, text="Sua Chave PIX (Telefone, CPF, CNPJ, E-mail ou EVP):", font=ctk.CTkFont(size=11, weight="bold"), text_color="#FFF").pack(anchor="w", pady=(0, 3))
+        self.ent_pix_alt = ctk.CTkEntry(form_box, font=ctk.CTkFont(size=12), fg_color=self.CLR_CARD_INNER, border_color=self.CLR_BORDER, corner_radius=8, height=34)
+        self.ent_pix_alt.insert(0, self.saved_config.get("pix", ""))
+        self.ent_pix_alt.pack(fill="x", pady=(0, 12))
+
+        # Nome Titular
+        ctk.CTkLabel(form_box, text="Nome do Titular / Razão Social:", font=ctk.CTkFont(size=11, weight="bold"), text_color="#FFF").pack(anchor="w", pady=(0, 3))
+        self.ent_merchant_alt = ctk.CTkEntry(form_box, font=ctk.CTkFont(size=12), fg_color=self.CLR_CARD_INNER, border_color=self.CLR_BORDER, corner_radius=8, height=34)
+        self.ent_merchant_alt.insert(0, self.saved_config.get("merchant", "Central Cell Premium"))
+        self.ent_merchant_alt.pack(fill="x", pady=(0, 12))
+
+        # Cidade
+        ctk.CTkLabel(form_box, text="Cidade do Titular:", font=ctk.CTkFont(size=11, weight="bold"), text_color="#FFF").pack(anchor="w", pady=(0, 3))
+        self.ent_city_alt = ctk.CTkEntry(form_box, font=ctk.CTkFont(size=12), fg_color=self.CLR_CARD_INNER, border_color=self.CLR_BORDER, corner_radius=8, height=34)
+        self.ent_city_alt.insert(0, self.saved_config.get("city", "Americana"))
+        self.ent_city_alt.pack(fill="x", pady=(0, 16))
+
+        btn_box = ctk.CTkFrame(form_box, fg_color="transparent")
+        btn_box.pack(fill="x")
+
+        def _save_pix_from_tab():
+            val = self.ent_pix_alt.get().strip()
+            merch = self.ent_merchant_alt.get().strip()
+            city = self.ent_city_alt.get().strip()
+            if hasattr(self, 'ent_pix') and self.ent_pix:
+                self.ent_pix.delete(0, "end")
+                self.ent_pix.insert(0, val)
+            if hasattr(self, 'ent_merchant') and self.ent_merchant:
+                self.ent_merchant.delete(0, "end")
+                self.ent_merchant.insert(0, merch)
+            if hasattr(self, 'ent_city') and self.ent_city:
+                self.ent_city.delete(0, "end")
+                self.ent_city.insert(0, city)
+            self.save_pix_config()
+            self.log("[CONFIG] Chave PIX atualizada com sucesso!")
+
+        btn_save = ctk.CTkButton(
+            btn_box,
+            text="💾 Salvar Minha Chave PIX",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            fg_color=self.CLR_GREEN,
+            hover_color=self.CLR_GREEN_HOVER,
+            corner_radius=8,
+            height=36,
+            command=_save_pix_from_tab
+        )
+        btn_save.pack(side="left", padx=(0, 10))
+
+        btn_gen = ctk.CTkButton(
+            btn_box,
+            text="⚡ Gerar QR Code PIX de Teste",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            fg_color=self.CLR_BLUE,
+            hover_color=self.CLR_BLUE_HOVER,
+            corner_radius=8,
+            height=36,
+            command=self.generate_qr_click
+        )
+        btn_gen.pack(side="left")
+
     def _build_tab_gestao(self):
         container = ctk.CTkFrame(self.tab_gestao, fg_color="transparent")
         container.pack(fill="both", expand=True, padx=2, pady=2)
@@ -2397,10 +2568,10 @@ class DeviceServiceManagerApp:
         self.lbl_gate_server.pack(side="left")
 
     def show_login_gate(self):
+        if hasattr(self, 'main_shell'):
+            self.main_shell.pack_forget()
         if hasattr(self, 'header_frame'):
             self.header_frame.pack_forget()
-        if hasattr(self, 'tabview'):
-            self.tabview.pack_forget()
 
         # Center and resize to login mode
         self.root.update_idletasks()
@@ -2421,18 +2592,18 @@ class DeviceServiceManagerApp:
 
         # Center and resize to full workspace mode
         self.root.resizable(True, True)
-        self.root.minsize(1000, 580)
+        self.root.minsize(1050, 620)
         self.root.update_idletasks()
         scr_w = self.root.winfo_screenwidth()
         scr_h = self.root.winfo_screenheight()
         pos_x = max(0, (scr_w - self.WIN_MAIN_W) // 2)
         pos_y = max(0, (scr_h - self.WIN_MAIN_H) // 2)
         self.root.geometry(f"{self.WIN_MAIN_W}x{self.WIN_MAIN_H}+{pos_x}+{pos_y}")
-        self.root.title("MDM & FRP BRASIL — DEVICE SERVICE MANAGER")
+        self.root.title("MDM & FRP BRASIL STUDIO — TITANIUM SLATE")
 
         # Pack main UI elements
-        self.header_frame.pack(fill="x", padx=12, pady=(8, 6))
-        self.tabview.pack(fill="both", expand=True, padx=12, pady=(0, 8))
+        self.main_shell.pack(fill="both", expand=True, padx=6, pady=6)
+        self._switch_view("bench")
         self._update_auth_ui()
         self.sync_official_pix()
         self.refresh_devices_async()
