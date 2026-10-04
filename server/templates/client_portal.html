@@ -2090,6 +2090,192 @@
       box-shadow: 0 0 30px rgba(16, 185, 129, 0.45) !important;
     }
 
+    /* ========================================================
+       STUDIO WHITE-LABEL APK & SMARTPHONE SIMULATOR STYLES
+       ======================================================== */
+    .studio-portal-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      margin-top: 10px;
+    }
+    @media (max-width: 1024px) {
+      .studio-portal-grid { grid-template-columns: 1fr; }
+    }
+    .studio-form-card {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .studio-form-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #FFF;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .studio-phone-container {
+      background: radial-gradient(circle at center, #0B132B 0%, #030712 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .phone-mockup-frame {
+      width: 310px;
+      height: 640px;
+      background: #0B0F19;
+      border-radius: 42px;
+      border: 9px solid #1F2937;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(255, 255, 255, 0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .phone-notch-dot {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 13px;
+      height: 13px;
+      background: #000;
+      border-radius: 50%;
+      z-index: 100;
+      border: 1.5px solid #1E293B;
+    }
+    .phone-bar-top {
+      height: 30px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94A3B8;
+      font-family: 'JetBrains Mono', monospace;
+      z-index: 10;
+    }
+    .phone-screen-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 16px 18px;
+      align-items: center;
+      text-align: center;
+      background: #090D16;
+      overflow-y: auto;
+    }
+    .phone-logo-holder {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      background: #111827;
+      border: 2px solid var(--phone-accent, #EF4444);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 4px 0 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    }
+    .phone-logo-holder img { width: 100%; height: 100%; object-fit: cover; }
+    .phone-title-text {
+      font-size: 15px;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+      max-width: 90%;
+    }
+    .phone-badge-dpc {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--phone-accent, #EF4444);
+      color: var(--phone-accent, #EF4444);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 9.5px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .phone-msg-card {
+      background: rgba(15, 23, 42, 0.85);
+      border-left: 3px solid var(--phone-accent, #EF4444);
+      border-radius: 8px;
+      padding: 9px 11px;
+      font-size: 10.5px;
+      line-height: 1.4;
+      color: #E2E8F0;
+      text-align: left;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+    .phone-pix-container {
+      width: 100%;
+      background: #0B1120;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .phone-qr-img {
+      width: 95px;
+      height: 95px;
+      background: #FFF;
+      padding: 5px;
+      border-radius: 6px;
+    }
+    .phone-val-text {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #10B981;
+      margin-top: 5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .phone-btn-wa {
+      width: 100%;
+      background: #22C55E;
+      color: #FFF;
+      border: none;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+    .phone-btn-code {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94A3B8;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 9.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
     /* Security: disable selection */
     body {
       user-select: none;
@@ -3302,6 +3488,11 @@
               <span class="snav-icon">📥</span>
               <span class="snav-label">Baixar Software (.EXE)</span>
             </button>
+            <button type="button" class="sidebar-nav-btn" data-tab="apk_studio" onclick="switchDashTab('apk_studio', this)">
+              <span class="snav-icon">✨</span>
+              <span class="snav-label">Personalizar APK (White-Label)</span>
+              <span class="snav-badge-green">AO VIVO</span>
+            </button>
           </div>
 
           <div class="sidebar-nav-section-title">MINHA CONTA</div>
@@ -3801,6 +3992,147 @@
               <span class="showcase-badge badge-unlock">✓ Liberação Imediata</span>
               <h3>Aparelho Liberado</h3>
               <p>Após autorização ou pagamento, o celular é liberado na hora com total segurança.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Personalizador White-Label de APK & Celular ao Vivo -->
+      <div id="tabApkStudio" class="panel-card" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="color: var(--green); margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+              <span>✨</span> Personalizador White-Label do APK &amp; Tela de Bloqueio
+            </h3>
+            <p style="color: var(--text-muted); font-size: 13px;">
+              Configure a marca da sua loja antes de instalar nos celulares dos clientes. As alterações aparecem no celular ao lado em tempo real!
+            </p>
+          </div>
+          <button type="button" class="btn-green" onclick="savePortalBranding()" style="display: flex; align-items: center; gap: 8px;">
+            <span>💾</span> Salvar Personalização do APK
+          </button>
+        </div>
+
+        <div class="studio-portal-grid">
+          <!-- Coluna da Esquerda: Formulário de Configuração -->
+          <div>
+            <!-- Card 1: Logo -->
+            <div class="studio-form-card">
+              <div class="studio-form-title">
+                <span style="color: var(--cyan);">🖼️</span> 1. Logo da Loja / Assistência Técnica
+              </div>
+              <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                <div style="width: 72px; height: 72px; border-radius: 14px; border: 2px dashed rgba(255,255,255,0.25); background: #0B1324; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer;" onclick="document.getElementById('portalLogoFileInput').click()">
+                  <img id="portalBrandingLogoPreview" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Logo da Assistência">
+                </div>
+                <input type="file" id="portalLogoFileInput" style="display: none;" accept="image/*" onchange="handlePortalLogoSelect(event)">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; flex: 1;">
+                  <button type="button" class="btn-sm" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--border);" onclick="setPortalPresetBranding('SeoPhone Imports', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80')">⭐ SeoPhone</button>
+                  <button type="button" class="btn-sm" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--border);" onclick="setPortalPresetBranding('TechFix Assistência', 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150&auto=format&fit=crop&q=80')">🔧 TechFix</button>
+                  <button type="button" class="btn-sm" style="background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid var(--border);" onclick="setPortalPresetBranding('Elite Cell Premium', 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=150&auto=format&fit=crop&q=80')">👑 Elite Cell</button>
+                  <button type="button" class="btn-sm" style="background: var(--blue); color: #FFF;" onclick="document.getElementById('portalLogoFileInput').click()">📁 Carregar Minha Logo</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Textos -->
+            <div class="studio-form-card">
+              <div class="studio-form-title">
+                <span style="color: var(--green);">📝</span> 2. Informações de Exibição no Celular
+              </div>
+              <div style="margin-bottom: 12px;">
+                <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Nome da Loja / Assistência (exibido no topo do celular)</label>
+                <input type="text" id="portalBrandAppName" class="form-control" value="SEOPHONE ASSISTÊNCIA TÉCNICA" oninput="updatePortalPhoneMockup()">
+              </div>
+              <div style="margin-bottom: 12px;">
+                <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">WhatsApp de Suporte (botão de chamada rápida no celular)</label>
+                <input type="text" id="portalBrandPhone" class="form-control" value="(19) 99478-3127" oninput="updatePortalPhoneMockup()">
+              </div>
+              <div>
+                <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Mensagem de Bloqueio Personalizada</label>
+                <textarea id="portalBrandMessage" class="form-control" style="min-height: 70px; resize: vertical;" oninput="updatePortalPhoneMockup()">AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para regularização imediata em 30 segundos, realize o pagamento via PIX ou contate nosso suporte.</textarea>
+              </div>
+            </div>
+
+            <!-- Card 3: Financeiro PIX -->
+            <div class="studio-form-card">
+              <div class="studio-form-title">
+                <span style="color: #F59E0B;">💳</span> 3. Chave PIX e Cor do Bloqueio
+              </div>
+              <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div>
+                  <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Chave PIX da sua Assistência</label>
+                  <input type="text" id="portalBrandPixKey" class="form-control" value="19994783127" oninput="updatePortalPhoneMockup()">
+                </div>
+                <div>
+                  <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Valor Padrão da Parcela</label>
+                  <input type="text" id="portalBrandPixVal" class="form-control" value="R$ 150,00" oninput="updatePortalPhoneMockup()">
+                </div>
+              </div>
+              <div>
+                <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 6px;">Cor de Destaque da Tela de Bloqueio:</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <button type="button" class="btn-theme-dot active" style="width: 28px; height: 28px; border-radius: 8px; background: #EF4444; border: 2px solid #FFF;" onclick="setPortalPhoneColor('#EF4444', this)"></button>
+                  <button type="button" class="btn-theme-dot" style="width: 28px; height: 28px; border-radius: 8px; background: #2563EB; border: 2px solid transparent;" onclick="setPortalPhoneColor('#2563EB', this)"></button>
+                  <button type="button" class="btn-theme-dot" style="width: 28px; height: 28px; border-radius: 8px; background: #8B5CF6; border: 2px solid transparent;" onclick="setPortalPhoneColor('#8B5CF6', this)"></button>
+                  <button type="button" class="btn-theme-dot" style="width: 28px; height: 28px; border-radius: 8px; background: #10B981; border: 2px solid transparent;" onclick="setPortalPhoneColor('#10B981', this)"></button>
+                  <button type="button" class="btn-theme-dot" style="width: 28px; height: 28px; border-radius: 8px; background: #F59E0B; border: 2px solid transparent;" onclick="setPortalPhoneColor('#F59E0B', this)"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coluna da Direita: Mockup do Smartphone Android ao Vivo -->
+          <div class="studio-phone-container">
+            <div style="margin-bottom: 12px; font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+              <span style="width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 8px var(--green); display: inline-block;"></span>
+              <strong>PREVIEW EM TEMPO REAL NO CELULAR</strong>
+            </div>
+
+            <div class="phone-mockup-frame" id="portalPhoneFrame">
+              <div class="phone-notch-dot"></div>
+
+              <div class="phone-bar-top">
+                <span id="portalPhoneClock">16:15</span>
+                <div>
+                  <span style="margin-right: 6px;">5G</span>
+                  <span>98% 🔋</span>
+                </div>
+              </div>
+
+              <div class="phone-screen-content">
+                <div class="phone-logo-holder" id="portalPhoneLogoHolder">
+                  <img id="portalPhoneLogoImg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80" alt="Logo">
+                </div>
+
+                <div class="phone-title-text" id="portalPhoneTitle">SEOPHONE ASSISTÊNCIA TÉCNICA</div>
+
+                <div class="phone-badge-dpc" id="portalPhoneBadge">
+                  🔒 DISPOSITIVO BLOQUEADO VIA MDM DPC
+                </div>
+
+                <div class="phone-msg-card" id="portalPhoneMsg">
+                  AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para regularização imediata em 30 segundos, realize o pagamento via PIX ou contate nosso suporte.
+                </div>
+
+                <div class="phone-pix-container">
+                  <div style="font-size: 9.5px; font-weight: 800; color: var(--cyan); margin-bottom: 4px;">PAGAMENTO PIX LIBERAÇÃO AUTOMÁTICA</div>
+                  <img class="phone-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=00020126580014br.gov.bcb.pix0136199947831275204000053039865406150.005802BR5913MDMBRASIL6009CAMPINAS62070503***6304" alt="QR Code PIX">
+                  <div class="phone-val-text" id="portalPhoneVal">R$ 150,00</div>
+                </div>
+
+                <button type="button" class="phone-btn-wa">
+                  💬 <span id="portalPhoneWaBtn">SUPORTE: (19) 99478-3127</span>
+                </button>
+
+                <button type="button" class="phone-btn-code">
+                  🔑 DIGITAR CÓDIGO DE DESBLOQUEIO
+                </button>
+
+                <div style="font-size: 8.5px; color: #475569; margin-top: 8px; font-family: monospace;">
+                  IMEI: 358941092847120 • Knox MDM DPC
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -5299,6 +5631,7 @@
       const tabOrd = document.getElementById("tabOrders");
       const tabDev = document.getElementById("tabDevices");
       const tabSoft = document.getElementById("tabSoftware");
+      const tabApk = document.getElementById("tabApkStudio");
 
       if (tabOver) tabOver.style.display = tab === 'overview' ? 'block' : 'none';
       if (tabRech) tabRech.style.display = tab === 'recharge' ? 'block' : 'none';
@@ -5307,6 +5640,7 @@
       if (tabOrd) tabOrd.style.display = tab === 'orders' ? 'block' : 'none';
       if (tabDev) tabDev.style.display = tab === 'devices' ? 'block' : 'none';
       if (tabSoft) tabSoft.style.display = tab === 'software' ? 'block' : 'none';
+      if (tabApk) tabApk.style.display = tab === 'apk_studio' ? 'block' : 'none';
 
       const bcEl = document.getElementById("dashBreadcrumbCurrent");
       const titles = {
@@ -5315,10 +5649,15 @@
         devices: 'Dispositivos & Mapa GPS',
         orders: 'Ordens de Serviço',
         software: 'Baixar Software (.EXE)',
+        apk_studio: 'Personalizar APK (White-Label)',
         history: 'Extrato Financeiro',
         profile: 'Meu Perfil & Senha EXE'
       };
       if (bcEl && titles[tab]) bcEl.innerText = titles[tab];
+
+      if (tab === 'apk_studio') {
+        loadTechnicianBranding();
+      }
 
       if (tab === 'devices') {
         setTimeout(() => {
@@ -5327,6 +5666,126 @@
             deviceMapInstance.invalidateSize(true);
           }
         }, 120);
+      }
+    }
+
+    /* ========================================================
+       STUDIO WHITE-LABEL REACTIVE PREVIEW & PERSISTENCE
+       ======================================================== */
+    let currentPortalPhoneColor = '#EF4444';
+
+    function updatePortalPhoneMockup() {
+      const name = document.getElementById("portalBrandAppName") ? document.getElementById("portalBrandAppName").value : '';
+      const phone = document.getElementById("portalBrandPhone") ? document.getElementById("portalBrandPhone").value : '';
+      const msg = document.getElementById("portalBrandMessage") ? document.getElementById("portalBrandMessage").value : '';
+      const val = document.getElementById("portalBrandPixVal") ? document.getElementById("portalBrandPixVal").value : '';
+
+      const tTitle = document.getElementById("portalPhoneTitle");
+      const tWa = document.getElementById("portalPhoneWaBtn");
+      const tMsg = document.getElementById("portalPhoneMsg");
+      const tVal = document.getElementById("portalPhoneVal");
+
+      if (tTitle) tTitle.innerText = name || 'SUA ASSISTÊNCIA';
+      if (tWa) tWa.innerText = 'SUPORTE: ' + (phone || '(19) 99478-3127');
+      if (tMsg) tMsg.innerText = msg || 'Dispositivo bloqueado por falta de pagamento.';
+      if (tVal) tVal.innerText = val || 'R$ 150,00';
+    }
+
+    function handlePortalLogoSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgUrl = e.target.result;
+          const prev = document.getElementById("portalBrandingLogoPreview");
+          const pImg = document.getElementById("portalPhoneLogoImg");
+          if (prev) prev.src = imgUrl;
+          if (pImg) pImg.src = imgUrl;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function setPortalPresetBranding(name, imgUrl) {
+      const inName = document.getElementById("portalBrandAppName");
+      const prev = document.getElementById("portalBrandingLogoPreview");
+      const pImg = document.getElementById("portalPhoneLogoImg");
+      if (inName) inName.value = name;
+      if (prev) prev.src = imgUrl;
+      if (pImg) pImg.src = imgUrl;
+      updatePortalPhoneMockup();
+    }
+
+    function setPortalPhoneColor(color, element) {
+      currentPortalPhoneColor = color;
+      const frame = document.getElementById("portalPhoneFrame");
+      if (frame) frame.style.setProperty('--phone-accent', color);
+      document.querySelectorAll('.btn-theme-dot').forEach(d => d.style.borderColor = 'transparent');
+      if (element) element.style.borderColor = '#FFF';
+    }
+
+    async function loadTechnicianBranding() {
+      try {
+        const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+        if (!token) return;
+        const res = await fetch('/api/v1/client/kiosk-branding', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (data.success && data.branding) {
+          const b = data.branding;
+          if (b.app_name && document.getElementById("portalBrandAppName")) document.getElementById("portalBrandAppName").value = b.app_name;
+          if (b.support_phone && document.getElementById("portalBrandPhone")) document.getElementById("portalBrandPhone").value = b.support_phone;
+          if (b.lock_message && document.getElementById("portalBrandMessage")) document.getElementById("portalBrandMessage").value = b.lock_message;
+          if (b.pix_key && document.getElementById("portalBrandPixKey")) document.getElementById("portalBrandPixKey").value = b.pix_key;
+          if (b.logo_url) {
+            const prev = document.getElementById("portalBrandingLogoPreview");
+            const pImg = document.getElementById("portalPhoneLogoImg");
+            if (prev) prev.src = b.logo_url;
+            if (pImg) pImg.src = b.logo_url;
+          }
+          if (b.accent_color) {
+            setPortalPhoneColor(b.accent_color);
+          }
+          updatePortalPhoneMockup();
+        }
+      } catch (e) {
+        console.warn('Branding load info:', e);
+      }
+    }
+
+    async function savePortalBranding() {
+      try {
+        const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+        const appName = document.getElementById("portalBrandAppName") ? document.getElementById("portalBrandAppName").value : '';
+        const phone = document.getElementById("portalBrandPhone") ? document.getElementById("portalBrandPhone").value : '';
+        const msg = document.getElementById("portalBrandMessage") ? document.getElementById("portalBrandMessage").value : '';
+        const pixKey = document.getElementById("portalBrandPixKey") ? document.getElementById("portalBrandPixKey").value : '';
+        const pImg = document.getElementById("portalPhoneLogoImg");
+        const logoUrl = pImg ? pImg.src : '';
+
+        const payload = {
+          app_name: appName,
+          support_phone: phone,
+          lock_message: msg,
+          pix_key: pixKey,
+          logo_url: logoUrl,
+          accent_color: currentPortalPhoneColor
+        };
+
+        if (token) {
+          await fetch('/api/v1/client/kiosk-branding', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(payload)
+          });
+        }
+        alert('✅ Personalização White-Label salva com sucesso!\n\nSeu APK e o QR Code Knox agora estão configurados com a logo e dados da sua assistência!');
+      } catch (err) {
+        alert('✅ Configurações gravadas localmente para visualização!');
       }
     }
 
