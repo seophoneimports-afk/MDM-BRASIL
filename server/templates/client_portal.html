@@ -2493,16 +2493,23 @@
       margin-bottom: 14px;
     }
     .linear-brand-logo {
-      width: 36px;
-      height: 36px;
+      width: 42px;
+      height: 42px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #00E5FF 0%, #00E676 100%);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 229, 255, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
-      color: #000;
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.25);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .linear-brand-img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.45));
     }
     .linear-brand-title {
       font-size: 13.5px;
@@ -3177,9 +3184,11 @@
       <!-- SIDEBAR LATERAL FIXADA: LINEAR STUDIO V2.2 -->
       <aside class="sidebar-portal-nav">
         <div>
-          <!-- BRAND LOGO LINEAR -->
+          <!-- BRAND LOGO LINEAR (LOGO OFICIAL MDM & FRP BRASIL) -->
           <div class="sidebar-linear-header" onclick="switchDashTab('overview')" style="cursor: pointer;" title="Ir para o Início">
-            <div class="linear-brand-logo">🛡️</div>
+            <div class="linear-brand-logo">
+              <img src="/static/logo.png" alt="MDM &amp; FRP BRASIL" class="linear-brand-img">
+            </div>
             <div>
               <div class="linear-brand-title">MDM &amp; FRP BRASIL</div>
               <div class="linear-brand-sub">TITANIUM STUDIO V2.2</div>
