@@ -2308,9 +2308,21 @@
       <span style="font-size: 11px; color: #38BDF8;">Sincronização Ativa</span>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <a href="#secBenchInteractive" class="btn-nav-item" style="font-size: 11.5px; padding: 6px 12px; color: #00E5FF; border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 8px; text-decoration: none; font-weight: 700;">
+        🔬 Bancada &amp; Comandos
+      </a>
+      <a href="/white-label" class="btn-nav-item" style="font-size: 11.5px; padding: 6px 12px; color: #00E676; border: 1px solid rgba(0, 230, 118, 0.4); border-radius: 8px; text-decoration: none; font-weight: 700;">
+        ✨ Personalizar APK
+      </a>
+      <button class="btn-nav-item" style="font-size: 11.5px; padding: 6px 12px; color: #FFF; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; text-decoration: none; font-weight: 700; background: transparent; cursor: pointer;" onclick="showView('Dashboard')">
+        📊 Painel Técnico
+      </button>
+      <a href="/admin" target="_blank" class="btn-nav-item" style="font-size: 11.5px; padding: 6px 12px; color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; text-decoration: none; font-weight: 700;">
+        👑 Admin
+      </a>
       <a href="/download/exe?v=2.2" class="btn-download-header" title="Baixar executável MDM & FRP BRASIL para Windows">
-        📥 Baixar Ferramenta (.exe)
+        📥 Baixar .EXE
       </a>
       <button id="btnHeaderAuth" class="btn-green" style="font-size: 12px; padding: 7px 14px;" onclick="openAuthOverlay('Login')">
         👤 Entrar / Cadastrar
@@ -2404,6 +2416,467 @@
             </div>
           </div>
         </div>
+
+        <!-- ========================================================
+             SEÇÃO EXCLUSIVA: SIMULADOR DE BANCADA TÉCNICA AO VIVO &
+             MATRIZ DE COMANDOS (CLOUD SITE vs EXE vs CELULAR)
+             ======================================================== -->
+        <div id="secBenchInteractive" style="max-width: 1200px; margin: 30px auto 40px; padding: 0 16px;">
+          
+          <!-- NAVEGAÇÃO DE ABAS: BANCADA CELULAR vs GUIA DE COMANDOS -->
+          <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;">
+            <button type="button" id="btnBenchTab1" class="btn-green" style="font-size: 13px; font-weight: 800; padding: 10px 22px; border-radius: 30px; box-shadow: 0 0 20px rgba(0, 230, 118, 0.3);" onclick="switchBenchView('steps')">
+              📱 1. Bancada ao Vivo: Passo a Passo no Celular
+            </button>
+            <button type="button" id="btnBenchTab2" class="btn-primary" style="font-size: 13px; font-weight: 800; padding: 10px 22px; border-radius: 30px;" onclick="switchBenchView('commands')">
+              🎮 2. Guia de Comandos: O que cada Botão faz (Site, EXE e Celular)
+            </button>
+          </div>
+
+          <!-- PARTE 1: PASSO A PASSO NA BANCADA COM CELULAR AO VIVO -->
+          <div id="viewBenchSteps" style="display: block; background: #0A0F1D; border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 20px; padding: 30px 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.6);">
+            
+            <div style="text-align: center; margin-bottom: 24px;">
+              <span style="background: rgba(0, 230, 118, 0.15); border: 1px solid rgba(0, 230, 118, 0.35); color: #00E676; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">
+                🔬 SIMULADOR DE LABORATÓRIO TÉCNICO • TEMPO REAL
+              </span>
+              <h2 style="font-size: 26px; font-weight: 900; color: #FFF; margin: 10px 0 6px;">
+                Passo a Passo na Bancada: Ativando Modo Desenvolvedor e Depuração USB
+              </h2>
+              <p style="font-size: 13.5px; color: #94A3B8; max-width: 720px; margin: 0 auto;">
+                Veja como o técnico opera o celular na bancada para ativar a depuração USB e autorizar a injeção do MDM DPC sem precisar formatar o aparelho:
+              </p>
+            </div>
+
+            <!-- CONTROLE DE PASSOS (1 A 5) -->
+            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 26px; flex-wrap: wrap;">
+              <button type="button" class="bench-step-btn active" id="bStepBtn0" onclick="setBenchStep(0)">
+                <strong>1</strong> Configurações Android
+              </button>
+              <button type="button" class="bench-step-btn" id="bStepBtn1" onclick="setBenchStep(1)">
+                <strong>2</strong> Clicar 7x Número da Versão
+              </button>
+              <button type="button" class="bench-step-btn" id="bStepBtn2" onclick="setBenchStep(2)">
+                <strong>3</strong> Ativar Depuração USB
+              </button>
+              <button type="button" class="bench-step-btn" id="bStepBtn3" onclick="setBenchStep(3)">
+                <strong>4</strong> Conectar USB & Autorizar RSA
+              </button>
+              <button type="button" class="bench-step-btn" id="bStepBtn4" onclick="setBenchStep(4)">
+                <strong>5</strong> Injeção DPC & Modo Kiosk
+              </button>
+            </div>
+
+            <!-- CONTAINER SPLIT: DETALHES À ESQUERDA + CELULAR INTERATIVO À DIREITA -->
+            <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: center;">
+              
+              <!-- ESQUERDA: EXPLICAÇÃO DETALHADA E LOGS -->
+              <div style="background: #060B16; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
+                <div id="benchStepBadge" style="font-size: 11px; font-weight: 800; color: #00E5FF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">
+                  PASSO 1 DE 5 • ACESSO AO SISTEMA
+                </div>
+                <h3 id="benchStepTitle" style="font-size: 20px; font-weight: 800; color: #FFF; margin-bottom: 12px;">
+                  1. Acessar Configurações > Sobre o Telefone
+                </h3>
+                <p id="benchStepDesc" style="font-size: 13.5px; line-height: 1.6; color: #CBD5E1; margin-bottom: 18px;">
+                  No smartphone Android do cliente, abra o aplicativo de <strong>Configurações</strong>. Role até o final da página e toque na opção <strong>"Sobre o Telefone"</strong> (ou "Sobre o dispositivo").
+                </p>
+
+                <!-- DICAS TÉCNICAS -->
+                <div style="background: rgba(0, 229, 255, 0.06); border-left: 3px solid #00E5FF; padding: 12px 14px; border-radius: 8px; margin-bottom: 18px; font-size: 12px; color: #E2E8F0;">
+                  <strong style="color: #00E5FF;">💡 Dica de Bancada:</strong>
+                  <span id="benchStepTip">Compatível com Samsung Knox, Xiaomi MIUI/HyperOS, Motorola e Realme (Android 8 até Android 15).</span>
+                </div>
+
+                <!-- TERMINAL ADB AO VIVO -->
+                <div style="background: #020509; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #34D399; margin-bottom: 20px;">
+                  <div style="color: #64748B; margin-bottom: 4px;">// Terminal de Comunicação USB / ADB</div>
+                  <div id="benchStepLog">$ adb wait-for-device<br>> Aguardando ativação da depuração USB no dispositivo...</div>
+                </div>
+
+                <!-- BOTOES DE NAVEGAÇÃO ANTERIOR / PRÓXIMO -->
+                <div style="display: flex; gap: 10px;">
+                  <button type="button" class="btn-sm" style="background: #1E293B; color: #FFF; padding: 8px 16px; border-radius: 8px; font-weight: 700;" onclick="prevBenchStep()">
+                    ← Passo Anterior
+                  </button>
+                  <button type="button" class="btn-green" style="padding: 8px 18px; border-radius: 8px; font-weight: 800;" onclick="nextBenchStep()">
+                    Próximo Passo →
+                  </button>
+                </div>
+              </div>
+
+              <!-- DIREITA: CELULAR INTERATIVO REALISTA MOSTRANDO A TELA DO ANDROID -->
+              <div style="display: flex; justify-content: center;">
+                <div class="phone-mockup-frame" style="width: 300px; height: 600px; border: 8px solid #1F2937; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 25px rgba(0, 229, 255, 0.2);">
+                  <div class="phone-notch-dot"></div>
+                  
+                  <div class="phone-bar-top">
+                    <span>15:45</span>
+                    <div>5G • 98% 🔋</div>
+                  </div>
+
+                  <!-- CONTEÚDO DINÂMICO DA TELA DO CELULAR -->
+                  <div id="benchPhoneScreen" style="flex: 1; background: #090D16; display: flex; flex-direction: column; padding: 14px; position: relative; overflow: hidden; text-align: left;">
+                    
+                    <!-- TELA DO PASSO 1: CONFIGURAÇÕES -->
+                    <div id="phoneScreenStep0" style="display: block;">
+                      <div style="font-size: 16px; font-weight: 800; color: #FFF; margin-bottom: 14px;">Configurações</div>
+                      <div style="background: #1E293B; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+                        <span>📶</span> Conexões &amp; Wi-Fi
+                      </div>
+                      <div style="background: #1E293B; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+                        <span>🔒</span> Segurança &amp; Privacidade
+                      </div>
+                      <div style="background: #1E293B; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+                        <span>🔋</span> Assistência do Aparelho
+                      </div>
+                      <div style="background: #2563EB; border-radius: 10px; padding: 10px; font-size: 12px; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);">
+                        <span>📱</span> <strong>Sobre o Telefone ➔</strong>
+                      </div>
+                    </div>
+
+                    <!-- TELA DO PASSO 2: CLICAR 7X -->
+                    <div id="phoneScreenStep1" style="display: none;">
+                      <div style="font-size: 14px; font-weight: 800; color: #FFF; margin-bottom: 10px;">Informações do Software</div>
+                      <div style="background: #1E293B; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; font-size: 11px; color: #94A3B8;">
+                        Versão do Android: <strong style="color: #FFF;">14 (Knox 3.10)</strong>
+                      </div>
+                      <div style="background: #1E293B; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-size: 11px; color: #94A3B8;">
+                        Versão da Banda Base: <strong style="color: #FFF;">A155MXXU1AXB2</strong>
+                      </div>
+                      
+                      <!-- TOQUE PULSANTE 7X -->
+                      <div style="background: rgba(0, 230, 118, 0.15); border: 2px dashed #00E676; border-radius: 10px; padding: 12px; text-align: center; position: relative;">
+                        <div style="font-size: 10.5px; color: #94A3B8;">Número da Compilação</div>
+                        <strong style="font-size: 13px; color: #00E676; display: block; margin: 4px 0;">UP1A.231005.007</strong>
+                        <div style="font-size: 10px; color: #FFF; background: #00E676; color: #000; font-weight: 800; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 4px;">
+                          👆 TOQUE 7 VEZES AQUI
+                        </div>
+                      </div>
+
+                      <div style="background: rgba(0, 229, 255, 0.2); border: 1px solid #00E5FF; border-radius: 8px; padding: 8px; font-size: 10.5px; color: #FFF; text-align: center; margin-top: 14px;">
+                        🎉 "Você agora é um desenvolvedor!"
+                      </div>
+                    </div>
+
+                    <!-- TELA DO PASSO 3: ATIVAR DEPURAÇÃO USB -->
+                    <div id="phoneScreenStep2" style="display: none;">
+                      <div style="font-size: 14px; font-weight: 800; color: #FFF; margin-bottom: 12px;">Opções do Desenvolvedor</div>
+                      <div style="background: #1E293B; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-size: 11px; color: #94A3B8; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Modo desenvolvedor</span>
+                        <span style="color: #00E676; font-weight: 800;">ATIVADO ✓</span>
+                      </div>
+                      
+                      <div style="background: rgba(0, 230, 118, 0.15); border: 1.5px solid #00E676; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <strong style="color: #FFF; font-size: 12px; display: block;">Depuração USB</strong>
+                          <span style="color: #94A3B8; font-size: 9.5px;">Permitir comandos ADB via USB</span>
+                        </div>
+                        <div style="width: 38px; height: 22px; background: #00E676; border-radius: 20px; position: relative; cursor: pointer;">
+                          <div style="width: 18px; height: 18px; background: #FFF; border-radius: 50%; position: absolute; right: 2px; top: 2px;"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- TELA DO PASSO 4: MODAL RSA AUTORIZAÇÃO -->
+                    <div id="phoneScreenStep3" style="display: none;">
+                      <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid #00E5FF; border-radius: 14px; padding: 16px; margin-top: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+                        <strong style="font-size: 13px; color: #FFF; display: block; margin-bottom: 8px;">Permitir a depuração USB?</strong>
+                        <p style="font-size: 10px; color: #94A3B8; line-height: 1.4; margin-bottom: 10px;">
+                          A chave de impressão digital RSA deste computador de bancada é:<br>
+                          <code style="color: #00E5FF; font-size: 8.5px;">E4:B8:2A:90:3F:11:7C:8A</code>
+                        </p>
+                        <div style="display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: #FFF; margin-bottom: 12px;">
+                          <span style="color: #00E676;">☑</span> <strong>Sempre permitir a partir deste computador</strong>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                          <button type="button" style="background: transparent; border: none; color: #94A3B8; font-size: 11px;">Cancelar</button>
+                          <button type="button" style="background: #00E676; border: none; color: #000; font-weight: 800; font-size: 11px; padding: 4px 12px; border-radius: 6px;">PERMITIR</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- TELA DO PASSO 5: CELULAR BLOQUEADO VIA KIOSK MDM DPC -->
+                    <div id="phoneScreenStep4" style="display: none; text-align: center;">
+                      <div style="width: 58px; height: 58px; border-radius: 14px; background: #111827; border: 2px solid #EF4444; margin: 0 auto 8px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Logo">
+                      </div>
+                      <div style="font-size: 13px; font-weight: 800; color: #FFF; margin-bottom: 2px;">SEOPHONE ASSISTÊNCIA</div>
+                      <div style="display: inline-block; background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid #EF4444; padding: 2px 8px; border-radius: 6px; font-size: 9px; font-weight: 800; margin-bottom: 8px;">
+                        🔒 BLOQUEADO VIA MDM DPC
+                      </div>
+                      <div style="background: rgba(15, 23, 42, 0.85); border-left: 3px solid #EF4444; border-radius: 6px; padding: 6px 8px; font-size: 9.5px; color: #E2E8F0; text-align: left; margin-bottom: 8px;">
+                        Aparelho bloqueado por parcelamento. Realize o pagamento via PIX para liberação em 30 segundos.
+                      </div>
+                      <div style="background: #0B1120; border-radius: 8px; padding: 6px; display: inline-block; margin-bottom: 6px;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=MDMBRASIL150" style="width: 75px; height: 75px; background: #FFF; padding: 3px; border-radius: 4px;" alt="QR Code">
+                        <div style="font-size: 11px; font-weight: 800; color: #10B981; margin-top: 2px;">R$ 150,00</div>
+                      </div>
+                      <button type="button" style="width: 100%; background: #22C55E; color: #FFF; border: none; padding: 7px; border-radius: 8px; font-size: 10px; font-weight: 800;">
+                        💬 SUPORTE: (19) 99478-3127
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- PARTE 2: GUIA DE COMANDOS & COMPORTAMENTO DE CADA BOTÃO -->
+          <div id="viewBenchCommands" style="display: none; background: #0A0F1D; border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 20px; padding: 30px 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.6);">
+            
+            <div style="text-align: center; margin-bottom: 24px;">
+              <span style="background: rgba(0, 229, 255, 0.15); border: 1px solid rgba(0, 229, 255, 0.35); color: #00E5FF; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">
+                🎮 MATRIZ OPERACIONAL DE COMANDOS &amp; BOTÕES
+              </span>
+              <h2 style="font-size: 26px; font-weight: 900; color: #FFF; margin: 10px 0 6px;">
+                O que cada Botão faz no Site (Cloud), no Software (.EXE) e no Celular
+              </h2>
+              <p style="font-size: 13.5px; color: #94A3B8; max-width: 760px; margin: 0 auto;">
+                Entenda o comportamento exato de cada botão e função do ecossistema MDM &amp; FRP BRASIL em todas as camadas:
+              </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px;">
+              
+              <!-- COMANDO 1: BLOQUEAR DISPOSITIVO -->
+              <div style="background: #060B16; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔒</div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Bloquear Aparelho</h4>
+                    <span style="font-size: 10.5px; color: #EF4444; font-weight: 700;">COMANDO DE SEGURANÇA</span>
+                  </div>
+                </div>
+                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                  <div>🌐 <strong>No Site (Cloud):</strong> Envia sinal criptografado para o servidor e atualiza o status na tabela do cliente.</div>
+                  <div>💻 <strong>No Software (.EXE):</strong> Aplica política de restrição Device Owner via USB em menos de 0.4s.</div>
+                  <div>📱 <strong>Comportamento no Celular:</strong> A tela trava na hora no Modo Kiosk, desativa botões de volume/desligar, oculta a barra de status e exibe a tela de cobrança PIX com o logo da sua assistência técnica.</div>
+                </div>
+              </div>
+
+              <!-- COMANDO 2: DESBLOQUEAR PIX -->
+              <div style="background: #060B16; border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 14px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 230, 118, 0.2); color: #00E676; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔓</div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Desbloquear / Liberação</h4>
+                    <span style="font-size: 10.5px; color: #00E676; font-weight: 700;">AUTOMAÇÃO BANCÁRIA PIX</span>
+                  </div>
+                </div>
+                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                  <div>🌐 <strong>No Site (Cloud):</strong> Confirma recebimento via Webhook do Banco Central em até 2 segundos.</div>
+                  <div>💻 <strong>No Software (.EXE):</strong> Libera a trava com consumo de 1 crédito da carteira técnica.</div>
+                  <div>📱 <strong>Comportamento no Celular:</strong> A tela verde de Kiosk fecha instantaneamente, o celular vibra com aviso de sucesso e o launcher padrão volta com todos os aplicativos intactos.</div>
+                </div>
+              </div>
+
+              <!-- COMANDO 3: ALARME SONORO -->
+              <div style="background: #060B16; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(245, 158, 11, 0.2); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔊</div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Tocar Alarme Sonoro</h4>
+                    <span style="font-size: 10.5px; color: #F59E0B; font-weight: 700;">LOCALIZAÇÃO ACÚSTICA</span>
+                  </div>
+                </div>
+                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                  <div>🌐 <strong>No Site / EXE:</strong> Aciona gatilho sonoro imediato em alta prioridade.</div>
+                  <div>📱 <strong>Comportamento no Celular:</strong> Dispara sirene em volume máximo de 100%, <strong>ignorando se o smartphone estiver no modo silencioso ou não perturbe</strong>, e aciona o flash LED.</div>
+                </div>
+              </div>
+
+              <!-- COMANDO 4: RASTREAMENTO GPS & MAPA -->
+              <div style="background: #060B16; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 14px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 229, 255, 0.2); color: #00E5FF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">📍</div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Rastrear GPS &amp; Mapa</h4>
+                    <span style="font-size: 10.5px; color: #00E5FF; font-weight: 700;">GEOLOCALIZAÇÃO SATÉLITE</span>
+                  </div>
+                </div>
+                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                  <div>🌐 <strong>No Site / EXE:</strong> Plota o ponto exato no mapa Leaflet, exibindo rua, bairro, bateria e sinal.</div>
+                  <div>📱 <strong>Comportamento no Celular:</strong> O serviço em segundo plano coleta a coordenada GNSS de alta precisão (erro menor que 4 metros) e transmite de forma silenciosa para a nuvem.</div>
+                </div>
+              </div>
+
+              <!-- COMANDO 5: WIPE TOTAL / RESET SEGURO -->
+              <div style="background: #060B16; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">⚠️</div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Wipe Total Knox</h4>
+                    <span style="font-size: 10.5px; color: #EF4444; font-weight: 700;">DESTRUIÇÃO SEGURA REMOTA</span>
+                  </div>
+                </div>
+                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                  <div>🌐 <strong>No Site / EXE:</strong> Exige confirmação de senha do técnico para evitar erros.</div>
+                  <div>📱 <strong>Comportamento no Celular:</strong> Executa formatação de segurança militar Knox, limpando arquivos, fotos e contas cadastradas sem chance de recuperação.</div>
+                </div>
+              </div>
+
+              <!-- COMANDO 6: PERSONALIZAR WHITE-LABEL -->
+              <div style="background: #060B16; border: 1px solid rgba(192, 132, 252, 0.3); border-radius: 14px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(192, 132, 252, 0.2); color: #C084FC; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">✨</div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Personalizar White-Label</h4>
+                    <span style="font-size: 10.5px; color: #C084FC; font-weight: 700;">MARCA PRÓPRIA DA LOJA</span>
+                  </div>
+                </div>
+                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                  <div>🌐 <strong>No Site / EXE:</strong> Salva sua logo, nome da loja e WhatsApp (19) 99478-3127.</div>
+                  <div>📱 <strong>Comportamento no Celular:</strong> O APK e a tela Kiosk de bloqueio passam a carregar a imagem da sua assistência técnica e o botão direto para o seu WhatsApp!</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <script>
+          // NAVEGAÇÃO DE ABAS ENTRE BANCADA E COMANDOS
+          function switchBenchView(mode) {
+            const vSteps = document.getElementById("viewBenchSteps");
+            const vCmds = document.getElementById("viewBenchCommands");
+            const b1 = document.getElementById("btnBenchTab1");
+            const b2 = document.getElementById("btnBenchTab2");
+
+            if (mode === 'steps') {
+              if (vSteps) vSteps.style.display = 'block';
+              if (vCmds) vCmds.style.display = 'none';
+              if (b1) { b1.className = 'btn-green'; b1.style.boxShadow = '0 0 20px rgba(0, 230, 118, 0.3)'; }
+              if (b2) { b2.className = 'btn-primary'; b2.style.boxShadow = 'none'; }
+            } else {
+              if (vSteps) vSteps.style.display = 'none';
+              if (vCmds) vCmds.style.display = 'block';
+              if (b2) { b2.className = 'btn-green'; b2.style.boxShadow = '0 0 20px rgba(0, 230, 118, 0.3)'; }
+              if (b1) { b1.className = 'btn-primary'; b1.style.boxShadow = 'none'; }
+            }
+          }
+
+          // CONTROLE DO PASSO A PASSO NA BANCADA
+          let currentBenchStep = 0;
+          const benchStepData = [
+            {
+              badge: "PASSO 1 DE 5 • ACESSO AO SISTEMA",
+              title: "1. Acessar Configurações > Sobre o Telefone",
+              desc: "No smartphone Android do cliente, abra o aplicativo de <strong>Configurações</strong>. Role até o final da página e toque na opção <strong>'Sobre o Telefone'</strong> (ou 'Sobre o dispositivo').",
+              tip: "Compatível com Samsung Knox, Xiaomi MIUI/HyperOS, Motorola e Realme (Android 8 até Android 15).",
+              log: "$ adb wait-for-device\\n> Aguardando ativação da depuração USB no dispositivo..."
+            },
+            {
+              badge: "PASSO 2 DE 5 • MODO DESENVOLVEDOR",
+              title: "2. Clicar 7 Vezes no 'Número da Compilação'",
+              desc: "Toque rapidamente 7 vezes consecutivas sobre o item <strong>'Número da Compilação'</strong> (ou Versão da MIUI/Build Number). O Android exibirá na tela a mensagem oficial: <em>'Você agora é um desenvolvedor!'</em>.",
+              tip: "Se o celular tiver senha de tela configurada, o Android solicitará o PIN para liberar as opções de desenvolvedor.",
+              log: "$ adb devices\\n> Modo desenvolvedor ativado. Buscando barramento ADB..."
+            },
+            {
+              badge: "PASSO 3 DE 5 • ATIVAR DEPURAÇÃO USB",
+              title: "3. Ligar a Chave 'Depuração USB'",
+              desc: "Volte para a lista de configurações, entre no novo menu <strong>'Opções do Desenvolvedor'</strong> e ative a chave <strong>'Depuração USB'</strong>.",
+              tip: "Em aparelhos Xiaomi, ative também a opção 'Instalar via USB' e 'Depuração USB (Configurações de segurança)'.",
+              log: "$ adb connect\\n> Barramento USB aberto para handshake de comunicação."
+            },
+            {
+              badge: "PASSO 4 DE 5 • AUTORIZAÇÃO RSA",
+              title: "4. Conectar Cabo USB & Autorizar Computador",
+              desc: "Conecte o smartphone ao computador via cabo USB de qualidade. Na tela do celular, surgirá a caixa de diálogo com a chave RSA. Marque a caixinha <strong>'Sempre permitir a partir deste computador'</strong> e toque em <strong>PERMITIR</strong>.",
+              tip: "Isso autoriza permanentemente a máquina da sua assistência a enviar comandos sem perguntar de novo.",
+              log: "$ adb devices -l\\nList of devices attached\\n358941092847120    device product:a15 model:SM-A155M device:a15\\n> Handshake RSA aprovado com sucesso!"
+            },
+            {
+              badge: "PASSO 5 DE 5 • INJEÇÃO DPC & BLOQUEIO KIOSK",
+              title: "5. Injeção DPC Persistente & Kiosk com PIX",
+              desc: "O software MDM & FRP BRASIL (.EXE) reconhece o aparelho em 0.4s e injeta a política Device Owner. O celular é bloqueado no modo Kiosk oficial exibindo a <strong>Logo da sua Assistência</strong>, o valor da parcela e a chave PIX para liberação automática!",
+              tip: "A blindagem bloqueia reset de fábrica pelas teclas de volume e impede desinstalação mesmo após reiniciar o celular.",
+              log: "$ adb shell dpm set-device-owner br.com.mdmfrpbrasil.deviceservice/.DeviceAdminReceiver\\nSuccess: Device owner set to package\\n> Modo Kiosk ativo. Monitoramento cloud operacional!"
+            }
+          ];
+
+          function setBenchStep(idx) {
+            currentBenchStep = idx;
+            document.querySelectorAll('.bench-step-btn').forEach((b, i) => {
+              b.classList.toggle('active', i === idx);
+            });
+            for (let i = 0; i < 5; i++) {
+              const scr = document.getElementById("phoneScreenStep" + i);
+              if (scr) scr.style.display = i === idx ? 'block' : 'none';
+            }
+            const d = benchStepData[idx];
+            if (d) {
+              const bBadge = document.getElementById("benchStepBadge");
+              const bTitle = document.getElementById("benchStepTitle");
+              const bDesc = document.getElementById("benchStepDesc");
+              const bTip = document.getElementById("benchStepTip");
+              const bLog = document.getElementById("benchStepLog");
+              if (bBadge) bBadge.innerText = d.badge;
+              if (bTitle) bTitle.innerText = d.title;
+              if (bDesc) bDesc.innerHTML = d.desc;
+              if (bTip) bTip.innerText = d.tip;
+              if (bLog) bLog.innerHTML = d.log.replace(/\\n/g, '<br>');
+            }
+          }
+
+          function nextBenchStep() {
+            let next = (currentBenchStep + 1) % 5;
+            setBenchStep(next);
+          }
+
+          function prevBenchStep() {
+            let prev = (currentBenchStep - 1 + 5) % 5;
+            setBenchStep(prev);
+          }
+        </script>
+
+        <style>
+          .bench-step-btn {
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94A3B8;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+          }
+          .bench-step-btn strong {
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFF;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+          }
+          .bench-step-btn:hover {
+            background: #1E293B;
+            color: #FFF;
+          }
+          .bench-step-btn.active {
+            background: #2563EB;
+            color: #FFF;
+            border-color: #60A5FA;
+            box-shadow: 0 0 16px rgba(37, 99, 235, 0.4);
+          }
+          .bench-step-btn.active strong {
+            background: #FFF;
+            color: #2563EB;
+          }
+        </style>
 
         <!-- Como Funciona na Prática: OPÇÃO 1 CINEMA SPLIT-SLIDER -->
         <div data-section="sec_slider">
