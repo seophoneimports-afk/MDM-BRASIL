@@ -1182,7 +1182,7 @@ class DeviceServiceManagerApp:
         )
         btn_gate_create.pack(fill="x", padx=30, pady=(0, 8))
 
-        # Bottom Bar: Server URL & Exit
+        # Bottom Bar: Server URL (Fixed & Protegido)
         bottom_box = ctk.CTkFrame(self.login_gate_frame, fg_color="transparent")
         bottom_box.pack(fill="x", padx=30, pady=(0, 10))
 
@@ -1193,19 +1193,6 @@ class DeviceServiceManagerApp:
             text_color="#64748B"
         )
         self.lbl_gate_server.pack(side="left")
-
-        btn_gate_cfg = ctk.CTkButton(
-            bottom_box,
-            text="⚙️ Servidor",
-            font=ctk.CTkFont(size=9),
-            fg_color="transparent",
-            text_color="#94A3B8",
-            hover_color="#0F172A",
-            width=65,
-            height=20,
-            command=self.gate_change_server
-        )
-        btn_gate_cfg.pack(side="right")
 
     def show_login_gate(self):
         if hasattr(self, 'header_frame'):
@@ -1459,15 +1446,8 @@ class DeviceServiceManagerApp:
         threading.Thread(target=work, daemon=True).start()
 
     def gate_change_server(self):
-        new_url = simpledialog.askstring(
-            "Servidor Cloud / VPS",
-            "Digite a URL da API Cloud (ex: http://SEU_IP:8000 ou https://api.seusite.com):",
-            initialvalue=self.api_client.base_url
-        )
-        if new_url and new_url.strip():
-            self.api_client.set_base_url(new_url.strip())
-            self.lbl_gate_server.configure(text=f"🌐 {self.api_client.base_url}")
-            messagebox.showinfo("Servidor Atualizado", f"URL do servidor definida para:\n{self.api_client.base_url}")
+        # Servidor oficial fixado em https://mdm-brasil.onrender.com (pop-up desativado)
+        pass
 
     def _verify_session_async(self):
         ok, bal, err = self.api_client.get_balance()
