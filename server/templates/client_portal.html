@@ -2347,81 +2347,7 @@
   <main>
     <!-- SHOWCASE & EXE DOWNLOAD SECTION (VISITOR & CLIENTS) -->
     <div id="viewShowcase" class="showcase-section" style="margin-top: 10px;">
-      
-      <!-- WELCOME BANNER FOR LOGGED-IN USERS ON HOMEPAGE -->
-      <div id="loggedHomeBanner" style="display: none; background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(0, 230, 118, 0.08) 100%); border: 1px solid rgba(0, 229, 255, 0.35); border-radius: 14px; padding: 14px 22px; max-width: 980px; margin: 10px auto 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 20px rgba(0, 229, 255, 0.1);">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <img id="bannerUserAvatar" src="" alt="Avatar" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--cyan); display: none;">
-          <div>
-            <div style="font-size: 15px; font-weight: 800; color: #FFF;">
-              👋 Olá, <span id="bannerUserName" style="color: var(--cyan);">Cliente</span>! Você está conectado no site.
-            </div>
-            <div style="font-size: 12.5px; color: #94A3B8; margin-top: 2px;">
-              Saldo disponível na carteira: <strong style="color: var(--green); font-size: 14px;" id="bannerUserBalance">🪙 0 Créditos</strong>
-            </div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <button class="btn-primary" style="font-size: 13px; padding: 9px 18px; width: auto;" onclick="showView('Dashboard')">
-            📊 Abrir Meu Painel &amp; Perfil ➔
-          </button>
-        </div>
-      </div>
-      <!-- ========================================================
-           MODO 1: CINEMA SPLIT-SLIDER (APPLE PRO / STRIPE HIGH-TECH)
-           ======================================================== -->
-      <div id="layoutCinemaSplit" class="layout-mode-view">
-        <!-- CLEAN ENTERPRISE SAAS HERO -->
-        <div data-section="sec_hero" class="hero-clean-container" style="text-align: center; max-width: 980px; margin: 15px auto 35px; padding: 10px 20px 0;">
-          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #00E5FF; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);">
-            <span class="pulse-indicator"></span>
-            <span>🛡️ TECNOLOGIA CORPORATIVA DPC PERSISTENTE • PROTOCOLO EMV PIX</span>
-          </div>
-          
-          <h1 style="font-size: 40px; font-weight: 900; line-height: 1.15; letter-spacing: -1px; color: #FFFFFF; margin-bottom: 18px;">
-            A Plataforma Definitiva para Gestão e <br>
-            <span style="background: linear-gradient(135deg, #00E5FF 0%, #00E676 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Recuperação de Aparelhos Android</span>
-          </h1>
-          
-          <p style="font-size: 15px; line-height: 1.6; color: #94A3B8; max-width: 760px; margin: 0 auto 28px;">
-            Ambiente completo para bancadas e laboratórios técnicos de alta rotatividade. Provisionamento de políticas DPC em segundos via USB, modo Kiosk inviolável com QR Code oficial Banco Central e liberação 100% automática pós-pagamento.
-          </p>
-          
-          <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 34px;">
-            <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.35);">
-              📥 Baixar MDM & FRP BRASIL (.exe)
-            </a>
-            <button class="btn-green" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 230, 118, 0.35);" onclick="openAuthOverlay('Register')">
-              ⚡ Entrar / Criar Conta & Comprar Créditos
-            </button>
-          </div>
-
-          <!-- 4 SLEEK KPI METRIC PILLS -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 8px;">
-            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-              <div style="font-size: 24px; font-weight: 900; color: #00E676;">99.98%</div>
-              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">DISPONIBILIDADE CLOUD</div>
-            </div>
-            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-              <div style="font-size: 24px; font-weight: 900; color: #00E5FF;">18ms</div>
-              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">LATÊNCIA MÉDIA PIX</div>
-            </div>
-            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-              <div style="font-size: 24px; font-weight: 900; color: #38BDF8;">+12.400</div>
-              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">APARELHOS ATENDIDOS</div>
-            </div>
-            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
-              <div style="font-size: 24px; font-weight: 900; color: #C084FC;">100%</div>
-              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">BLINDAGEM DPC OFICIAL</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================================
-             SEÇÃO EXCLUSIVA: SIMULADOR DE BANCADA TÉCNICA AO VIVO &
-             MATRIZ DE COMANDOS (CLOUD SITE vs EXE vs CELULAR)
-             ======================================================== -->
-        <div id="secBenchInteractive" style="max-width: 1200px; margin: 30px auto 40px; padding: 0 16px;">
+<div id="secBenchInteractive" style="margin-top: 10px !important;" style="max-width: 1200px; margin: 30px auto 40px; padding: 0 16px;">
           
           <!-- NAVEGAÇÃO DE ABAS: BANCADA CELULAR vs GUIA DE COMANDOS -->
           <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;">
@@ -2878,6 +2804,82 @@
           }
         </style>
 
+        
+
+      
+      <!-- WELCOME BANNER FOR LOGGED-IN USERS ON HOMEPAGE -->
+      <div id="loggedHomeBanner" style="display: none; background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(0, 230, 118, 0.08) 100%); border: 1px solid rgba(0, 229, 255, 0.35); border-radius: 14px; padding: 14px 22px; max-width: 980px; margin: 10px auto 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 20px rgba(0, 229, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <img id="bannerUserAvatar" src="" alt="Avatar" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--cyan); display: none;">
+          <div>
+            <div style="font-size: 15px; font-weight: 800; color: #FFF;">
+              👋 Olá, <span id="bannerUserName" style="color: var(--cyan);">Cliente</span>! Você está conectado no site.
+            </div>
+            <div style="font-size: 12.5px; color: #94A3B8; margin-top: 2px;">
+              Saldo disponível na carteira: <strong style="color: var(--green); font-size: 14px;" id="bannerUserBalance">🪙 0 Créditos</strong>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-primary" style="font-size: 13px; padding: 9px 18px; width: auto;" onclick="showView('Dashboard')">
+            📊 Abrir Meu Painel &amp; Perfil ➔
+          </button>
+        </div>
+      </div>
+      <!-- ========================================================
+           MODO 1: CINEMA SPLIT-SLIDER (APPLE PRO / STRIPE HIGH-TECH)
+           ======================================================== -->
+      <div id="layoutCinemaSplit" class="layout-mode-view">
+        <!-- CLEAN ENTERPRISE SAAS HERO -->
+        <div data-section="sec_hero" class="hero-clean-container" style="text-align: center; max-width: 980px; margin: 15px auto 35px; padding: 10px 20px 0;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: #00E5FF; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);">
+            <span class="pulse-indicator"></span>
+            <span>🛡️ TECNOLOGIA CORPORATIVA DPC PERSISTENTE • PROTOCOLO EMV PIX</span>
+          </div>
+          
+          <h1 style="font-size: 40px; font-weight: 900; line-height: 1.15; letter-spacing: -1px; color: #FFFFFF; margin-bottom: 18px;">
+            A Plataforma Definitiva para Gestão e <br>
+            <span style="background: linear-gradient(135deg, #00E5FF 0%, #00E676 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Recuperação de Aparelhos Android</span>
+          </h1>
+          
+          <p style="font-size: 15px; line-height: 1.6; color: #94A3B8; max-width: 760px; margin: 0 auto 28px;">
+            Ambiente completo para bancadas e laboratórios técnicos de alta rotatividade. Provisionamento de políticas DPC em segundos via USB, modo Kiosk inviolável com QR Code oficial Banco Central e liberação 100% automática pós-pagamento.
+          </p>
+          
+          <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 34px;">
+            <a href="/download/exe?v=2.2" class="btn-download-big" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.35);">
+              📥 Baixar MDM & FRP BRASIL (.exe)
+            </a>
+            <button class="btn-green" style="padding: 13px 26px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 30px rgba(0, 230, 118, 0.35);" onclick="openAuthOverlay('Register')">
+              ⚡ Entrar / Criar Conta & Comprar Créditos
+            </button>
+          </div>
+
+          <!-- 4 SLEEK KPI METRIC PILLS -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 8px;">
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #00E676;">99.98%</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">DISPONIBILIDADE CLOUD</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #00E5FF;">18ms</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">LATÊNCIA MÉDIA PIX</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #38BDF8;">+12.400</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">APARELHOS ATENDIDOS</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 14px; padding: 16px; text-align: center; backdrop-filter: blur(10px);">
+              <div style="font-size: 24px; font-weight: 900; color: #C084FC;">100%</div>
+              <div style="font-size: 11px; color: #94A3B8; font-weight: 700; margin-top: 4px; letter-spacing: 0.5px;">BLINDAGEM DPC OFICIAL</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             SEÇÃO EXCLUSIVA: SIMULADOR DE BANCADA TÉCNICA AO VIVO &
+             MATRIZ DE COMANDOS (CLOUD SITE vs EXE vs CELULAR)
+             ======================================================== -->
         <!-- Como Funciona na Prática: OPÇÃO 1 CINEMA SPLIT-SLIDER -->
         <div data-section="sec_slider">
           <div style="margin: 20px 0 10px 0; text-align: center;">
