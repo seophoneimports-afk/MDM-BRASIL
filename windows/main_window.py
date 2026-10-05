@@ -2681,10 +2681,25 @@ class DeviceServiceManagerApp:
                 self.lbl_side_bal.configure(text="🪙 Saldo: 0 Créditos")
 
     def open_recharge_portal(self):
-        url = self.api_client.base_url
+        url = getattr(self.api_client, 'base_url', '') or "https://mdm-brasil.onrender.com"
         if not url or "localhost" in url or "127.0.0.1" in url:
             url = "https://mdm-brasil.onrender.com"
         webbrowser.open(f"{url}/client")
+
+    def open_client_portal_in_browser(self):
+        url = getattr(self.api_client, 'base_url', '') or "https://mdm-brasil.onrender.com"
+        if not url or "localhost" in url or "127.0.0.1" in url:
+            url = "https://mdm-brasil.onrender.com"
+        webbrowser.open(f"{url}/client")
+
+    def open_whatsapp_support(self):
+        webbrowser.open("https://wa.me/5519994783127?text=Olá! Preciso de suporte no MDM FRP Brasil.")
+
+    def save_pix_config(self):
+        self.action_save_custom_pix()
+
+    def generate_qr_click(self):
+        self.action_generate_pix()
 
     def _show_account_menu(self):
         user = self.api_client.user or {}
