@@ -268,6 +268,8 @@ def init_db():
             cursor.execute("ALTER TABLE users ADD COLUMN kiosk_lock_message TEXT;")
         if "kiosk_accent_color" not in cols:
             cursor.execute("ALTER TABLE users ADD COLUMN kiosk_accent_color TEXT DEFAULT '#EF4444';")
+        if "kiosk_layout_template" not in cols:
+            cursor.execute("ALTER TABLE users ADD COLUMN kiosk_layout_template TEXT DEFAULT 'default';")
 
         # Check and migrate columns for devices
         cursor.execute("PRAGMA table_info(devices)")

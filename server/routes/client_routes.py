@@ -514,11 +514,17 @@ def get_kiosk_branding(user: dict = Depends(get_current_user)):
         cursor = conn.cursor()
         cursor.execute("""
             SELECT kiosk_app_name, kiosk_logo_url, kiosk_support_phone,
-                   kiosk_lock_message, kiosk_accent_color, custom_pix_key
+                   kiosk_lock_message, kiosk_accent_color, custom_pix_key,
+                   kiosk_layout_template
             FROM users WHERE id = ?
         """, (user_id,))
         row = cursor.fetchone()
         if row:
+            layout_tpl = "default"
+            try:
+                layout_tpl = row["kiosk_layout_template"] or "default"
+            except Exception:
+                pass
             return {
                 "success": True,
                 "branding": {
@@ -527,7 +533,8 @@ def get_kiosk_branding(user: dict = Depends(get_current_user)):
                     "support_phone": row["kiosk_support_phone"] or "(19) 99478-3127",
                     "lock_message": row["kiosk_lock_message"] or "AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para realizar o desbloqueio imediato em até 30 segundos, efetue o pagamento via PIX ou contate nosso suporte técnico.",
                     "pix_key": row["custom_pix_key"] or "19994783127",
-                    "accent_color": row["kiosk_accent_color"] or "#EF4444"
+                    "accent_color": row["kiosk_accent_color"] or "#EF4444",
+                    "layout_template": layout_tpl
                 }
             }
         return {
@@ -538,7 +545,8 @@ def get_kiosk_branding(user: dict = Depends(get_current_user)):
                 "support_phone": "(19) 99478-3127",
                 "lock_message": "AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para realizar o desbloqueio imediato em até 30 segundos, efetue o pagamento via PIX ou contate nosso suporte técnico.",
                 "pix_key": "19994783127",
-                "accent_color": "#EF4444"
+                "accent_color": "#EF4444",
+                "layout_template": "default"
             }
         }
 
@@ -552,6 +560,7 @@ def update_kiosk_branding(payload: dict, user: dict = Depends(get_current_user))
     lock_message = payload.get("lock_message", "").strip()
     pix_key = payload.get("pix_key", "").strip() or "19994783127"
     accent_color = payload.get("accent_color", "#EF4444")
+    layout_template = payload.get("layout_template", "default").strip() or "default"
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -563,9 +572,10 @@ def update_kiosk_branding(payload: dict, user: dict = Depends(get_current_user))
                 kiosk_lock_message = ?,
                 custom_pix_key = ?,
                 kiosk_accent_color = ?,
+                kiosk_layout_template = ?,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
-        """, (app_name, logo_url, support_phone, lock_message, pix_key, accent_color, user_id))
+        """, (app_name, logo_url, support_phone, lock_message, pix_key, accent_color, layout_template, user_id))
         conn.commit()
 
     return {"success": True, "message": "Personalização White-Label salva com sucesso!"}
