@@ -87,34 +87,24 @@
     }
 
     /* Dashboard Layout & Shell */
-    .admin-dash { display: none; }
-    .app-dash-container {
-      display: flex !important;
-      align-items: stretch;
-      min-height: calc(100vh - 70px);
+    .admin-dash {
+      display: none;
       width: 100%;
+      min-height: 100vh;
+      position: relative;
+    }
+    .admin-dash.is-authenticated,
+    .admin-dash.active {
+      display: flex !important;
+      width: 100% !important;
+      min-height: 100vh !important;
+    }
+    .app-dash-container {
+      width: 100%;
+      min-height: 100vh;
       margin: 0 !important;
       padding: 0 !important;
       max-width: 100% !important;
-    }
-
-    /* LEFT SIDEBAR NAVIGATION */
-    .sidebar-portal-nav {
-      width: 270px;
-      min-width: 270px;
-      max-width: 270px;
-      background: #090E1D;
-      border-right: 1px solid rgba(0, 229, 255, 0.18);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px 14px;
-      position: sticky;
-      top: 70px;
-      height: calc(100vh - 70px);
-      overflow-y: auto;
-      z-index: 100;
-      transition: all 0.25s ease;
     }
 
     .sidebar-portal-header {
@@ -850,11 +840,11 @@
     body { background-color: #060913 !important; color: #F8FAFC !important; min-height: 100vh; overflow-x: hidden; }
     main { flex: 1; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; display: flex; min-height: 100vh; position: relative; }
 
-    /* Admin Login Wrap */
+    /* Admin Login Wrap - Centered Clean Glass Card */
     .admin-login-wrap {
       width: 100%;
-      max-width: 420px;
-      margin: 70px auto;
+      max-width: 440px;
+      margin: 60px auto;
       background: #0A0F1D;
       border: 1px solid rgba(0, 229, 255, 0.25);
       border-radius: 18px;
@@ -865,7 +855,7 @@
       z-index: 10;
     }
 
-    /* Fixed Left Sidebar 250px */
+    /* Fixed Left Sidebar 250px - Anti-Clipping Non-Overlapping Linear Studio */
     .sidebar-portal-nav {
       position: fixed !important;
       top: 0 !important;
@@ -873,14 +863,14 @@
       bottom: 0 !important;
       width: 250px !important;
       height: 100vh !important;
+      max-height: 100vh !important;
       background: #080D1A !important;
       border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
       display: flex !important;
       flex-direction: column !important;
-      justify-content: space-between !important;
-      padding: 16px 14px !important;
+      padding: 16px 14px 12px 14px !important;
       z-index: 900 !important;
-      overflow-y: auto !important;
+      overflow: hidden !important;
       box-sizing: border-box !important;
     }
     .sidebar-portal-nav::-webkit-scrollbar { width: 4px; }
@@ -967,11 +957,25 @@
       color: #00E5FF;
     }
 
-    /* Navigation Linear Studio Buttons */
+    /* Navigation Linear Studio Buttons with Internal Smooth Scroll */
     .sidebar-linear-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 3px !important;
+      padding-right: 2px !important;
+      margin-bottom: 8px !important;
+    }
+    .sidebar-linear-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-linear-nav::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.25); border-radius: 4px; }
+    .sidebar-linear-footer {
+      flex-shrink: 0 !important;
+      margin-top: auto !important;
+      padding-top: 10px !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
     .linear-nav-btn {
       display: flex;
@@ -1130,7 +1134,7 @@
 
   <main>
     <!-- LOGIN VIEW (MODERN GLASS CARD) -->
-    <div id="viewAdminLogin" class="admin-login-wrap">
+    <div id="viewAdminLogin" class="admin-login-wrap" style="display: none;">
       <div style="display: flex; justify-content: center; margin-bottom: 16px;">
         <img src="/static/logo.png" style="height: 52px; width: auto; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.45));" alt="Logo MDM &amp; FRP BRASIL">
       </div>
@@ -1163,10 +1167,11 @@
     </div>
 
     <!-- ADMIN DASHBOARD (LAYOUT LINEAR STUDIO V2.2) -->
-    <div id="viewAdminDash" class="admin-dash app-dash-container" data-dash-theme="titanium-slate">
-      <!-- SIDEBAR LATERAL FIXADA: 250PX -->
+    <div id="viewAdminDash" class="admin-dash app-dash-container" data-dash-theme="titanium-slate" style="display: none;">
+      <!-- SIDEBAR LATERAL FIXADA: 250PX (3 FILHOS DIRETOS: HEADER, NAVEGAÇÃO SCROLL, FOOTER PINADO) -->
       <aside class="sidebar-portal-nav">
-        <div>
+        <!-- BLOCO SUPERIOR FIXO (BRAND + FATURAMENTO PIX) -->
+        <div class="sidebar-linear-header-wrap" style="flex-shrink: 0;">
           <!-- BRAND LOGO LINEAR (LOGO OFICIAL MDM & FRP BRASIL) -->
           <div class="sidebar-linear-header" onclick="switchTab('overview')" style="cursor: pointer;" title="Ir para o Início">
             <div class="linear-brand-logo">
@@ -1187,60 +1192,60 @@
             <div class="lcc-value" id="sideAdminRevenue" style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; color: #00E676;">R$ 0,00</div>
             <div class="lcc-btn" style="font-size: 10.5px; font-weight: 700; color: var(--cyan); margin-top: 4px;" id="sideAdminRevenueSub">Pagamentos confirmados</div>
           </div>
-
-          <!-- NAVEGAÇÃO LINEAR STUDIO ADMIN -->
-          <div class="sidebar-linear-nav">
-            <button type="button" class="linear-nav-btn active" data-tab="overview" onclick="switchTab('overview', this)">
-              <span class="ln-icon">📊</span>
-              <span class="ln-label">Visão Geral &amp; Métricas</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="users" onclick="switchTab('users', this)">
-              <span class="ln-icon">👥</span>
-              <span class="ln-label">Clientes &amp; Carteiras</span>
-              <span class="ln-badge" id="sideAdminUsersCount">Técnicos</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="payments" onclick="switchTab('payments', this)">
-              <span class="ln-icon">💳</span>
-              <span class="ln-label">Cobranças PIX</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="audit" onclick="switchTab('audit', this)">
-              <span class="ln-icon">📜</span>
-              <span class="ln-label">Logs de Auditoria</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="layouts" onclick="switchTab('layouts', this)">
-              <span class="ln-icon">📐</span>
-              <span class="ln-label">Disposição da Vitrine</span>
-              <span class="ln-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan);">6</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="themes" onclick="switchTab('themes', this)">
-              <span class="ln-icon">🎨</span>
-              <span class="ln-label">Temas &amp; Cores</span>
-              <span class="ln-badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC;">5</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="settings" onclick="switchTab('settings', this)">
-              <span class="ln-icon">⚙️</span>
-              <span class="ln-label">Configurações Servidor</span>
-            </button>
-            <a href="/" target="_blank" class="linear-nav-btn" style="color: var(--cyan);">
-              <span class="ln-icon">🌐</span>
-              <span class="ln-label">Ver Site do Cliente</span>
-              <span class="ln-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan);">Site</span>
-            </a>
-            <a href="/?tab=apk_studio" target="_blank" class="linear-nav-btn" style="color: var(--green);">
-              <span class="ln-icon">✨</span>
-              <span class="ln-label">Personalizador APK</span>
-              <span class="ln-badge">Ao Vivo</span>
-            </a>
-            <a href="https://wa.me/5519994783127" target="_blank" class="linear-nav-btn" style="color: #25D366;">
-              <span class="ln-icon">💬</span>
-              <span class="ln-label">WhatsApp Admin</span>
-              <span class="ln-badge" style="background: rgba(37, 211, 102, 0.15); color: #25D366;">19 99478-3127</span>
-            </a>
-          </div>
         </div>
 
-        <!-- FOOTER ADMIN -->
-        <div class="sidebar-linear-footer" style="padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 10px;">
+        <!-- NAVEGAÇÃO LINEAR STUDIO ADMIN (SCROLL INDEPENDENTE) -->
+        <div class="sidebar-linear-nav">
+          <button type="button" class="linear-nav-btn active" data-tab="overview" onclick="switchTab('overview', this)">
+            <span class="ln-icon">📊</span>
+            <span class="ln-label">Visão Geral &amp; Métricas</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="users" onclick="switchTab('users', this)">
+            <span class="ln-icon">👥</span>
+            <span class="ln-label">Clientes &amp; Carteiras</span>
+            <span class="ln-badge" id="sideAdminUsersCount">Técnicos</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="payments" onclick="switchTab('payments', this)">
+            <span class="ln-icon">💳</span>
+            <span class="ln-label">Cobranças PIX</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="audit" onclick="switchTab('audit', this)">
+            <span class="ln-icon">📜</span>
+            <span class="ln-label">Logs de Auditoria</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="layouts" onclick="switchTab('layouts', this)">
+            <span class="ln-icon">📐</span>
+            <span class="ln-label">Disposição da Vitrine</span>
+            <span class="ln-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan);">6</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="themes" onclick="switchTab('themes', this)">
+            <span class="ln-icon">🎨</span>
+            <span class="ln-label">Temas &amp; Cores</span>
+            <span class="ln-badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC;">5</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="settings" onclick="switchTab('settings', this)">
+            <span class="ln-icon">⚙️</span>
+            <span class="ln-label">Configurações Servidor</span>
+          </button>
+          <a href="/" target="_blank" class="linear-nav-btn" style="color: var(--cyan);">
+            <span class="ln-icon">🌐</span>
+            <span class="ln-label">Ver Site do Cliente</span>
+            <span class="ln-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan);">Site</span>
+          </a>
+          <a href="/?tab=apk_studio" target="_blank" class="linear-nav-btn" style="color: var(--green);">
+            <span class="ln-icon">✨</span>
+            <span class="ln-label">Personalizador APK</span>
+            <span class="ln-badge">Ao Vivo</span>
+          </a>
+          <a href="https://wa.me/5519994783127" target="_blank" class="linear-nav-btn" style="color: #25D366;">
+            <span class="ln-icon">💬</span>
+            <span class="ln-label">WhatsApp Admin</span>
+            <span class="ln-badge" style="background: rgba(37, 211, 102, 0.15); color: #25D366;">19 99478-3127</span>
+          </a>
+        </div>
+
+        <!-- FOOTER ADMIN FIXADO (NUNCA CORTA) -->
+        <div class="sidebar-linear-footer" style="padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: auto; flex-shrink: 0;">
           <div class="linear-user-card" style="display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px;">
             <div style="width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, #F59E0B, #EF4444); display: flex; align-items: center; justify-content: center; font-size: 15px;">👑</div>
             <div style="flex: 1; overflow: hidden;">
@@ -2606,10 +2611,29 @@
         const res = await adminApi('/api/v1/admin/login', 'POST', { email, password });
         adminToken = res.access_token;
         localStorage.setItem("mdm_admin_token", adminToken);
+        setAdminViewMode(true);
         initAdminDashboard();
       } catch (err) {
         alert.innerText = err.message;
         alert.style.display = 'block';
+      }
+    }
+
+    function setAdminViewMode(isAuth) {
+      const vLog = document.getElementById("viewAdminLogin");
+      const vDash = document.getElementById("viewAdminDash");
+      if (isAuth) {
+        if (vLog) vLog.style.display = 'none';
+        if (vDash) {
+          vDash.classList.add('is-authenticated');
+          vDash.style.display = 'flex';
+        }
+      } else {
+        if (vDash) {
+          vDash.classList.remove('is-authenticated');
+          vDash.style.display = 'none';
+        }
+        if (vLog) vLog.style.display = 'block';
       }
     }
 
@@ -2621,15 +2645,11 @@
     function adminLogout() {
       adminToken = null;
       localStorage.removeItem("mdm_admin_token");
-      const vLog = document.getElementById("viewAdminLogin");
-      if (vLog) vLog.style.display = 'block';
-      const vDash = document.getElementById("viewAdminDash");
-      if (vDash) vDash.style.display = 'none';
-      const aHdr = document.getElementById("adminHeaderArea");
-      if (aHdr) aHdr.style.display = 'none';
+      setAdminViewMode(false);
     }
 
     async function initAdminDashboard() {
+      setAdminViewMode(true);
       try {
         await loadMetrics();
       } catch (err) {
@@ -2637,13 +2657,6 @@
         adminLogout();
         return;
       }
-
-      const vLog = document.getElementById("viewAdminLogin");
-      if (vLog) vLog.style.display = 'none';
-      const vDash = document.getElementById("viewAdminDash");
-      if (vDash) vDash.style.display = 'flex';
-      const aHdr = document.getElementById("adminHeaderArea");
-      if (aHdr) aHdr.style.display = 'flex';
 
       loadAdminUsers();
       loadPayments();
@@ -3691,6 +3704,7 @@
     }
 
     if (adminToken) {
+      setAdminViewMode(true);
       initAdminDashboard();
       loadThemeSelection();
       loadLayoutSelection();
@@ -3710,6 +3724,8 @@
       if (urlParams.get("open_create")) {
         setTimeout(() => openCreateUserModal(), 700);
       }
+    } else {
+      setAdminViewMode(false);
     }
 
     // ==========================================
