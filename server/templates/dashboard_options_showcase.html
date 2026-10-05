@@ -1343,45 +1343,12 @@
 </head>
 <body>
 
-  <!-- ========================================================================
-       TOP SWITCHER BAR: NAVEGAÇÃO ENTRE AS 7 VISUALIZAÇÕES
-       ======================================================================== -->
-  <header class="top-switcher-bar">
-    <div class="switcher-brand">
-      <div class="logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <div class="switcher-brand-title">MDM <span>BRASIL</span> • SHOWCASE</div>
-    </div>
-
-    <div class="nav-pills-group">
-      <!-- BOTÃO STUDIO PERSONALIZADOR DE APK (DESTAQUE MÁXIMO) -->
-      <button class="nav-pill-btn studio-pill active" onclick="switchView('apk-studio')">
-        <i class="fa-solid fa-mobile-screen-button"></i>
-        <strong>📱 STUDIO: Personalizar APK (Celular ao Vivo)</strong>
-      </button>
-
-      <span class="nav-label">Cliente / Técnico:</span>
-      <button class="nav-pill-btn" onclick="switchView('client-v1')">
-        <i class="fa-solid fa-table-cells-large"></i> V1: Bento Grid
-      </button>
-      <button class="nav-pill-btn" onclick="switchView('client-v2')">
-        <i class="fa-solid fa-columns"></i> V2: Workbench 50/50
-      </button>
-      <button class="nav-pill-btn" onclick="switchView('client-v3')">
-        <i class="fa-solid fa-bars-staggered"></i> V3: Dock Panorâmico
-      </button>
-
-      <span class="nav-label">Painel Admin:</span>
-      <button class="nav-pill-btn admin-pill" onclick="switchView('admin-v1')">
-        <i class="fa-solid fa-network-wired"></i> V1: Console Tree
-      </button>
-      <button class="nav-pill-btn admin-pill" onclick="switchView('admin-v2')">
-        <i class="fa-solid fa-chart-line"></i> V2: NOC Dual-Panel
-      </button>
-      <button class="nav-pill-btn admin-pill" onclick="switchView('admin-v3')">
-        <i class="fa-solid fa-window-maximize"></i> V3: Topbar Suite
-      </button>
-    </div>
-  </header>
+  <!-- Top switcher bar permanently removed. Auto-redirect to official APK Studio -->
+  <script>
+    if (window.location.pathname.includes('white-label') || window.location.pathname.includes('personalizar-apk')) {
+      window.location.replace('/?tab=apk_studio');
+    }
+  </script>
 
   <!-- ========================================================================
        CONTAINER DAS TELAS

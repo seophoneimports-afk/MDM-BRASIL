@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -256,31 +256,18 @@ def serve_client_portal(request: Request):
 
     return html
 
-@app.get("/headers", response_class=HTMLResponse)
-def serve_headers_showcase():
-    path = os.path.join(TEMPLATES_DIR, "header_showcase.html")
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
+@app.get("/headers")
+@app.get("/layouts")
+@app.get("/slider-options")
+@app.get("/dashboards")
+@app.get("/dashboard-options")
+def redirect_to_home():
+    return RedirectResponse(url="/", status_code=302)
 
-@app.get("/layouts", response_class=HTMLResponse)
-def serve_layouts_showcase():
-    path = os.path.join(TEMPLATES_DIR, "layouts_showcase.html")
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
-
-@app.get("/slider-options", response_class=HTMLResponse)
-def serve_slider_options():
-    path = os.path.join(TEMPLATES_DIR, "slider_options.html")
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
-@app.get("/dashboards", response_class=HTMLResponse)
-@app.get("/dashboard-options", response_class=HTMLResponse)
-@app.get("/white-label", response_class=HTMLResponse)
-@app.get("/personalizar-apk", response_class=HTMLResponse)
-def serve_dashboard_options():
-    path = os.path.join(TEMPLATES_DIR, "dashboard_options_showcase.html")
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
+@app.get("/white-label")
+@app.get("/personalizar-apk")
+def redirect_to_white_label():
+    return RedirectResponse(url="/?tab=apk_studio", status_code=302)
 
 @app.get("/admin", response_class=HTMLResponse)
 def serve_admin_portal():

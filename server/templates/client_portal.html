@@ -5590,7 +5590,14 @@
       if (headerUserArea) headerUserArea.style.display = 'none';
       if (btnHeaderAuth) btnHeaderAuth.style.display = 'inline-block';
 
-      switchDashTab('overview');
+      const reqTab = urlParams.get("tab");
+      if (reqTab) {
+        const tabBtn = Array.from(document.querySelectorAll('.tab-btn, .linear-nav-btn')).find(b => (b.getAttribute('onclick') && b.getAttribute('onclick').includes(reqTab)) || b.dataset.tab === reqTab);
+        if (tabBtn) switchDashTab(reqTab, tabBtn);
+        else switchDashTab(reqTab);
+      } else {
+        switchDashTab('overview');
+      }
     }
 
 async function initDashboard(targetView = null) {
@@ -5699,8 +5706,9 @@ async function initDashboard(targetView = null) {
         // Support direct tab opening via query param (?tab=account, etc)
         const reqTab = urlParams.get("tab");
         if (reqTab) {
-          const tabBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(reqTab));
+          const tabBtn = Array.from(document.querySelectorAll('.tab-btn, .linear-nav-btn')).find(b => (b.getAttribute('onclick') && b.getAttribute('onclick').includes(reqTab)) || b.dataset.tab === reqTab);
           if (tabBtn) switchDashTab(reqTab, tabBtn);
+          else switchDashTab(reqTab);
         }
 
         // Load background data safely without kicking out if single query fails
