@@ -214,10 +214,10 @@ class ApiClient:
         payload = {"serial": serial.strip(), "model": model.strip(), "manufacturer": manufacturer.strip(), "lock_status": lock_status}
         return self._request("POST", "/api/v1/client/devices/register", payload)
 
-    def send_device_alarm_remote(self, serial: str) -> tuple[bool, dict]:
+    def send_device_alarm_remote(self, serial: str, alarm_type: str = "siren") -> tuple[bool, dict]:
         if not self.token:
             return False, {"error": "AUTH_REQUIRED", "message": "Faça login para disparar alarme sonoro."}
-        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/alarm")
+        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/alarm", {"alarm_type": alarm_type})
 
     def send_device_message_remote(self, serial: str, message: str) -> tuple[bool, dict]:
         if not self.token:

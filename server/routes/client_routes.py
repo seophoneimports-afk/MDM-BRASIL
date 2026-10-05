@@ -242,23 +242,30 @@ def unlock_device_remote(serial: str, user: dict = Depends(get_current_user)):
     }
 
 @router.post("/devices/{serial}/alarm")
-def trigger_device_alarm(serial: str, user: dict = Depends(get_current_user)):
+def trigger_device_alarm(serial: str, payload: dict = None, user: dict = Depends(get_current_user)):
+    alarm_type = "siren"
+    if payload and isinstance(payload, dict):
+        alarm_type = payload.get("alarm_type", "siren")
+    command_str = "ALARM_BEEP" if alarm_type == "beep" else "ALARM_SIREN"
+    alarm_label = "BIPE INTERMITENTE DE LOCALIZAÇÃO (RADAR)" if alarm_type == "beep" else "SIRENE CONTÍNUA ANTIFURTO (110dB)"
+    
     with db_transaction() as conn:
         cursor = conn.cursor()
         cursor.execute(
             """
             UPDATE devices 
-            SET pending_command = 'ALARM',
+            SET pending_command = ?,
                 last_seen = CURRENT_TIMESTAMP
             WHERE serial = ?
             """,
-            (serial,)
+            (command_str, serial)
         )
-    log_audit_event("DEVICE_REMOTE_ALARM_COMMAND", user_id=user["id"], details={"serial": serial})
+    log_audit_event("DEVICE_REMOTE_ALARM_COMMAND", user_id=user["id"], details={"serial": serial, "alarm_type": alarm_type})
     return {
         "success": True,
         "serial": serial,
-        "message": f"Ordem de SIRENE / ALARME enviada para {serial}! O celular tocará o sinal sonoro assim que sincronizar."
+        "alarm_type": alarm_type,
+        "message": f"Ordem de {alarm_label} enviada para {serial}! O smartphone emitirá o som imediatamente."
     }
 
 @router.post("/devices/{serial}/message")

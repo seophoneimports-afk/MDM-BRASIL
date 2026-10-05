@@ -2279,11 +2279,11 @@
       position: relative;
     }
     .phone-mockup-frame {
-      width: 310px;
-      height: 640px;
+      width: 326px;
+      height: 676px;
       background: #0B0F19;
-      border-radius: 42px;
-      border: 9px solid #1F2937;
+      border-radius: 44px;
+      border: 8px solid #1E293B;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(255, 255, 255, 0.1);
       position: relative;
       display: flex;
@@ -2303,7 +2303,7 @@
       border: 1.5px solid #1E293B;
     }
     .phone-bar-top {
-      height: 30px;
+      height: 28px;
       padding: 0 16px;
       display: flex;
       align-items: center;
@@ -2316,12 +2316,15 @@
     }
     .phone-screen-content {
       flex: 1;
+      height: calc(100% - 28px);
       display: flex;
       flex-direction: column;
-      padding: 12px 16px 18px;
+      justify-content: space-between;
+      padding: 12px 14px 14px;
       align-items: center;
       text-align: center;
       background: #090D16;
+      box-sizing: border-box;
       overflow-y: auto;
     }
     .phone-logo-holder {
@@ -2499,6 +2502,8 @@
     .pill-cyber { background: rgba(168, 85, 247, 0.18); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.45); }
     .pill-fintech { background: rgba(16, 185, 129, 0.18); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.45); }
     .pill-slate { background: rgba(245, 158, 11, 0.18); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.45); }
+    .pill-crimson { background: rgba(239, 68, 68, 0.18); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.45); }
+    .pill-emerald { background: rgba(16, 185, 129, 0.18); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.45); }
 
     /* ESTILIZAÇÃO DO MOCKUP DO CELULAR */
     #portalPhoneFrame[data-phone-layout="cyber_neon"] {
@@ -2512,6 +2517,14 @@
     #portalPhoneFrame[data-phone-layout="titanium_slate"] {
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.25);
       border-color: #38BDF8;
+    }
+    #portalPhoneFrame[data-phone-layout="crimson_matrix"] {
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 28px rgba(239, 68, 68, 0.35);
+      border-color: #EF4444;
+    }
+    #portalPhoneFrame[data-phone-layout="emerald_minimal"] {
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 28px rgba(16, 185, 129, 0.35);
+      border-color: #10B981;
     }
 
     /* ========================================================
@@ -4440,13 +4453,13 @@
 
                 <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
                   <div style="font-size: 11px; color: var(--cyan); font-weight: 800; margin-bottom: 4px;">🎯 COORDENADAS GPS EXATAS</div>
-                  <div id="locCoordsText" class="mono" style="font-size: 12px; color: #FFF; font-weight: 700;">Lat: -22.739400 | Lon: -47.331400</div>
+                  <div id="locCoordsText" class="mono" style="font-size: 12px; color: #FFF; font-weight: 700;">Lat: -22.749809 | Lon: -47.241569</div>
                   <div id="locAccuracyText" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Precisão: 8m (GPS Hardware)</div>
                 </div>
 
                 <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 12px;">
                   <div style="font-size: 11px; color: #F59E0B; font-weight: 800; margin-bottom: 4px;">📍 ENDEREÇO IDENTIFICADO</div>
-                  <div id="locAddressText" style="font-size: 11.5px; color: #CBD5E1; line-height: 1.4;">Av. Brasil, 1420 - Centro, Americana - SP</div>
+                  <div id="locAddressText" style="font-size: 11.5px; color: #CBD5E1; line-height: 1.4;">Rua dos Campos, 62 - Jardim da Mata, Americana - SP, CEP 13476-404</div>
                   <div id="locLastSyncText" style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px;">Última atualização: Tempo Real</div>
                 </div>
               </div>
@@ -4551,10 +4564,10 @@
                 <div>
                   <span style="color: var(--cyan);">🎨</span> 1. Modelo de Interface do APK (Tela de Bloqueio)
                 </div>
-                <span style="font-size: 10.5px; color: var(--cyan); background: rgba(0, 229, 255, 0.15); border: 1px solid rgba(0, 229, 255, 0.3); padding: 2px 8px; border-radius: 12px; font-weight: 800;">4 MODELOS DISPONÍVEIS</span>
+                <span style="font-size: 10.5px; color: var(--cyan); background: rgba(0, 229, 255, 0.15); border: 1px solid rgba(0, 229, 255, 0.3); padding: 2px 8px; border-radius: 12px; font-weight: 800;">6 MODELOS FULL-SCREEN DISPONÍVEIS</span>
               </div>
               <p style="color: var(--text-muted); font-size: 11.5px; margin: 4px 0 12px 0; line-height: 1.4;">
-                Quem deixar no modelo <strong>Padrão</strong> mantém o visual original do projeto. Se quiser personalizar, escolha entre os <strong>3 novos modelos</strong> exclusivos abaixo para ver o celular mudar ao vivo!
+                Quem deixar no modelo <strong>Padrão</strong> mantém o visual original do projeto. Se quiser personalizar, escolha entre os <strong>5 novos modelos</strong> exclusivos abaixo para ver o celular preencher praticamente 100% da tela em tempo real!
               </p>
 
               <div class="apk-layouts-grid">
@@ -4599,6 +4612,28 @@
                   </div>
                   <div class="apk-layout-title">4. Titanium Slate Bento</div>
                   <div class="apk-layout-desc">Design modular escuro em blocos Bento (Apple/Linear), cabeçalho Knox Guard integrado e grade de ações rápidas.</div>
+                  <div class="apk-layout-check">✓ Selecionado</div>
+                </div>
+
+                <!-- Opção 5: Crimson Matrix Stealth -->
+                <div class="apk-layout-card" data-apk-layout="crimson_matrix" onclick="selectApkLayout('crimson_matrix', this)">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                    <span style="font-size: 18px;">🛑</span>
+                    <span class="apk-layout-pill pill-crimson">CRIMSON MATRIX</span>
+                  </div>
+                  <div class="apk-layout-title">5. Crimson Matrix Stealth</div>
+                  <div class="apk-layout-desc">Design tático militar escuro com bordas e matrizes em vermelho pulsante, aviso de bloqueio biométrico e visual imponente.</div>
+                  <div class="apk-layout-check">✓ Selecionado</div>
+                </div>
+
+                <!-- Opção 6: Emerald Glass Minimalist -->
+                <div class="apk-layout-card" data-apk-layout="emerald_minimal" onclick="selectApkLayout('emerald_minimal', this)">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                    <span style="font-size: 18px;">🌿</span>
+                    <span class="apk-layout-pill pill-emerald">EMERALD VIP</span>
+                  </div>
+                  <div class="apk-layout-title">6. Emerald Glass Minimalist</div>
+                  <div class="apk-layout-desc">Estilo esmeralda luxuoso translúcido com acabamento refinado, foco total no QR Code PIX e suporte VIP instantâneo.</div>
                   <div class="apk-layout-check">✓ Selecionado</div>
                 </div>
               </div>
@@ -5330,6 +5365,79 @@
         <button class="btn-green" style="font-size: 12px; padding: 6px 14px;" onclick="simulatePixPay()">⚡ Simular Pagamento (Teste)</button>
         <button class="btn-logout" onclick="closePixModal()">Fechar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE ALARME SONORO COM 2 TIPOS & TESTE NO NAVEGADOR -->
+  <div id="modalCloudAlarm" class="modal-overlay" style="display: none; z-index: 10001; background: rgba(3, 7, 18, 0.88); backdrop-filter: blur(14px);">
+    <div class="modal-content" style="max-width: 520px; text-align: left; border: 1.5px solid rgba(245, 158, 11, 0.45); box-shadow: 0 0 50px rgba(245, 158, 11, 0.25); border-radius: 18px; padding: 24px;">
+      
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="font-size: 26px; background: rgba(245, 158, 11, 0.16); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: 1.5px solid #F59E0B;">
+            🚨
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 17px; color: #FFFFFF; font-weight: 800; letter-spacing: 0.2px;">DISPARAR ALARME NO APARELHO</h3>
+            <p style="margin: 2px 0 0; font-size: 11.5px; color: #F59E0B; font-weight: 600;">Central de Alerta Acústico Remoto • Teste & Disparo</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeCloudAlarmModal()" style="background: transparent; border: none; color: #94A3B8; font-size: 20px; cursor: pointer; padding: 4px;">✕</button>
+      </div>
+
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px;">
+        <div style="color: #94A3B8; font-size: 11px;">Dispositivo Alvo:</div>
+        <div id="modalAlarmDeviceName" style="color: #FFF; font-weight: 800; font-size: 13.5px; margin-top: 2px;">Galaxy A54 5G (SM-A546E-BR9841)</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
+        <!-- TIPO 1: SIRENE CONTÍNUA ANTIFURTO -->
+        <div style="background: #0B1324; border: 1.5px solid rgba(245, 158, 11, 0.4); border-radius: 12px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-size: 13px; font-weight: 800; color: #FFF; display: flex; align-items: center; gap: 6px;">
+              <span>🚨</span> 1. Sirene Contínua Antifurto (110dB)
+            </div>
+            <span style="font-size: 9.5px; font-weight: 800; color: #F59E0B; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); padding: 2px 7px; border-radius: 6px;">AGRESSIVO</span>
+          </div>
+          <div style="font-size: 11px; color: #94A3B8; line-height: 1.4; margin-bottom: 12px;">
+            Alerta sonoro modulado de alta frequência contínua (800Hz - 1500Hz) em volume máximo. Inibe evasão e força o portador a regularizar o aparelho. Toca mesmo se o celular estiver no modo silencioso.
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button type="button" class="btn-sm" style="background: #1E293B; border: 1px solid #334155; color: #CBD5E1; font-weight: 700; padding: 8px;" onclick="playWebAudioAlarm('siren')">
+              🔊 Testar Som no PC
+            </button>
+            <button type="button" class="btn-sm" style="background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); border: 1px solid #EF4444; color: #FFF; font-weight: 800; padding: 8px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);" onclick="executeCloudAlarm('siren')">
+              🚨 Disparar no Celular
+            </button>
+          </div>
+        </div>
+
+        <!-- TIPO 2: BIPE INTERMITENTE DE LOCALIZAÇÃO -->
+        <div style="background: #0B1324; border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 12px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-size: 13px; font-weight: 800; color: #FFF; display: flex; align-items: center; gap: 6px;">
+              <span>🔊</span> 2. Bipe Intermitente de Localização (Radar Sonar)
+            </div>
+            <span style="font-size: 9.5px; font-weight: 800; color: #38BDF8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); padding: 2px 7px; border-radius: 6px;">LOCALIZADOR</span>
+          </div>
+          <div style="font-size: 11px; color: #94A3B8; line-height: 1.4; margin-bottom: 12px;">
+            Pulsos acústicos rítmicos de sonar radar (1200Hz) ideais para encontrar o aparelho dentro de residências, veículos, gavetas ou estoques sem espanto.
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button type="button" class="btn-sm" style="background: #1E293B; border: 1px solid #334155; color: #CBD5E1; font-weight: 700; padding: 8px;" onclick="playWebAudioAlarm('beep')">
+              🔊 Testar Som no PC
+            </button>
+            <button type="button" class="btn-sm" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); border: 1px solid #38BDF8; color: #FFF; font-weight: 800; padding: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);" onclick="executeCloudAlarm('beep')">
+              📡 Disparar no Celular
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="button" class="btn-logout" onclick="closeCloudAlarmModal()" style="padding: 7px 16px; font-size: 11.5px;">Cancelar</button>
+      </div>
+
     </div>
   </div>
 
@@ -6388,7 +6496,7 @@
         deviceMapInstance = L.map('liveDeviceMap', {
           zoomControl: true,
           attributionControl: false
-        }).setView([-22.7394, -47.3314], 14);
+        }).setView([-22.749809, -47.241569], 15);
 
         // Google Maps Tiles Oficiais (Padrão e Satélite)
         const googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -6479,13 +6587,13 @@
       const syncEl = document.getElementById("locLastSyncText");
       const gmapsBtn = document.getElementById("btnExternalGoogleMaps");
 
-      const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.7394;
-      const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.3314;
+      const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.749809;
+      const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.241569;
 
       if (coordsEl) coordsEl.textContent = `Lat: ${lat.toFixed(6)} | Lon: ${lon.toFixed(6)}`;
       if (accEl) accEl.textContent = `Precisão: ${d.accuracy ? d.accuracy + 'm (GPS Hardware)' : '5-15m (Alta Resolução)'}`;
 
-      const fullAddr = d.address_formatted || `${d.street || 'Setor Central'}, ${d.neighborhood || 'Bairro'} - ${d.city || 'Americana'}/${d.state || 'SP'}`;
+      const fullAddr = d.address_formatted || `${d.street || 'Rua dos Campos, 62'}, ${d.neighborhood || 'Jardim da Mata'} - ${d.city || 'Americana'}/${d.state || 'SP'}`;
       if (addrEl) addrEl.textContent = fullAddr;
 
       const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
@@ -6517,7 +6625,7 @@
       } else if (allDevicesCache.length > 0 && allDevicesCache[0].latitude && allDevicesCache[0].longitude) {
         window.open(`https://www.google.com/maps?q=${allDevicesCache[0].latitude},${allDevicesCache[0].longitude}`, '_blank');
       } else {
-        window.open('https://www.google.com/maps?q=-22.7394,-47.3314', '_blank');
+        window.open('https://www.google.com/maps?q=-22.749809,-47.241569', '_blank');
       }
     }
 
@@ -6528,14 +6636,14 @@
         manufacturer: "Samsung Knox",
         lock_status: "UNLOCKED",
         battery_level: 88,
-        latitude: -22.7394,
-        longitude: -47.3314,
+        latitude: -22.749809,
+        longitude: -47.241569,
         accuracy: 8,
         city: "Americana",
         state: "SP",
-        street: "Av. Brasil",
-        neighborhood: "Centro",
-        address_formatted: "Av. Brasil, 1420 - Centro, Americana - SP, 13465-000",
+        street: "Rua dos Campos",
+        neighborhood: "Jardim da Mata",
+        address_formatted: "Rua dos Campos, 62 - Jardim da Mata, Americana - SP, CEP 13476-404",
         network_status: "5G Vivo • Wi-Fi",
         last_sync: new Date(Date.now() - 2 * 60000).toISOString()
       },
@@ -6773,8 +6881,8 @@
 
       devices.forEach((d) => {
         const isLocked = !d.lock_status || d.lock_status.toUpperCase() === 'LOCKED' || d.lock_status.toUpperCase() === 'PENDING';
-        const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.7394;
-        const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.3314;
+        const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.749809;
+        const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.241569;
         const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
         const lastSeenFormatted = lastSeenText ? new Date(lastSeenText).toLocaleString('pt-BR') : 'Tempo Real';
 
@@ -7010,35 +7118,88 @@
       return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    async function remoteAlarmDevice(serial) {
-      if (!confirm(`🚨 Deseja DISPARAR ALARME SONORO no aparelho ${serial}?\n\nO celular tocará a sirene de alerta antifurto em VOLUME MÁXIMO, mesmo se estiver no modo silencioso.`)) {
-        return;
+    let currentAlarmTargetSerial = null;
+
+    function openCloudAlarmModal(serial) {
+      currentAlarmTargetSerial = serial;
+      const targetDev = allDevicesCache.find(x => x.serial === serial);
+      const nameEl = document.getElementById("modalAlarmDeviceName");
+      if (nameEl) {
+        if (targetDev) {
+          nameEl.textContent = `${targetDev.model || 'Android'} (${targetDev.serial})`;
+        } else {
+          nameEl.textContent = serial || 'Dispositivo';
+        }
       }
+      const modal = document.getElementById("modalCloudAlarm");
+      if (modal) modal.style.display = "flex";
+    }
+
+    function closeCloudAlarmModal() {
+      const modal = document.getElementById("modalCloudAlarm");
+      if (modal) modal.style.display = "none";
+    }
+
+    function playWebAudioAlarm(type) {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (type === 'siren') {
+          // Sirene modulada contínua 800Hz - 1500Hz
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          const now = audioCtx.currentTime;
+          for (let i = 0; i < 4; i++) {
+            osc.frequency.setValueAtTime(750, now + i * 0.4);
+            osc.frequency.linearRampToValueAtTime(1450, now + i * 0.4 + 0.2);
+            osc.frequency.linearRampToValueAtTime(750, now + i * 0.4 + 0.4);
+          }
+          gain.gain.setValueAtTime(0.2, now + 1.5);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.65);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(now + 1.65);
+        } else {
+          // Bipe intermitente / radar sonar pulsado 1200Hz
+          const now = audioCtx.currentTime;
+          for (let i = 0; i < 4; i++) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1250, now + i * 0.4);
+            gain.gain.setValueAtTime(0, now + i * 0.4);
+            gain.gain.linearRampToValueAtTime(0.28, now + i * 0.4 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.4 + 0.25);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.4);
+            osc.stop(now + i * 0.4 + 0.28);
+          }
+        }
+      } catch (e) {
+        console.warn("WebAudio warning:", e);
+      }
+    }
+
+    async function executeCloudAlarm(alarmType) {
+      const serial = currentAlarmTargetSerial;
+      if (!serial) return;
+      closeCloudAlarmModal();
+
+      const labelText = alarmType === 'siren' ? 'Sirene Contínua Antifurto (110dB)' : 'Bipe Intermitente de Localização';
       const alertEl = document.getElementById("deviceActionAlert");
       if (alertEl) {
         alertEl.style.display = "block";
         alertEl.style.background = "rgba(245, 158, 11, 0.18)";
         alertEl.style.border = "1px solid #F59E0B";
         alertEl.style.color = "#F59E0B";
-        alertEl.textContent = `🚨 Enviando sinal de sirene antifurto para ${serial}...`;
+        alertEl.textContent = `🚨 Transmitindo ordem de ${labelText} para ${serial}...`;
       }
 
-      // Efeito sonoro sintetizado de sirene no navegador
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(1400, audioCtx.currentTime + 0.25);
-        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.5);
-        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.6);
-      } catch(e) {}
+      // Tocar som de confirmação auditiva local
+      playWebAudioAlarm(alarmType);
 
       const isDemo = !token || ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(serial);
       if (isDemo) {
@@ -7047,7 +7208,7 @@
             alertEl.style.background = "rgba(245, 158, 11, 0.22)";
             alertEl.style.border = "1px solid #F59E0B";
             alertEl.style.color = "#FBBF24";
-            alertEl.innerHTML = `🚨 <strong>SIRENE ANTIFURTO ACIONADA!</strong> Sinal transmitido via Nuvem para <code>${escapeHtml(serial)}</code>. O aparelho está tocando em volume máximo!`;
+            alertEl.innerHTML = `🚨 <strong>${labelText.toUpperCase()} ACIONADO!</strong> Sinal transmitido via Nuvem para <code>${escapeHtml(serial)}</code>. O aparelho está emitindo o som em volume máximo!`;
           }
           selectDeviceOnMap(serial);
         }, 350);
@@ -7055,12 +7216,12 @@
       }
 
       try {
-        const res = await api('/api/v1/client/devices/' + encodeURIComponent(serial) + '/alarm', 'POST');
+        const res = await api('/api/v1/client/devices/' + encodeURIComponent(serial) + '/alarm', 'POST', { alarm_type: alarmType });
         if (alertEl) {
           alertEl.style.background = "rgba(245, 158, 11, 0.22)";
           alertEl.style.border = "1px solid #F59E0B";
           alertEl.style.color = "#FBBF24";
-          alertEl.innerHTML = `🚨 <strong>SIRENE ANTIFURTO ACIONADA!</strong> ${escapeHtml(res.message || 'Ordem de alarme enviada com sucesso!')}`;
+          alertEl.innerHTML = `🚨 <strong>${labelText.toUpperCase()} ACIONADO!</strong> ${escapeHtml(res.message || 'Ordem de alarme enviada com sucesso!')}`;
         }
       } catch (err) {
         if (alertEl) {
@@ -7070,6 +7231,10 @@
           alertEl.textContent = "Erro ao disparar alarme: " + err.message;
         }
       }
+    }
+
+    function remoteAlarmDevice(serial) {
+      openCloudAlarmModal(serial);
     }
 
     async function remoteLockDevice(serial) {
@@ -7330,7 +7495,9 @@
           default: 'PADRÃO ORIGINAL',
           cyber_neon: 'CYBERPUNK HIGH-TECH',
           clean_fintech: 'FINTECH GLASS',
-          titanium_slate: 'TITANIUM SLATE BENTO'
+          titanium_slate: 'TITANIUM SLATE BENTO',
+          crimson_matrix: 'CRIMSON MATRIX STEALTH',
+          emerald_minimal: 'EMERALD GLASS VIP'
         };
         badge.innerText = titles[currentApkLayout] || 'PADRÃO ORIGINAL';
 
@@ -7338,7 +7505,9 @@
           default: 'var(--cyan)',
           cyber_neon: '#C084FC',
           clean_fintech: '#10B981',
-          titanium_slate: '#F59E0B'
+          titanium_slate: '#F59E0B',
+          crimson_matrix: '#EF4444',
+          emerald_minimal: '#10B981'
         };
         badge.style.color = colors[currentApkLayout] || 'var(--cyan)';
       }
@@ -7513,12 +7682,107 @@
             </div>
           </div>
         `;
-      } else {
-        // DEFAULT: PADRÃO OFICIAL DO PROJETO (Mantém 100% o layout original)
+      } else if (currentApkLayout === 'crimson_matrix') {
         container.innerHTML = `
-          <div class="phone-screen-content" style="flex: 1; display: flex; flex-direction: column; padding: 10px 14px 14px; align-items: center; width: 100%; box-sizing: border-box; justify-content: space-between;">
+          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 12px 12px 14px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.24) 0%, rgba(10, 4, 8, 0.99) 75%); font-family: 'JetBrains Mono', monospace; border-left: 2px solid #EF4444; border-right: 2px solid #EF4444;">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-              <div class="phone-logo-holder" id="portalPhoneLogoHolder" style="width: 60px; height: 60px; border-radius: 16px; background: #111827; border: 2px solid var(--phone-accent, #EF4444); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 5px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px; font-size: 8.5px; color: #EF4444; border-bottom: 1px dashed rgba(239, 68, 68, 0.4); padding-bottom: 4px;">
+                <span>[ TACTICAL_LOCK // SEC-09 ]</span>
+                <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; background: #EF4444; border-radius: 50%; box-shadow: 0 0 8px #EF4444;"></span> BIOMETRIC HOLD</span>
+              </div>
+
+              <div style="position: relative; margin-bottom: 6px;">
+                <div style="width: 58px; height: 58px; border-radius: 14px; background: #120508; border: 2px solid #EF4444; box-shadow: 0 0 18px rgba(239, 68, 68, 0.5), inset 0 0 8px rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                  <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <span style="position: absolute; bottom: -4px; right: -4px; background: #EF4444; color: #FFF; font-size: 7.5px; font-weight: 900; padding: 1px 4px; border-radius: 4px; border: 1px solid #FFF;">DPC</span>
+              </div>
+
+              <div style="font-size: 12.5px; font-weight: 900; color: #FFF; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(239, 68, 68, 0.7); text-align: center; margin-bottom: 6px;" id="portalPhoneTitle">
+                ${safeName}
+              </div>
+
+              <div style="background: rgba(18, 5, 8, 0.85); border: 1px solid rgba(239, 68, 68, 0.4); border-left: 3px solid #EF4444; border-radius: 6px; padding: 6px 8px; font-size: 8.5px; color: #FECACA; width: 100%; box-sizing: border-box; margin-bottom: 8px; line-height: 1.35;" id="portalPhoneMsg">
+                <div style="color: #EF4444; font-weight: 800; margin-bottom: 2px;">⛔ RESTRIÇÃO DE SISTEMA ATIVA</div>
+                ${safeMsg}
+              </div>
+
+              <div style="width: 100%; background: rgba(18, 5, 8, 0.95); border: 1.5px solid rgba(239, 68, 68, 0.45); box-shadow: 0 0 16px rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;">
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 7.5px; color: #94A3B8; margin-bottom: 3px;">
+                  <span>AUTOLIBERAÇÃO PIX</span>
+                  <span style="color: #EF4444; font-weight: 800;">100% AUTOMÁTICO</span>
+                </div>
+                <div style="position: relative; padding: 3px; background: #000; border: 1px dashed rgba(239, 68, 68, 0.6); border-radius: 6px;">
+                  <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 82px; height: 82px; background: #FFF; padding: 3px; border-radius: 4px; display: block;">
+                </div>
+                <div style="font-size: 13px; font-weight: 900; color: #F87171; margin-top: 4px; text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);" id="portalPhoneVal">
+                  ${safeVal}
+                </div>
+              </div>
+            </div>
+
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 5px;">
+              <button type="button" style="width: 100%; background: linear-gradient(90deg, #DC2626 0%, #991B1B 100%); color: #FFF; border: none; padding: 8px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 0 16px rgba(220, 38, 38, 0.45); cursor: pointer; text-transform: uppercase;">
+                🚨 <span id="portalPhoneWaBtn">EMERGÊNCIA: ${safePhone}</span>
+              </button>
+              <button type="button" style="width: 100%; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.45); color: #FCA5A5; padding: 6px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
+                🔓 [ INSERIR CÓDIGO DE DESBLOQUEIO ]
+              </button>
+              <div style="font-size: 7.5px; color: #64748B; text-align: center; margin-top: 2px;">
+                TACTICAL_NODE: 358941092847120 // HARDWARE MIL-SPEC LOCK
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentApkLayout === 'emerald_minimal') {
+        container.innerHTML = `
+          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 14px 14px 14px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.22) 0%, #05130F 50%, #020705 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div style="display: inline-flex; align-items: center; gap: 5px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #10B981; font-size: 8.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px;">
+                ✦ SERVIÇO AUTORIZADO VIP
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(16, 185, 129, 0.25); padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;">
+                <div style="width: 22px; height: 22px; border-radius: 50%; overflow: hidden; border: 1.5px solid #10B981;">
+                  <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <span style="font-size: 11px; font-weight: 700; color: #FFF;" id="portalPhoneTitle">${safeName}</span>
+                <span style="color: #10B981; font-size: 11px;">✓</span>
+              </div>
+
+              <div style="font-size: 8.5px; color: #6EE7B7; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 2px;">Valor para Quitação Instantânea</div>
+              <div style="font-size: 24px; font-weight: 900; color: #FFF; letter-spacing: -0.5px; margin-bottom: 2px;" id="portalPhoneVal">
+                ${safeVal}
+              </div>
+              <div style="font-size: 8.5px; color: #34D399; margin-bottom: 8px;">Aponte o app do banco no QR Code abaixo</div>
+
+              <div style="width: 100%; background: rgba(6, 25, 18, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.12);">
+                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 86px; height: 86px; background: #FFF; padding: 4px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                <div style="margin-top: 6px; font-size: 8.5px; color: #A7F3D0; text-align: center; max-height: 28px; overflow: hidden; line-height: 1.3;" id="portalPhoneMsg">
+                  ${safeMsg}
+                </div>
+              </div>
+            </div>
+
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
+              <button type="button" style="width: 100%; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFF; border: none; padding: 8px 12px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 16px rgba(16, 185, 129, 0.38); cursor: pointer;">
+                💬 <span id="portalPhoneWaBtn">Suporte VIP: ${safePhone}</span>
+              </button>
+              <button type="button" style="width: 100%; background: transparent; border: none; color: #6EE7B7; padding: 4px 8px; font-size: 8.5px; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                Inserir PIN de Liberação Manual
+              </button>
+              <div style="font-size: 7.5px; color: #059669; text-align: center;">
+                Transação Verificada • Knox VIP Enterprise Gate
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        // DEFAULT: PADRÃO OFICIAL DO PROJETO (Mantém 100% o layout original preenchendo toda a tela)
+        container.innerHTML = `
+          <div class="phone-screen-content" style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 12px 14px 14px; align-items: center; width: 100%; box-sizing: border-box; justify-content: space-between;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div class="phone-logo-holder" id="portalPhoneLogoHolder" style="width: 62px; height: 62px; border-radius: 16px; background: #111827; border: 2px solid var(--phone-accent, #EF4444); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 5px;">
                 <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
               </div>
 
@@ -8039,7 +8303,7 @@
         if (out) out.innerHTML = `[${now}] <span style="color:#F59E0B;">[ALARME SONORO]</span> Pacote de alta prioridade transmitido...<br>&gt; Sirene disparada no celular a 100% do volume + Flash LED piscando.<br>&gt; Status: ALARME TOCANDO!`;
         alert('🔊 Teste de Alarme Disparado:\n\nSirene em volume máximo de 100% emitida para localização acústica do smartphone!');
       } else if (cmd === 'gps') {
-        if (out) out.innerHTML = `[${now}] <span style="color:#00E5FF;">[GPS REAL]</span> Coordenadas GNSS recebidas: Lat -22.7394, Lon -47.3314<br>&gt; Precisão: 3.8 metros • Americana, SP<br>&gt; Ponto plotado no mapa Leaflet.`;
+        if (out) out.innerHTML = `[${now}] <span style="color:#00E5FF;">[GPS REAL]</span> Coordenadas GNSS recebidas: Lat -22.749809, Lon -47.241569<br>&gt; Precisão: 3.8 metros • Rua dos Campos, 62 - Americana, SP<br>&gt; Ponto plotado no mapa Leaflet.`;
         alert('📍 Teste de GPS Executado:\n\nCoordenada de alta precisão via hardware GNSS coletada e transmitida para a nuvem!');
       } else if (cmd === 'wipe') {
         if (out) out.innerHTML = `[${now}] <span style="color:#EF4444;">[WIPE KNOX]</span> Protocolo de destruição segura militar inicializado...<br>&gt; (SIMULAÇÃO SEGURA DE LABORATÓRIO: Aparelho limpo e restaurado de fábrica)`;

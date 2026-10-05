@@ -2103,26 +2103,92 @@ class DeviceServiceManagerApp:
             messagebox.showwarning("Aviso", "Selecione um aparelho na lista primeiro.")
             return
         serial = self.cloud_selected_device.get("serial")
-        res = messagebox.askyesno(
-            "Disparar Alarme Sonoro",
-            f"Deseja acionar o alarme / sirene sonora no smartphone:\n\n"
-            f"Serial: {serial}\n\n"
-            f"O aparelho tocará um bipe de localização em volume alto."
-        )
-        if not res:
-            return
+        self.open_alarm_selection_dialog(serial)
 
-        self.cloud_log(f"[ORDEM] Disparando ALARME SONORO para {serial}...")
-        def work():
-            ok, resp = self.api_client.send_device_alarm_remote(serial)
-            def done():
-                if ok:
-                    self.cloud_log(f"[SUCESSO] 🚨 Ordem de ALARME enviada com sucesso para {serial}!")
-                    messagebox.showinfo("Alarme Enviado", f"Ordem de alarme sonoro enviada para {serial}!\nO smartphone emitirá o som assim que sincronizar com a nuvem.")
-                else:
-                    self.cloud_log(f"[ERRO] Falha ao disparar alarme: {resp.get('error', '')}")
-            self.safe_after(0, done)
-        threading.Thread(target=work, daemon=True).start()
+    def open_alarm_selection_dialog(self, serial):
+        dlg = ctk.CTkToplevel(self)
+        dlg.title("🚨 Disparar Alarme / Sirene no Aparelho")
+        dlg.geometry("480x360")
+        dlg.resizable(False, False)
+        dlg.attributes("-topmost", True)
+        dlg.configure(fg_color="#070D18")
+
+        dlg.update_idletasks()
+        try:
+            x = self.winfo_x() + (self.winfo_width() // 2) - 240
+            y = self.winfo_y() + (self.winfo_height() // 2) - 180
+            dlg.geometry(f"+{x}+{y}")
+        except Exception:
+            pass
+
+        ctk.CTkLabel(
+            dlg,
+            text="🚨 CENTRAL DE ALARMES & SIRENE REMOTA",
+            font=ctk.CTkFont(size=14, weight="bold"),
+            text_color="#FBBF24"
+        ).pack(pady=(16, 4))
+
+        ctk.CTkLabel(
+            dlg,
+            text=f"Aparelho Selecionado: {serial}\nEscolha o tipo de sinal sonoro para testar ou disparar no celular:",
+            font=ctk.CTkFont(size=11),
+            text_color="#94A3B8"
+        ).pack(pady=(0, 12))
+
+        def _play_local_sound(sound_type):
+            try:
+                import winsound
+                def _beep_thread():
+                    if sound_type == "siren":
+                        for _ in range(2):
+                            for freq in [800, 1050, 1300, 1550, 1300, 1050]:
+                                winsound.Beep(freq, 75)
+                    else:
+                        for _ in range(3):
+                            winsound.Beep(1800, 120)
+                            time.sleep(0.12)
+                threading.Thread(target=_beep_thread, daemon=True).start()
+            except Exception:
+                pass
+
+        def _send_alarm(alarm_type):
+            dlg.destroy()
+            label_text = "Sirene Contínua Antifurto (110dB)" if alarm_type == "siren" else "Bipe Intermitente de Localização (Radar)"
+            self.cloud_log(f"[ORDEM] Enviando {label_text} para {serial}...")
+            def work():
+                ok, resp = self.api_client.send_device_alarm_remote(serial, alarm_type)
+                def done():
+                    if ok:
+                        self.cloud_log(f"[SUCESSO] 🚨 {label_text} transmitido com sucesso para {serial}!")
+                        messagebox.showinfo("Alarme Enviado", f"Ordem de {label_text} enviada para {serial}!\nO smartphone emitirá o som imediatamente.")
+                    else:
+                        self.cloud_log(f"[ERRO] Falha ao enviar alarme: {resp.get('error', '')}")
+                self.safe_after(0, done)
+            threading.Thread(target=work, daemon=True).start()
+
+        # Opção 1: Sirene Contínua Antifurto
+        f_opt1 = ctk.CTkFrame(dlg, fg_color="#0B1324", border_color="#F59E0B", border_width=1, corner_radius=10)
+        f_opt1.pack(fill="x", padx=16, pady=5)
+        ctk.CTkLabel(f_opt1, text="🚨 Sirene Contínua Antifurto (110dB)", font=ctk.CTkFont(size=11.5, weight="bold"), text_color="#FFF").pack(anchor="w", padx=12, pady=(6, 2))
+        ctk.CTkLabel(f_opt1, text="Alarme contínuo de alta frequência em volume máximo para inibir furto.", font=ctk.CTkFont(size=10), text_color="#94A3B8").pack(anchor="w", padx=12, pady=(0, 6))
+        
+        f_btns1 = ctk.CTkFrame(f_opt1, fg_color="transparent")
+        f_btns1.pack(fill="x", padx=12, pady=(0, 8))
+        ctk.CTkButton(f_btns1, text="▶ Testar no PC", width=110, height=26, font=ctk.CTkFont(size=10), fg_color="#334155", hover_color="#475569", command=lambda: _play_local_sound("siren")).pack(side="left", padx=(0, 8))
+        ctk.CTkButton(f_btns1, text="⚡ Disparar no Celular", height=26, font=ctk.CTkFont(size=10, weight="bold"), fg_color="#C2410C", hover_color="#EA580C", command=lambda: _send_alarm("siren")).pack(side="left", fill="x", expand=True)
+
+        # Opção 2: Bipe Intermitente de Localização
+        f_opt2 = ctk.CTkFrame(dlg, fg_color="#0B1324", border_color="#38BDF8", border_width=1, corner_radius=10)
+        f_opt2.pack(fill="x", padx=16, pady=5)
+        ctk.CTkLabel(f_opt2, text="🔊 Bipe Intermitente de Localização (Radar Sonar)", font=ctk.CTkFont(size=11.5, weight="bold"), text_color="#FFF").pack(anchor="w", padx=12, pady=(6, 2))
+        ctk.CTkLabel(f_opt2, text="Bipes pulsados para encontrar o smartphone em ambiente fechado.", font=ctk.CTkFont(size=10), text_color="#94A3B8").pack(anchor="w", padx=12, pady=(0, 6))
+
+        f_btns2 = ctk.CTkFrame(f_opt2, fg_color="transparent")
+        f_btns2.pack(fill="x", padx=12, pady=(0, 8))
+        ctk.CTkButton(f_btns2, text="▶ Testar no PC", width=110, height=26, font=ctk.CTkFont(size=10), fg_color="#334155", hover_color="#475569", command=lambda: _play_local_sound("beep")).pack(side="left", padx=(0, 8))
+        ctk.CTkButton(f_btns2, text="⚡ Disparar no Celular", height=26, font=ctk.CTkFont(size=10, weight="bold"), fg_color="#2563EB", hover_color="#3B82F6", command=lambda: _send_alarm("beep")).pack(side="left", fill="x", expand=True)
+
+        ctk.CTkButton(dlg, text="Fechar", height=24, fg_color="transparent", text_color="#94A3B8", hover_color="#1E293B", command=dlg.destroy).pack(pady=(6, 6))
 
     def cloud_action_send_message(self):
         if not self.cloud_selected_device:
