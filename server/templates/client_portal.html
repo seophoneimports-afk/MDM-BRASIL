@@ -37,21 +37,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-
-    function selectBentoPackage(amount, el) {
-      document.querySelectorAll('.bp-pill').forEach(p => p.classList.remove('active'));
-      if (el) el.classList.add('active');
-      const valDisp = document.getElementById("bentoPixValDisplay");
-      if (valDisp) valDisp.innerText = `R$ ${amount},00`;
-    }
-
-    function copyBentoPixKey() {
-      const pixKey = "minha_chave_pix@assistenciatecnica.com.br";
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(pixKey);
-      }
-      alert("✅ Chave PIX copiada com sucesso para a área de transferência!\n\nApós o pagamento, seus créditos caem na conta em até 3 segundos.");
-    }
     /* ========================================================
        5 MODELOS DE LAYOUT / TEMAS VISUAIS
        ======================================================== */
@@ -2455,7 +2440,7 @@
       overflow-x: hidden;
     }
 
-    /* Fixed Left Sidebar (250px) */
+    /* Fixed Left Sidebar (250px) - Non-clipping Flex Layout */
     .sidebar-portal-nav {
       position: fixed !important;
       top: 0 !important;
@@ -2469,33 +2454,26 @@
       border-right: 1px solid rgba(0, 229, 255, 0.12) !important;
       display: flex !important;
       flex-direction: column !important;
-      justify-content: space-between !important;
-      padding: 20px 14px !important;
+      padding: 12px 10px 14px !important;
       z-index: 1000 !important;
-      overflow-y: auto !important;
+      overflow: hidden !important;
       box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    .sidebar-portal-nav::-webkit-scrollbar {
-      width: 4px;
-    }
-    .sidebar-portal-nav::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+      box-sizing: border-box !important;
     }
 
     .sidebar-linear-header {
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 0 4px 18px;
+      padding: 2px 4px 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      margin-bottom: 14px;
+      margin-bottom: 6px;
     }
     .linear-brand-logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(0, 229, 255, 0.25);
       display: flex;
@@ -2506,20 +2484,20 @@
       flex-shrink: 0;
     }
     .linear-brand-img {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       object-fit: contain;
       filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.45));
     }
     .linear-brand-title {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 800;
       color: #FFF;
       line-height: 1.2;
       letter-spacing: -0.3px;
     }
     .linear-brand-sub {
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 700;
       color: #00E5FF;
       text-transform: uppercase;
@@ -2529,67 +2507,88 @@
     .sidebar-linear-nav {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      flex: 1;
+      gap: 2px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 2px;
     }
+    .sidebar-linear-nav::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar-linear-nav::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.2);
+      border-radius: 4px;
+    }
+    .sidebar-linear-nav::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 229, 255, 0.4);
+    }
+
     .linear-nav-btn {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 9px 12px;
-      border-radius: 8px;
+      gap: 8px;
+      padding: 6.5px 10px;
+      border-radius: 7px;
       background: transparent;
       border: 1px solid transparent;
       color: #94A3B8;
-      font-size: 12.5px;
+      font-size: 11.8px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
       text-align: left;
       width: 100%;
+      flex-shrink: 0;
     }
     .linear-nav-btn:hover {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       color: #FFF;
     }
     .linear-nav-btn.active {
-      background: rgba(0, 229, 255, 0.1) !important;
-      border-color: rgba(0, 229, 255, 0.35) !important;
+      background: rgba(0, 229, 255, 0.12) !important;
+      border-color: rgba(0, 229, 255, 0.4) !important;
       color: #00E5FF !important;
       font-weight: 700 !important;
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.12);
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.15);
     }
     .ln-icon {
-      font-size: 15px;
-      width: 18px;
+      font-size: 14px;
+      width: 16px;
       text-align: center;
     }
     .ln-label {
       flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .ln-badge {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 1px 5px;
+      border-radius: 5px;
       background: rgba(0, 230, 118, 0.15);
       color: var(--green);
     }
 
-    /* Sidebar Linear Footer */
+    /* Sidebar Linear Footer (Pinned safely at the bottom) */
     .sidebar-linear-footer {
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding-top: 14px;
+      gap: 8px;
+      padding-top: 8px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      margin-top: 10px;
+      margin-top: auto;
+      background: #080D1A;
     }
     .linear-credit-card {
       background: linear-gradient(145deg, #0B1426 0%, #071C17 100%);
       border: 1px solid rgba(0, 230, 118, 0.35);
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 10px;
+      padding: 9px 12px;
       cursor: pointer;
       transition: all 0.2s;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
@@ -2602,24 +2601,24 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 800;
       color: #94A3B8;
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .lcc-value {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--green);
     }
     .lcc-btn {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--cyan);
-      margin-top: 4px;
+      margin-top: 2px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -2628,15 +2627,15 @@
     .linear-user-card {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       padding: 6px 10px;
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 9px;
     }
     .luc-avatar {
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       border: 1.5px solid var(--cyan);
       object-fit: cover;
@@ -2646,7 +2645,7 @@
       overflow: hidden;
     }
     .luc-name {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #FFF;
       white-space: nowrap;
@@ -2654,7 +2653,7 @@
       text-overflow: ellipsis;
     }
     .luc-status {
-      font-size: 10px;
+      font-size: 9.5px;
       color: var(--green);
       font-weight: 600;
     }
@@ -2663,13 +2662,13 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: #94A3B8;
       border-radius: 6px;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 12px;
       transition: all 0.2s;
     }
     .luc-auth-btn:hover {
@@ -2690,37 +2689,52 @@
       padding: 0 0 60px 0 !important;
     }
 
-    /* Single Slim Topbar */
+    /* Single Slim Topbar - High-Tech Glass */
     .linear-topbar {
-      height: 52px;
+      height: 54px;
       position: sticky;
       top: 0;
       z-index: 850;
-      background: rgba(8, 13, 26, 0.95);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      padding: 0 32px;
+      background: rgba(8, 13, 26, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      padding: 0 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
     .linear-breadcrumbs {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 13px;
+      font-size: 12.5px;
       color: #64748B;
     }
-    .bc-home { color: #64748B; cursor: pointer; }
+    .bc-home { color: #64748B; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+    .bc-home:hover { color: #00E5FF; }
     .bc-sep { color: #334155; }
     .bc-active { color: #FFF; font-weight: 700; }
 
+    .linear-clock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94A3B8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+    }
     .linear-topbar-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .server-status-pill {
       display: flex;
@@ -2746,18 +2760,56 @@
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
     }
+    .topbar-credit-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(0, 230, 118, 0.12) 0%, rgba(0, 229, 255, 0.12) 100%);
+      border: 1px solid rgba(0, 230, 118, 0.35);
+      color: #00E676;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .topbar-credit-pill:hover {
+      border-color: #00E676;
+      transform: translateY(-1px);
+      box-shadow: 0 0 16px rgba(0, 230, 118, 0.25);
+    }
+    .btn-topbar-quick-recharge {
+      background: linear-gradient(135deg, #00E676 0%, #00B0FF 100%);
+      color: #060911;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+      box-shadow: 0 0 14px rgba(0, 230, 118, 0.25);
+    }
+    .btn-topbar-quick-recharge:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 22px rgba(0, 230, 118, 0.45);
+    }
     .btn-linear-download {
       background: rgba(56, 189, 248, 0.12);
       border: 1px solid rgba(56, 189, 248, 0.35);
       color: #38BDF8;
       font-size: 11.5px;
       font-weight: 700;
-      padding: 6px 12px;
+      padding: 5px 11px;
       border-radius: 8px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.2s;
     }
     .btn-linear-download:hover {
@@ -2770,7 +2822,7 @@
       color: #F59E0B;
       font-size: 11.5px;
       font-weight: 700;
-      padding: 6px 12px;
+      padding: 5px 11px;
       border-radius: 8px;
       text-decoration: none;
       display: inline-flex;
@@ -2783,17 +2835,85 @@
       color: #00E676;
       font-size: 11.5px;
       font-weight: 700;
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 8px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.2s;
     }
     .btn-linear-wa:hover {
       background: #00E676;
       color: #000;
+    }
+
+    /* RECHARGE QUANTITY PILLS */
+    .btn-qty-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #CBD5E1;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-qty-pill:hover {
+      background: rgba(0, 229, 255, 0.1);
+      border-color: rgba(0, 229, 255, 0.3);
+      color: #FFF;
+    }
+    .btn-qty-pill.active {
+      background: rgba(0, 230, 118, 0.15);
+      border-color: #00E676;
+      color: #00E676;
+      box-shadow: 0 0 14px rgba(0, 230, 118, 0.25);
+    }
+    .btn-qty-pill.featured {
+      border-color: rgba(0, 230, 118, 0.4);
+    }
+
+    /* BENCH STEPS CONTROLS */
+    .bench-step-btn {
+      background: #0B1120;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94A3B8;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bench-step-btn:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+      color: #FFF;
+    }
+    .bench-step-btn.active {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: #00E5FF;
+      color: #00E5FF;
+      font-weight: 800;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    }
+    .bench-step-btn strong {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 10.5px;
+    }
+    .bench-step-btn.active strong {
+      background: #00E5FF;
+      color: #060911;
     }
 
     /* BENTO GRID (TAB OVERVIEW) */
@@ -3181,80 +3301,78 @@
     <main>
     <!-- DASHBOARD VIEW COM SIDEBAR LATERAL ESQUERDA (LAYOUT UNIFICADO) -->
     <div id="viewDashboard" class="dashboard app-dash-container" data-dash-theme="titanium-slate">
-      <!-- SIDEBAR LATERAL FIXADA: LINEAR STUDIO V2.2 -->
+      <!-- SIDEBAR LATERAL FIXADA: LINEAR STUDIO V2.2 (NON-CLIPPING FIXED FOOTER) -->
       <aside class="sidebar-portal-nav">
-        <div>
-          <!-- BRAND LOGO LINEAR (LOGO OFICIAL MDM & FRP BRASIL) -->
-          <div class="sidebar-linear-header" onclick="switchDashTab('overview')" style="cursor: pointer;" title="Ir para o Início">
-            <div class="linear-brand-logo">
-              <img src="/static/logo.png" alt="MDM &amp; FRP BRASIL" class="linear-brand-img">
-            </div>
-            <div>
-              <div class="linear-brand-title">MDM &amp; FRP BRASIL</div>
-              <div class="linear-brand-sub">TITANIUM STUDIO V2.2</div>
-            </div>
+        <!-- BRAND LOGO LINEAR (LOGO OFICIAL MDM & FRP BRASIL) -->
+        <div class="sidebar-linear-header" onclick="switchDashTab('overview')" style="cursor: pointer;" title="Ir para o Início">
+          <div class="linear-brand-logo">
+            <img src="/static/logo.png" alt="MDM &amp; FRP BRASIL" class="linear-brand-img">
           </div>
-
-          <!-- NAVEGAÇÃO LINEAR STUDIO -->
-          <div class="sidebar-linear-nav">
-            <button type="button" class="linear-nav-btn active" data-tab="overview" onclick="switchDashTab('overview', this)">
-              <span class="ln-icon">⚡</span>
-              <span class="ln-label">Bancada USB</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="devices" onclick="switchDashTab('devices', this)">
-              <span class="ln-icon">☁️</span>
-              <span class="ln-label">Aparelhos Nuvem</span>
-              <span class="ln-badge">GPS Real</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="recharge" onclick="switchDashTab('recharge', this)">
-              <span class="ln-icon">💎</span>
-              <span class="ln-label">Planos &amp; PIX</span>
-              <span class="ln-badge">Auto</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="apk_studio" onclick="switchDashTab('apk_studio', this)">
-              <span class="ln-icon">✨</span>
-              <span class="ln-label">Personalizar APK</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="bench_steps" onclick="switchDashTab('bench_steps', this)">
-              <span class="ln-icon">🔬</span>
-              <span class="ln-label">Passo a Passo USB</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="bench_commands" onclick="switchDashTab('bench_commands', this)">
-              <span class="ln-icon">🎮</span>
-              <span class="ln-label">Guia de Comandos</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="software" onclick="switchDashTab('software', this)">
-              <span class="ln-icon">💻</span>
-              <span class="ln-label">Baixar Software (.EXE)</span>
-              <span class="ln-badge">v2.2</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="orders" onclick="switchDashTab('orders', this)">
-              <span class="ln-icon">🛠️</span>
-              <span class="ln-label">Ordens de Serviço</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="ranking" onclick="switchDashTab('ranking', this)">
-              <span class="ln-icon">🏆</span>
-              <span class="ln-label">Ranking do Mês</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="benefits" onclick="switchDashTab('benefits', this)">
-              <span class="ln-icon">🛡️</span>
-              <span class="ln-label">Vantagens &amp; Blindagem</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="history" onclick="switchDashTab('history', this)">
-              <span class="ln-icon">📜</span>
-              <span class="ln-label">Extrato Financeiro</span>
-            </button>
-            <button type="button" class="linear-nav-btn" data-tab="profile" onclick="switchDashTab('profile', this)">
-              <span class="ln-icon">👤</span>
-              <span class="ln-label">Meu Perfil &amp; Senha EXE</span>
-            </button>
+          <div>
+            <div class="linear-brand-title">MDM &amp; FRP BRASIL</div>
+            <div class="linear-brand-sub">TITANIUM STUDIO V2.2</div>
           </div>
         </div>
 
-        <!-- FOOTER DA SIDEBAR: SALDO & TÉCNICO -->
+        <!-- NAVEGAÇÃO LINEAR STUDIO (COM SCROLL INDEPENDENTE SUAVE) -->
+        <div class="sidebar-linear-nav">
+          <button type="button" class="linear-nav-btn active" data-tab="overview" onclick="switchDashTab('overview', this)">
+            <span class="ln-icon">⚡</span>
+            <span class="ln-label">Bancada USB</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="devices" onclick="switchDashTab('devices', this)">
+            <span class="ln-icon">☁️</span>
+            <span class="ln-label">Aparelhos Nuvem</span>
+            <span class="ln-badge">GPS Real</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="recharge" onclick="switchDashTab('recharge', this)">
+            <span class="ln-icon">💎</span>
+            <span class="ln-label">Planos &amp; PIX</span>
+            <span class="ln-badge">Auto</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="apk_studio" onclick="switchDashTab('apk_studio', this)">
+            <span class="ln-icon">✨</span>
+            <span class="ln-label">Personalizar APK</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="bench_steps" onclick="switchDashTab('bench_steps', this)">
+            <span class="ln-icon">🔬</span>
+            <span class="ln-label">Passo a Passo USB</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="bench_commands" onclick="switchDashTab('bench_commands', this)">
+            <span class="ln-icon">🎮</span>
+            <span class="ln-label">Guia de Comandos</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="software" onclick="switchDashTab('software', this)">
+            <span class="ln-icon">💻</span>
+            <span class="ln-label">Baixar Software (.EXE)</span>
+            <span class="ln-badge">v2.2</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="orders" onclick="switchDashTab('orders', this)">
+            <span class="ln-icon">🛠️</span>
+            <span class="ln-label">Ordens de Serviço</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="ranking" onclick="switchDashTab('ranking', this)">
+            <span class="ln-icon">🏆</span>
+            <span class="ln-label">Ranking do Mês</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="benefits" onclick="switchDashTab('benefits', this)">
+            <span class="ln-icon">🛡️</span>
+            <span class="ln-label">Vantagens &amp; Blindagem</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="history" onclick="switchDashTab('history', this)">
+            <span class="ln-icon">📜</span>
+            <span class="ln-label">Extrato Financeiro</span>
+          </button>
+          <button type="button" class="linear-nav-btn" data-tab="profile" onclick="switchDashTab('profile', this)">
+            <span class="ln-icon">👤</span>
+            <span class="ln-label">Meu Perfil &amp; Senha EXE</span>
+          </button>
+        </div>
+
+        <!-- FOOTER DA SIDEBAR: SALDO & TÉCNICO (FIXO NA BASE, NUNCA CORTA) -->
         <div class="sidebar-linear-footer">
           <!-- CARD DE SALDO DE CRÉDITOS -->
-          <div class="linear-credit-card" onclick="switchDashTab('recharge')" title="Clique para recarregar saldo">
+          <div class="linear-credit-card" onclick="switchDashTab('recharge')" title="Clique para recarregar saldo de créditos">
             <div class="lcc-header">
               <span>💳 SALDO DISPONÍVEL</span>
               <span class="status-pulse-dot" title="Sincronizado em tempo real"></span>
@@ -3279,21 +3397,38 @@
 
       <!-- ÁREA PRINCIPAL DO DASHBOARD (LADO DIREITO) -->
       <div class="dashboard-main-area">
-        <!-- SLIM TOPBAR LINEAR STUDIO -->
+        <!-- SLIM TOPBAR LINEAR STUDIO (ALTA TECNOLOGIA & FUNCIONAL) -->
         <div class="linear-topbar">
           <div class="linear-breadcrumbs">
             <button type="button" class="btn-mobile-sidebar-toggle" onclick="toggleMobileSidebar()" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #FFF; font-size: 13px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; margin-right: 6px;">☰</button>
-            <span class="bc-home" onclick="switchDashTab('overview')">Home</span>
+            <span class="bc-home" onclick="switchDashTab('overview')">🏠 Painel</span>
             <span class="bc-sep">/</span>
             <strong class="bc-active" id="dashBreadcrumbCurrent">Bancada USB &amp; Diagnósticos</strong>
           </div>
 
-          <div class="linear-topbar-actions">
-            <div class="server-status-pill">
-              <span class="status-pulse-dot"></span>
-              <span>Nuvem Online</span>
-              <span class="lat-badge">18ms</span>
+          <!-- AMBIENT STATUS (RELÓGIO BRASÍLIA & LATÊNCIA) -->
+          <div class="linear-topbar-center" style="display: flex; align-items: center; gap: 8px;">
+            <div class="linear-clock-pill" title="Horário Oficial de Brasília">
+              <span>🕒</span>
+              <span id="topbarLiveClock">--:--:--</span>
+              <span style="font-size: 8.5px; color: #64748B;">BRT</span>
             </div>
+            <div class="server-status-pill" title="Latência do Servidor de Nuvem">
+              <span class="status-pulse-dot"></span>
+              <span>Nuvem</span>
+              <span class="lat-badge" id="topbarPingVal">14ms</span>
+            </div>
+          </div>
+
+          <!-- TOPBAR ACTIONS & SHORTCUTS -->
+          <div class="linear-topbar-actions">
+            <div class="topbar-credit-pill" onclick="switchDashTab('recharge')" title="Clique para recarregar créditos">
+              <span>💳</span>
+              <span id="topbarUserBalance">10 Créditos</span>
+            </div>
+            <button type="button" class="btn-topbar-quick-recharge" onclick="switchDashTab('recharge')" title="Recarga Instantânea PIX">
+              <span>⚡</span> + Recarregar PIX
+            </button>
             <a href="/admin" target="_blank" class="btn-linear-admin" id="linkAdminLinear">👑 Admin</a>
             <a href="/download/exe?v=2.2" class="btn-linear-download" title="Baixar aplicativo Windows">📥 Baixar .EXE</a>
             <a href="https://wa.me/5519994783127" target="_blank" class="btn-linear-wa" title="WhatsApp Suporte">💬 Suporte WhatsApp</a>
@@ -3501,143 +3636,205 @@
           </div>
         </div> <!-- /tabOverview -->
 
-        <!-- ABA 2: RECARGA PIX & PLANOS -->
+        <!-- ABA 2: RECARGA PIX & PLANOS (QUANTIDADE CUSTOMIZADA PRIMEIRO + PROMOÇÕES ABAIXO) -->
         <div id="tabRecharge" class="dash-tab-pane" style="display: none;">
-          <!-- Pacotes Promocionais Starter, Pro, Master, Diamante -->
-          <section id="secPricing" data-section="sec_pricing" class="home-pricing-section" style="max-width: 1150px; margin: 45px auto 30px; padding: 0 10px;">
-        <div style="text-align: center; margin-bottom: 28px;">
-          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.35); padding: 6px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; color: var(--green); margin-bottom: 12px; box-shadow: 0 0 20px rgba(0, 230, 118, 0.2);">
-            <span>💎 RECARGAS INSTANTÂNEAS PIX • LIBERAÇÃO EM 3s</span>
-          </div>
-          <h2 style="font-size: 32px; font-weight: 900; color: #FFF; margin-bottom: 10px; letter-spacing: -0.5px;">
-            Pacotes de Créditos para Bancada &amp; Assistência
-          </h2>
-          <p style="color: #94A3B8; font-size: 14px; max-width: 680px; margin: 0 auto; line-height: 1.5;">
-            Sem fidelidade ou mensalidade fixa. Adquira créditos via PIX automático com ativação imediata no software e bônus progressivo.
-          </p>
-        </div>
-
-        <div class="home-pricing-grid">
-          <!-- Card 1: Starter -->
-          <div class="home-pricing-card">
-            <div>
-              <span class="home-pkg-badge" style="background: rgba(148, 163, 184, 0.15); color: #94A3B8; border: 1px solid rgba(148, 163, 184, 0.3);">
-                BRONZE • INICIANTE
-              </span>
-              <div class="home-pkg-title">Starter Bancada</div>
-              <div style="font-size: 12.5px; color: var(--text-muted);">Ideal para testes rápidos e serviços esporádicos</div>
-              <div class="home-pkg-price">R$ 50<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
-              <div class="home-pkg-unit">+ Bônus de 5 créditos cortesia</div>
-              <ul class="home-pkg-features">
-                <li><span class="icon">✓</span> Desbloqueios FRP &amp; MDM Imediatos</li>
-                <li><span class="icon">✓</span> Todas as marcas (Samsung, Xiaomi, Moto)</li>
-                <li><span class="icon">✓</span> Reconhecimento USB Automático (0.4s)</li>
-                <li><span class="icon">✓</span> Créditos sem prazo de validade</li>
-                <li><span class="icon">✓</span> Suporte oficial via WhatsApp</li>
-              </ul>
+          
+          <!-- 1. PARTE SUPERIOR (PRIMEIRO): ESCOLHA A QUANTIDADE QUE VOCÊ QUER -->
+          <section class="recharge-calc-hero" style="max-width: 1050px; margin: 30px auto 25px; padding: 0 12px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.35); padding: 6px 18px; border-radius: 30px; font-size: 11.5px; font-weight: 800; color: var(--green); margin-bottom: 10px; box-shadow: 0 0 20px rgba(0, 230, 118, 0.2);">
+                <span>⚡ RECARGA INSTANTÂNEA PIX • LIBERAÇÃO EM 3 SEGUNDOS</span>
+              </div>
+              <h2 style="font-size: 32px; font-weight: 900; color: #FFF; margin-bottom: 8px; letter-spacing: -0.5px;">
+                Quantos Créditos Você Deseja Adquirir?
+              </h2>
+              <p style="color: #94A3B8; font-size: 14px; max-width: 680px; margin: 0 auto; line-height: 1.5;">
+                Digite a quantidade que você precisa para a sua bancada hoje ou clique nos valores rápidos. Sem mensalidade, sem carência e sem prazo de validade!
+              </p>
             </div>
-            <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800;" onclick="handleHomepageRecharge(50)">
-              ⚡ Recarregar R$ 50 via PIX
-            </button>
-          </div>
 
-          <!-- Card 2: Profissional (Featured) -->
-          <div class="home-pricing-card featured" style="border-width: 2px;">
-            <div style="position: absolute; top: -13px; right: 20px; background: linear-gradient(135deg, #00E676 0%, #00B0FF 100%); color: #060911; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0, 230, 118, 0.4);">
-              🔥 MAIS POPULAR
-            </div>
-            <div>
-              <span class="home-pkg-badge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.35);">
-                PRATA • MELHOR VALOR
-              </span>
-              <div class="home-pkg-title">Profissional Pro</div>
-              <div style="font-size: 12.5px; color: var(--text-muted);">O mais escolhido por lojas e técnicos de bancada</div>
-              <div class="home-pkg-price" style="color: var(--green);">R$ 100<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
-              <div class="home-pkg-unit" style="color: var(--green); font-weight: 700;">+ Bônus de 15 créditos cortesia</div>
-              <ul class="home-pkg-features">
-                <li><span class="icon">✓</span> <strong>Todos os benefícios do Starter</strong></li>
-                <li><span class="icon">✓</span> Blindagem Knox Guard DPC Inviolável</li>
-                <li><span class="icon">✓</span> Prioridade na fila de servidores em nuvem</li>
-                <li><span class="icon">✓</span> Elegível ao Ranking de Destaques do Mês</li>
-                <li><span class="icon">✓</span> Suporte VIP WhatsApp (19) 99478-3127</li>
-              </ul>
-            </div>
-            <button type="button" class="btn-green" style="width: 100%; padding: 13px; font-size: 14px; font-weight: 800; box-shadow: 0 0 25px rgba(0, 230, 118, 0.35);" onclick="handleHomepageRecharge(100)">
-              ⚡ Recarregar R$ 100 via PIX
-            </button>
-          </div>
+            <!-- CARD PRINCIPAL: CALCULADORA DE CRÉDITOS & GERADOR PIX -->
+            <div style="background: linear-gradient(145deg, #0A1324 0%, #061814 100%); border: 1.5px solid rgba(0, 230, 118, 0.4); border-radius: 20px; padding: 30px 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(0, 230, 118, 0.12);">
+              
+              <!-- ETAPA 1: ATALHOS RÁPIDOS DE QUANTIDADE -->
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;">
+                  1. Seleção Rápida de Quantidade:
+                </label>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <button type="button" class="btn-qty-pill" onclick="setCustomCredits(5)">5 Créditos (R$ 25)</button>
+                  <button type="button" class="btn-qty-pill active" id="btnQtyPill10" onclick="setCustomCredits(10)">10 Créditos (R$ 50)</button>
+                  <button type="button" class="btn-qty-pill featured" id="btnQtyPill20" onclick="setCustomCredits(20)">🔥 20 Créditos (R$ 100)</button>
+                  <button type="button" class="btn-qty-pill" onclick="setCustomCredits(50)">50 Créditos (R$ 250)</button>
+                  <button type="button" class="btn-qty-pill" onclick="setCustomCredits(100)">100 Créditos (R$ 500)</button>
+                </div>
+              </div>
 
-          <!-- Card 3: Master Shop -->
-          <div class="home-pricing-card">
-            <div>
-              <span class="home-pkg-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.35);">
-                OURO • ALTO VOLUME
-              </span>
-              <div class="home-pkg-title">Master Bancada</div>
-              <div style="font-size: 12.5px; color: var(--text-muted);">Para oficinas com grande fluxo de aparelhos</div>
-              <div class="home-pkg-price" style="color: var(--cyan);">R$ 250<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
-              <div class="home-pkg-unit" style="color: var(--cyan); font-weight: 700;">+ Bônus de 50 créditos cortesia</div>
-              <ul class="home-pkg-features">
-                <li><span class="icon">✓</span> <strong>Todos os recursos do Profissional</strong></li>
-                <li><span class="icon">✓</span> Menor custo por aparelho desbloqueado</li>
-                <li><span class="icon">✓</span> Suporte para múltiplos PCs da mesma oficina</li>
-                <li><span class="icon">✓</span> Acesso antecipado a atualizações Android 16</li>
-                <li><span class="icon">✓</span> Atendimento técnico prioritário 24/7</li>
-              </ul>
-            </div>
-            <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800;" onclick="handleHomepageRecharge(250)">
-              ⚡ Recarregar R$ 250 via PIX
-            </button>
-          </div>
+              <!-- ETAPA 2: CONTROLE NUMÉRICO & RESUMO FINANCEIRO AO VIVO -->
+              <div style="display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; align-items: center; background: rgba(3, 7, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 22px;">
+                <!-- ESQUERDA: INPUT STEPPER -->
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 800; color: #E2E8F0; margin-bottom: 8px;">
+                    2. Ou digite a quantidade exata:
+                  </label>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <button type="button" onclick="stepCustomCredits(-1)" style="width: 46px; height: 48px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; font-size: 22px; font-weight: 800; border-radius: 10px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">-</button>
+                    <input type="number" id="customCreditsInput" min="1" max="1000" value="10" oninput="updateCreditCalculator()" style="flex: 1; height: 48px; background: #060B16; border: 1.5px solid rgba(0, 229, 255, 0.45); border-radius: 10px; color: #FFF; font-size: 22px; font-weight: 900; text-align: center; font-family: 'JetBrains Mono', monospace; outline: none; box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);">
+                    <button type="button" onclick="stepCustomCredits(1)" style="width: 46px; height: 48px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; font-size: 22px; font-weight: 800; border-radius: 10px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">+</button>
+                  </div>
+                  <div style="font-size: 11px; color: #64748B; margin-top: 6px;">
+                    💡 Cada crédito desbloqueia 1 aparelho ou autoriza operações avançadas.
+                  </div>
+                </div>
 
-          <!-- Card 4: Distribuidor / VIP Supremo -->
-          <div class="home-pricing-card">
-            <div>
-              <span class="home-pkg-badge" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.35);">
-                DIAMANTE • DISTRIBUIDOR
-              </span>
-              <div class="home-pkg-title">Rede / Distribuidor</div>
-              <div style="font-size: 12.5px; color: var(--text-muted);">Pacote master para redes de lojas e centros técnicos</div>
-              <div class="home-pkg-price" style="color: #F59E0B;">R$ 500<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
-              <div class="home-pkg-unit" style="color: #F59E0B; font-weight: 700;">+ Bônus de 150 créditos cortesia</div>
-              <ul class="home-pkg-features">
-                <li><span class="icon">✓</span> <strong>Máxima margem de lucro por serviço</strong></li>
-                <li><span class="icon">✓</span> Linha direta de suporte com desenvolvedores</li>
-                <li><span class="icon">✓</span> Destaque garantido no Ranking do Mês</li>
-                <li><span class="icon">✓</span> Liberação de chaves e sub-operadores</li>
-                <li><span class="icon">✓</span> Assessoria completa de instalação e drivers</li>
-              </ul>
-            </div>
-            <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border-color: #F59E0B; color: #FFF;" onclick="handleHomepageRecharge(500)">
-              ⚡ Recarregar R$ 500 via PIX
-            </button>
-          </div>
-        </div>
-      </section>
+                <!-- DIREITA: RESUMO DINÂMICO DE VALORES E BÔNUS -->
+                <div style="border-left: 1px solid rgba(255,255,255,0.08); padding-left: 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                    <span style="font-size: 12.5px; color: #94A3B8;">Valor Total a Pagar:</span>
+                    <strong id="calcTotalBrlDisplay" style="font-size: 28px; font-weight: 900; color: #00E676; font-family: 'JetBrains Mono', monospace; text-shadow: 0 0 15px rgba(0, 230, 118, 0.4);">R$ 50,00</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: #CBD5E1; margin-bottom: 3px;">
+                    <span>Créditos solicitados:</span>
+                    <strong id="calcBaseCreditsDisplay">10 CR (R$ 5,00/crédito)</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: #00E5FF; font-weight: 700; margin-bottom: 6px;">
+                    <span>🎁 Bônus Cortesia da Recarga:</span>
+                    <strong id="calcBonusCreditsDisplay">+2 CR BÔNUS GRÁTIS</strong>
+                  </div>
+                  <div style="background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.35); border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 800; color: #00E676; text-align: center;">
+                    Você recebe: <span id="calcFinalCreditsDisplay">12 Créditos</span> disponíveis na sua conta!
+                  </div>
+                </div>
+              </div>
 
-          <!-- Checkout Instantâneo via PIX Automático -->
-          <div class="panel-card" style="border-color: var(--border-green); margin-top: 24px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
-              <h3 style="margin: 0; color: #FFF; display: flex; align-items: center; gap: 8px;">
-                <span>⚡</span> Recarga Instantânea via PIX • Crédito Imediato
+              <!-- BOTÃO DE AÇÃO GERAR PIX IMEDIATO -->
+              <div style="margin-top: 22px;">
+                <button type="button" class="btn-green" id="btnMainPixGen" onclick="generatePixOrder()" style="width: 100%; padding: 16px; font-size: 15px; font-weight: 900; border-radius: 12px; letter-spacing: 0.3px; box-shadow: 0 0 30px rgba(0, 230, 118, 0.35); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+                  ⚡ GERAR QR CODE PIX AGORA • LIBERAÇÃO EM 3 SEGUNDOS
+                </button>
+              </div>
+
+              <!-- SELOS DE CONFIANÇA & GARANTIA -->
+              <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 14px; font-size: 11.5px; color: #94A3B8;">
+                <span>🔒 PIX Banco Central Oficial</span>
+                <span>⚡ Liberação Automática 24/7</span>
+                <span>📅 Créditos Sem Vencimento</span>
+                <span>💬 WhatsApp Suporte: (19) 99478-3127</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. PARTE INFERIOR (ABAIXO): PACOTES PROMOCIONAIS COM MAIORES BÔNUS -->
+          <section id="secPricing" data-section="sec_pricing" class="home-pricing-section" style="max-width: 1150px; margin: 30px auto 40px; padding: 0 10px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 229, 255, 0.12); border: 1px solid rgba(0, 229, 255, 0.35); padding: 5px 16px; border-radius: 30px; font-size: 11px; font-weight: 800; color: var(--cyan); margin-bottom: 10px;">
+                <span>🎁 PACOTES PROMOCIONAIS COM BÔNUS PROGRESSIVO</span>
+              </div>
+              <h3 style="font-size: 26px; font-weight: 900; color: #FFF; margin-bottom: 6px;">
+                Prefere Economizar? Veja os Pacotes com Bônus Extra
               </h3>
-              <span style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.4); padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 800;">
-                ✓ 1 CRÉDITO = R$ 5,00
-              </span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">
-              Escolha um pacote rápido ou digite a quantidade customizada de créditos. O QR Code PIX oficial Banco Central é gerado em menos de 1 segundo com liberação automática.
-            </p>
-
-            <div class="packages-grid" id="packagesContainer">
-              <!-- Rendered via JS -->
+              <p style="color: #94A3B8; font-size: 13.5px; max-width: 680px; margin: 0 auto;">
+                Pacotes fechados com os maiores bônus do mercado para assistências técnicas e centros de reparo:
+              </p>
             </div>
 
-            <div style="display: flex; gap: 12px; align-items: center; max-width: 520px; margin-top: 18px;">
-              <input type="number" id="customCreditsInput" class="form-control" min="1" max="1000" value="10" placeholder="Quantidade customizada" style="max-width: 220px;">
-              <button class="btn-green" onclick="generatePixOrder()" style="padding: 10px 20px; font-weight: 800;">⚡ Gerar PIX de Recarga</button>
+            <div class="home-pricing-grid">
+              <!-- Card 1: Starter -->
+              <div class="home-pricing-card">
+                <div>
+                  <span class="home-pkg-badge" style="background: rgba(148, 163, 184, 0.15); color: #94A3B8; border: 1px solid rgba(148, 163, 184, 0.3);">
+                    BRONZE • INICIANTE
+                  </span>
+                  <div class="home-pkg-title">Starter Bancada</div>
+                  <div style="font-size: 12.5px; color: var(--text-muted);">Ideal para testes rápidos e serviços esporádicos</div>
+                  <div class="home-pkg-price">R$ 50<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+                  <div class="home-pkg-unit" style="color: var(--green); font-weight: 700;">10 CR + 2 Bônus = 12 Créditos</div>
+                  <ul class="home-pkg-features">
+                    <li><span class="icon">✓</span> Desbloqueios FRP &amp; MDM Imediatos</li>
+                    <li><span class="icon">✓</span> Todas as marcas (Samsung, Xiaomi, Moto)</li>
+                    <li><span class="icon">✓</span> Reconhecimento USB Automático (0.4s)</li>
+                    <li><span class="icon">✓</span> Créditos sem prazo de validade</li>
+                    <li><span class="icon">✓</span> Suporte oficial via WhatsApp</li>
+                  </ul>
+                </div>
+                <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800;" onclick="handleHomepageRecharge(50)">
+                  ⚡ Adquirir Starter (R$ 50)
+                </button>
+              </div>
+
+              <!-- Card 2: Profissional (Featured) -->
+              <div class="home-pricing-card featured" style="border-width: 2px;">
+                <div style="position: absolute; top: -13px; right: 20px; background: linear-gradient(135deg, #00E676 0%, #00B0FF 100%); color: #060911; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0, 230, 118, 0.4);">
+                  🔥 MAIS POPULAR
+                </div>
+                <div>
+                  <span class="home-pkg-badge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.35);">
+                    PRATA • MELHOR VALOR
+                  </span>
+                  <div class="home-pkg-title">Profissional Pro</div>
+                  <div style="font-size: 12.5px; color: var(--text-muted);">O mais escolhido por lojas e técnicos de bancada</div>
+                  <div class="home-pkg-price" style="color: var(--green);">R$ 100<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+                  <div class="home-pkg-unit" style="color: var(--green); font-weight: 700;">20 CR + 5 Bônus = 25 Créditos</div>
+                  <ul class="home-pkg-features">
+                    <li><span class="icon">✓</span> <strong>Todos os benefícios do Starter</strong></li>
+                    <li><span class="icon">✓</span> Blindagem Knox Guard DPC Inviolável</li>
+                    <li><span class="icon">✓</span> Prioridade na fila de servidores em nuvem</li>
+                    <li><span class="icon">✓</span> Elegível ao Ranking de Destaques do Mês</li>
+                    <li><span class="icon">✓</span> Suporte VIP WhatsApp (19) 99478-3127</li>
+                  </ul>
+                </div>
+                <button type="button" class="btn-green" style="width: 100%; padding: 13px; font-size: 14px; font-weight: 800; box-shadow: 0 0 25px rgba(0, 230, 118, 0.35);" onclick="handleHomepageRecharge(100)">
+                  ⚡ Adquirir Pro (R$ 100)
+                </button>
+              </div>
+
+              <!-- Card 3: Master Shop -->
+              <div class="home-pricing-card">
+                <div>
+                  <span class="home-pkg-badge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.35);">
+                    OURO • ALTO VOLUME
+                  </span>
+                  <div class="home-pkg-title">Master Bancada</div>
+                  <div style="font-size: 12.5px; color: var(--text-muted);">Para oficinas com grande fluxo de aparelhos</div>
+                  <div class="home-pkg-price" style="color: var(--cyan);">R$ 250<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+                  <div class="home-pkg-unit" style="color: var(--cyan); font-weight: 700;">50 CR + 15 Bônus = 65 Créditos</div>
+                  <ul class="home-pkg-features">
+                    <li><span class="icon">✓</span> <strong>Todos os recursos do Profissional</strong></li>
+                    <li><span class="icon">✓</span> Menor custo por aparelho desbloqueado</li>
+                    <li><span class="icon">✓</span> Suporte para múltiplos PCs da mesma oficina</li>
+                    <li><span class="icon">✓</span> Acesso antecipado a atualizações Android 16</li>
+                    <li><span class="icon">✓</span> Atendimento técnico prioritário 24/7</li>
+                  </ul>
+                </div>
+                <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800;" onclick="handleHomepageRecharge(250)">
+                  ⚡ Adquirir Master (R$ 250)
+                </button>
+              </div>
+
+              <!-- Card 4: Distribuidor / VIP Supremo -->
+              <div class="home-pricing-card">
+                <div>
+                  <span class="home-pkg-badge" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.35);">
+                    DIAMANTE • DISTRIBUIDOR
+                  </span>
+                  <div class="home-pkg-title">Rede / Distribuidor</div>
+                  <div style="font-size: 12.5px; color: var(--text-muted);">Pacote master para redes de lojas e centros técnicos</div>
+                  <div class="home-pkg-price" style="color: #F59E0B;">R$ 500<span style="font-size: 15px; font-weight: 600; color: var(--text-muted);">,00</span></div>
+                  <div class="home-pkg-unit" style="color: #F59E0B; font-weight: 700;">100 CR + 35 Bônus = 135 Créditos</div>
+                  <ul class="home-pkg-features">
+                    <li><span class="icon">✓</span> <strong>Máxima margem de lucro por serviço</strong></li>
+                    <li><span class="icon">✓</span> Linha direta de suporte com desenvolvedores</li>
+                    <li><span class="icon">✓</span> Destaque garantido no Ranking do Mês</li>
+                    <li><span class="icon">✓</span> Liberação de chaves e sub-operadores</li>
+                    <li><span class="icon">✓</span> Assessoria completa de instalação e drivers</li>
+                  </ul>
+                </div>
+                <button type="button" class="btn-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 800; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border-color: #F59E0B; color: #FFF;" onclick="handleHomepageRecharge(500)">
+                  ⚡ Adquirir VIP (R$ 500)
+                </button>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
 
         <!-- ABA 3: BANCADA PASSO A PASSO (USB) -->
@@ -3650,7 +3847,7 @@
                 🔬 SIMULADOR DE LABORATÓRIO TÉCNICO • TEMPO REAL
               </span>
               <h2 style="font-size: 26px; font-weight: 900; color: #FFF; margin: 10px 0 6px;">
-                Passo a Passo na Bancada: Ativando Modo Desenvolvedor e Depuração USB
+                Passo a Passo na Bancada: Ativação e Injeção MDM DPC
               </h2>
               <p style="font-size: 13.5px; color: #94A3B8; max-width: 720px; margin: 0 auto;">
                 Veja como o técnico opera o celular na bancada para ativar a depuração USB e autorizar a injeção do MDM DPC sem precisar formatar o aparelho:
@@ -3658,7 +3855,7 @@
             </div>
 
             <!-- CONTROLE DE PASSOS (1 A 5) -->
-            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 26px; flex-wrap: wrap;">
+            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
               <button type="button" class="bench-step-btn active" id="bStepBtn0" onclick="setBenchStep(0)">
                 <strong>1</strong> Configurações Android
               </button>
@@ -3669,23 +3866,32 @@
                 <strong>3</strong> Ativar Depuração USB
               </button>
               <button type="button" class="bench-step-btn" id="bStepBtn3" onclick="setBenchStep(3)">
-                <strong>4</strong> Conectar USB & Autorizar RSA
+                <strong>4</strong> Conectar USB &amp; Autorizar RSA
               </button>
               <button type="button" class="bench-step-btn" id="bStepBtn4" onclick="setBenchStep(4)">
-                <strong>5</strong> Injeção DPC & Modo Kiosk
+                <strong>5</strong> Injeção DPC &amp; Modo Kiosk
               </button>
             </div>
 
             <!-- CONTAINER SPLIT: DETALHES À ESQUERDA + CELULAR INTERATIVO À DIREITA -->
-            <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: center;">
+            <div class="bench-split-container" style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: center;">
               
               <!-- ESQUERDA: EXPLICAÇÃO DETALHADA E LOGS -->
               <div style="background: #060B16; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px;">
-                <div id="benchStepBadge" style="font-size: 11px; font-weight: 800; color: #00E5FF; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">
-                  PASSO 1 DE 5 • ACESSO AO SISTEMA
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <div id="benchStepBadge" style="font-size: 11px; font-weight: 800; color: #00E5FF; text-transform: uppercase; letter-spacing: 0.8px;">
+                    PASSO 1 DE 5 • ACESSO AO SISTEMA
+                  </div>
+                  <strong id="benchStepPct" style="font-size: 11px; color: #00E5FF; font-family: 'JetBrains Mono', monospace;">20% Concluído</strong>
                 </div>
+
+                <!-- PROGRESS BAR -->
+                <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
+                  <div id="benchProgressFill" style="width: 20%; height: 100%; background: linear-gradient(90deg, #00E5FF, #00E676); border-radius: 4px; transition: width 0.3s ease;"></div>
+                </div>
+
                 <h3 id="benchStepTitle" style="font-size: 20px; font-weight: 800; color: #FFF; margin-bottom: 12px;">
-                  1. Acessar Configurações > Sobre o Telefone
+                  1. Acessar Configurações &gt; Sobre o Telefone
                 </h3>
                 <p id="benchStepDesc" style="font-size: 13.5px; line-height: 1.6; color: #CBD5E1; margin-bottom: 18px;">
                   No smartphone Android do cliente, abra o aplicativo de <strong>Configurações</strong>. Role até o final da página e toque na opção <strong>"Sobre o Telefone"</strong> (ou "Sobre o dispositivo").
@@ -3694,21 +3900,24 @@
                 <!-- DICAS TÉCNICAS -->
                 <div style="background: rgba(0, 229, 255, 0.06); border-left: 3px solid #00E5FF; padding: 12px 14px; border-radius: 8px; margin-bottom: 18px; font-size: 12px; color: #E2E8F0;">
                   <strong style="color: #00E5FF;">💡 Dica de Bancada:</strong>
-                  <span id="benchStepTip">Compatível com Samsung Knox, Xiaomi MIUI/HyperOS, Motorola e Realme (Android 8 até Android 15).</span>
+                  <span id="benchStepTip">Compatível com Samsung Knox, Xiaomi MIUI/HyperOS, Motorola e Realme (Android 8 até Android 16).</span>
                 </div>
 
                 <!-- TERMINAL ADB AO VIVO -->
                 <div style="background: #020509; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #34D399; margin-bottom: 20px;">
-                  <div style="color: #64748B; margin-bottom: 4px;">// Terminal de Comunicação USB / ADB</div>
-                  <div id="benchStepLog">$ adb wait-for-device<br>> Aguardando ativação da depuração USB no dispositivo...</div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="color: #64748B;">// Terminal de Comunicação USB / ADB</span>
+                    <button type="button" onclick="testBenchAdbConnection()" style="background: rgba(0, 229, 255, 0.12); border: 1px solid rgba(0, 229, 255, 0.35); color: #00E5FF; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; cursor: pointer;">🧪 Testar ADB Ping</button>
+                  </div>
+                  <div id="benchStepLog">$ adb wait-for-device<br>&gt; Aguardando ativação da depuração USB no dispositivo...</div>
                 </div>
 
                 <!-- BOTOES DE NAVEGAÇÃO ANTERIOR / PRÓXIMO -->
                 <div style="display: flex; gap: 10px;">
-                  <button type="button" class="btn-sm" style="background: #1E293B; color: #FFF; padding: 8px 16px; border-radius: 8px; font-weight: 700;" onclick="prevBenchStep()">
+                  <button type="button" class="btn-sm" style="background: #1E293B; color: #FFF; padding: 9px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none;" onclick="prevBenchStep()">
                     ← Passo Anterior
                   </button>
-                  <button type="button" class="btn-green" style="padding: 8px 18px; border-radius: 8px; font-weight: 800;" onclick="nextBenchStep()">
+                  <button type="button" class="btn-green" style="padding: 9px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none;" onclick="nextBenchStep()">
                     Próximo Passo →
                   </button>
                 </div>
@@ -3716,31 +3925,31 @@
 
               <!-- DIREITA: CELULAR INTERATIVO REALISTA MOSTRANDO A TELA DO ANDROID -->
               <div style="display: flex; justify-content: center;">
-                <div class="phone-mockup-frame" style="width: 300px; height: 600px; border: 8px solid #1F2937; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 25px rgba(0, 229, 255, 0.2);">
-                  <div class="phone-notch-dot"></div>
+                <div class="phone-mockup-frame" style="width: 290px; height: 580px; border: 8px solid #1F2937; border-radius: 36px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 25px rgba(0, 229, 255, 0.2); display: flex; flex-direction: column; overflow: hidden; background: #090D16;">
+                  <div class="phone-notch-dot" style="width: 12px; height: 12px; background: #000; border-radius: 50%; margin: 8px auto 4px; flex-shrink: 0;"></div>
                   
-                  <div class="phone-bar-top">
-                    <span>15:45</span>
+                  <div class="phone-bar-top" style="display: flex; justify-content: space-between; padding: 0 16px; font-size: 10px; color: #94A3B8; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; margin-bottom: 8px;">
+                    <span id="phoneClockDisplay">15:45</span>
                     <div>5G • 98% 🔋</div>
                   </div>
 
                   <!-- CONTEÚDO DINÂMICO DA TELA DO CELULAR -->
-                  <div id="benchPhoneScreen" style="flex: 1; background: #090D16; display: flex; flex-direction: column; padding: 14px; position: relative; overflow: hidden; text-align: left;">
+                  <div id="benchPhoneScreen" style="flex: 1; background: #090D16; display: flex; flex-direction: column; padding: 14px; position: relative; overflow-y: auto; text-align: left;">
                     
                     <!-- TELA DO PASSO 1: CONFIGURAÇÕES -->
                     <div id="phoneScreenStep0" style="display: block;">
-                      <div style="font-size: 16px; font-weight: 800; color: #FFF; margin-bottom: 14px;">Configurações</div>
-                      <div style="background: #1E293B; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+                      <div style="font-size: 15px; font-weight: 800; color: #FFF; margin-bottom: 12px;">Configurações</div>
+                      <div style="background: #1E293B; border-radius: 10px; padding: 9px 12px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
                         <span>📶</span> Conexões &amp; Wi-Fi
                       </div>
-                      <div style="background: #1E293B; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+                      <div style="background: #1E293B; border-radius: 10px; padding: 9px 12px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
                         <span>🔒</span> Segurança &amp; Privacidade
                       </div>
-                      <div style="background: #1E293B; border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
+                      <div style="background: #1E293B; border-radius: 10px; padding: 9px 12px; margin-bottom: 8px; font-size: 11.5px; color: #FFF; display: flex; align-items: center; gap: 8px;">
                         <span>🔋</span> Assistência do Aparelho
                       </div>
-                      <div style="background: #2563EB; border-radius: 10px; padding: 10px; font-size: 12px; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);">
-                        <span>📱</span> <strong>Sobre o Telefone ➔</strong>
+                      <div onclick="setBenchStep(1)" style="background: #2563EB; border-radius: 10px; padding: 11px 12px; font-size: 12px; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(37, 99, 235, 0.5); cursor: pointer;" title="Clique para avançar">
+                        <span>📱</span> <strong>Sobre o Telefone ➔ (Toque aqui)</strong>
                       </div>
                     </div>
 
@@ -3754,16 +3963,16 @@
                         Versão da Banda Base: <strong style="color: #FFF;">A155MXXU1AXB2</strong>
                       </div>
                       
-                      <!-- TOQUE PULSANTE 7X -->
-                      <div style="background: rgba(0, 230, 118, 0.15); border: 2px dashed #00E676; border-radius: 10px; padding: 12px; text-align: center; position: relative;">
+                      <!-- TOQUE PULSANTE 7X INTERATIVO -->
+                      <div id="boxCompilationTouch" onclick="clickCompileNumber()" style="background: rgba(0, 230, 118, 0.15); border: 2px dashed #00E676; border-radius: 10px; padding: 14px; text-align: center; position: relative; cursor: pointer; transition: all 0.15s;" title="Clique aqui repetidamente">
                         <div style="font-size: 10.5px; color: #94A3B8;">Número da Compilação</div>
                         <strong style="font-size: 13px; color: #00E676; display: block; margin: 4px 0;">UP1A.231005.007</strong>
-                        <div style="font-size: 10px; color: #FFF; background: #00E676; color: #000; font-weight: 800; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 4px;">
-                          👆 TOQUE 7 VEZES AQUI
+                        <div id="lblTouchCounterBadge" style="font-size: 10px; background: #00E676; color: #000; font-weight: 800; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-top: 4px;">
+                          👆 TOQUE 7 VEZES AQUI (<span id="touchCountdownVal">7</span> restantes)
                         </div>
                       </div>
 
-                      <div style="background: rgba(0, 229, 255, 0.2); border: 1px solid #00E5FF; border-radius: 8px; padding: 8px; font-size: 10.5px; color: #FFF; text-align: center; margin-top: 14px;">
+                      <div id="boxDevActivatedNotice" style="display: none; background: rgba(0, 229, 255, 0.2); border: 1px solid #00E5FF; border-radius: 8px; padding: 10px; font-size: 11px; color: #FFF; text-align: center; margin-top: 14px;">
                         🎉 "Você agora é um desenvolvedor!"
                       </div>
                     </div>
@@ -3776,53 +3985,53 @@
                         <span style="color: #00E676; font-weight: 800;">ATIVADO ✓</span>
                       </div>
                       
-                      <div style="background: rgba(0, 230, 118, 0.15); border: 1.5px solid #00E676; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                      <div onclick="toggleUsbDebugging()" style="background: rgba(0, 230, 118, 0.15); border: 1.5px solid #00E676; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" title="Clique para alternar">
                         <div>
                           <strong style="color: #FFF; font-size: 12px; display: block;">Depuração USB</strong>
                           <span style="color: #94A3B8; font-size: 9.5px;">Permitir comandos ADB via USB</span>
                         </div>
-                        <div style="width: 38px; height: 22px; background: #00E676; border-radius: 20px; position: relative; cursor: pointer;">
-                          <div style="width: 18px; height: 18px; background: #FFF; border-radius: 50%; position: absolute; right: 2px; top: 2px;"></div>
+                        <div id="phoneUsbSwitchTrack" style="width: 38px; height: 22px; background: #00E676; border-radius: 20px; position: relative;">
+                          <div id="phoneUsbSwitchThumb" style="width: 18px; height: 18px; background: #FFF; border-radius: 50%; position: absolute; right: 2px; top: 2px; transition: all 0.2s;"></div>
                         </div>
                       </div>
                     </div>
 
                     <!-- TELA DO PASSO 4: MODAL RSA AUTORIZAÇÃO -->
                     <div id="phoneScreenStep3" style="display: none;">
-                      <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid #00E5FF; border-radius: 14px; padding: 16px; margin-top: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+                      <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid #00E5FF; border-radius: 14px; padding: 16px; margin-top: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
                         <strong style="font-size: 13px; color: #FFF; display: block; margin-bottom: 8px;">Permitir a depuração USB?</strong>
                         <p style="font-size: 10px; color: #94A3B8; line-height: 1.4; margin-bottom: 10px;">
                           A chave de impressão digital RSA deste computador de bancada é:<br>
-                          <code style="color: #00E5FF; font-size: 8.5px;">E4:B8:2A:90:3F:11:7C:8A</code>
+                          <code style="color: #00E5FF; font-size: 8.5px;">E4:B8:2A:90:3F:11:7C:8A:23:45</code>
                         </p>
                         <div style="display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: #FFF; margin-bottom: 12px;">
                           <span style="color: #00E676;">☑</span> <strong>Sempre permitir a partir deste computador</strong>
                         </div>
                         <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                          <button type="button" style="background: transparent; border: none; color: #94A3B8; font-size: 11px;">Cancelar</button>
-                          <button type="button" style="background: #00E676; border: none; color: #000; font-weight: 800; font-size: 11px; padding: 4px 12px; border-radius: 6px;">PERMITIR</button>
+                          <button type="button" onclick="alert('Depuração USB cancelada.')" style="background: transparent; border: none; color: #94A3B8; font-size: 11px; cursor: pointer;">Cancelar</button>
+                          <button type="button" onclick="authorizeRsaKey()" style="background: #00E676; border: none; color: #000; font-weight: 800; font-size: 11px; padding: 5px 14px; border-radius: 6px; cursor: pointer;">PERMITIR</button>
                         </div>
                       </div>
                     </div>
 
                     <!-- TELA DO PASSO 5: CELULAR BLOQUEADO VIA KIOSK MDM DPC -->
                     <div id="phoneScreenStep4" style="display: none; text-align: center;">
-                      <div style="width: 58px; height: 58px; border-radius: 14px; background: #111827; border: 2px solid #EF4444; margin: 0 auto 8px; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Logo">
+                      <div style="width: 54px; height: 54px; border-radius: 14px; background: #111827; border: 2px solid #EF4444; margin: 0 auto 8px; overflow: hidden;">
+                        <img src="/static/logo.png" style="width: 100%; height: 100%; object-fit: contain; padding: 4px;" alt="Logo">
                       </div>
-                      <div style="font-size: 13px; font-weight: 800; color: #FFF; margin-bottom: 2px;">SEOPHONE ASSISTÊNCIA</div>
-                      <div style="display: inline-block; background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid #EF4444; padding: 2px 8px; border-radius: 6px; font-size: 9px; font-weight: 800; margin-bottom: 8px;">
+                      <div style="font-size: 13px; font-weight: 800; color: #FFF; margin-bottom: 2px;">MDM &amp; FRP BRASIL</div>
+                      <div id="kioskStatusPill" style="display: inline-block; background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid #EF4444; padding: 2px 8px; border-radius: 6px; font-size: 9px; font-weight: 800; margin-bottom: 8px;">
                         🔒 BLOQUEADO VIA MDM DPC
                       </div>
-                      <div style="background: rgba(15, 23, 42, 0.85); border-left: 3px solid #EF4444; border-radius: 6px; padding: 6px 8px; font-size: 9.5px; color: #E2E8F0; text-align: left; margin-bottom: 8px;">
+                      <div id="kioskMsgBox" style="background: rgba(15, 23, 42, 0.85); border-left: 3px solid #EF4444; border-radius: 6px; padding: 6px 8px; font-size: 9.5px; color: #E2E8F0; text-align: left; margin-bottom: 8px;">
                         Aparelho bloqueado por parcelamento. Realize o pagamento via PIX para liberação em 30 segundos.
                       </div>
-                      <div style="background: #0B1120; border-radius: 8px; padding: 6px; display: inline-block; margin-bottom: 6px;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=MDMBRASIL150" style="width: 75px; height: 75px; background: #FFF; padding: 3px; border-radius: 4px;" alt="QR Code">
+                      <div id="kioskQrBox" style="background: #0B1120; border-radius: 8px; padding: 6px; display: inline-block; margin-bottom: 8px;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=MDMBRASIL150" style="width: 70px; height: 70px; background: #FFF; padding: 3px; border-radius: 4px;" alt="QR Code">
                         <div style="font-size: 11px; font-weight: 800; color: #10B981; margin-top: 2px;">R$ 150,00</div>
                       </div>
-                      <button type="button" style="width: 100%; background: #22C55E; color: #FFF; border: none; padding: 7px; border-radius: 8px; font-size: 10px; font-weight: 800;">
-                        💬 SUPORTE: (19) 99478-3127
+                      <button type="button" onclick="simulateKioskUnlock()" style="width: 100%; background: #00E676; color: #000; border: none; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 900; cursor: pointer;">
+                        ⚡ Testar Desbloqueio Instantâneo
                       </button>
                     </div>
 
@@ -3833,8 +4042,6 @@
             </div>
 
           </div>
-
-          <!-- PARTE 2: GUIA DE COMANDOS & COMPORTAMENTO DE CADA BOTÃO -->
           </div>
         </div>
 
@@ -3851,110 +4058,145 @@
                 O que cada Botão faz no Site (Cloud), no Software (.EXE) e no Celular
               </h2>
               <p style="font-size: 13.5px; color: #94A3B8; max-width: 760px; margin: 0 auto;">
-                Entenda o comportamento exato de cada botão e função do ecossistema MDM &amp; FRP BRASIL em todas as camadas:
+                Entenda o comportamento exato de cada botão e função do ecossistema MDM &amp; FRP BRASIL em todas as camadas e teste cada um em tempo real:
               </p>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px;">
               
               <!-- COMANDO 1: BLOQUEAR DISPOSITIVO -->
-              <div style="background: #060B16; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔒</div>
-                  <div>
-                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Bloquear Aparelho</h4>
-                    <span style="font-size: 10.5px; color: #EF4444; font-weight: 700;">COMANDO DE SEGURANÇA</span>
+              <div style="background: #060B16; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔒</div>
+                    <div>
+                      <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Bloquear Aparelho</h4>
+                      <span style="font-size: 10.5px; color: #EF4444; font-weight: 700;">COMANDO DE SEGURANÇA</span>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                    <div>🌐 <strong>No Site (Cloud):</strong> Envia sinal criptografado para o servidor e atualiza o status na tabela do cliente.</div>
+                    <div>💻 <strong>No Software (.EXE):</strong> Aplica política de restrição Device Owner via USB em menos de 0.4s.</div>
+                    <div>📱 <strong>Comportamento no Celular:</strong> A tela trava na hora no Modo Kiosk, desativa botões de volume/desligar, oculta a barra de status e exibe a tela de cobrança PIX com o logo da sua assistência técnica.</div>
                   </div>
                 </div>
-                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
-                  <div>🌐 <strong>No Site (Cloud):</strong> Envia sinal criptografado para o servidor e atualiza o status na tabela do cliente.</div>
-                  <div>💻 <strong>No Software (.EXE):</strong> Aplica política de restrição Device Owner via USB em menos de 0.4s.</div>
-                  <div>📱 <strong>Comportamento no Celular:</strong> A tela trava na hora no Modo Kiosk, desativa botões de volume/desligar, oculta a barra de status e exibe a tela de cobrança PIX com o logo da sua assistência técnica.</div>
-                </div>
+                <button type="button" class="btn-sm" style="margin-top: 14px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #EF4444; padding: 8px 12px; border-radius: 8px; font-weight: 800; cursor: pointer;" onclick="testBenchCommand('lock')">
+                  🧪 Testar Bloqueio DPC (Simulação)
+                </button>
               </div>
 
               <!-- COMANDO 2: DESBLOQUEAR PIX -->
-              <div style="background: #060B16; border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 14px; padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 230, 118, 0.2); color: #00E676; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔓</div>
-                  <div>
-                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Desbloquear / Liberação</h4>
-                    <span style="font-size: 10.5px; color: #00E676; font-weight: 700;">AUTOMAÇÃO BANCÁRIA PIX</span>
+              <div style="background: #060B16; border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 230, 118, 0.2); color: #00E676; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔓</div>
+                    <div>
+                      <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Desbloquear / Liberação</h4>
+                      <span style="font-size: 10.5px; color: #00E676; font-weight: 700;">AUTOMAÇÃO BANCÁRIA PIX</span>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                    <div>🌐 <strong>No Site (Cloud):</strong> Confirma recebimento via Webhook do Banco Central em até 2 segundos.</div>
+                    <div>💻 <strong>No Software (.EXE):</strong> Libera a trava com consumo de 1 crédito da carteira técnica.</div>
+                    <div>📱 <strong>Comportamento no Celular:</strong> A tela verde de Kiosk fecha instantaneamente, o celular vibra com aviso de sucesso e o launcher padrão volta com todos os aplicativos intactos.</div>
                   </div>
                 </div>
-                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
-                  <div>🌐 <strong>No Site (Cloud):</strong> Confirma recebimento via Webhook do Banco Central em até 2 segundos.</div>
-                  <div>💻 <strong>No Software (.EXE):</strong> Libera a trava com consumo de 1 crédito da carteira técnica.</div>
-                  <div>📱 <strong>Comportamento no Celular:</strong> A tela verde de Kiosk fecha instantaneamente, o celular vibra com aviso de sucesso e o launcher padrão volta com todos os aplicativos intactos.</div>
-                </div>
+                <button type="button" class="btn-sm" style="margin-top: 14px; background: rgba(0, 230, 118, 0.15); border: 1px solid rgba(0, 230, 118, 0.4); color: #00E676; padding: 8px 12px; border-radius: 8px; font-weight: 800; cursor: pointer;" onclick="testBenchCommand('unlock')">
+                  🧪 Testar Liberação PIX (Simulação)
+                </button>
               </div>
 
               <!-- COMANDO 3: ALARME SONORO -->
-              <div style="background: #060B16; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(245, 158, 11, 0.2); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔊</div>
-                  <div>
-                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Tocar Alarme Sonoro</h4>
-                    <span style="font-size: 10.5px; color: #F59E0B; font-weight: 700;">LOCALIZAÇÃO ACÚSTICA</span>
+              <div style="background: #060B16; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(245, 158, 11, 0.2); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">🔊</div>
+                    <div>
+                      <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Tocar Alarme Sonoro</h4>
+                      <span style="font-size: 10.5px; color: #F59E0B; font-weight: 700;">LOCALIZAÇÃO ACÚSTICA</span>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                    <div>🌐 <strong>No Site / EXE:</strong> Aciona gatilho sonoro imediato em alta prioridade.</div>
+                    <div>📱 <strong>Comportamento no Celular:</strong> Dispara sirene em volume máximo de 100%, <strong>ignorando se o smartphone estiver no modo silencioso ou não perturbe</strong>, e aciona o flash LED.</div>
                   </div>
                 </div>
-                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
-                  <div>🌐 <strong>No Site / EXE:</strong> Aciona gatilho sonoro imediato em alta prioridade.</div>
-                  <div>📱 <strong>Comportamento no Celular:</strong> Dispara sirene em volume máximo de 100%, <strong>ignorando se o smartphone estiver no modo silencioso ou não perturbe</strong>, e aciona o flash LED.</div>
-                </div>
+                <button type="button" class="btn-sm" style="margin-top: 14px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #F59E0B; padding: 8px 12px; border-radius: 8px; font-weight: 800; cursor: pointer;" onclick="testBenchCommand('alarm')">
+                  🔊 Disparar Sirene Sonora (Ao Vivo)
+                </button>
               </div>
 
               <!-- COMANDO 4: RASTREAMENTO GPS & MAPA -->
-              <div style="background: #060B16; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 14px; padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 229, 255, 0.2); color: #00E5FF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">📍</div>
-                  <div>
-                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Rastrear GPS &amp; Mapa</h4>
-                    <span style="font-size: 10.5px; color: #00E5FF; font-weight: 700;">GEOLOCALIZAÇÃO SATÉLITE</span>
+              <div style="background: #060B16; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(0, 229, 255, 0.2); color: #00E5FF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">📍</div>
+                    <div>
+                      <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Rastrear GPS &amp; Mapa</h4>
+                      <span style="font-size: 10.5px; color: #00E5FF; font-weight: 700;">GEOLOCALIZAÇÃO SATÉLITE</span>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                    <div>🌐 <strong>No Site / EXE:</strong> Plota o ponto exato no mapa Leaflet, exibindo rua, bairro, bateria e sinal.</div>
+                    <div>📱 <strong>Comportamento no Celular:</strong> O serviço em segundo plano coleta a coordenada GNSS de alta precisão (erro menor que 4 metros) e transmite de forma silenciosa para a nuvem.</div>
                   </div>
                 </div>
-                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
-                  <div>🌐 <strong>No Site / EXE:</strong> Plota o ponto exato no mapa Leaflet, exibindo rua, bairro, bateria e sinal.</div>
-                  <div>📱 <strong>Comportamento no Celular:</strong> O serviço em segundo plano coleta a coordenada GNSS de alta precisão (erro menor que 4 metros) e transmite de forma silenciosa para a nuvem.</div>
-                </div>
+                <button type="button" class="btn-sm" style="margin-top: 14px; background: rgba(0, 229, 255, 0.15); border: 1px solid rgba(0, 229, 255, 0.4); color: #00E5FF; padding: 8px 12px; border-radius: 8px; font-weight: 800; cursor: pointer;" onclick="testBenchCommand('gps')">
+                  📍 Testar Coleta GPS em Tempo Real
+                </button>
               </div>
 
               <!-- COMANDO 5: WIPE TOTAL / RESET SEGURO -->
-              <div style="background: #060B16; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">⚠️</div>
-                  <div>
-                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Wipe Total Knox</h4>
-                    <span style="font-size: 10.5px; color: #EF4444; font-weight: 700;">DESTRUIÇÃO SEGURA REMOTA</span>
+              <div style="background: #060B16; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(239, 68, 68, 0.2); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">⚠️</div>
+                    <div>
+                      <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Wipe Total Knox</h4>
+                      <span style="font-size: 10.5px; color: #EF4444; font-weight: 700;">DESTRUIÇÃO SEGURA REMOTA</span>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                    <div>🌐 <strong>No Site / EXE:</strong> Exige confirmação de segurança do técnico para evitar erros.</div>
+                    <div>📱 <strong>Comportamento no Celular:</strong> Executa formatação de segurança militar Knox, limpando arquivos, fotos e contas cadastradas sem chance de recuperação.</div>
                   </div>
                 </div>
-                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
-                  <div>🌐 <strong>No Site / EXE:</strong> Exige confirmação de senha do técnico para evitar erros.</div>
-                  <div>📱 <strong>Comportamento no Celular:</strong> Executa formatação de segurança militar Knox, limpando arquivos, fotos e contas cadastradas sem chance de recuperação.</div>
-                </div>
+                <button type="button" class="btn-sm" style="margin-top: 14px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #EF4444; padding: 8px 12px; border-radius: 8px; font-weight: 800; cursor: pointer;" onclick="testBenchCommand('wipe')">
+                  ⚠️ Testar Protocolo Wipe Knox (Simulação)
+                </button>
               </div>
 
               <!-- COMANDO 6: PERSONALIZAR WHITE-LABEL -->
-              <div style="background: #060B16; border: 1px solid rgba(192, 132, 252, 0.3); border-radius: 14px; padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                  <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(192, 132, 252, 0.2); color: #C084FC; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">✨</div>
-                  <div>
-                    <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Personalizar White-Label</h4>
-                    <span style="font-size: 10.5px; color: #C084FC; font-weight: 700;">MARCA PRÓPRIA DA LOJA</span>
+              <div style="background: #060B16; border: 1px solid rgba(192, 132, 252, 0.3); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(192, 132, 252, 0.2); color: #C084FC; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;">✨</div>
+                    <div>
+                      <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin: 0;">Botão: Personalizar White-Label</h4>
+                      <span style="font-size: 10.5px; color: #C084FC; font-weight: 700;">MARCA PRÓPRIA DA LOJA</span>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
+                    <div>🌐 <strong>No Site / EXE:</strong> Salva sua logo, nome da loja e WhatsApp (19) 99478-3127.</div>
+                    <div>📱 <strong>Comportamento no Celular:</strong> O APK e a tela Kiosk de bloqueio passam a carregar a imagem da sua assistência técnica e o botão direto para o seu WhatsApp!</div>
                   </div>
                 </div>
-                <div style="font-size: 12px; line-height: 1.5; color: #CBD5E1; display: flex; flex-direction: column; gap: 8px;">
-                  <div>🌐 <strong>No Site / EXE:</strong> Salva sua logo, nome da loja e WhatsApp (19) 99478-3127.</div>
-                  <div>📱 <strong>Comportamento no Celular:</strong> O APK e a tela Kiosk de bloqueio passam a carregar a imagem da sua assistência técnica e o botão direto para o seu WhatsApp!</div>
-                </div>
+                <button type="button" class="btn-sm" style="margin-top: 14px; background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.4); color: #C084FC; padding: 8px 12px; border-radius: 8px; font-weight: 800; cursor: pointer;" onclick="switchDashTab('apk_studio')">
+                  🎨 Abrir Personalizador White-Label
+                </button>
               </div>
 
             </div>
 
-          </div>
+            <!-- TERMINAL DE FEEDBACK EM TEMPO REAL PARA OS COMANDOS TESTADOS -->
+            <div style="margin-top: 24px; background: #020509; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 18px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #34D399; box-shadow: inset 0 2px 10px rgba(0,0,0,0.6);">
+              <div style="color: #64748B; margin-bottom: 6px;">// Telemetria &amp; Retorno de Execução de Comandos (Cloud &amp; USB)</div>
+              <div id="benchCommandConsoleOutput">$ Pronto. Clique em qualquer comando acima para disparar teste em tempo real...</div>
+            </div>
 
-        </div>
           </div>
+          </div>
+        </div>
 
 <!-- Tab: Aparelhos & Gestão Remota Online -->
       <div id="tabDevices" class="dash-tab-pane" style="display: none;">
@@ -5565,7 +5807,7 @@
       } catch (e) {}
     }
 
-        function initGuestDashboard() {
+    function initGuestDashboard() {
       const vDash = document.getElementById("viewDashboard");
       if (vDash) vDash.style.display = 'flex';
 
@@ -5582,8 +5824,13 @@
         sideUserStatus.style.color = "#94A3B8";
       }
 
-      const topbarBal = document.getElementById("topbarDashBalance");
-      if (topbarBal) topbarBal.innerText = "Entrar";
+      const topbarBal = document.getElementById("topbarUserBalance");
+      if (topbarBal) topbarBal.innerText = "10 Créditos";
+      const sideBal = document.getElementById("sideUserBalance");
+      if (sideBal) sideBal.innerText = "10 Créditos";
+
+      const topbarDashBalEl = document.getElementById("topbarDashBalance");
+      if (topbarDashBalEl) topbarDashBalEl.innerText = "10 Créditos";
 
       const headerUserArea = document.getElementById("headerUserArea");
       const btnHeaderAuth = document.getElementById("btnHeaderAuth");
@@ -5600,19 +5847,21 @@
       }
     }
 
-async function initDashboard(targetView = null) {
+    async function initDashboard(targetView = null) {
       try {
         currentUser = await api('/api/v1/auth/me');
         if (!currentUser) throw new Error("Usuário não encontrado");
 
         const firstName = (currentUser.name || currentUser.email || 'Cliente').split(' ')[0];
+        const avatarUrl = currentUser.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'Cliente')}&background=00E5FF&color=000&bold=true`;
+        const bal = (currentUser.wallet && currentUser.wallet.balance_credits !== undefined) ? currentUser.wallet.balance_credits : 0;
+
         const userHeaderEl = document.getElementById("headerUserName");
         if (userHeaderEl) userHeaderEl.innerText = firstName;
 
         const bannerUserEl = document.getElementById("bannerUserName");
         if (bannerUserEl) bannerUserEl.innerText = firstName;
 
-        const bal = (currentUser.wallet && currentUser.wallet.balance_credits !== undefined) ? currentUser.wallet.balance_credits : 0;
         const balHeaderEl = document.getElementById("headerBalance");
         if (balHeaderEl) balHeaderEl.innerText = `🪙 ${bal} Créditos`;
 
@@ -5623,7 +5872,10 @@ async function initDashboard(targetView = null) {
         if (dashBalEl) dashBalEl.innerText = bal;
 
         const sideUserBalEl = document.getElementById("sideUserBalance");
-        if (sideUserBalEl) sideUserBalEl.innerText = bal;
+        if (sideUserBalEl) sideUserBalEl.innerText = `${bal} Créditos`;
+
+        const topbarBal = document.getElementById("topbarUserBalance");
+        if (topbarBal) topbarBal.innerText = `${bal} Créditos`;
 
         const topbarDashBalEl = document.getElementById("topbarDashBalance");
         if (topbarDashBalEl) topbarDashBalEl.innerText = `${bal} Créditos`;
@@ -5651,8 +5903,6 @@ async function initDashboard(targetView = null) {
         const dashUsedEl = document.getElementById("dashUsed");
         if (dashUsedEl) dashUsedEl.innerText = (currentUser.wallet && currentUser.wallet.total_used) || 0;
 
-        // User Avatar
-        const avatarUrl = currentUser.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'Cliente')}&background=00E5FF&color=000&bold=true`;
         const hAvatar = document.getElementById("headerUserAvatar");
         if (hAvatar) { hAvatar.src = avatarUrl; hAvatar.style.display = 'inline-block'; }
         const bAvatar = document.getElementById("bannerUserAvatar");
@@ -5748,8 +5998,17 @@ async function initDashboard(targetView = null) {
     }
 
     async function generatePixOrder() {
-      const credits = parseInt(document.getElementById("customCreditsInput").value);
-      if (!credits || credits <= 0) return alert("Digite uma quantidade válida.");
+      const inpt = document.getElementById("customCreditsInput");
+      const credits = parseInt(inpt ? inpt.value : 10);
+      if (!credits || credits <= 0) return alert("Digite uma quantidade válida de créditos.");
+
+      if (!token) {
+        sessionStorage.setItem('pending_recharge_credits', credits);
+        openAuthOverlay('Login');
+        alert("Para gerar seu PIX com liberação instantânea de créditos na sua conta, entre ou crie seu cadastro!");
+        return;
+      }
+
       const bonus = Math.floor(credits / 5);
       const totalCreds = credits + bonus;
 
@@ -6469,14 +6728,365 @@ async function initDashboard(targetView = null) {
       const credits = creditsMap[amount] || Math.round(amount / 5);
       if (token) {
         showView('Dashboard');
-        switchDashTab('profile', document.querySelector('.tab-btn'));
+        switchDashTab('recharge');
         const inpt = document.getElementById("customCreditsInput");
         if (inpt) inpt.value = credits;
+        updateCreditCalculator();
         generatePixOrder();
       } else {
         sessionStorage.setItem('pending_recharge_credits', credits);
         openAuthOverlay('Register');
         alert(`Para ativar o pacote de R$ ${amount},00 com bônus de créditos, acesse sua conta ou cadastre-se! O QR Code PIX será gerado imediatamente.`);
+      }
+    }
+
+    /* ========================================================
+       BENTO CARD PIX CONTROLS
+       ======================================================== */
+    function selectBentoPackage(amount, el) {
+      document.querySelectorAll('.bp-pill').forEach(p => p.classList.remove('active'));
+      if (el) el.classList.add('active');
+      const valDisp = document.getElementById("bentoPixValDisplay");
+      if (valDisp) valDisp.innerText = `R$ ${amount},00`;
+      const creds = Math.round(amount / 5);
+      const inpt = document.getElementById("customCreditsInput");
+      if (inpt) {
+        inpt.value = creds;
+        updateCreditCalculator();
+      }
+    }
+
+    function copyBentoPixKey() {
+      const pixKey = "minha_chave_pix@assistenciatecnica.com.br";
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(pixKey);
+      }
+      alert("✅ Chave PIX copiada com sucesso para a área de transferência!\n\nApós o pagamento, seus créditos caem na conta em até 3 segundos.");
+    }
+
+    /* ========================================================
+       CALCULADORA DE CRÉDITOS CUSTOMIZADOS (TAB RECHARGE)
+       ======================================================== */
+    function setCustomCredits(amount) {
+      const inpt = document.getElementById("customCreditsInput");
+      if (inpt) inpt.value = amount;
+
+      document.querySelectorAll('.btn-qty-pill').forEach(b => b.classList.remove('active'));
+      const activePill = document.getElementById('btnQtyPill' + amount);
+      if (activePill) activePill.classList.add('active');
+
+      updateCreditCalculator();
+    }
+
+    function stepCustomCredits(delta) {
+      const inpt = document.getElementById("customCreditsInput");
+      if (!inpt) return;
+      let val = parseInt(inpt.value) || 1;
+      val = Math.max(1, Math.min(1000, val + delta));
+      inpt.value = val;
+      updateCreditCalculator();
+    }
+
+    function updateCreditCalculator() {
+      const inpt = document.getElementById("customCreditsInput");
+      if (!inpt) return;
+      let credits = parseInt(inpt.value) || 0;
+      if (credits < 1) credits = 1;
+
+      let bonus = 0;
+      if (credits >= 100) {
+        bonus = 35;
+      } else if (credits >= 50) {
+        bonus = 15;
+      } else if (credits >= 20) {
+        bonus = 5;
+      } else if (credits >= 10) {
+        bonus = 2;
+      } else {
+        bonus = Math.floor(credits / 5);
+      }
+
+      const priceBrl = credits * 5;
+      const finalCredits = credits + bonus;
+
+      const totalBrlEl = document.getElementById("calcTotalBrlDisplay");
+      if (totalBrlEl) totalBrlEl.innerText = `R$ ${priceBrl},00`;
+
+      const baseEl = document.getElementById("calcBaseCreditsDisplay");
+      if (baseEl) baseEl.innerText = `${credits} CR (R$ 5,00/crédito)`;
+
+      const bonusEl = document.getElementById("calcBonusCreditsDisplay");
+      if (bonusEl) bonusEl.innerText = `+${bonus} CR BÔNUS GRÁTIS`;
+
+      const finalEl = document.getElementById("calcFinalCreditsDisplay");
+      if (finalEl) finalEl.innerText = `${finalCredits} Créditos`;
+
+      const btnGen = document.getElementById("btnMainPixGen");
+      if (btnGen) {
+        btnGen.innerText = `⚡ GERAR QR CODE PIX AGORA (R$ ${priceBrl},00) • LIBERAÇÃO EM 3 SEGUNDOS`;
+      }
+    }
+
+    /* ========================================================
+       SIMULADOR PASSO A PASSO NA BANCADA USB (TAB BENCH STEPS)
+       ======================================================== */
+    const benchStepData = [
+      {
+        step: 0,
+        badge: "PASSO 1 DE 5 • ACESSO AO SISTEMA",
+        title: "1. Acessar Configurações > Sobre o Telefone",
+        desc: "No smartphone Android do cliente, abra o aplicativo de <strong>Configurações</strong>. Role até o final da página e toque na opção <strong>\"Sobre o Telefone\"</strong> (ou \"Sobre o dispositivo\").",
+        tip: "Compatível com Samsung Knox, Xiaomi MIUI/HyperOS, Motorola e Realme (Android 8 até Android 16).",
+        log: "$ adb wait-for-device\n> Aguardando ativação da depuração USB no dispositivo...",
+        pct: "20%"
+      },
+      {
+        step: 1,
+        badge: "PASSO 2 DE 5 • MODO DESENVOLVEDOR",
+        title: "2. Clicar 7x no Número da Compilação",
+        desc: "Dentro de <strong>Informações do Software</strong>, localize o item <strong>\"Número da Compilação\"</strong> (ou \"Número da Versão / Versão MIUI\"). Toque 7 vezes seguidas até o Android exibir a mensagem confirmando a liberação.",
+        tip: "Se o celular solicitar PIN, senha padrão ou biometria da tela de bloqueio, digite o PIN do cliente para autorizar.",
+        log: "$ adb shell getprop ro.build.version.release\n> Dispositivo reconhecido: Android 14 (Knox 3.10)\n> Modo desenvolvedor ativado!",
+        pct: "40%"
+      },
+      {
+        step: 2,
+        badge: "PASSO 3 DE 5 • COMUNICAÇÃO USB",
+        title: "3. Ativar a Depuração USB",
+        desc: "Volte para a tela principal de <strong>Configurações</strong> e entre em <strong>\"Opções do Desenvolvedor\"</strong> (no final da lista). Ative a chave <strong>\"Depuração USB\"</strong> e toque em OK.",
+        tip: "Em aparelhos Xiaomi, ative também a opção 'Instalar via USB' e 'Depuração USB (Configurações de Segurança)'.",
+        log: "$ adb usb\n> Reiniciando daemon ADB em modo USB 3.0...\n> Porta TCP/USB 5555 pronta.",
+        pct: "60%"
+      },
+      {
+        step: 3,
+        badge: "PASSO 4 DE 5 • CHAVE CRIPTOGRÁFICA RSA",
+        title: "4. Conectar o Cabo USB & Autorizar Chave RSA",
+        desc: "Conecte o smartphone ao computador de bancada pelo cabo USB. Na tela do celular surgirá o aviso: <em>\"Permitir a depuração USB?\"</em>. Marque a caixa <strong>\"Sempre permitir a partir deste computador\"</strong> e toque em <strong>PERMITIR</strong>.",
+        tip: "Use portas USB traseiras (diretas na placa-mãe) para garantir estabilidade de sinal e velocidade de 0.4s.",
+        log: "$ adb devices -l\nList of devices attached\nSM-A145M    device product:a14nsxx model:SM_A145M device:a14 transport_id:1\n> Autenticação RSA de bancada aprovada com sucesso!",
+        pct: "80%"
+      },
+      {
+        step: 4,
+        badge: "PASSO 5 DE 5 • INJEÇÃO DPC & KIOSK",
+        title: "5. Injeção MDM DPC & Blindagem Knox",
+        desc: "O software de bancada (.EXE) ou a plataforma Cloud injeta o APK com privilégio <strong>Device Owner (DPC)</strong>. A blindagem corporativa bloqueia tentativas de reset, ativa GPS e fixa o modo Kiosk.",
+        tip: "Processo concluído em menos de 0.4s sem necessidade de formatar o smartphone do cliente!",
+        log: "$ adb shell dpm set-device-owner com.mdm.brasil.dpc/.DeviceAdminReceiver\nSuccess: Device owner set to package com.mdm.brasil.dpc\n> Modo Kiosk Blindado Ativo • Sincronizado com a Nuvem!",
+        pct: "100%"
+      }
+    ];
+
+    let currentBenchStep = 0;
+    let compileTouchCounter = 7;
+
+    function setBenchStep(step) {
+      currentBenchStep = Math.max(0, Math.min(4, step));
+      const data = benchStepData[currentBenchStep];
+
+      for (let i = 0; i < 5; i++) {
+        const btn = document.getElementById('bStepBtn' + i);
+        if (btn) btn.classList.toggle('active', i === currentBenchStep);
+      }
+
+      const pctEl = document.getElementById('benchStepPct');
+      if (pctEl) pctEl.innerText = data.pct + ' Concluído';
+      const fillEl = document.getElementById('benchProgressFill');
+      if (fillEl) fillEl.style.width = data.pct;
+
+      const badgeEl = document.getElementById('benchStepBadge');
+      if (badgeEl) badgeEl.innerText = data.badge;
+      const titleEl = document.getElementById('benchStepTitle');
+      if (titleEl) titleEl.innerHTML = data.title;
+      const descEl = document.getElementById('benchStepDesc');
+      if (descEl) descEl.innerHTML = data.desc;
+      const tipEl = document.getElementById('benchStepTip');
+      if (tipEl) tipEl.innerHTML = data.tip;
+      const logEl = document.getElementById('benchStepLog');
+      if (logEl) logEl.innerHTML = data.log.replace(/\n/g, '<br>');
+
+      for (let i = 0; i < 5; i++) {
+        const screen = document.getElementById('phoneScreenStep' + i);
+        if (screen) screen.style.display = (i === currentBenchStep) ? 'block' : 'none';
+      }
+    }
+
+    function nextBenchStep() {
+      setBenchStep((currentBenchStep + 1) % 5);
+    }
+
+    function prevBenchStep() {
+      setBenchStep((currentBenchStep - 1 + 5) % 5);
+    }
+
+    function clickCompileNumber() {
+      const box = document.getElementById('boxCompilationTouch');
+      if (box) {
+        box.style.transform = 'scale(0.96)';
+        setTimeout(() => { if (box) box.style.transform = 'none'; }, 100);
+      }
+
+      if (compileTouchCounter > 1) {
+        compileTouchCounter--;
+        const cntEl = document.getElementById('touchCountdownVal');
+        if (cntEl) cntEl.innerText = compileTouchCounter;
+      } else {
+        compileTouchCounter = 0;
+        const badge = document.getElementById('lblTouchCounterBadge');
+        if (badge) {
+          badge.style.background = '#00E5FF';
+          badge.innerText = '🎉 MODO DESENVOLVEDOR ATIVADO!';
+        }
+        const notice = document.getElementById('boxDevActivatedNotice');
+        if (notice) notice.style.display = 'block';
+
+        const logEl = document.getElementById('benchStepLog');
+        if (logEl) logEl.innerHTML = '$ adb shell settings put global development_settings_enabled 1<br>&gt; Modo desenvolvedor habilitado com sucesso!';
+
+        setTimeout(() => {
+          setBenchStep(2);
+        }, 1200);
+      }
+    }
+
+    function toggleUsbDebugging() {
+      const track = document.getElementById('phoneUsbSwitchTrack');
+      const thumb = document.getElementById('phoneUsbSwitchThumb');
+      if (thumb) {
+        thumb.style.right = '18px';
+        setTimeout(() => {
+          thumb.style.right = '2px';
+          if (track) track.style.background = '#00E676';
+        }, 200);
+      }
+
+      const logEl = document.getElementById('benchStepLog');
+      if (logEl) logEl.innerHTML = '$ adb tcpip 5555<br>&gt; Depuração USB ATIVADA no smartphone!<br>&gt; Cabo USB 3.0 detectado.';
+
+      setTimeout(() => {
+        setBenchStep(3);
+      }, 900);
+    }
+
+    function authorizeRsaKey() {
+      alert('✅ Chave criptográfica RSA autorizada no dispositivo com sucesso!\n\nO computador de bancada agora tem permissão total de injeção ADB.');
+      const logEl = document.getElementById('benchStepLog');
+      if (logEl) logEl.innerHTML = '$ adb connect 127.0.0.1:5555<br>&gt; Dispositivo autenticado e pareado via RSA com sucesso!';
+      setTimeout(() => {
+        setBenchStep(4);
+      }, 700);
+    }
+
+    function simulateKioskUnlock() {
+      const pill = document.getElementById('kioskStatusPill');
+      const msg = document.getElementById('kioskMsgBox');
+      const qr = document.getElementById('kioskQrBox');
+
+      if (pill) {
+        pill.style.background = 'rgba(0, 230, 118, 0.2)';
+        pill.style.color = '#00E676';
+        pill.style.borderColor = '#00E676';
+        pill.innerText = '🟢 DESBLOQUEADO COM SUCESSO';
+      }
+      if (msg) {
+        msg.style.borderColor = '#00E676';
+        msg.innerHTML = '<strong>Pagamento Confirmado!</strong> Aparelho liberado imediatamente. Obrigado!';
+      }
+      if (qr) qr.style.display = 'none';
+
+      alert('⚡ Demonstração de Desbloqueio PIX:\n\nEm menos de 1 segundo após o pagamento, o modo Kiosk fecha e o aparelho do cliente é liberado automaticamente!');
+
+      setTimeout(() => {
+        if (pill) {
+          pill.style.background = 'rgba(239, 68, 68, 0.2)';
+          pill.style.color = '#EF4444';
+          pill.style.borderColor = '#EF4444';
+          pill.innerText = '🔒 BLOQUEADO VIA MDM DPC';
+        }
+        if (msg) {
+          msg.style.borderColor = '#EF4444';
+          msg.innerHTML = 'Aparelho bloqueado por parcelamento. Realize o pagamento via PIX para liberação em 30 segundos.';
+        }
+        if (qr) qr.style.display = 'inline-block';
+      }, 4000);
+    }
+
+    function testBenchAdbConnection() {
+      const logEl = document.getElementById('benchStepLog');
+      if (logEl) {
+        logEl.innerHTML = '$ adb ping-host<br>&gt; Verificando portas USB ativas...<br>&gt; [OK] Conexão USB 3.0 de alta velocidade (Latência: 0.38s)<br>&gt; Status: ADB Daemon pronto para envio de comandos.';
+      }
+    }
+
+    /* ========================================================
+       TESTE DE COMANDOS DO SITE (TAB BENCH COMMANDS)
+       ======================================================== */
+    function playSirenSound() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(650, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.35);
+        osc.frequency.exponentialRampToValueAtTime(650, audioCtx.currentTime + 0.7);
+        osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 1.05);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.4);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.4);
+      } catch(e) {
+        console.log("Audio siren not triggered:", e);
+      }
+    }
+
+    function testBenchCommand(cmd) {
+      const out = document.getElementById('benchCommandConsoleOutput');
+      const now = new Date().toLocaleTimeString('pt-BR');
+
+      if (cmd === 'lock') {
+        if (out) out.innerHTML = `[${now}] <span style="color:#EF4444;">[BLOQUEAR]</span> Disparando sinal Device Owner Knox...<br>&gt; Aparelho travado no Modo Kiosk com logotipo da loja.<br>&gt; Status: SUCESSO (0.32s)`;
+        alert('🔒 Teste de Bloqueio Executado:\n\nO aparelho trava instantaneamente na tela Kiosk com mensagem de cobrança e QR Code PIX.');
+      } else if (cmd === 'unlock') {
+        if (out) out.innerHTML = `[${now}] <span style="color:#00E676;">[DESBLOQUEAR]</span> Webhook de confirmação bancária recebido...<br>&gt; Desbloqueio autorizado! Modo Kiosk desativado.<br>&gt; Status: LIBERADO (0.41s)`;
+        alert('🔓 Teste de Desbloqueio Executado:\n\nAo confirmar o pagamento PIX, a tela de trava fecha e o smartphone volta à normalidade em segundos.');
+      } else if (cmd === 'alarm') {
+        playSirenSound();
+        if (out) out.innerHTML = `[${now}] <span style="color:#F59E0B;">[ALARME SONORO]</span> Pacote de alta prioridade transmitido...<br>&gt; Sirene disparada no celular a 100% do volume + Flash LED piscando.<br>&gt; Status: ALARME TOCANDO!`;
+        alert('🔊 Teste de Alarme Disparado:\n\nSirene em volume máximo de 100% emitida para localização acústica do smartphone!');
+      } else if (cmd === 'gps') {
+        if (out) out.innerHTML = `[${now}] <span style="color:#00E5FF;">[GPS REAL]</span> Coordenadas GNSS recebidas: Lat -22.7394, Lon -47.3314<br>&gt; Precisão: 3.8 metros • Americana, SP<br>&gt; Ponto plotado no mapa Leaflet.`;
+        alert('📍 Teste de GPS Executado:\n\nCoordenada de alta precisão via hardware GNSS coletada e transmitida para a nuvem!');
+      } else if (cmd === 'wipe') {
+        if (out) out.innerHTML = `[${now}] <span style="color:#EF4444;">[WIPE KNOX]</span> Protocolo de destruição segura militar inicializado...<br>&gt; (SIMULAÇÃO SEGURA DE LABORATÓRIO: Aparelho limpo e restaurado de fábrica)`;
+        alert('⚠️ Simulação de Wipe Seguro Concluída:\n\nEm produção real, este comando apaga completamente todos os dados do dispositivo.');
+      }
+    }
+
+    /* ========================================================
+       TOPBAR LIVE FEATURES (RELÓGIO BRASÍLIA & LATÊNCIA)
+       ======================================================== */
+    function initTopbarLiveFeatures() {
+      function updateLiveClock() {
+        const el = document.getElementById('topbarLiveClock');
+        const phoneClock = document.getElementById('phoneClockDisplay');
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour12: false });
+        if (el) el.innerText = timeStr;
+        if (phoneClock) phoneClock.innerText = timeStr.slice(0, 5);
+      }
+      updateLiveClock();
+      setInterval(updateLiveClock, 1000);
+
+      const pingEl = document.getElementById('topbarPingVal');
+      if (pingEl) {
+        setInterval(() => {
+          const ms = Math.floor(Math.random() * 7) + 13;
+          pingEl.innerText = ms + 'ms';
+        }, 4500);
       }
     }
 
@@ -6534,6 +7144,9 @@ async function initDashboard(targetView = null) {
     applySiteTheme();
     applyHomepageSectionsAndLayout();
     fetchRanking();
+    initTopbarLiveFeatures();
+    updateCreditCalculator();
+    setBenchStep(0);
 
     const savedDashTheme = localStorage.getItem('mdm_dash_visual_theme') || 'titanium-slate';
     setDashboardVisualTheme(savedDashTheme);
