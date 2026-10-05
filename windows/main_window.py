@@ -208,6 +208,8 @@ class DeviceServiceManagerApp:
             ("cloud", "☁️ Aparelhos Nuvem", lambda: self._switch_view("cloud")),
             ("maps", "📍 Google Maps", lambda: self._switch_view("maps")),
             ("pix", "⚙️ Chave PIX & Loja", lambda: self._switch_view("pix")),
+            ("recharge", "💎 Planos & Recarga", lambda: self._switch_view("recharge")),
+            ("history", "📜 Logs Auditoria", lambda: self._switch_view("history")),
         ]
 
         for key, label, cmd in nav_items:
@@ -229,6 +231,34 @@ class DeviceServiceManagerApp:
         # Spacer in sidebar
         sidebar_spacer = ctk.CTkFrame(self.sidebar_nav, fg_color="transparent")
         sidebar_spacer.pack(fill="both", expand=True)
+
+        # Card de Identificação do Lojista Conectado
+        self.sidebar_user_frame = ctk.CTkFrame(
+            self.sidebar_nav,
+            fg_color="#080E1B",
+            corner_radius=8,
+            border_width=1,
+            border_color="#1E293B"
+        )
+        self.sidebar_user_frame.pack(fill="x", padx=10, pady=(0, 8))
+
+        self.lbl_side_user = ctk.CTkLabel(
+            self.sidebar_user_frame,
+            text="👤 Técnico Convidado",
+            font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
+            text_color="#FFFFFF",
+            anchor="w"
+        )
+        self.lbl_side_user.pack(fill="x", padx=10, pady=(6, 1))
+
+        self.lbl_side_bal = ctk.CTkLabel(
+            self.sidebar_user_frame,
+            text="🪙 Saldo: 0 Créditos",
+            font=ctk.CTkFont(family="Segoe UI", size=9, weight="bold"),
+            text_color="#00E676",
+            anchor="w"
+        )
+        self.lbl_side_bal.pack(fill="x", padx=10, pady=(0, 6))
 
         # Bottom sidebar buttons
         btn_site = ctk.CTkButton(
@@ -368,6 +398,8 @@ class DeviceServiceManagerApp:
         self.view_cloud = ctk.CTkFrame(self.views_container, fg_color="transparent")
         self.view_maps = ctk.CTkFrame(self.views_container, fg_color="transparent")
         self.view_pix = ctk.CTkFrame(self.views_container, fg_color="transparent")
+        self.view_recharge = ctk.CTkFrame(self.views_container, fg_color="transparent")
+        self.view_history = ctk.CTkFrame(self.views_container, fg_color="transparent")
 
         # Compatibility aliases so existing builder methods work seamlessly
         self.tab_gestao = self.view_bench
@@ -383,6 +415,8 @@ class DeviceServiceManagerApp:
         self._build_tab_cloud()
         self._build_tab_location()
         self._build_tab_pix()
+        self._build_tab_recharge()
+        self._build_tab_history()
 
         # Start with login gate
         self.show_login_gate()
@@ -406,7 +440,7 @@ class DeviceServiceManagerApp:
             else:
                 btn.configure(fg_color="transparent", text_color="#94A3B8")
 
-        for f in [self.view_bench, self.view_cloud, self.view_maps, self.view_pix]:
+        for f in [self.view_bench, self.view_cloud, self.view_maps, self.view_pix, self.view_recharge, self.view_history]:
             f.pack_forget()
 
         if target_key == "bench":
@@ -426,6 +460,15 @@ class DeviceServiceManagerApp:
             self.view_pix.pack(fill="both", expand=True)
             self.lbl_view_title.configure(text="⚙️ CONFIGURAÇÃO DE CHAVE PIX & LOJA")
             self.lbl_view_sub.configure(text="Defina seus dados para recebimento direto de pagamentos nos aparelhos")
+        elif target_key == "recharge":
+            self.view_recharge.pack(fill="both", expand=True)
+            self.lbl_view_title.configure(text="💎 PLANOS & RECARGA PIX AUTOMÁTICA")
+            self.lbl_view_sub.configure(text="Recarregue créditos instantaneamente via PIX direto no aplicativo")
+        elif target_key == "history":
+            self.view_history.pack(fill="both", expand=True)
+            self.lbl_view_title.configure(text="📜 LOGS DE AUDITORIA & REGISTRO DE COMANDOS")
+            self.lbl_view_sub.configure(text="Histórico completo de comandos executados na bancada e na nuvem")
+            self.refresh_history_tab()
 
     def _build_tab_pix(self):
         container = ctk.CTkFrame(self.view_pix, fg_color="transparent")
@@ -512,6 +555,258 @@ class DeviceServiceManagerApp:
             command=self.generate_qr_click
         )
         btn_gen.pack(side="left")
+
+    def _build_tab_recharge(self):
+        container = ctk.CTkFrame(self.view_recharge, fg_color="transparent")
+        container.pack(fill="both", expand=True, padx=2, pady=2)
+        container.columnconfigure(0, weight=5)
+        container.columnconfigure(1, weight=5)
+        container.rowconfigure(0, weight=1)
+
+        # Left Column: Pacotes de Recarga
+        card_pkgs = ctk.CTkFrame(container, fg_color=self.CLR_CARD, corner_radius=12, border_width=1, border_color=self.CLR_BORDER)
+        card_pkgs.grid(row=0, column=0, sticky="nsew", padx=(0, 6), pady=6)
+
+        ctk.CTkLabel(
+            card_pkgs,
+            text="💎  PACOTES DE CRÉDITOS & RECARGA PIX",
+            font=ctk.CTkFont(size=13, weight="bold"),
+            text_color=self.CLR_CYAN
+        ).pack(anchor="w", padx=16, pady=(16, 4))
+
+        ctk.CTkLabel(
+            card_pkgs,
+            text="Selecione um pacote com bônus para liberação imediata em até 10 segundos:",
+            font=ctk.CTkFont(size=10),
+            text_color=self.CLR_TEXT_MUTED
+        ).pack(anchor="w", padx=16, pady=(0, 12))
+
+        self.recharge_tab_pkg = tk.IntVar(value=10)
+        packages = [
+            (5, "5 Créditos (+1 BÔNUS = 6)", "R$ 25,00", "+1 Bônus Grátis"),
+            (10, "10 Créditos (+2 BÔNUS = 12)", "R$ 50,00", "🔥 MAIS POPULAR"),
+            (20, "20 Créditos (+4 BÔNUS = 24)", "R$ 100,00", "+4 Bônus Grátis"),
+            (50, "50 Créditos (+10 BÔNUS = 60)", "R$ 250,00", "💎 MELHOR CUSTO")
+        ]
+
+        pbox = ctk.CTkFrame(card_pkgs, fg_color=self.CLR_CARD_INNER, corner_radius=8, border_width=1, border_color="#1E293B")
+        pbox.pack(fill="x", padx=16, pady=(0, 12))
+
+        for qty, title, price, tag in packages:
+            r = ctk.CTkRadioButton(
+                pbox,
+                text=f"{title} — {price}   [{tag}]",
+                variable=self.recharge_tab_pkg,
+                value=qty,
+                font=ctk.CTkFont(size=11, weight="bold" if qty == 10 else "normal"),
+                text_color=self.CLR_GREEN if qty == 10 else self.CLR_TEXT_WHITE
+            )
+            r.pack(anchor="w", padx=16, pady=8)
+
+        btn_buy = ctk.CTkButton(
+            card_pkgs,
+            text="⚡ GERAR QR CODE PIX AGORA",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            fg_color="#059669",
+            hover_color=self.CLR_GREEN,
+            corner_radius=8,
+            height=38,
+            command=self._generate_tab_pix_recharge
+        )
+        btn_buy.pack(fill="x", padx=16, pady=(0, 8))
+
+        # Right Column: QR Code & Copia e Cola ao Vivo
+        card_qr = ctk.CTkFrame(container, fg_color=self.CLR_CARD, corner_radius=12, border_width=1, border_color=self.CLR_BORDER)
+        card_qr.grid(row=0, column=1, sticky="nsew", padx=(6, 0), pady=6)
+
+        ctk.CTkLabel(
+            card_qr,
+            text="📱  PAGAMENTO PIX EM TEMPO REAL",
+            font=ctk.CTkFont(size=13, weight="bold"),
+            text_color=self.CLR_GREEN
+        ).pack(anchor="w", padx=16, pady=(16, 4))
+
+        # QR Code Display Box
+        self.recharge_qr_box = ctk.CTkFrame(card_qr, fg_color="#FFFFFF", corner_radius=10, width=170, height=170)
+        self.recharge_qr_box.pack(pady=10)
+        self.recharge_qr_box.pack_propagate(False)
+
+        self.lbl_recharge_qr_img = ctk.CTkLabel(self.recharge_qr_box, text="Aguardando\nseleção de pacote", font=ctk.CTkFont(size=10), text_color="#64748B")
+        self.lbl_recharge_qr_img.pack(expand=True)
+
+        self.lbl_recharge_status = ctk.CTkLabel(
+            card_qr,
+            text="Aguardando geração do PIX...",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            text_color=self.CLR_CYAN
+        )
+        self.lbl_recharge_status.pack(pady=4)
+
+        # Copia e Cola Entry
+        self.ent_recharge_payload = ctk.CTkEntry(
+            card_qr,
+            font=ctk.CTkFont(family="Consolas", size=9),
+            placeholder_text="Código Copia-e-Cola aparecerá aqui...",
+            fg_color=self.CLR_CARD_INNER,
+            border_color="#1E293B",
+            corner_radius=6,
+            height=30
+        )
+        self.ent_recharge_payload.pack(fill="x", padx=16, pady=4)
+
+        btn_copy = ctk.CTkButton(
+            card_qr,
+            text="📋 Copiar Código PIX",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="#1E293B",
+            hover_color="#334155",
+            corner_radius=6,
+            height=32,
+            command=self._copy_tab_recharge_code
+        )
+        btn_copy.pack(fill="x", padx=16, pady=(0, 6))
+
+        btn_check = ctk.CTkButton(
+            card_qr,
+            text="🔄 Atualizar Saldo da Conta",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color=self.CLR_BLUE,
+            hover_color=self.CLR_BLUE_HOVER,
+            corner_radius=6,
+            height=32,
+            command=self._check_tab_recharge_balance
+        )
+        btn_check.pack(fill="x", padx=16, pady=(0, 10))
+
+    def _generate_tab_pix_recharge(self):
+        if not self.api_client.is_logged_in():
+            self.show_login_gate()
+            return
+        qty = self.recharge_tab_pkg.get()
+        self.lbl_recharge_status.configure(text=f"Gerando PIX para {qty} créditos...", text_color=self.CLR_CYAN)
+
+        def work():
+            ok, res = self.api_client.create_pix_order(qty)
+            def done():
+                if ok and isinstance(res, dict):
+                    payload = res.get("pix_copia_e_cola", "")
+                    qr_b64 = res.get("qr_code_base64", "")
+                    self.ent_recharge_payload.delete(0, "end")
+                    self.ent_recharge_payload.insert(0, payload)
+                    self.lbl_recharge_status.configure(text="⏳ PIX Gerado! Aguardando pagamento...", text_color="#F59E0B")
+                    if qr_b64:
+                        try:
+                            raw = base64.b64decode(qr_b64)
+                            img = Image.open(io.BytesIO(raw)).resize((150, 150))
+                            self._tab_recharge_ctk_img = ctk.CTkImage(img, size=(150, 150))
+                            self.lbl_recharge_qr_img.configure(image=self._tab_recharge_ctk_img, text="")
+                        except Exception as e:
+                            self.lbl_recharge_qr_img.configure(text="[QR Code Gerado]")
+                    self._start_tab_pix_polling(res.get("txid", ""))
+                else:
+                    err = res.get("detail", "Falha na comunicação") if isinstance(res, dict) else str(res)
+                    self.lbl_recharge_status.configure(text=f"Erro: {err}", text_color="#EF4444")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def _copy_tab_recharge_code(self):
+        c = self.ent_recharge_payload.get().strip()
+        if c:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(c)
+            messagebox.showinfo("Copiado", "Código PIX Copia-e-Cola copiado para a Área de Transferência!")
+
+    def _check_tab_recharge_balance(self):
+        if self.api_client.is_logged_in():
+            ok, user = self.api_client.get_current_user()
+            if ok and isinstance(user, dict):
+                bal = user.get("balance_credits", 0)
+                self.api_client.user = user
+                self._update_auth_ui()
+                self.lbl_recharge_status.configure(text=f"✓ Saldo atualizado: {bal} Créditos", text_color=self.CLR_GREEN)
+
+    def _start_tab_pix_polling(self, txid):
+        if not txid:
+            return
+        def poll():
+            for _ in range(30):
+                time.sleep(3)
+                ok, st = self.api_client.get_pix_status(txid)
+                if ok and isinstance(st, dict) and st.get("status") == "PAID":
+                    def on_paid():
+                        self.lbl_recharge_status.configure(text="✓ Pagamento Confirmado! Créditos Liberados!", text_color=self.CLR_GREEN)
+                        self._check_tab_recharge_balance()
+                    self.safe_after(0, on_paid)
+                    break
+        threading.Thread(target=poll, daemon=True).start()
+
+    def _build_tab_history(self):
+        container = ctk.CTkFrame(self.view_history, fg_color="transparent")
+        container.pack(fill="both", expand=True, padx=2, pady=2)
+
+        card = ctk.CTkFrame(container, fg_color=self.CLR_CARD, corner_radius=12, border_width=1, border_color=self.CLR_BORDER)
+        card.pack(fill="both", expand=True, padx=8, pady=8)
+
+        hdr = ctk.CTkFrame(card, fg_color="transparent")
+        hdr.pack(fill="x", padx=16, pady=(14, 8))
+
+        ctk.CTkLabel(
+            hdr,
+            text="📜  LOGS DE AUDITORIA & REGISTRO DE COMANDOS",
+            font=ctk.CTkFont(size=13, weight="bold"),
+            text_color=self.CLR_CYAN
+        ).pack(side="left")
+
+        btn_clear = ctk.CTkButton(
+            hdr,
+            text="🗑️ Limpar Tela",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#1E293B",
+            hover_color="#334155",
+            width=90,
+            height=26,
+            command=lambda: self.txt_history_log.delete("1.0", tk.END)
+        )
+        btn_clear.pack(side="right", padx=(6, 0))
+
+        btn_ref = ctk.CTkButton(
+            hdr,
+            text="🔄 Atualizar Logs",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color=self.CLR_BLUE,
+            hover_color=self.CLR_BLUE_HOVER,
+            width=110,
+            height=26,
+            command=self.refresh_history_tab
+        )
+        btn_ref.pack(side="right")
+
+        self.txt_history_log = ctk.CTkTextbox(
+            card,
+            font=ctk.CTkFont(family="Consolas", size=10),
+            fg_color=self.CLR_CARD_INNER,
+            border_color="#101C30",
+            corner_radius=8,
+            text_color="#E2E8F0"
+        )
+        self.txt_history_log.pack(fill="both", expand=True, padx=16, pady=(0, 14))
+        self.refresh_history_tab()
+
+    def refresh_history_tab(self):
+        if not hasattr(self, 'txt_history_log') or not self.txt_history_log:
+            return
+        self.txt_history_log.delete("1.0", tk.END)
+        content = ""
+        if os.path.exists(AUDIT_FILE):
+            try:
+                with open(AUDIT_FILE, "r", encoding="utf-8", errors="ignore") as f:
+                    content = f.read()
+            except Exception:
+                pass
+        if not content.strip():
+            content = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] [SISTEMA] Sistema iniciado. Aguardando operações de bancada ou comandos em nuvem.\n"
+        self.txt_history_log.insert(tk.END, content)
+        self.txt_history_log.see(tk.END)
 
     def _build_tab_gestao(self):
         container = ctk.CTkFrame(self.tab_gestao, fg_color="transparent")
@@ -2372,10 +2667,18 @@ class DeviceServiceManagerApp:
                 self.lbl_cloud_user_info.configure(
                     text=f"👤 Logista: {user.get('name', 'Logista')} ({user.get('email', '')}) | 🪙 Saldo: {bal} Créditos | 🌐 Nuvem: SINCRONIZADA"
                 )
+            if hasattr(self, 'lbl_side_user') and self.lbl_side_user:
+                self.lbl_side_user.configure(text=f"👤 {user.get('name', 'Logista')[:16]}")
+            if hasattr(self, 'lbl_side_bal') and self.lbl_side_bal:
+                self.lbl_side_bal.configure(text=f"🪙 Saldo: {bal} Créditos")
         else:
             self.btn_account.configure(text="👤 Entrar / Login", command=self.show_login_gate)
             self.lbl_wallet_badge.pack_forget()
             self.btn_recharge.pack_forget()
+            if hasattr(self, 'lbl_side_user') and self.lbl_side_user:
+                self.lbl_side_user.configure(text="👤 Técnico Convidado")
+            if hasattr(self, 'lbl_side_bal') and self.lbl_side_bal:
+                self.lbl_side_bal.configure(text="🪙 Saldo: 0 Créditos")
 
     def open_recharge_portal(self):
         url = self.api_client.base_url
