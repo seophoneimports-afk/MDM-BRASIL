@@ -840,19 +840,35 @@
     body { background-color: #060913 !important; color: #F8FAFC !important; min-height: 100vh; overflow-x: hidden; }
     main { flex: 1; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; display: flex; min-height: 100vh; position: relative; }
 
-    /* Admin Login Wrap - Centered Clean Glass Card */
-    .admin-login-wrap {
+    /* Admin Login Fullscreen Isolated Overlay (Z-INDEX 999999 - Zero Overlap) */
+    .admin-login-fullscreen-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background: #060913 !important;
+      z-index: 999999 !important;
+      display: flex;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 24px !important;
+      overflow-y: auto !important;
+      box-sizing: border-box !important;
+    }
+    .admin-login-box {
       width: 100%;
       max-width: 440px;
-      margin: 60px auto;
+      margin: auto;
       background: #0A0F1D;
-      border: 1px solid rgba(0, 229, 255, 0.25);
+      border: 1px solid rgba(0, 229, 255, 0.28);
       border-radius: 18px;
       padding: 34px 28px;
-      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.65), 0 0 25px rgba(0, 229, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 229, 255, 0.14);
       text-align: center;
       position: relative;
-      z-index: 10;
     }
 
     /* Fixed Left Sidebar 250px - Anti-Clipping Non-Overlapping Linear Studio */
@@ -1132,9 +1148,9 @@
 </head>
 <body>
 
-  <main>
-    <!-- LOGIN VIEW (MODERN GLASS CARD) -->
-    <div id="viewAdminLogin" class="admin-login-wrap" style="display: none;">
+  <!-- TELA DE LOGIN MASTER ADMINISTRATIVO (FULLSCREEN ISOLADO, Z-INDEX 999999, ZERO SOBREPOSIÇÃO) -->
+  <div id="viewAdminLogin" class="admin-login-fullscreen-overlay" style="display: none;">
+    <div class="admin-login-box">
       <div style="display: flex; justify-content: center; margin-bottom: 16px;">
         <img src="/static/logo.png" style="height: 52px; width: auto; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.45));" alt="Logo MDM &amp; FRP BRASIL">
       </div>
@@ -1165,9 +1181,10 @@
         </button>
       </form>
     </div>
+  </div>
 
-    <!-- ADMIN DASHBOARD (LAYOUT LINEAR STUDIO V2.2) -->
-    <div id="viewAdminDash" class="admin-dash app-dash-container" data-dash-theme="titanium-slate" style="display: none;">
+  <!-- ADMIN DASHBOARD (LAYOUT LINEAR STUDIO V2.2) -->
+  <main id="viewAdminDash" class="admin-dash app-dash-container" data-dash-theme="titanium-slate" style="display: none;">
       <!-- SIDEBAR LATERAL FIXADA: 250PX (3 FILHOS DIRETOS: HEADER, NAVEGAÇÃO SCROLL, FOOTER PINADO) -->
       <aside class="sidebar-portal-nav">
         <!-- BLOCO SUPERIOR FIXO (BRAND + FATURAMENTO PIX) -->
@@ -2254,8 +2271,7 @@
         </div>
         </div> <!-- /tabSettings -->
       </div> <!-- /dashboard-main-area -->
-    </div> <!-- /viewAdminDash -->
-  </main>
+  </main> <!-- /viewAdminDash -->
 
   <!-- MODAL AJUSTE DE CRÉDITO -->
   <div class="modal-overlay" id="modalAdjust">
@@ -2578,7 +2594,7 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    let adminToken = urlParams.get("token") || localStorage.getItem("mdm_admin_token") || localStorage.getItem("mdm_token");
+    let adminToken = urlParams.get("token") || localStorage.getItem("mdm_admin_token");
     if (urlParams.get("token")) localStorage.setItem("mdm_admin_token", adminToken);
     let currentAdjustUserId = null;
     let allUsersCache = [];
@@ -2623,28 +2639,30 @@
       const vLog = document.getElementById("viewAdminLogin");
       const vDash = document.getElementById("viewAdminDash");
       if (isAuth) {
-        if (vLog) vLog.style.display = 'none';
+        if (vLog) vLog.style.setProperty('display', 'none', 'important');
         if (vDash) {
           vDash.classList.add('is-authenticated');
-          vDash.style.display = 'flex';
+          vDash.style.setProperty('display', 'flex', 'important');
         }
       } else {
         if (vDash) {
           vDash.classList.remove('is-authenticated');
-          vDash.style.display = 'none';
+          vDash.style.setProperty('display', 'none', 'important');
         }
-        if (vLog) vLog.style.display = 'block';
+        if (vLog) {
+          vLog.style.setProperty('display', 'flex', 'important');
+        }
       }
     }
 
     function handleAdminGoogleLogin() {
-      // Redireciona para o fluxo oficial e criptograficamente verificado do Google OAuth
-      window.location.href = '/api/v1/auth/google/login';
+      alert("Para o Painel Master Root, utilize o e-mail e senha administrativa pré-configurados no formulário acima.");
     }
 
     function adminLogout() {
       adminToken = null;
       localStorage.removeItem("mdm_admin_token");
+      sessionStorage.removeItem("mdm_admin_token");
       setAdminViewMode(false);
     }
 
@@ -3645,6 +3663,7 @@
     }
 
     function switchTab(tab, btn) {
+      setAdminViewMode(true);
       document.querySelectorAll('.tab-btn, .sidebar-nav-btn, .linear-nav-btn').forEach(b => b.classList.remove('active'));
       if (btn) {
         btn.classList.add('active');
