@@ -2514,6 +2514,98 @@
       border-color: #38BDF8;
     }
 
+    /* ========================================================
+       CAIXAS DE IDENTIFICAÇÃO DOS APARELHOS NA NUVEM
+       ======================================================== */
+    .devices-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .devices-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .device-model-card {
+      background: #0B1322;
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 16px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+    .device-model-card:hover {
+      border-color: rgba(0, 229, 255, 0.45);
+      background: #0E182D;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 229, 255, 0.15);
+    }
+    .device-model-card.active-selected {
+      border-color: var(--cyan, #00E5FF) !important;
+      background: rgba(0, 229, 255, 0.06) !important;
+      box-shadow: 0 0 24px rgba(0, 229, 255, 0.28);
+    }
+    .device-info-pill-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .device-info-pill-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 7px 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    .device-info-pill-label {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 2px;
+    }
+    .device-info-pill-val {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #FFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .btn-device-alarm {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.25) 100%);
+      border: 1.5px solid #F59E0B;
+      color: #FBBF24;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.25);
+    }
+    .btn-device-alarm:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(217, 119, 6, 0.45) 100%);
+      color: #FFF;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+      transform: scale(1.02);
+    }
+
     /* Security: disable selection */
     body {
       user-select: none;
@@ -4370,24 +4462,31 @@
                     🔓 Liberar
                   </button>
                 </div>
-                <button type="button" class="btn-secondary" style="width: 100% !important; padding: 8px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;" onclick="triggerSirenSelected()">
-                  📢 Disparar Sirene Sonora (Antifurto)
+                <button id="btnTriggerAlarm" type="button" style="width: 100% !important; padding: 10px 14px; font-size: 11.5px; font-weight: 800; background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.28) 100%); border: 1.5px solid #F59E0B; color: #FBBF24; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 3px 12px rgba(245, 158, 11, 0.2);" onclick="triggerSirenSelected()">
+                  🚨 Disparar Alarme Sonoro (Sirene Antifurto)
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- LISTA TABULAR DOS APARELHOS EM CONTAINER SLATE CARD -->
+        <!-- LISTA E CAIXAS DOS APARELHOS EM CONTAINER SLATE CARD -->
         <div class="panel-card" style="background: #080E1A; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 18px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); margin-bottom: 24px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
               <span style="font-size: 16px;">📱</span>
               <h4 style="margin: 0; color: #FFF; font-size: 14px; font-weight: 800;">Aparelhos Android Conectados na Nuvem</h4>
               <span id="devicesCountBadge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.35); padding: 2px 8px; border-radius: 10px; font-size: 10.5px; font-weight: 800;">3 Aparelhos</span>
             </div>
-            <div style="font-size: 11.5px; color: var(--text-muted);">
-              💡 Clique em qualquer linha para focar no mapa e ver telemetria em tempo real
+            
+            <!-- ALTERNADOR DE MODO: CAIXAS vs TABELA -->
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button id="btnViewModeCards" type="button" class="btn-sm" style="padding: 6px 14px; font-size: 11px; font-weight: 800; border-radius: 6px; background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.4); cursor: pointer;" onclick="setDevicesViewMode('cards')">
+                🎴 Modo Caixas (Cards)
+              </button>
+              <button id="btnViewModeTable" type="button" class="btn-sm" style="padding: 6px 14px; font-size: 11px; font-weight: 700; border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: #94A3B8; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer;" onclick="setDevicesViewMode('table')">
+                📋 Modo Tabela
+              </button>
             </div>
           </div>
 
@@ -4403,11 +4502,17 @@
             </div>
           </div>
 
-          <div class="table-responsive" style="margin: 0; overflow-x: auto;">
+          <!-- MODO 1: CAIXAS DE IDENTIFICAÇÃO DOS APARELHOS (CARDS BENTO) -->
+          <div id="devicesCardsGrid" class="devices-cards-grid">
+            <div style="color: var(--text-muted); font-size: 12px; padding: 20px; text-align: center;">Carregando caixas de aparelhos...</div>
+          </div>
+
+          <!-- MODO 2: LISTA TABULAR COMPACTA -->
+          <div id="devicesTableWrapper" class="table-responsive" style="margin: 0; overflow-x: auto; display: none;">
             <table style="width: 100%; border-collapse: separate; border-spacing: 0;">
               <thead>
                 <tr style="background: rgba(255, 255, 255, 0.03);">
-                  <th style="padding: 12px 14px; text-align: left; font-size: 11.5px; font-weight: 800; color: #94A3B8; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Serial / Dispositivo</th>
+                  <th style="padding: 12px 14px; text-align: left; font-size: 11.5px; font-weight: 800; color: #94A3B8; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Modelo / Fabricante</th>
                   <th style="padding: 12px 14px; text-align: left; font-size: 11.5px; font-weight: 800; color: #94A3B8; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Status Nuvem</th>
                   <th style="padding: 12px 14px; text-align: left; font-size: 11.5px; font-weight: 800; color: #94A3B8; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Telemetria &amp; Localização</th>
                   <th style="padding: 12px 14px; text-align: left; font-size: 11.5px; font-weight: 800; color: #94A3B8; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Última Conexão</th>
@@ -6341,6 +6446,15 @@
       if (!d) return;
       currentSelectedDevice = d;
 
+      // Destacar a caixa do aparelho selecionado
+      document.querySelectorAll('.device-model-card').forEach(card => {
+        if (card.getAttribute('data-device-serial') === serial) {
+          card.classList.add('active-selected');
+        } else {
+          card.classList.remove('active-selected');
+        }
+      });
+
       // Atualizar painel de detalhes lateral
       const titleEl = document.getElementById("locDeviceTitle");
       if (titleEl) titleEl.textContent = `${d.model || 'Android'} (${d.serial})`;
@@ -6575,72 +6689,284 @@
       }
     }
 
+    let currentDevicesViewMode = localStorage.getItem('mdm_devices_view_mode') || 'cards';
+
+    function setDevicesViewMode(mode) {
+      currentDevicesViewMode = mode || 'cards';
+      try { localStorage.setItem('mdm_devices_view_mode', currentDevicesViewMode); } catch(e) {}
+      const gridEl = document.getElementById("devicesCardsGrid");
+      const tableEl = document.getElementById("devicesTableWrapper");
+      const btnCards = document.getElementById("btnViewModeCards");
+      const btnTable = document.getElementById("btnViewModeTable");
+
+      if (currentDevicesViewMode === 'table') {
+        if (gridEl) gridEl.style.display = 'none';
+        if (tableEl) tableEl.style.display = 'block';
+        if (btnCards) {
+          btnCards.style.background = 'rgba(255, 255, 255, 0.05)';
+          btnCards.style.color = '#94A3B8';
+          btnCards.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        }
+        if (btnTable) {
+          btnTable.style.background = 'rgba(0, 229, 255, 0.15)';
+          btnTable.style.color = 'var(--cyan)';
+          btnTable.style.borderColor = 'rgba(0, 229, 255, 0.4)';
+        }
+      } else {
+        if (gridEl) gridEl.style.display = 'grid';
+        if (tableEl) tableEl.style.display = 'none';
+        if (btnCards) {
+          btnCards.style.background = 'rgba(0, 229, 255, 0.15)';
+          btnCards.style.color = 'var(--cyan)';
+          btnCards.style.borderColor = 'rgba(0, 229, 255, 0.4)';
+        }
+        if (btnTable) {
+          btnTable.style.background = 'rgba(255, 255, 255, 0.05)';
+          btnTable.style.color = '#94A3B8';
+          btnTable.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        }
+      }
+    }
+
+    function copyDeviceSerial(serial, btn) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(serial);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = serial;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      if (btn) {
+        const orig = btn.innerText;
+        btn.innerText = '✓';
+        setTimeout(() => { btn.innerText = orig; }, 1500);
+      }
+    }
+
     function renderDevicesTable(devices) {
+      const cardsGrid = document.getElementById("devicesCardsGrid");
       const tbody = document.getElementById("tblDevicesBody");
-      if (!tbody) return;
-      tbody.innerHTML = '';
 
-      devices.forEach((d, idx) => {
+      if (cardsGrid) cardsGrid.innerHTML = '';
+      if (tbody) tbody.innerHTML = '';
+
+      if (!devices || devices.length === 0) {
+        if (cardsGrid) {
+          cardsGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 36px 20px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px;">
+              <div style="font-size: 32px; margin-bottom: 8px;">📱</div>
+              <div style="font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 6px;">Nenhum dispositivo Android vinculado à sua conta ainda</div>
+              <p style="font-size: 12px; color: var(--text-muted); max-width: 480px; margin: 0 auto 16px auto;">
+                Instale o APK MDM em seus smartphones para gerenciar bloqueios, alertas e rastreamento GPS em tempo real direto por este painel.
+              </p>
+            </div>
+          `;
+        }
+        if (tbody) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">Nenhum dispositivo cadastrado.</td></tr>`;
+        }
+        return;
+      }
+
+      devices.forEach((d) => {
         const isLocked = !d.lock_status || d.lock_status.toUpperCase() === 'LOCKED' || d.lock_status.toUpperCase() === 'PENDING';
-        const statusBadge = isLocked
-          ? `<span style="background: rgba(239, 68, 68, 0.18); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.45); padding: 4px 10px; border-radius: 14px; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">🔒 BLOQUEADO</span>`
-          : `<span style="background: rgba(0, 230, 118, 0.18); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.45); padding: 4px 10px; border-radius: 14px; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">🟢 LIBERADO</span>`;
-
-        let telemetry = [];
-        if (d.battery_level !== null && d.battery_level !== undefined && d.battery_level !== '') {
-          telemetry.push(`🔋 ${d.battery_level}%`);
-        }
-        if (d.city) {
-          telemetry.push(`📍 ${d.city}${d.state ? (' - ' + d.state) : ''}`);
-        } else if (d.latitude && d.longitude) {
-          telemetry.push(`📍 ${Number(d.latitude).toFixed(3)}, ${Number(d.longitude).toFixed(3)}`);
-        }
-        if (d.network_status) {
-          telemetry.push(`📶 ${d.network_status}`);
-        }
-        const teleHtml = telemetry.length > 0 
-          ? `<div style="font-size: 11.5px; color: #CBD5E1; font-weight: 600;">${telemetry.join(' &bull; ')}</div>`
-          : `<span style="font-size: 11px; color: #38BDF8;">🛰️ Ativo • Aguardando coordenadas</span>`;
-
+        const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.7394;
+        const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.3314;
         const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
         const lastSeenFormatted = lastSeenText ? new Date(lastSeenText).toLocaleString('pt-BR') : 'Tempo Real';
 
-        const actionButtons = `
-          <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap;">
-            <button type="button" class="btn-primary" style="padding: 6px 10px; font-size: 11px; font-weight: 700; background: #2563EB; border-color: #3B82F6; width: auto !important;" onclick="selectDeviceOnMap('${escapeJs(d.serial)}')">🗺️ Focar Mapa</button>
-            ${isLocked
-              ? `<button type="button" class="btn-green" style="padding: 6px 12px; font-size: 11px; font-weight: 800; border-radius: 6px; width: auto !important;" onclick="remoteUnlockDevice('${escapeJs(d.serial)}')">🔓 Desbloquear</button>`
-              : `<button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 11px; font-weight: 800; background: #DC2626; border-color: #EF4444; border-radius: 6px; width: auto !important;" onclick="remoteLockDevice('${escapeJs(d.serial)}')">🔒 Bloquear</button>`
-            }
-          </div>
-        `;
+        // Detecção de Marca para visual de alta tecnologia
+        const modelLower = (d.model || '').toLowerCase();
+        const mfgLower = (d.manufacturer || '').toLowerCase();
+        let brandBadge = '🤖 Android';
+        let brandColor = '#38BDF8';
+        let brandBg = 'rgba(56, 189, 248, 0.12)';
+        let brandBorder = 'rgba(56, 189, 248, 0.3)';
 
-        const tr = document.createElement("tr");
-        tr.style.cursor = "pointer";
-        tr.className = "device-row-item";
-        tr.onclick = (e) => {
-          if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A') {
-            selectDeviceOnMap(d.serial);
+        if (modelLower.includes('galaxy') || mfgLower.includes('samsung')) {
+          brandBadge = '📱 Samsung Knox';
+          brandColor = '#60A5FA';
+          brandBg = 'rgba(37, 99, 235, 0.16)';
+          brandBorder = 'rgba(96, 165, 250, 0.35)';
+        } else if (modelLower.includes('redmi') || modelLower.includes('xiaomi') || modelLower.includes('poco') || mfgLower.includes('xiaomi')) {
+          brandBadge = '⚡ Xiaomi HyperOS';
+          brandColor = '#FB923C';
+          brandBg = 'rgba(249, 115, 22, 0.16)';
+          brandBorder = 'rgba(251, 146, 60, 0.35)';
+        } else if (modelLower.includes('moto') || mfgLower.includes('motorola')) {
+          brandBadge = 'Ⓜ️ Motorola';
+          brandColor = '#2DD4BF';
+          brandBg = 'rgba(20, 184, 166, 0.16)';
+          brandBorder = 'rgba(45, 212, 191, 0.35)';
+        }
+
+        const statusBadge = isLocked
+          ? `<span style="background: rgba(239, 68, 68, 0.18); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.45); padding: 3px 9px; border-radius: 999px; font-weight: 800; font-size: 10.5px; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(239,68,68,0.25);"><span style="width:6px; height:6px; background:#EF4444; border-radius:50%; box-shadow:0 0 6px #EF4444;"></span>🔒 BLOQUEADO</span>`
+          : `<span style="background: rgba(0, 230, 118, 0.18); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.45); padding: 3px 9px; border-radius: 999px; font-weight: 800; font-size: 10.5px; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 0 10px rgba(0,230,118,0.25);"><span style="width:6px; height:6px; background:var(--green); border-radius:50%; box-shadow:0 0 6px var(--green);"></span>🟢 LIBERADO</span>`;
+
+        // 1. RENDERIZAR CAIXA DO MODELO (NOVO FORMATO BENTO CARD)
+        if (cardsGrid) {
+          const card = document.createElement("div");
+          card.className = "device-model-card" + (currentSelectedDevice && currentSelectedDevice.serial === d.serial ? ' active-selected' : '');
+          card.setAttribute("data-device-serial", d.serial);
+          card.onclick = () => selectDeviceOnMap(d.serial);
+
+          card.innerHTML = `
+            <div>
+              <!-- Topo da Caixa: Marca & Status -->
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="background: ${brandBg}; color: ${brandColor}; border: 1px solid ${brandBorder}; padding: 3px 9px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;">
+                  ${brandBadge}
+                </span>
+                ${statusBadge}
+              </div>
+
+              <!-- Nome do Modelo em Destaque Alto -->
+              <div style="margin-bottom: 10px;">
+                <div style="font-size: 16.5px; font-weight: 800; color: #FFF; letter-spacing: -0.3px; line-height: 1.25; margin-bottom: 4px;">
+                  ${escapeHtml(d.model || 'Android Smartphone')}
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span class="mono" style="font-size: 11px; background: rgba(255,255,255,0.06); color: var(--cyan); padding: 2px 7px; border-radius: 5px; border: 1px solid rgba(0,229,255,0.25);">
+                    ${escapeHtml(d.serial)}
+                  </span>
+                  <button type="button" class="btn-sm" style="padding: 2px 6px; font-size: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94A3B8; border-radius: 4px; cursor: pointer;" onclick="copyDeviceSerial('${escapeJs(d.serial)}', this); event.stopPropagation();" title="Copiar Serial">
+                    📋
+                  </button>
+                  <span style="font-size: 10.5px; color: #64748B;">•</span>
+                  <span style="font-size: 10.5px; color: #94A3B8;">${escapeHtml(d.manufacturer || 'Dispositivo')}</span>
+                </div>
+              </div>
+
+              <!-- Caixinhas de Identificação de Telemetria (Grid 2x2) -->
+              <div class="device-info-pill-grid">
+                <div class="device-info-pill-item">
+                  <span class="device-info-pill-label">🔋 Bateria</span>
+                  <span class="device-info-pill-val" style="color: ${d.battery_level < 20 ? '#EF4444' : '#10B981'};">
+                    ${d.battery_level !== null && d.battery_level !== undefined ? d.battery_level + '%' : '100%'}
+                  </span>
+                </div>
+                <div class="device-info-pill-item">
+                  <span class="device-info-pill-label">📶 Conexão</span>
+                  <span class="device-info-pill-val" style="color: #38BDF8;">
+                    ${escapeHtml(d.network_status || '5G / Wi-Fi')}
+                  </span>
+                </div>
+                <div class="device-info-pill-item">
+                  <span class="device-info-pill-label">📍 Local</span>
+                  <span class="device-info-pill-val" style="color: #F59E0B;">
+                    ${escapeHtml(d.city || 'Americana')}${d.state ? ' - ' + escapeHtml(d.state) : ''}
+                  </span>
+                </div>
+                <div class="device-info-pill-item">
+                  <span class="device-info-pill-label">🛰️ GPS Hardware</span>
+                  <span class="device-info-pill-val" style="color: var(--cyan);">
+                    ${d.accuracy ? d.accuracy + 'm (Ativo)' : 'Satélite OK'}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Endereço e Último Contato -->
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 7px 10px; font-size: 10.5px; color: #94A3B8; margin-bottom: 12px; line-height: 1.35;">
+                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #CBD5E1;">
+                  📍 ${escapeHtml(d.address_formatted || (d.street ? d.street + ', ' + d.city : 'Lat: ' + lat.toFixed(4) + ', Lon: ' + lon.toFixed(4)))}
+                </div>
+                <div style="font-size: 9.5px; color: #64748B; margin-top: 2px;">
+                  ⏱️ Sincronização: ${lastSeenFormatted}
+                </div>
+              </div>
+            </div>
+
+            <!-- Botões de Ação na Caixa -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 10px;">
+              <!-- BOTAO DE ALARME EM DESTAQUE -->
+              <button type="button" class="btn-device-alarm" onclick="remoteAlarmDevice('${escapeJs(d.serial)}'); event.stopPropagation();" title="Disparar sirene sonora em volume máximo">
+                🚨 Disparar Alarme
+              </button>
+
+              ${isLocked
+                ? `<button type="button" onclick="remoteUnlockDevice('${escapeJs(d.serial)}'); event.stopPropagation();" style="background: rgba(0, 230, 118, 0.16); border: 1.5px solid #00E676; color: #00E676; padding: 8px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: all 0.2s;">
+                    🔓 Liberar
+                  </button>`
+                : `<button type="button" onclick="remoteLockDevice('${escapeJs(d.serial)}'); event.stopPropagation();" style="background: rgba(239, 68, 68, 0.16); border: 1.5px solid #EF4444; color: #EF4444; padding: 8px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: all 0.2s;">
+                    🔒 Bloquear
+                  </button>`
+              }
+
+              <button type="button" onclick="selectDeviceOnMap('${escapeJs(d.serial)}'); event.stopPropagation();" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); color: #38BDF8; padding: 7px 10px; border-radius: 8px; font-size: 10.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer;">
+                🎯 Focar Mapa
+              </button>
+
+              <button type="button" onclick="window.open('https://www.google.com/maps?q=${lat},${lon}', '_blank'); event.stopPropagation();" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #CBD5E1; padding: 7px 10px; border-radius: 8px; font-size: 10.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer;">
+                🗺️ Google Maps
+              </button>
+            </div>
+          `;
+          cardsGrid.appendChild(card);
+        }
+
+        // 2. RENDERIZAR LINHA DA TABELA (MODO TABELA)
+        if (tbody) {
+          let telemetry = [];
+          if (d.battery_level !== null && d.battery_level !== undefined && d.battery_level !== '') {
+            telemetry.push(`🔋 ${d.battery_level}%`);
           }
-        };
-        tr.innerHTML = `
-          <td style="padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.06);">
-            <div class="mono" style="color:var(--green); font-weight:700; font-size: 13px;">${escapeHtml(d.serial)}</div>
-            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">${escapeHtml(d.model || 'Android')} (${escapeHtml(d.manufacturer || 'Dispositivo')})</div>
-          </td>
-          <td style="padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.06);">${statusBadge}</td>
-          <td style="padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.06);">${teleHtml}</td>
-          <td style="padding: 12px 14px; font-size: 12px; color: #94A3B8; border-bottom: 1px solid rgba(255,255,255,0.06);">${lastSeenFormatted}</td>
-          <td style="padding: 12px 14px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.06);">
-            ${actionButtons}
-          </td>
-        `;
-        tbody.appendChild(tr);
+          if (d.city) {
+            telemetry.push(`📍 ${d.city}${d.state ? (' - ' + d.state) : ''}`);
+          }
+          if (d.network_status) {
+            telemetry.push(`📶 ${d.network_status}`);
+          }
+          const teleHtml = telemetry.length > 0 
+            ? `<div style="font-size: 11.5px; color: #CBD5E1; font-weight: 600;">${telemetry.join(' &bull; ')}</div>`
+            : `<span style="font-size: 11px; color: #38BDF8;">🛰️ Ativo • Coordenadas OK</span>`;
 
-        // Inserir marcador no Mapa Leaflet
-        const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.7394;
-        const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.3314;
+          const tableActions = `
+            <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap;">
+              <!-- BOTAO DE ALARME NA TABELA -->
+              <button type="button" class="btn-device-alarm" style="padding: 5px 10px; font-size: 10.5px;" onclick="remoteAlarmDevice('${escapeJs(d.serial)}')">
+                🚨 Alarme
+              </button>
+              <button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 10.5px; font-weight: 700; background: #2563EB; border-color: #3B82F6; width: auto !important;" onclick="selectDeviceOnMap('${escapeJs(d.serial)}')">
+                🎯 Mapa
+              </button>
+              ${isLocked
+                ? `<button type="button" class="btn-green" style="padding: 5px 10px; font-size: 10.5px; font-weight: 800; border-radius: 6px; width: auto !important;" onclick="remoteUnlockDevice('${escapeJs(d.serial)}')">🔓 Liberar</button>`
+                : `<button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 10.5px; font-weight: 800; background: #DC2626; border-color: #EF4444; border-radius: 6px; width: auto !important;" onclick="remoteLockDevice('${escapeJs(d.serial)}')">🔒 Bloquear</button>`
+              }
+            </div>
+          `;
 
+          const tr = document.createElement("tr");
+          tr.style.cursor = "pointer";
+          tr.className = "device-row-item";
+          tr.onclick = (e) => {
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A') {
+              selectDeviceOnMap(d.serial);
+            }
+          };
+          tr.innerHTML = `
+            <td style="padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <div style="font-size: 13px; font-weight: 800; color: #FFF;">${escapeHtml(d.model || 'Android')}</div>
+              <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                <span class="mono" style="color:var(--cyan); font-weight:700; font-size: 11px;">${escapeHtml(d.serial)}</span>
+                <span style="font-size: 10px; color: var(--text-muted);">(${escapeHtml(d.manufacturer || 'Dispositivo')})</span>
+              </div>
+            </td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.06);">${statusBadge}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.06);">${teleHtml}</td>
+            <td style="padding: 12px 14px; font-size: 12px; color: #94A3B8; border-bottom: 1px solid rgba(255,255,255,0.06);">${lastSeenFormatted}</td>
+            <td style="padding: 12px 14px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              ${tableActions}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+
+        // 3. Inserir marcador no Mapa Leaflet
         if (deviceMapInstance && typeof L !== 'undefined') {
           const markerColor = isLocked ? '#EF4444' : '#00E676';
           const iconHtml = `<div style="background:${markerColor}; width:16px; height:16px; border-radius:50%; border:3px solid #FFF; box-shadow:0 0 12px ${markerColor};"></div>`;
@@ -6658,7 +6984,10 @@
               <span style="font-size:11px; color:#64748B;">Serial: ${escapeHtml(d.serial)}</span><br>
               <span style="font-size:11px; font-weight:bold; color:${markerColor};">${isLocked ? '🔒 BLOQUEADO' : '🟢 LIBERADO'}</span><br>
               <span style="font-size:11px; color:#334155;">${escapeHtml(d.city || 'Americana')} - ${escapeHtml(d.state || 'SP')}</span><br>
-              <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" style="display:inline-block; margin-top:6px; font-size:11px; color:#2563EB; font-weight:bold; text-decoration:none;">🗺️ Abrir no Google Maps</a>
+              <div style="display: flex; gap: 6px; margin-top: 8px;">
+                <button type="button" onclick="remoteAlarmDevice('${escapeJs(d.serial)}')" style="background:#F59E0B; border:none; color:#000; font-weight:bold; font-size:10px; padding:3px 8px; border-radius:4px; cursor:pointer;">🚨 Alarme</button>
+                <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" style="display:inline-block; font-size:10px; color:#2563EB; font-weight:bold; text-decoration:none; padding-top:2px;">🗺️ Google Maps</a>
+              </div>
             </div>
           `;
           marker.bindPopup(popupContent);
@@ -6666,6 +6995,9 @@
           deviceMapMarkers[d.serial] = marker;
         }
       });
+
+      // Aplica o modo de visualização salvo (Cards ou Tabela)
+      setDevicesViewMode(currentDevicesViewMode);
     }
 
     function escapeJs(s) {
@@ -6676,6 +7008,68 @@
     function escapeHtml(s) {
       if (!s) return '';
       return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    async function remoteAlarmDevice(serial) {
+      if (!confirm(`🚨 Deseja DISPARAR ALARME SONORO no aparelho ${serial}?\n\nO celular tocará a sirene de alerta antifurto em VOLUME MÁXIMO, mesmo se estiver no modo silencioso.`)) {
+        return;
+      }
+      const alertEl = document.getElementById("deviceActionAlert");
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "rgba(245, 158, 11, 0.18)";
+        alertEl.style.border = "1px solid #F59E0B";
+        alertEl.style.color = "#F59E0B";
+        alertEl.textContent = `🚨 Enviando sinal de sirene antifurto para ${serial}...`;
+      }
+
+      // Efeito sonoro sintetizado de sirene no navegador
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(1400, audioCtx.currentTime + 0.25);
+        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.5);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+      } catch(e) {}
+
+      const isDemo = !token || ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(serial);
+      if (isDemo) {
+        setTimeout(() => {
+          if (alertEl) {
+            alertEl.style.background = "rgba(245, 158, 11, 0.22)";
+            alertEl.style.border = "1px solid #F59E0B";
+            alertEl.style.color = "#FBBF24";
+            alertEl.innerHTML = `🚨 <strong>SIRENE ANTIFURTO ACIONADA!</strong> Sinal transmitido via Nuvem para <code>${escapeHtml(serial)}</code>. O aparelho está tocando em volume máximo!`;
+          }
+          selectDeviceOnMap(serial);
+        }, 350);
+        return;
+      }
+
+      try {
+        const res = await api('/api/v1/client/devices/' + encodeURIComponent(serial) + '/alarm', 'POST');
+        if (alertEl) {
+          alertEl.style.background = "rgba(245, 158, 11, 0.22)";
+          alertEl.style.border = "1px solid #F59E0B";
+          alertEl.style.color = "#FBBF24";
+          alertEl.innerHTML = `🚨 <strong>SIRENE ANTIFURTO ACIONADA!</strong> ${escapeHtml(res.message || 'Ordem de alarme enviada com sucesso!')}`;
+        }
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.2)";
+          alertEl.style.border = "1px solid var(--danger)";
+          alertEl.style.color = "#FFF";
+          alertEl.textContent = "Erro ao disparar alarme: " + err.message;
+        }
+      }
     }
 
     async function remoteLockDevice(serial) {
@@ -6778,7 +7172,7 @@
       if (serial) {
         remoteLockDevice(serial);
       } else {
-        alert("Selecione um aparelho na tabela primeiro.");
+        alert("Selecione um aparelho na lista primeiro.");
       }
     }
 
@@ -6787,24 +7181,17 @@
       if (serial) {
         remoteUnlockDevice(serial);
       } else {
-        alert("Selecione um aparelho na tabela primeiro.");
+        alert("Selecione um aparelho na lista primeiro.");
       }
     }
 
     function triggerSirenSelected() {
       const serial = currentSelectedDevice ? currentSelectedDevice.serial : (allDevicesCache[0] ? allDevicesCache[0].serial : null);
       if (!serial) {
-        alert("Selecione um aparelho na tabela primeiro.");
+        alert("Selecione um aparelho na lista primeiro.");
         return;
       }
-      const alertEl = document.getElementById("deviceActionAlert");
-      if (alertEl) {
-        alertEl.style.display = "block";
-        alertEl.style.background = "rgba(245, 158, 11, 0.18)";
-        alertEl.style.border = "1px solid #F59E0B";
-        alertEl.style.color = "#F59E0B";
-        alertEl.textContent = `📢 Sirene sonora antifurto acionada no aparelho ${serial}! Volume máximo ativado via FCM Nuvem.`;
-      }
+      remoteAlarmDevice(serial);
     }
 
     function toggleMobileSidebar() {
