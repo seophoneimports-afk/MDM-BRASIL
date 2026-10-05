@@ -17,15 +17,16 @@ PyInstaller.__main__.run([
 ])
 
 candidates = [
-    os.path.join(WINDOWS_DIR, "dist", "MDM_FRP_BRASIL_DEVICE_SERVICE_MANAGER.exe"),
     os.path.join(os.getcwd(), "dist", "MDM_FRP_BRASIL_DEVICE_SERVICE_MANAGER.exe"),
+    os.path.join(WINDOWS_DIR, "dist", "MDM_FRP_BRASIL_DEVICE_SERVICE_MANAGER.exe"),
     os.path.abspath("dist/MDM_FRP_BRASIL_DEVICE_SERVICE_MANAGER.exe")
 ]
-out_exe = None
-for c in candidates:
-    if os.path.exists(c):
-        out_exe = c
-        break
+existing_candidates = [c for c in candidates if os.path.exists(c)]
+if existing_candidates:
+    existing_candidates.sort(key=lambda p: os.path.getmtime(p), reverse=True)
+    out_exe = existing_candidates[0]
+else:
+    out_exe = None
 
 desktop_exe = os.path.join(os.path.expanduser("~"), "Desktop", "MDM & FRP BRASIL.exe")
 desktop_exe2 = os.path.join(os.path.expanduser("~"), "Desktop", "MDM_FRP_BRASIL_DEVICE_SERVICE_MANAGER.exe")

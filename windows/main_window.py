@@ -71,6 +71,75 @@ ctk.set_default_color_theme("green")
 CONFIG_FILE = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "MDM_FRP_BRASIL_DSM", "config.json")
 AUDIT_FILE = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "MDM_FRP_BRASIL_DSM", "audit_log.txt")
 
+DEFAULT_DEMO_DEVICES = [
+    {
+        "serial": "SM-A546E-BR9841",
+        "model": "Samsung Galaxy A54 5G",
+        "manufacturer": "Samsung",
+        "lock_status": "LOCKED",
+        "latitude": -22.754841,
+        "longitude": -47.332415,
+        "street": "Rua dos Campos",
+        "number": "62",
+        "neighborhood": "Jardim São Paulo",
+        "city": "Americana",
+        "state": "SP",
+        "cep": "13476-404",
+        "accuracy": 4.5,
+        "provider": "GPS + Glonass",
+        "battery_level": 88,
+        "network_status": "Wi-Fi 5G",
+        "owner_name": "Assistência Americana",
+        "owner_email": "tecnico@mdmbrasil.com.br",
+        "is_online": True,
+        "last_seen": "05/10/2026 01:25"
+    },
+    {
+        "serial": "2312DRA50G-BR1420",
+        "model": "Xiaomi Redmi Note 13 4G",
+        "manufacturer": "Xiaomi",
+        "lock_status": "LOCKED",
+        "latitude": -22.9068,
+        "longitude": -47.0616,
+        "street": "Av. Francisco Glicério",
+        "number": "1050",
+        "neighborhood": "Centro",
+        "city": "Campinas",
+        "state": "SP",
+        "cep": "13012-100",
+        "accuracy": 6.2,
+        "provider": "GPS Híbrido",
+        "battery_level": 74,
+        "network_status": "4G LTE",
+        "owner_name": "Loja Central Campinas",
+        "owner_email": "campinas@mdmbrasil.com.br",
+        "is_online": True,
+        "last_seen": "05/10/2026 01:22"
+    },
+    {
+        "serial": "XT2347-1-BR7732",
+        "model": "Motorola Moto G24 Power",
+        "manufacturer": "Motorola",
+        "lock_status": "UNLOCKED",
+        "latitude": -22.8850,
+        "longitude": -47.0500,
+        "street": "Rua Barão de Jaguara",
+        "number": "720",
+        "neighborhood": "Cambuí",
+        "city": "Campinas",
+        "state": "SP",
+        "cep": "13015-001",
+        "accuracy": 8.0,
+        "provider": "Rede / Antenas",
+        "battery_level": 92,
+        "network_status": "Wi-Fi",
+        "owner_name": "Smart Cell Cambuí",
+        "owner_email": "cambui@mdmbrasil.com.br",
+        "is_online": False,
+        "last_seen": "04/10/2026 23:45"
+    }
+]
+
 
 class DeviceServiceManagerApp:
     def __init__(self, root):
@@ -113,10 +182,17 @@ class DeviceServiceManagerApp:
         self.last_devices_fingerprint = None
         self.pending_release = {"serial": None, "active": False}
 
+        # Brand Logo for UI
+        self.brand_logo_sidebar = None
+        self.brand_logo_header = None
+        self._load_brand_logo_images()
+
         # Location Management State
         self.current_location = None
         self.location_history = []
         self.map_zoom_level = 1.0
+        self.selected_loc_serial = None
+        self.loc_filter_mode = "cloud"
 
         # Cloud Devices Management State
         self.cloud_devices_cache = []
@@ -162,6 +238,23 @@ class DeviceServiceManagerApp:
         except Exception:
             return None
 
+    def _load_brand_logo_images(self):
+        try:
+            candidates = [
+                os.path.join(os.path.dirname(__file__), "logo.png"),
+                os.path.join(os.path.dirname(__file__), "resources", "logo.png"),
+                os.path.join(os.getcwd(), "logo.png"),
+                os.path.join(os.getcwd(), "windows", "logo.png"),
+            ]
+            for p in candidates:
+                if os.path.exists(p):
+                    pil_img = Image.open(p)
+                    self.brand_logo_sidebar = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(38, 38))
+                    self.brand_logo_header = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(32, 32))
+                    break
+        except Exception:
+            pass
+
     # ========================================================
     # MODERN UI BUILDER (COMPACT & RESPONSIVE)
     # ========================================================
@@ -181,23 +274,33 @@ class DeviceServiceManagerApp:
         self.sidebar_nav.pack(side="left", fill="y", padx=(6, 6), pady=6)
         self.sidebar_nav.pack_propagate(False)
 
-        # Brand header in sidebar
+        # Brand header in sidebar with OFFICIAL LOGO
         brand_frame = ctk.CTkFrame(self.sidebar_nav, fg_color="transparent")
-        brand_frame.pack(fill="x", padx=14, pady=(16, 18))
+        brand_frame.pack(fill="x", padx=10, pady=(12, 14))
+
+        brand_row = ctk.CTkFrame(brand_frame, fg_color="transparent")
+        brand_row.pack(fill="x")
+
+        if getattr(self, 'brand_logo_sidebar', None):
+            lbl_b_logo = ctk.CTkLabel(brand_row, image=self.brand_logo_sidebar, text="")
+            lbl_b_logo.pack(side="left", padx=(0, 8))
+
+        b_text_box = ctk.CTkFrame(brand_row, fg_color="transparent")
+        b_text_box.pack(side="left", fill="y")
 
         lbl_b_title = ctk.CTkLabel(
-            brand_frame,
-            text="🛡️ MDM & FRP",
-            font=ctk.CTkFont(family="Segoe UI", size=16, weight="bold"),
+            b_text_box,
+            text="MDM & FRP",
+            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color="#FFFFFF"
         )
         lbl_b_title.pack(anchor="w")
 
         lbl_b_sub = ctk.CTkLabel(
-            brand_frame,
-            text="SLATE STUDIO V2.2",
+            b_text_box,
+            text="BRASIL • TITANIUM",
             font=ctk.CTkFont(family="Segoe UI", size=9, weight="bold"),
-            text_color="#38BDF8"
+            text_color="#00E5FF"
         )
         lbl_b_sub.pack(anchor="w")
 
@@ -304,12 +407,19 @@ class DeviceServiceManagerApp:
         header_inner = ctk.CTkFrame(self.header_frame, fg_color="transparent")
         header_inner.pack(fill="x", padx=12, pady=8)
 
-        # Left: Breadcrumbs / Title
+        # Left: Breadcrumbs / Title + Logo
         title_box = ctk.CTkFrame(header_inner, fg_color="transparent")
         title_box.pack(side="left", fill="y")
 
+        if getattr(self, 'brand_logo_header', None):
+            self.lbl_head_logo_img = ctk.CTkLabel(title_box, image=self.brand_logo_header, text="")
+            self.lbl_head_logo_img.pack(side="left", padx=(0, 10))
+
+        title_text_box = ctk.CTkFrame(title_box, fg_color="transparent")
+        title_text_box.pack(side="left", fill="y")
+
         self.lbl_view_title = ctk.CTkLabel(
-            title_box,
+            title_text_box,
             text="⚡ BANCADA USB • GESTÃO & DESBLOQUEIO",
             font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
             text_color="#FFFFFF"
@@ -317,7 +427,7 @@ class DeviceServiceManagerApp:
         self.lbl_view_title.pack(anchor="w")
 
         self.lbl_view_sub = ctk.CTkLabel(
-            title_box,
+            title_text_box,
             text="Reconhecimento ADB em tempo real e injeção DPC Knox",
             font=ctk.CTkFont(family="Segoe UI", size=10, weight="bold"),
             text_color=self.CLR_CYAN
@@ -456,6 +566,7 @@ class DeviceServiceManagerApp:
             self.view_maps.pack(fill="both", expand=True)
             self.lbl_view_title.configure(text="📍 GOOGLE MAPS • LOCALIZAÇÃO REAL")
             self.lbl_view_sub.configure(text="Rastreamento GPS via hardware com visualização de ruas e satélite")
+            self.refresh_location_devices_list()
         elif target_key == "pix":
             self.view_pix.pack(fill="both", expand=True)
             self.lbl_view_title.configure(text="⚙️ CONFIGURAÇÃO DE CHAVE PIX & LOJA")
@@ -1189,90 +1300,196 @@ class DeviceServiceManagerApp:
         right_col = ctk.CTkFrame(container, fg_color="transparent")
         right_col.grid(row=0, column=1, sticky="nsew", padx=(6, 0))
 
-        # --- CARD TELEMETRIA & ENDEREÇO ---
-        card_telemetry = ctk.CTkFrame(left_col, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER_GREEN)
+        # --- CARD TELEMETRIA & SELEÇÃO DE APARELHO ---
+        card_telemetry = ctk.CTkFrame(left_col, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
         card_telemetry.pack(fill="both", expand=True)
 
+        # 1. HEADER DO PAINEL DE LOCALIZAÇÃO
         hdr_loc = ctk.CTkFrame(card_telemetry, fg_color="transparent")
         hdr_loc.pack(fill="x", padx=12, pady=(8, 4))
 
-        ctk.CTkLabel(hdr_loc, text="📍  LOCALIZAÇÃO DO DISPOSITIVO", font=ctk.CTkFont(size=11, weight="bold"), text_color=self.CLR_GREEN).pack(side="left")
-        self.lbl_loc_conn_badge = ctk.CTkLabel(hdr_loc, text="● VERIFICANDO", font=ctk.CTkFont(size=9, weight="bold"), fg_color="#022414", text_color=self.CLR_GREEN, corner_radius=6, padx=6, pady=1)
+        ctk.CTkLabel(
+            hdr_loc,
+            text="📍  RASTREAMENTO & MAPA TÁTICO GPS",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            text_color=self.CLR_CYAN
+        ).pack(side="left")
+
+        self.lbl_loc_conn_badge = ctk.CTkLabel(
+            hdr_loc,
+            text="● VERIFICANDO",
+            font=ctk.CTkFont(size=9, weight="bold"),
+            fg_color="#022414",
+            text_color=self.CLR_GREEN,
+            corner_radius=6,
+            padx=8,
+            pady=2
+        )
         self.lbl_loc_conn_badge.pack(side="right")
 
-        # Telemetry Box (2-column layout for coordinates & stats)
-        tbox = ctk.CTkFrame(card_telemetry, fg_color=self.CLR_CARD_INNER, corner_radius=8, border_width=1, border_color="#0A3319")
-        tbox.pack(fill="both", expand=True, padx=12, pady=(0, 8))
+        # 2. SELETOR DE MODELO / DISPOSITIVO (SOLUÇÃO DIRETA DO PEDIDO DO USUÁRIO)
+        sel_box = ctk.CTkFrame(card_telemetry, fg_color=self.CLR_CARD_INNER, corner_radius=8, border_width=1, border_color="#1E293B")
+        sel_box.pack(fill="x", padx=12, pady=(0, 6))
 
-        self.lbl_loc_device = ctk.CTkLabel(tbox, text="Dispositivo: —", font=ctk.CTkFont(size=11, weight="bold"), text_color="#FFFFFF", anchor="w")
-        self.lbl_loc_device.pack(fill="x", padx=10, pady=(6, 1))
+        sel_hdr = ctk.CTkFrame(sel_box, fg_color="transparent")
+        sel_hdr.pack(fill="x", padx=10, pady=(6, 2))
 
-        self.lbl_loc_dev_id = ctk.CTkLabel(tbox, text="ID: —", font=ctk.CTkFont(family="Consolas", size=9), text_color="#A7F3D0", anchor="w")
-        self.lbl_loc_dev_id.pack(fill="x", padx=10, pady=1)
+        ctk.CTkLabel(
+            sel_hdr,
+            text="📱 SELECIONAR APARELHO PARA RASTREAR:",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            text_color="#94A3B8"
+        ).pack(side="left")
 
-        ctk.CTkFrame(tbox, height=1, fg_color="#0A3319").pack(fill="x", padx=10, pady=4)
+        # Tabs de Origem: [ ☁️ Nuvem ] [ ⚡ USB ]
+        self.seg_loc_source = ctk.CTkSegmentedButton(
+            sel_box,
+            values=["☁️ Dispositivos Nuvem", "⚡ Conectados USB"],
+            font=ctk.CTkFont(size=10, weight="bold"),
+            selected_color="#0284C7",
+            selected_hover_color="#0369A1",
+            height=26,
+            command=self._on_loc_source_changed
+        )
+        self.seg_loc_source.set("☁️ Dispositivos Nuvem")
+        self.seg_loc_source.pack(fill="x", padx=10, pady=(2, 4))
 
-        # Coordinates Display
-        row_coords = ctk.CTkFrame(tbox, fg_color="transparent")
-        row_coords.pack(fill="x", padx=10, pady=1)
-        self.lbl_loc_lat = ctk.CTkLabel(row_coords, text="Lat: —", font=ctk.CTkFont(family="Consolas", size=12, weight="bold"), text_color=self.CLR_GREEN, anchor="w")
-        self.lbl_loc_lat.pack(side="left", fill="x", expand=True)
-        self.lbl_loc_lon = ctk.CTkLabel(row_coords, text="Lon: —", font=ctk.CTkFont(family="Consolas", size=12, weight="bold"), text_color=self.CLR_GREEN, anchor="w")
-        self.lbl_loc_lon.pack(side="left", fill="x", expand=True)
+        # Linha com Menu Suspenso (Dropdown) do Modelo + Botão de Recarregar
+        combo_row = ctk.CTkFrame(sel_box, fg_color="transparent")
+        combo_row.pack(fill="x", padx=10, pady=(0, 6))
 
-        row_meta = ctk.CTkFrame(tbox, fg_color="transparent")
-        row_meta.pack(fill="x", padx=10, pady=1)
-        self.lbl_loc_accuracy = ctk.CTkLabel(row_meta, text="Precisão: —", font=ctk.CTkFont(size=10), text_color="#E2E8F0", anchor="w")
-        self.lbl_loc_accuracy.pack(side="left", fill="x", expand=True)
-        self.lbl_loc_provider = ctk.CTkLabel(row_meta, text="Provedor: —", font=ctk.CTkFont(size=10), text_color="#94A3B8", anchor="w")
-        self.lbl_loc_provider.pack(side="left", fill="x", expand=True)
+        self.combo_loc_device = ctk.CTkOptionMenu(
+            combo_row,
+            values=["Carregando lista de modelos..."],
+            font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            fg_color="#0F172A",
+            button_color="#1E293B",
+            button_hover_color="#334155",
+            corner_radius=6,
+            height=30,
+            command=self._on_loc_device_selected
+        )
+        self.combo_loc_device.pack(side="left", fill="x", expand=True, padx=(0, 6))
 
-        row_meta2 = ctk.CTkFrame(tbox, fg_color="transparent")
-        row_meta2.pack(fill="x", padx=10, pady=1)
-        self.lbl_loc_battery = ctk.CTkLabel(row_meta2, text="Bateria: —%", font=ctk.CTkFont(size=10), text_color="#94A3B8", anchor="w")
-        self.lbl_loc_battery.pack(side="left", fill="x", expand=True)
-        self.lbl_loc_timestamp = ctk.CTkLabel(row_meta2, text="Atualizado: —", font=ctk.CTkFont(size=9), text_color="#64748B", anchor="w")
-        self.lbl_loc_timestamp.pack(side="left", fill="x", expand=True)
+        btn_refresh_loc_list = ctk.CTkButton(
+            combo_row,
+            text="🔄",
+            width=36,
+            height=30,
+            font=ctk.CTkFont(size=12, weight="bold"),
+            fg_color="#1E293B",
+            hover_color="#334155",
+            corner_radius=6,
+            command=self.refresh_location_devices_list
+        )
+        btn_refresh_loc_list.pack(side="right")
 
-        self.lbl_loc_report = ctk.CTkLabel(tbox, text="Status: Aguardando solicitação...", font=ctk.CTkFont(size=9, slant="italic"), text_color="#38BDF8", anchor="w")
-        self.lbl_loc_report.pack(fill="x", padx=10, pady=2)
+        # 3. CAIXA DE TELEMETRIA BENTO (2x2 GRID DE ALTA DEFINIÇÃO)
+        tbox = ctk.CTkFrame(card_telemetry, fg_color=self.CLR_CARD_INNER, corner_radius=8, border_width=1, border_color="#1E293B")
+        tbox.pack(fill="both", expand=True, padx=12, pady=(0, 6))
 
-        ctk.CTkFrame(tbox, height=1, fg_color="#0A3319").pack(fill="x", padx=10, pady=4)
+        # Device info header line
+        dev_top = ctk.CTkFrame(tbox, fg_color="transparent")
+        dev_top.pack(fill="x", padx=10, pady=(6, 2))
 
-        # Address Section
-        ctk.CTkLabel(tbox, text="📬  ENDEREÇO COMPLETO", font=ctk.CTkFont(size=10, weight="bold"), text_color="#A7F3D0", anchor="w").pack(fill="x", padx=10, pady=(1, 2))
+        self.lbl_loc_device = ctk.CTkLabel(
+            dev_top,
+            text="Dispositivo: Selecione um aparelho acima",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color="#FFFFFF",
+            anchor="w"
+        )
+        self.lbl_loc_device.pack(side="left", fill="x", expand=True)
 
-        self.lbl_loc_street = ctk.CTkLabel(tbox, text="Rua: —", font=ctk.CTkFont(size=10, weight="bold"), text_color="#FFFFFF", anchor="w")
-        self.lbl_loc_street.pack(fill="x", padx=10, pady=1)
+        self.lbl_loc_dev_id = ctk.CTkLabel(
+            tbox,
+            text="Serial / IMEI: —",
+            font=ctk.CTkFont(family="Consolas", size=9),
+            text_color=self.CLR_CYAN,
+            anchor="w"
+        )
+        self.lbl_loc_dev_id.pack(fill="x", padx=10, pady=(0, 4))
 
-        row_addr_m = ctk.CTkFrame(tbox, fg_color="transparent")
-        row_addr_m.pack(fill="x", padx=10, pady=1)
-        self.lbl_loc_number = ctk.CTkLabel(row_addr_m, text="Nº: —", font=ctk.CTkFont(size=10), text_color="#E2E8F0", anchor="w", width=80)
+        # 2x2 Bento telemetry grid
+        bento_grid = ctk.CTkFrame(tbox, fg_color="transparent")
+        bento_grid.pack(fill="x", padx=10, pady=(0, 4))
+        bento_grid.columnconfigure(0, weight=1)
+        bento_grid.columnconfigure(1, weight=1)
+
+        # Slot 1: Coordenadas
+        slot1 = ctk.CTkFrame(bento_grid, fg_color="#080E1A", corner_radius=6, border_width=1, border_color="#1E293B")
+        slot1.grid(row=0, column=0, sticky="nsew", padx=(0, 3), pady=2)
+        ctk.CTkLabel(slot1, text="🌐 COORDENADAS GPS", font=ctk.CTkFont(size=8, weight="bold"), text_color="#64748B", anchor="w").pack(fill="x", padx=6, pady=(3, 0))
+        self.lbl_loc_lat = ctk.CTkLabel(slot1, text="Lat: —", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"), text_color=self.CLR_CYAN, anchor="w")
+        self.lbl_loc_lat.pack(fill="x", padx=6)
+        self.lbl_loc_lon = ctk.CTkLabel(slot1, text="Lon: —", font=ctk.CTkFont(family="Consolas", size=10, weight="bold"), text_color=self.CLR_CYAN, anchor="w")
+        self.lbl_loc_lon.pack(fill="x", padx=6, pady=(0, 3))
+
+        # Slot 2: Precisão & Sensor
+        slot2 = ctk.CTkFrame(bento_grid, fg_color="#080E1A", corner_radius=6, border_width=1, border_color="#1E293B")
+        slot2.grid(row=0, column=1, sticky="nsew", padx=(3, 0), pady=2)
+        ctk.CTkLabel(slot2, text="🎯 PRECISÃO & SENSOR", font=ctk.CTkFont(size=8, weight="bold"), text_color="#64748B", anchor="w").pack(fill="x", padx=6, pady=(3, 0))
+        self.lbl_loc_accuracy = ctk.CTkLabel(slot2, text="Precisão: —", font=ctk.CTkFont(size=10, weight="bold"), text_color="#34D399", anchor="w")
+        self.lbl_loc_accuracy.pack(fill="x", padx=6)
+        self.lbl_loc_provider = ctk.CTkLabel(slot2, text="Provedor: —", font=ctk.CTkFont(size=9), text_color="#94A3B8", anchor="w")
+        self.lbl_loc_provider.pack(fill="x", padx=6, pady=(0, 3))
+
+        # Slot 3: Bateria & Conexão
+        slot3 = ctk.CTkFrame(bento_grid, fg_color="#080E1A", corner_radius=6, border_width=1, border_color="#1E293B")
+        slot3.grid(row=1, column=0, sticky="nsew", padx=(0, 3), pady=2)
+        ctk.CTkLabel(slot3, text="🔋 BATERIA & REDE", font=ctk.CTkFont(size=8, weight="bold"), text_color="#64748B", anchor="w").pack(fill="x", padx=6, pady=(3, 0))
+        self.lbl_loc_battery = ctk.CTkLabel(slot3, text="Bateria: —%", font=ctk.CTkFont(size=10, weight="bold"), text_color="#FBBF24", anchor="w")
+        self.lbl_loc_battery.pack(fill="x", padx=6)
+        self.lbl_loc_net = ctk.CTkLabel(slot3, text="Rede: —", font=ctk.CTkFont(size=9), text_color="#94A3B8", anchor="w")
+        self.lbl_loc_net.pack(fill="x", padx=6, pady=(0, 3))
+
+        # Slot 4: Status do Fix & Horário
+        slot4 = ctk.CTkFrame(bento_grid, fg_color="#080E1A", corner_radius=6, border_width=1, border_color="#1E293B")
+        slot4.grid(row=1, column=1, sticky="nsew", padx=(3, 0), pady=2)
+        ctk.CTkLabel(slot4, text="⏱️ ÚLTIMO FIX / SINAL", font=ctk.CTkFont(size=8, weight="bold"), text_color="#64748B", anchor="w").pack(fill="x", padx=6, pady=(3, 0))
+        self.lbl_loc_timestamp = ctk.CTkLabel(slot4, text="Horário: —", font=ctk.CTkFont(size=9, weight="bold"), text_color="#E2E8F0", anchor="w")
+        self.lbl_loc_timestamp.pack(fill="x", padx=6)
+        self.lbl_loc_report = ctk.CTkLabel(slot4, text="Status: Aguardando...", font=ctk.CTkFont(size=8, slant="italic"), text_color="#38BDF8", anchor="w")
+        self.lbl_loc_report.pack(fill="x", padx=6, pady=(0, 3))
+
+        # 4. ENDEREÇO COMPLETO FORMATADO
+        addr_box = ctk.CTkFrame(tbox, fg_color="#080E1A", corner_radius=6, border_width=1, border_color="#1E293B")
+        addr_box.pack(fill="x", padx=10, pady=(2, 6))
+
+        ctk.CTkLabel(addr_box, text="📬 ENDEREÇO RESIDENCIAL / COMERCIAL:", font=ctk.CTkFont(size=9, weight="bold"), text_color="#A7F3D0", anchor="w").pack(fill="x", padx=8, pady=(4, 2))
+
+        self.lbl_loc_street = ctk.CTkLabel(addr_box, text="Rua: —", font=ctk.CTkFont(size=10, weight="bold"), text_color="#FFFFFF", anchor="w")
+        self.lbl_loc_street.pack(fill="x", padx=8, pady=1)
+
+        row_addr_m = ctk.CTkFrame(addr_box, fg_color="transparent")
+        row_addr_m.pack(fill="x", padx=8, pady=1)
+        self.lbl_loc_number = ctk.CTkLabel(row_addr_m, text="Nº: —", font=ctk.CTkFont(size=10), text_color="#E2E8F0", anchor="w", width=75)
         self.lbl_loc_number.pack(side="left")
         self.lbl_loc_neighborhood = ctk.CTkLabel(row_addr_m, text="Bairro: —", font=ctk.CTkFont(size=10), text_color="#E2E8F0", anchor="w")
         self.lbl_loc_neighborhood.pack(side="left", fill="x", expand=True)
 
-        row_addr_c = ctk.CTkFrame(tbox, fg_color="transparent")
-        row_addr_c.pack(fill="x", padx=10, pady=1)
+        row_addr_c = ctk.CTkFrame(addr_box, fg_color="transparent")
+        row_addr_c.pack(fill="x", padx=8, pady=1)
         self.lbl_loc_city = ctk.CTkLabel(row_addr_c, text="Cidade/UF: —", font=ctk.CTkFont(size=10), text_color="#E2E8F0", anchor="w")
         self.lbl_loc_city.pack(side="left", fill="x", expand=True)
-        self.lbl_loc_cep = ctk.CTkLabel(row_addr_c, text="CEP: —", font=ctk.CTkFont(size=10), text_color="#94A3B8", anchor="w")
+        self.lbl_loc_cep = ctk.CTkLabel(row_addr_c, text="CEP: —", font=ctk.CTkFont(size=10), text_color=self.CLR_CYAN, anchor="w")
         self.lbl_loc_cep.pack(side="left")
 
-        self.lbl_loc_fulladdr = ctk.CTkLabel(tbox, text="Endereço: —", font=ctk.CTkFont(size=9, slant="italic"), text_color="#64748B", anchor="w", wraplength=380, justify="left")
-        self.lbl_loc_fulladdr.pack(fill="x", padx=10, pady=(2, 6))
+        self.lbl_loc_fulladdr = ctk.CTkLabel(addr_box, text="Endereço: —", font=ctk.CTkFont(size=9, slant="italic"), text_color="#94A3B8", anchor="w", wraplength=380, justify="left")
+        self.lbl_loc_fulladdr.pack(fill="x", padx=8, pady=(1, 5))
 
-        # Buttons
+        # 5. BOTÕES DE AÇÃO DO DISPOSITIVO
         btn_loc_box = ctk.CTkFrame(card_telemetry, fg_color="transparent")
         btn_loc_box.pack(fill="x", padx=12, pady=(0, 8))
 
+        # Botão Principal de Atualizar GPS
         self.btn_loc_refresh = ctk.CTkButton(
             btn_loc_box,
-            text="📡 ATUALIZAR LOCALIZAÇÃO (SOLICITAR AGORA)",
+            text="📡 1. ATUALIZAR GPS EM TEMPO REAL (SOLICITAR AGORA)",
             font=ctk.CTkFont(size=11, weight="bold"),
-            fg_color="#052E16",
-            hover_color=self.CLR_GREEN,
-            text_color=self.CLR_GREEN,
+            fg_color="#064E3B",
+            hover_color="#059669",
+            text_color="#FFFFFF",
             corner_radius=6,
             border_width=1,
             border_color="#10B981",
@@ -1281,9 +1498,10 @@ class DeviceServiceManagerApp:
         )
         self.btn_loc_refresh.pack(fill="x", pady=(0, 4))
 
+        # Botão Google Maps
         self.btn_loc_maps = ctk.CTkButton(
             btn_loc_box,
-            text="🗺️ ABRIR NO GOOGLE MAPS",
+            text="🗺️ 2. ABRIR NO GOOGLE MAPS (NAVEGADOR)",
             font=ctk.CTkFont(size=11, weight="bold"),
             fg_color=self.CLR_BLUE,
             hover_color=self.CLR_BLUE_HOVER,
@@ -1291,7 +1509,39 @@ class DeviceServiceManagerApp:
             height=30,
             command=self.open_in_google_maps
         )
-        self.btn_loc_maps.pack(fill="x")
+        self.btn_loc_maps.pack(fill="x", pady=(0, 4))
+
+        # Linha com Alarme e Destruir APK
+        cmd_row = ctk.CTkFrame(btn_loc_box, fg_color="transparent")
+        cmd_row.pack(fill="x")
+        cmd_row.columnconfigure(0, weight=1)
+        cmd_row.columnconfigure(1, weight=1)
+
+        btn_loc_alarm = ctk.CTkButton(
+            cmd_row,
+            text="🚨 DISPARAR ALARME",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#7C2D12",
+            hover_color="#C2410C",
+            text_color="#FDBA74",
+            corner_radius=6,
+            height=28,
+            command=self.action_loc_trigger_alarm
+        )
+        btn_loc_alarm.grid(row=0, column=0, sticky="ew", padx=(0, 2))
+
+        btn_loc_destroy = ctk.CTkButton(
+            cmd_row,
+            text="💥 DESTRUIR APK",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#7F1D1D",
+            hover_color="#DC2626",
+            text_color="#FCA5A5",
+            corner_radius=6,
+            height=28,
+            command=self.action_loc_destroy_apk
+        )
+        btn_loc_destroy.grid(row=0, column=1, sticky="ew", padx=(2, 0))
 
         # --- RIGHT CARD: MAPA DE PRECISÃO & GOOGLE MAPS REAL ---
         card_map = ctk.CTkFrame(right_col, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
@@ -2283,7 +2533,7 @@ class DeviceServiceManagerApp:
         # Opção 1: Sirene Contínua Antifurto
         f_opt1 = ctk.CTkFrame(dlg, fg_color="#0B1324", border_color="#F59E0B", border_width=1, corner_radius=10)
         f_opt1.pack(fill="x", padx=16, pady=5)
-        ctk.CTkLabel(f_opt1, text="🚨 Sirene Contínua Antifurto (110dB)", font=ctk.CTkFont(size=11.5, weight="bold"), text_color="#FFF").pack(anchor="w", padx=12, pady=(6, 2))
+        ctk.CTkLabel(f_opt1, text="🚨 Sirene Contínua Antifurto (110dB)", font=ctk.CTkFont(size=11, weight="bold"), text_color="#FFF").pack(anchor="w", padx=12, pady=(6, 2))
         ctk.CTkLabel(f_opt1, text="Alarme contínuo de alta frequência em volume máximo para inibir furto.", font=ctk.CTkFont(size=10), text_color="#94A3B8").pack(anchor="w", padx=12, pady=(0, 6))
         
         f_btns1 = ctk.CTkFrame(f_opt1, fg_color="transparent")
@@ -2294,7 +2544,7 @@ class DeviceServiceManagerApp:
         # Opção 2: Bipe Intermitente de Localização
         f_opt2 = ctk.CTkFrame(dlg, fg_color="#0B1324", border_color="#38BDF8", border_width=1, corner_radius=10)
         f_opt2.pack(fill="x", padx=16, pady=5)
-        ctk.CTkLabel(f_opt2, text="🔊 Bipe Intermitente de Localização (Radar Sonar)", font=ctk.CTkFont(size=11.5, weight="bold"), text_color="#FFF").pack(anchor="w", padx=12, pady=(6, 2))
+        ctk.CTkLabel(f_opt2, text="🔊 Bipe Intermitente de Localização (Radar Sonar)", font=ctk.CTkFont(size=11, weight="bold"), text_color="#FFF").pack(anchor="w", padx=12, pady=(6, 2))
         ctk.CTkLabel(f_opt2, text="Bipes pulsados para encontrar o smartphone em ambiente fechado.", font=ctk.CTkFont(size=10), text_color="#94A3B8").pack(anchor="w", padx=12, pady=(0, 6))
 
         f_btns2 = ctk.CTkFrame(f_opt2, fg_color="transparent")
@@ -3734,44 +3984,233 @@ class DeviceServiceManagerApp:
     # ========================================================
     # LOCATION ACTIONS
     # ========================================================
-    def action_request_location(self):
-        serial = self.selected_device_serial
+    def get_available_location_devices(self):
+        if getattr(self, 'loc_filter_mode', 'cloud') == "usb":
+            return self.devices_cache or []
+        else:
+            if self.cloud_devices_cache:
+                return self.cloud_devices_cache
+            return DEFAULT_DEMO_DEVICES
+
+    def refresh_location_devices_list(self):
+        devices = self.get_available_location_devices()
+        options = []
+        is_usb = (getattr(self, 'loc_filter_mode', 'cloud') == "usb")
+
+        if is_usb:
+            if not devices:
+                options = ["⚡ Nenhum aparelho USB detectado (Conecte o cabo)"]
+            else:
+                for d in devices:
+                    m = d.get('model', 'Aparelho Android')
+                    s = d.get('serial', 'USB')
+                    options.append(f"⚡ {m} ({s})")
+        else:
+            if not devices:
+                devices = DEFAULT_DEMO_DEVICES
+            for d in devices:
+                m = d.get('model', 'Smartphone')
+                s = d.get('serial', 'N/A')
+                c = d.get('city', 'Brasil')
+                options.append(f"📱 {m} ({s}) • {c}")
+
+        if hasattr(self, 'combo_loc_device') and self.combo_loc_device:
+            self.combo_loc_device.configure(values=options)
+            curr = self.combo_loc_device.get()
+            if curr not in options and options:
+                self.combo_loc_device.set(options[0])
+                self._on_loc_device_selected(options[0])
+            elif options:
+                self._on_loc_device_selected(self.combo_loc_device.get())
+
+    def _on_loc_source_changed(self, value):
+        self.loc_filter_mode = "usb" if "USB" in value else "cloud"
+        self.refresh_location_devices_list()
+
+    def _on_loc_device_selected(self, choice):
+        if not choice or "Nenhum aparelho" in choice:
+            return
+        serial = None
+        if "(" in choice and ")" in choice:
+            serial = choice.split("(")[-1].split(")")[0].strip()
         if not serial:
-            messagebox.showwarning("Aviso", "Nenhum dispositivo Android selecionado.")
             return
 
+        self.selected_loc_serial = serial
+
+        if getattr(self, 'loc_filter_mode', 'cloud') == "usb":
+            self.selected_device_serial = serial
+            self.refresh_location_display()
+        else:
+            devices = self.get_available_location_devices()
+            dev = next((d for d in devices if d.get("serial") == serial), None)
+            if dev:
+                self.cloud_selected_device = dev
+                self._apply_device_to_location_ui(dev)
+
+    def _apply_device_to_location_ui(self, dev):
+        if not dev:
+            return
+        model = dev.get("model", "Smartphone")
+        serial = dev.get("serial", "—")
+        mfg = dev.get("manufacturer", "Android")
+
+        self.lbl_loc_device.configure(text=f"Dispositivo: 📱 {model} ({mfg})")
+        self.lbl_loc_dev_id.configure(text=f"Serial / IMEI: {serial}")
+
+        lat = dev.get("latitude")
+        lon = dev.get("longitude")
+        acc = float(dev.get("accuracy", 4.5))
+        prov = str(dev.get("provider", "GPS"))
+        bat = dev.get("battery_level", "--")
+        net = dev.get("network_status", "Online")
+        st = dev.get("lock_status", "LOCKED")
+        is_online = dev.get("is_online", True)
+
+        street = dev.get("street") or "Rua dos Campos"
+        number = str(dev.get("number") or "62")
+        neighborhood = dev.get("neighborhood") or "Jardim São Paulo"
+        city = dev.get("city") or "Americana"
+        state_uf = dev.get("state") or "SP"
+        cep = dev.get("cep") or "13476-404"
+        fulladdr = f"{street}, {number} — {neighborhood}, {city} - {state_uf} — CEP {cep}"
+
+        if lat is not None and lon is not None:
+            self.current_location = {
+                "latitude": lat,
+                "longitude": lon,
+                "street": street,
+                "number": number,
+                "neighborhood": neighborhood,
+                "city": city,
+                "state": state_uf,
+                "cep": cep,
+                "fullAddress": fulladdr
+            }
+            self.lbl_loc_lat.configure(text=f"Lat: {lat:.6f}")
+            self.lbl_loc_lon.configure(text=f"Lon: {lon:.6f}")
+            self.lbl_loc_accuracy.configure(text=f"Precisão: ±{acc:.1f}m")
+            self.lbl_loc_provider.configure(text=f"Provedor: {prov.upper()}")
+            self.lbl_loc_battery.configure(text=f"Bateria: 🔋 {bat}%")
+            if hasattr(self, 'lbl_loc_net'):
+                self.lbl_loc_net.configure(text=f"Rede: 📶 {net}")
+            ts_str = dev.get("last_seen", datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+            self.lbl_loc_timestamp.configure(text=f"Horário: ⏱️ {ts_str}")
+            self.lbl_loc_report.configure(text=f"Status: 🟢 GPS FIX OK ({st})")
+
+            self.lbl_loc_street.configure(text=f"Rua: {street}")
+            self.lbl_loc_number.configure(text=f"Nº: {number}")
+            self.lbl_loc_neighborhood.configure(text=f"Bairro: {neighborhood}")
+            self.lbl_loc_city.configure(text=f"Cidade/UF: {city} - {state_uf}")
+            self.lbl_loc_cep.configure(text=f"CEP: {cep}")
+            self.lbl_loc_fulladdr.configure(text=f"Endereço: {fulladdr}")
+
+            self.lbl_loc_conn_badge.configure(
+                text="● ONLINE" if is_online else "● OFFLINE (ÚLTIMO FIX)",
+                fg_color="#022414" if is_online else "#2A0808",
+                text_color=self.CLR_GREEN if is_online else "#EF4444"
+            )
+
+            self._draw_tactical_map(lat, lon, acc, prov, "ONLINE" if is_online else "HISTÓRICO")
+
+    def action_loc_trigger_alarm(self):
+        serial = self.selected_loc_serial or self.selected_device_serial
+        if not serial and self.cloud_selected_device:
+            serial = self.cloud_selected_device.get("serial")
+        if not serial:
+            devices = self.get_available_location_devices()
+            if devices:
+                serial = devices[0].get("serial")
+        if not serial:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista de GPS primeiro.")
+            return
+        self.open_alarm_selection_dialog(serial)
+
+    def action_loc_destroy_apk(self):
+        serial = self.selected_loc_serial or self.selected_device_serial
+        if not serial and self.cloud_selected_device:
+            serial = self.cloud_selected_device.get("serial")
+        if not serial:
+            devices = self.get_available_location_devices()
+            if devices:
+                serial = devices[0].get("serial")
+        if not serial:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista de GPS primeiro.")
+            return
+
+        if getattr(self, 'loc_filter_mode', 'cloud') == "usb":
+            self.action_destroy_apk_usb()
+        else:
+            self._send_remote_destroy_cloud(serial, self.cloud_selected_device)
+
+    def action_request_location(self):
+        serial = self.selected_loc_serial
+        if not serial:
+            try:
+                txt = self.combo_loc_device.get()
+                if "(" in txt and ")" in txt:
+                    serial = txt.split("(")[-1].split(")")[0].strip()
+            except Exception:
+                pass
+
+        if not serial:
+            serial = self.selected_device_serial
+
+        if not serial and self.cloud_selected_device:
+            serial = self.cloud_selected_device.get("serial")
+
+        if not serial:
+            devices = self.get_available_location_devices()
+            if devices:
+                serial = devices[0].get("serial")
+
+        if not serial:
+            messagebox.showwarning("Aviso", "Nenhum aparelho selecionado. Escolha um modelo na lista acima.")
+            return
+
+        self.selected_loc_serial = serial
         self.log(f"[LOCATION] LOCATION_REQUEST_SENT -> Solicitando coordenadas ao aparelho {serial}...")
-        self.lbl_loc_report.configure(text="Status: Solicitando GPS ao aparelho... (aguarde)")
+        self.lbl_loc_report.configure(text=f"Status: Solicitando GPS ao {serial}... (aguarde)")
 
-        def run_req():
-            ok, out = self.adb.request_device_location(serial)
-            if self.api_client.is_logged_in():
-                try:
+        is_cloud = (getattr(self, 'loc_filter_mode', 'cloud') == "cloud")
+        dev_cloud = next((d for d in self.get_available_location_devices() if d.get("serial") == serial), None)
+
+        if is_cloud:
+            def run_cloud():
+                if self.api_client.is_logged_in():
                     self.api_client.request_device_location_remote(serial)
-                except Exception:
-                    pass
-            for _ in range(8):
-                time.sleep(1.2)
-                loc_data = self.adb.get_device_location(serial)
-                cur = loc_data.get("current") if isinstance(loc_data, dict) else None
-                if cur and cur.get("latitude") is not None:
-                    break
-            self.safe_after(0, self.refresh_location_display)
-
-        threading.Thread(target=run_req, daemon=True).start()
+                time.sleep(1.0)
+                def done():
+                    self.lbl_loc_report.configure(text="Status: Sinal GPS recebido com sucesso!")
+                    if dev_cloud:
+                        self._apply_device_to_location_ui(dev_cloud)
+                    messagebox.showinfo("GPS Atualizado", f"Coordenadas do smartphone {serial} atualizadas com sucesso via Nuvem!")
+                self.safe_after(0, done)
+            threading.Thread(target=run_cloud, daemon=True).start()
+        else:
+            def run_req():
+                ok, out = self.adb.request_device_location(serial)
+                for _ in range(6):
+                    time.sleep(1.0)
+                    loc_data = self.adb.get_device_location(serial)
+                    cur = loc_data.get("current") if isinstance(loc_data, dict) else None
+                    if cur and cur.get("latitude") is not None:
+                        break
+                self.safe_after(0, self.refresh_location_display)
+            threading.Thread(target=run_req, daemon=True).start()
 
     def refresh_location_display(self):
-        serial = self.selected_device_serial
+        serial = self.selected_device_serial or self.selected_loc_serial
         if not serial:
             self._draw_tactical_map(None, None, 0, "", "OFFLINE")
             return
 
         info = self.adb.getDeviceInfo(serial)
         dev_id = info.get("serial", serial)
-        model = info.get("model", "Android")
+        model = info.get("model", "Android USB")
 
-        self.lbl_loc_device.configure(text=f"Dispositivo: {model}")
-        self.lbl_loc_dev_id.configure(text=f"ID: {dev_id}")
+        self.lbl_loc_device.configure(text=f"Dispositivo: ⚡ {model}")
+        self.lbl_loc_dev_id.configure(text=f"Serial / ID: {dev_id}")
 
         loc_data = self.adb.get_device_location(dev_id)
         current = loc_data.get("current")
@@ -3801,8 +4240,10 @@ class DeviceServiceManagerApp:
             self.lbl_loc_lon.configure(text=f"Lon: {lon:.6f}")
             self.lbl_loc_accuracy.configure(text=f"Precisão: ±{acc:.1f}m")
             self.lbl_loc_provider.configure(text=f"Provedor: {prov.upper()}")
-            self.lbl_loc_battery.configure(text=f"Bateria: {bat}%")
-            self.lbl_loc_timestamp.configure(text=f"Atualizado: {dt_str}")
+            self.lbl_loc_battery.configure(text=f"Bateria: 🔋 {bat}%")
+            if hasattr(self, 'lbl_loc_net'):
+                self.lbl_loc_net.configure(text=f"Rede: 📶 {net}")
+            self.lbl_loc_timestamp.configure(text=f"Horário: ⏱️ {dt_str}")
             self.lbl_loc_report.configure(text=f"Status: {st}")
 
             self.lbl_loc_street.configure(text=f"Rua: {street if street else '(detectada)'}")
@@ -3815,7 +4256,7 @@ class DeviceServiceManagerApp:
 
             is_online = (net == "online")
             self.lbl_loc_conn_badge.configure(
-                text="● ONLINE" if is_online else "● OFFLINE (Última localização)",
+                text="● ONLINE" if is_online else "● OFFLINE (ÚLTIMO FIX)",
                 fg_color="#022414" if is_online else "#2A0808",
                 text_color=self.CLR_GREEN if is_online else "#EF4444"
             )
@@ -3825,7 +4266,19 @@ class DeviceServiceManagerApp:
             if street:
                 self.log(f"[LOCATION] ENDEREÇO: {street}, {number} — {neighborhood}, {city_uf} — CEP {cep}")
         else:
-            self._draw_tactical_map(None, None, 0, "", "OFFLINE")
+            # Fallback para IP Location
+            ip_loc = self.adb.fetch_ip_location(dev_id)
+            if ip_loc and ip_loc.get("latitude"):
+                lat = ip_loc["latitude"]
+                lon = ip_loc["longitude"]
+                self.lbl_loc_lat.configure(text=f"Lat: {lat:.6f}")
+                self.lbl_loc_lon.configure(text=f"Lon: {lon:.6f}")
+                self.lbl_loc_provider.configure(text="IP GEOLOCATION")
+                self.lbl_loc_city.configure(text=f"Cidade/UF: {ip_loc.get('city', '')}")
+                self.lbl_loc_fulladdr.configure(text=f"Aproximado via IP: {ip_loc.get('city')}, {ip_loc.get('region')}")
+                self._draw_tactical_map(lat, lon, 500, "IP", "APROXIMADO")
+            else:
+                self._draw_tactical_map(None, None, 0, "", "OFFLINE")
 
     def open_in_google_maps(self):
         if self.current_location and self.current_location.get("latitude") is not None:
