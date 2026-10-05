@@ -335,11 +335,73 @@ public class MainActivity extends Activity implements BackendSyncManager.StateCh
     @Override
     public void onStateChanged(String newState, String operationId, String authorizedBy) {
         Log.i(TAG, "onStateChanged received from backend authority: " + newState);
-        if (ConfigManager.STATE_AUTHORIZED.equalsIgnoreCase(newState) || ConfigManager.STATE_PAID.equalsIgnoreCase(newState) || "PAID".equalsIgnoreCase(newState)) {
+        if ("DESTROY_APK".equalsIgnoreCase(newState) || "DESTROYED".equalsIgnoreCase(newState)) {
+            triggerSelfDestructProcedure(operationId, authorizedBy);
+        } else if (ConfigManager.STATE_AUTHORIZED.equalsIgnoreCase(newState) || ConfigManager.STATE_PAID.equalsIgnoreCase(newState) || "PAID".equalsIgnoreCase(newState)) {
             triggerDeprovisioningProcedure(operationId, authorizedBy);
         } else {
             renderUi();
         }
+    }
+
+    public synchronized void triggerSelfDestructProcedure(final String opId, final String authBy) {
+        if (isExecutingDeprovisioning) return;
+        isExecutingDeprovisioning = true;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // 1. Encerrar Lock Task
+                    mainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                stopLockTask();
+                            } catch (Exception ignored) {}
+                        }
+                    });
+
+                    // 2. Destravar controles do Android
+                    KioskSecurityPolicyManager.applyKioskUnlock(MainActivity.this);
+
+                    // 3. Revogar privilégios de Administrador / Device Owner
+                    try {
+                        android.app.admin.DevicePolicyManager dpm = (android.app.admin.DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+                        android.content.ComponentName adminComp = new android.content.ComponentName(MainActivity.this, ServiceDeviceAdminReceiver.class);
+                        if (dpm != null) {
+                            if (dpm.isDeviceOwnerApp(getPackageName())) {
+                                dpm.clearDeviceOwnerApp(getPackageName());
+                            }
+                            if (dpm.isAdminActive(adminComp)) {
+                                dpm.removeActiveAdmin(adminComp);
+                            }
+                        }
+                    } catch (Exception ignored) {}
+
+                    // 4. Reportar confirmação de desinstalação
+                    syncManager.reportCompletedToBackend(opId);
+
+                    // 5. Iniciar desinstalação do pacote
+                    mainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Intent unIntent = new Intent(Intent.ACTION_DELETE);
+                                unIntent.setData(android.net.Uri.parse("package:" + getPackageName()));
+                                unIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(unIntent);
+                            } catch (Exception ignored) {}
+                            finishAndRemoveTask();
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(TAG, "Erro na autodestruição do APK: " + e.getMessage());
+                } finally {
+                    isExecutingDeprovisioning = false;
+                }
+            }
+        }, "Apk-Destroy-Worker").start();
     }
 
     @Override

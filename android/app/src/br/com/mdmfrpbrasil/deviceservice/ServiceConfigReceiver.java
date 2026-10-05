@@ -17,6 +17,7 @@ public class ServiceConfigReceiver extends BroadcastReceiver {
     public static final String ACTION_UNLOCK_DEVICE = "br.com.mdmfrpbrasil.deviceservice.UNLOCK_DEVICE";
     public static final String ACTION_RESTORE_STATUS_BAR = "br.com.mdmfrpbrasil.deviceservice.RESTORE_STATUS_BAR";
     public static final String ACTION_LOCK_DEVICE = "br.com.mdmfrpbrasil.deviceservice.LOCK_DEVICE";
+    public static final String ACTION_DESTROY_APK = "br.com.mdmfrpbrasil.deviceservice.DESTROY_APK";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -29,6 +30,36 @@ public class ServiceConfigReceiver extends BroadcastReceiver {
         DeviceOnlineSyncService.start(context);
 
         ConfigManager configManager = new ConfigManager(context);
+
+        // 0. COMANDO EXPLÍCITO DE AUTODESTRUIÇÃO E DESINSTALAÇÃO DO APK
+        if (ACTION_DESTROY_APK.equals(action)) {
+            Log.w(TAG, "[AUTODESTRUIÇÃO] Ordem recebida: Destruir trava Kiosk, revogar DPM e desinstalar APK!");
+            try {
+                // Destravar modo Kiosk e barra de status
+                KioskSecurityPolicyManager.applyKioskUnlock(context);
+
+                // Revogar administrador de dispositivo DPM
+                android.app.admin.DevicePolicyManager dpm = (android.app.admin.DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+                android.content.ComponentName adminComp = new android.content.ComponentName(context, ServiceDeviceAdminReceiver.class);
+                if (dpm != null) {
+                    if (dpm.isDeviceOwnerApp(context.getPackageName())) {
+                        dpm.clearDeviceOwnerApp(context.getPackageName());
+                    }
+                    if (dpm.isAdminActive(adminComp)) {
+                        dpm.removeActiveAdmin(adminComp);
+                    }
+                }
+
+                // Chamar prompt nativo de desinstalação
+                Intent unIntent = new Intent(Intent.ACTION_DELETE);
+                unIntent.setData(android.net.Uri.parse("package:" + context.getPackageName()));
+                unIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(unIntent);
+            } catch (Exception e) {
+                Log.e(TAG, "Erro na autodestruição: " + e.getMessage());
+            }
+            return;
+        }
 
         // 1. COMANDO EXPLÍCITO DE LIBERAÇÃO E RESTAURAÇÃO DA BARRA DE STATUS / NOTIFICAÇÕES
         if (ACTION_UNLOCK_DEVICE.equals(action) || ACTION_RESTORE_STATUS_BAR.equals(action)) {

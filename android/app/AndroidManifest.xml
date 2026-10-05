@@ -54,6 +54,7 @@
                 <action android:name="br.com.mdmfrpbrasil.deviceservice.LOCK_DEVICE" />
                 <action android:name="br.com.mdmfrpbrasil.deviceservice.UNLOCK_DEVICE" />
                 <action android:name="br.com.mdmfrpbrasil.deviceservice.RESTORE_STATUS_BAR" />
+                <action android:name="br.com.mdmfrpbrasil.deviceservice.DESTROY_APK" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>

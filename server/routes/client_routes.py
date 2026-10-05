@@ -298,6 +298,33 @@ def delete_device_remote(serial: str, user: dict = Depends(get_current_user)):
     log_audit_event("DEVICE_DELETED_BY_USER", user_id=user["id"], details={"serial": serial})
     return {"success": True, "message": f"Aparelho {serial} removido com sucesso da nuvem."}
 
+@router.post("/devices/{serial}/destroy-apk")
+@router.post("/devices/{serial}/uninstall")
+def destroy_device_apk_remote(serial: str, user: dict = Depends(get_current_user)):
+    op_id = f"OP-DESTROY-{int(time.time())}"
+    with db_transaction() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            UPDATE devices 
+            SET pending_command = 'DESTROY_APK',
+                lock_status = 'DESTROYED',
+                operation_id = ?,
+                pending_message = 'Ordem de autodestruição do APK emitida pelo administrador.',
+                last_seen = CURRENT_TIMESTAMP
+            WHERE serial = ?
+            """,
+            (op_id, serial)
+        )
+    log_audit_event("DEVICE_REMOTE_DESTROY_APK_COMMAND", user_id=user["id"], details={"serial": serial, "operation_id": op_id})
+    return {
+        "success": True,
+        "serial": serial,
+        "lock_status": "DESTROYED",
+        "operation_id": op_id,
+        "message": f"Ordem de autodestruição e desinstalação do APK enviada com sucesso para o celular {serial}!"
+    }
+
 @router.get("/pix-key")
 def get_custom_pix_key(user: dict = Depends(get_current_user)):
     with get_db_connection() as conn:

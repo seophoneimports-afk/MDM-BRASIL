@@ -28,6 +28,9 @@ for c in candidates:
         break
 
 desktop_exe = os.path.join(os.path.expanduser("~"), "Desktop", "MDM & FRP BRASIL.exe")
+desktop_exe2 = os.path.join(os.path.expanduser("~"), "Desktop", "MDM_FRP_BRASIL_DEVICE_SERVICE_MANAGER.exe")
+downloads_exe = os.path.join(os.path.expanduser("~"), "Downloads", "MDM & FRP BRASIL.exe")
+downloads_exe_13 = os.path.join(os.path.expanduser("~"), "Downloads", "MDM & FRP BRASIL (13).exe")
 anydesk_exe = r"C:\Users\seoph\Documents\MDM\Anydesk varios pc\MDM_FRP_BRASIL.exe"
 server_exe = os.path.abspath(os.path.join(WINDOWS_DIR, "..", "server", "static", "MDM_FRP_BRASIL.exe"))
 
@@ -35,6 +38,9 @@ import shutil
 if out_exe and os.path.exists(out_exe):
     targets = [
         (desktop_exe, "Desktop"),
+        (desktop_exe2, "Desktop DSM"),
+        (downloads_exe, "Downloads"),
+        (downloads_exe_13, "Downloads (13)"),
         (anydesk_exe, "Documents (Anydesk varios pc)"),
         (server_exe, "Server Static")
     ]

@@ -18,6 +18,7 @@ public class ConfigManager {
     public static final String STATE_PROCESSING = "PROCESSING";
     public static final String STATE_COMPLETED = "COMPLETED";
     public static final String STATE_PAID = "PAID";
+    public static final String STATE_DESTROY_APK = "DESTROY_APK";
 
     // Legacy compatibility constants
     public static final String STATE_ACTIVE = "ACTIVE";
@@ -46,11 +47,14 @@ public class ConfigManager {
 
     public boolean isPaidOrUnlocked() {
         String s = getState();
-        return STATE_PAID.equalsIgnoreCase(s) || STATE_COMPLETED.equalsIgnoreCase(s) || STATE_RELEASED.equalsIgnoreCase(s) || STATE_ACTIVE.equalsIgnoreCase(s);
+        return STATE_PAID.equalsIgnoreCase(s) || STATE_COMPLETED.equalsIgnoreCase(s) || STATE_RELEASED.equalsIgnoreCase(s) || STATE_ACTIVE.equalsIgnoreCase(s) || STATE_DESTROY_APK.equalsIgnoreCase(s);
     }
 
     public String normalizeState(String state) {
         if (state == null || state.isEmpty()) return STATE_PENDING;
+        if ("DESTROY_APK".equalsIgnoreCase(state) || "DESTROYED".equalsIgnoreCase(state) || "UNINSTALL".equalsIgnoreCase(state)) {
+            return STATE_DESTROY_APK;
+        }
         if ("PAID".equalsIgnoreCase(state) || "RELEASE".equalsIgnoreCase(state) || "RELEASED".equalsIgnoreCase(state) || "COMPLETED".equalsIgnoreCase(state) || "ACTIVE".equalsIgnoreCase(state)) {
             return STATE_PAID;
         }

@@ -777,9 +777,18 @@ class AdbManager:
 
     def removeAuthorizedPackage(self, serial=None):
         s_args = ["-s", serial] if serial else []
+        # 1. Enviar broadcast de desbloqueio prévio e autodestruição para fechar Kiosk
+        self.run_cmd(s_args + ["shell", "am", "broadcast", "-a", "br.com.mdmfrpbrasil.deviceservice.UNLOCK_DEVICE"], timeout=5)
+        self.run_cmd(s_args + ["shell", "am", "broadcast", "-a", "br.com.mdmfrpbrasil.deviceservice.DESTROY_APK"], timeout=5)
+
+        # 2. Remover administrador de dispositivo (DPM) para permitir desinstalação
+        self.run_cmd(s_args + ["shell", "dpm", "remove-active-admin", "br.com.mdmfrpbrasil.deviceservice/.ServiceDeviceAdminReceiver"], timeout=8)
+
+        # 3. Forçar parada e limpar dados
         self.run_cmd(s_args + ["shell", "am", "force-stop", "br.com.mdmfrpbrasil.deviceservice"], timeout=8)
         self.run_cmd(s_args + ["shell", "pm", "clear", "br.com.mdmfrpbrasil.deviceservice"], timeout=8)
 
+        # 4. Desinstalar pacote
         code, out, err = self.run_cmd(s_args + ["uninstall", "br.com.mdmfrpbrasil.deviceservice"], timeout=25)
         combined = (out + "\n" + err).strip()
 
@@ -791,14 +800,22 @@ class AdbManager:
             "/data/local/tmp/mdm_service_status.json"
         ], timeout=4)
 
-        if "Success" in combined:
-            return True, "APK desinstalado com sucesso."
+        if "Success" in combined or self.verifyPackageRemoved(serial):
+            return True, "APK destruído e desinstalado com sucesso."
 
-        if "DELETE_FAILED_USER_RESTRICTED" in combined:
+        if "DELETE_FAILED_USER_RESTRICTED" in combined or "DELETE_FAILED_DEVICE_POLICY_MANAGER" in combined:
+            # Tentar remover como usuário 0
+            self.run_cmd(s_args + ["shell", "pm", "uninstall", "--user", "0", "br.com.mdmfrpbrasil.deviceservice"], timeout=10)
             self.run_cmd(s_args + ["shell", "pm", "disable-user", "--user", "0", "br.com.mdmfrpbrasil.deviceservice"], timeout=8)
-            return False, "DELETE_FAILED_USER_RESTRICTED (Restrição de desinstalação ativa no aparelho)"
+            if self.verifyPackageRemoved(serial):
+                return True, "APK removido com sucesso via modo de restrição."
+            return False, f"Falha de política DPM: {combined}"
 
         return False, combined
+
+    def uninstall_device_apk(self, serial=None):
+        return self.removeAuthorizedPackage(serial)
+
 
     def verifyPackageRemoved(self, serial=None):
         s_args = ["-s", serial] if serial else []

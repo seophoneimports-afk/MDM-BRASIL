@@ -38,5 +38,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['C:/Users/seoph/.gemini/antigravity/scratch/mdm-frp-brasil-device-service-manager/windows/app_icon.ico'],
+    icon=['C:/Users/seoph/.gemini/antigravity/scratch/mdm_repo_clone/windows/app_icon.ico'],
 )

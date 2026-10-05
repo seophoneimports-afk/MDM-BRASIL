@@ -229,6 +229,12 @@ class ApiClient:
             return False, {"error": "AUTH_REQUIRED", "message": "Faça login para remover aparelho."}
         return self._request("DELETE", f"/api/v1/client/devices/{urllib.parse.quote(serial)}")
 
+    def destroy_device_apk_remote(self, serial: str) -> tuple[bool, dict]:
+        if not self.token:
+            return False, {"error": "AUTH_REQUIRED", "message": "Faça login para comandar a destruição do APK."}
+        return self._request("POST", f"/api/v1/client/devices/{urllib.parse.quote(serial)}/destroy-apk")
+
+
     def save_session(self):
         try:
             cipher = _get_encryption_cipher()

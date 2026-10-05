@@ -2279,10 +2279,10 @@
       position: relative;
     }
     .phone-mockup-frame {
-      width: 326px;
-      height: 676px;
-      background: #0B0F19;
-      border-radius: 44px;
+      width: 350px;
+      height: 720px;
+      background: #020604;
+      border-radius: 46px;
       border: 8px solid #1E293B;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(255, 255, 255, 0.1);
       position: relative;
@@ -4478,6 +4478,9 @@
                 <button id="btnTriggerAlarm" type="button" style="width: 100% !important; padding: 10px 14px; font-size: 11.5px; font-weight: 800; background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.28) 100%); border: 1.5px solid #F59E0B; color: #FBBF24; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 3px 12px rgba(245, 158, 11, 0.2);" onclick="triggerSirenSelected()">
                   🚨 Disparar Alarme Sonoro (Sirene Antifurto)
                 </button>
+                <button id="btnQuickDestroyApk" type="button" style="width: 100% !important; padding: 10px 14px; font-size: 11.5px; font-weight: 800; background: linear-gradient(135deg, rgba(220, 38, 38, 0.22) 0%, rgba(185, 28, 28, 0.3) 100%); border: 1.5px solid #EF4444; color: #FCA5A5; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 3px 12px rgba(220, 38, 38, 0.2);" onclick="quickDestroySelected()" title="Desinstalar e apagar o aplicativo do celular via nuvem">
+                  💥 Destruir APK do Celular (Desinstalar Remoto)
+                </button>
               </div>
             </div>
           </div>
@@ -4578,7 +4581,7 @@
                     <span class="apk-layout-pill pill-default">PADRÃO ORIGINAL</span>
                   </div>
                   <div class="apk-layout-title">1. Padrão Oficial do Projeto</div>
-                  <div class="apk-layout-desc">Visual clássico MDM FRP BRASIL com banner de segurança DPC vermelho, logo circular, QR Code PIX centralizado e chamada rápida.</div>
+                  <div class="apk-layout-desc">Visual oficial do APK com cabeçalho MDM, telemetria de 2 colunas (Aparelho e Contrato), QR Code PIX split e rodapé técnico estruturado.</div>
                   <div class="apk-layout-check">✓ Selecionado</div>
                 </div>
 
@@ -4667,13 +4670,23 @@
                 <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Nome da Loja / Assistência (exibido no topo do celular)</label>
                 <input type="text" id="portalBrandAppName" class="form-control" value="SEOPHONE ASSISTÊNCIA TÉCNICA" oninput="updatePortalPhoneMockup()">
               </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                <div>
+                  <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Modelo do Celular</label>
+                  <input type="text" id="portalBrandDeviceModel" class="form-control" value="Samsung Galaxy S21 FE 5G (SM-G990E)" oninput="updatePortalPhoneMockup()">
+                </div>
+                <div>
+                  <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Número do Contrato / ID</label>
+                  <input type="text" id="portalBrandContract" class="form-control" value="Contrato #104 • ID: RQCTA06T67T" oninput="updatePortalPhoneMockup()">
+                </div>
+              </div>
               <div style="margin-bottom: 12px;">
                 <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">WhatsApp de Suporte (botão de chamada rápida no celular)</label>
                 <input type="text" id="portalBrandPhone" class="form-control" value="(19) 99478-3127" oninput="updatePortalPhoneMockup()">
               </div>
               <div>
                 <label style="color: var(--text-muted); font-size: 11.5px; display: block; margin-bottom: 4px;">Mensagem de Bloqueio Personalizada</label>
-                <textarea id="portalBrandMessage" class="form-control" style="min-height: 70px; resize: vertical;" oninput="updatePortalPhoneMockup()">AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para regularização imediata em 30 segundos, realize o pagamento via PIX ou contate nosso suporte.</textarea>
+                <textarea id="portalBrandMessage" class="form-control" style="min-height: 60px; resize: vertical;" oninput="updatePortalPhoneMockup()">Após realizar o pagamento via PIX, aguarde a confirmação do administrador para liberação do dispositivo.</textarea>
               </div>
             </div>
 
@@ -7011,6 +7024,11 @@
               <button type="button" onclick="window.open('https://www.google.com/maps?q=${lat},${lon}', '_blank'); event.stopPropagation();" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #CBD5E1; padding: 7px 10px; border-radius: 8px; font-size: 10.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer;">
                 🗺️ Google Maps
               </button>
+
+              <!-- BOTAO DESTRUIR APK DO CELULAR -->
+              <button type="button" onclick="remoteDestroyApk('${escapeJs(d.serial)}'); event.stopPropagation();" style="grid-column: 1 / -1; background: rgba(185, 28, 28, 0.22); border: 1.5px solid #EF4444; color: #FCA5A5; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.2s;" title="Remover MDM e desinstalar o aplicativo do aparelho permanentemente">
+                💥 Destruir APK do Celular
+              </button>
             </div>
           `;
           cardsGrid.appendChild(card);
@@ -7045,6 +7063,9 @@
                 ? `<button type="button" class="btn-green" style="padding: 5px 10px; font-size: 10.5px; font-weight: 800; border-radius: 6px; width: auto !important;" onclick="remoteUnlockDevice('${escapeJs(d.serial)}')">🔓 Liberar</button>`
                 : `<button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 10.5px; font-weight: 800; background: #DC2626; border-color: #EF4444; border-radius: 6px; width: auto !important;" onclick="remoteLockDevice('${escapeJs(d.serial)}')">🔒 Bloquear</button>`
               }
+              <button type="button" class="btn-sm" style="padding: 5px 10px; font-size: 10.5px; font-weight: 800; background: rgba(185, 28, 28, 0.25); border: 1px solid #EF4444; color: #FCA5A5; border-radius: 6px; width: auto !important;" onclick="remoteDestroyApk('${escapeJs(d.serial)}')">
+                💥 Destruir APK
+              </button>
             </div>
           `;
 
@@ -7359,6 +7380,67 @@
       remoteAlarmDevice(serial);
     }
 
+    async function remoteDestroyApk(serial) {
+      if (!confirm(`💥 ATENÇÃO — DESTRUIR APK DO CELULAR:\n\nDeseja realmente emitir a ordem de AUTODESTRUIÇÃO e DESINSTALAÇÃO para o smartphone ${serial}?\n\nAssim que o aparelho receber esta ordem via internet:\n1. A tela Kiosk de bloqueio será desligada na hora\n2. Os privilégios de Administrador/MDM serão desativados\n3. O aplicativo será desinstalado permanentemente do celular\n\nConfirmar autodestruição do APK?`)) {
+        return;
+      }
+      const alertEl = document.getElementById("deviceActionAlert");
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "rgba(239, 68, 68, 0.18)";
+        alertEl.style.border = "1px solid #EF4444";
+        alertEl.style.color = "#FCA5A5";
+        alertEl.textContent = `💥 Enviando ordem de autodestruição do APK para ${serial}...`;
+      }
+
+      const isDemo = !token || ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(serial);
+      if (isDemo) {
+        setTimeout(() => {
+          const dev = allDevicesCache.find(x => x.serial === serial);
+          if (dev) {
+            dev.lock_status = 'DESTROYED';
+            dev.pending_command = 'DESTROY_APK';
+          }
+          if (alertEl) {
+            alertEl.style.background = "rgba(239, 68, 68, 0.22)";
+            alertEl.style.border = "1px solid #EF4444";
+            alertEl.style.color = "#FECACA";
+            alertEl.textContent = `💥 Ordem de autodestruição e remoção do APK enviada com sucesso para ${serial}!`;
+          }
+          renderDevicesTable(allDevicesCache);
+          selectDeviceOnMap(serial);
+        }, 400);
+        return;
+      }
+
+      try {
+        const res = await api('/api/v1/client/devices/' + encodeURIComponent(serial) + '/destroy-apk', 'POST');
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.22)";
+          alertEl.style.border = "1px solid #EF4444";
+          alertEl.style.color = "#FECACA";
+          alertEl.textContent = "💥 " + (res.message || "Ordem de autodestruição do APK enviada com sucesso!");
+        }
+        await loadDevices();
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.2)";
+          alertEl.style.border = "1px solid var(--danger)";
+          alertEl.style.color = "#FFF";
+          alertEl.textContent = "Erro ao enviar autodestruição: " + err.message;
+        }
+      }
+    }
+
+    function quickDestroySelected() {
+      const serial = currentSelectedDevice ? currentSelectedDevice.serial : (allDevicesCache[0] ? allDevicesCache[0].serial : null);
+      if (serial) {
+        remoteDestroyApk(serial);
+      } else {
+        alert("Selecione um aparelho na lista primeiro.");
+      }
+    }
+
     function toggleMobileSidebar() {
       const side = document.querySelector('.sidebar-portal-nav');
       if (side) side.classList.toggle('open-mobile');
@@ -7525,297 +7607,469 @@
       const inVal = document.getElementById("portalBrandPixVal");
       const inPixKey = document.getElementById("portalBrandPixKey");
       const inLogo = document.getElementById("portalBrandingLogoPreview");
+      const inModel = document.getElementById("portalBrandDeviceModel");
+      const inContract = document.getElementById("portalBrandContract");
 
       const name = (inName && inName.value.trim()) || 'SEOPHONE ASSISTÊNCIA TÉCNICA';
       const phone = (inPhone && inPhone.value.trim()) || '(19) 99478-3127';
-      const msg = (inMsg && inMsg.value.trim()) || 'AVISO DE SEGURANÇA: Este aparelho possui restrição financeira ativa de parcelamento. Para regularização imediata em 30 segundos, realize o pagamento via PIX ou contate nosso suporte.';
+      const msg = (inMsg && inMsg.value.trim()) || 'Após realizar o pagamento via PIX, aguarde a confirmação do administrador para liberação do dispositivo.';
       const val = (inVal && inVal.value.trim()) || 'R$ 150,00';
       const pixKey = (inPixKey && inPixKey.value.trim()) || '19994783127';
       const logoUrl = (inLogo && inLogo.src) || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80';
+      const model = (inModel && inModel.value.trim()) || 'Samsung Galaxy S21 FE 5G (SM-G990E)';
+      const contract = (inContract && inContract.value.trim()) || 'Contrato #104 • ID: RQCTA06T67T';
 
       const cleanPixKey = encodeURIComponent(pixKey);
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=00020126580014br.gov.bcb.pix0136${cleanPixKey}5204000053039865406150.005802BR5913MDMBRASIL6009CAMPINAS62070503***6304`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=00020126580014br.gov.bcb.pix0136${cleanPixKey}5204000053039865406150.005802BR5913MDMBRASIL6009CAMPINAS62070503***6304`;
 
       const safeName = escapeHtml(name);
       const safePhone = escapeHtml(phone);
       const safeMsg = escapeHtml(msg);
       const safeVal = escapeHtml(val);
+      const safeModel = escapeHtml(model);
+      const safeContract = escapeHtml(contract);
 
       if (currentApkLayout === 'cyber_neon') {
         container.innerHTML = `
-          <div style="flex: 1; display: flex; flex-direction: column; padding: 10px 12px 14px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at top, rgba(0, 229, 255, 0.15) 0%, rgba(4, 7, 16, 0.98) 70%); font-family: 'JetBrains Mono', monospace;">
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px; font-size: 8.5px; color: #00E5FF; border-bottom: 1px dashed rgba(0, 229, 255, 0.3); padding-bottom: 4px;">
-                <span>[ SYS_LOCK // V4 ]</span>
-                <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; background: #FF0055; border-radius: 50%; box-shadow: 0 0 6px #FF0055;"></span> RESTRICTED</span>
-              </div>
+          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 10px 12px 10px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at top, rgba(0, 229, 255, 0.16) 0%, rgba(4, 7, 16, 0.98) 75%); font-family: 'JetBrains Mono', monospace; text-align: center;">
+            <!-- TOP HUD BAR -->
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; font-size: 8px; color: #00E5FF; border-bottom: 1px dashed rgba(0, 229, 255, 0.35); padding-bottom: 4px;">
+              <span>[ SYS_LOCK // V4 ]</span>
+              <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; background: #FF0055; border-radius: 50%; box-shadow: 0 0 6px #FF0055;"></span> RESTRICTED</span>
+            </div>
 
-              <div style="position: relative; margin-bottom: 6px;">
-                <div style="width: 58px; height: 58px; border-radius: 14px; background: #060B18; border: 2px solid #00E5FF; box-shadow: 0 0 16px rgba(0, 229, 255, 0.5), inset 0 0 8px rgba(0, 229, 255, 0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <!-- HEADER CYBER LOGO + NOME -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div style="position: relative; margin-bottom: 4px;">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: #060B18; border: 2px solid #00E5FF; box-shadow: 0 0 14px rgba(0, 229, 255, 0.5), inset 0 0 6px rgba(0, 229, 255, 0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
                   <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <span style="position: absolute; bottom: -4px; right: -4px; background: #FF0055; color: #FFF; font-size: 7.5px; font-weight: 900; padding: 1px 4px; border-radius: 4px; border: 1px solid #FFF;">DPC</span>
+                <span style="position: absolute; bottom: -3px; right: -3px; background: #FF0055; color: #FFF; font-size: 7px; font-weight: 900; padding: 1px 3px; border-radius: 3px; border: 1px solid #FFF;">DPC</span>
               </div>
+              <div style="font-size: 12px; font-weight: 900; color: #FFF; letter-spacing: 0.4px; text-transform: uppercase; text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);" id="portalPhoneTitle">${safeName}</div>
+            </div>
 
-              <div style="font-size: 12.5px; font-weight: 900; color: #FFF; letter-spacing: 0.4px; text-transform: uppercase; text-shadow: 0 0 8px rgba(0, 229, 255, 0.6); text-align: center; margin-bottom: 6px;" id="portalPhoneTitle">
-                ${safeName}
+            <!-- CYBER TELEMETRIA: DISPOSITIVO & CONTRATO (2 COLUNAS) -->
+            <div style="width: 100%; background: rgba(6, 11, 24, 0.9); border: 1px solid rgba(0, 229, 255, 0.35); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #00E5FF; font-weight: 800;">[HW_MODEL]</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneModel">${safeModel}</div>
+                <div style="font-size: 6.5px; color: #64748B;">VERIFIED_NODE</div>
               </div>
-
-              <div style="background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(0, 229, 255, 0.35); border-left: 3px solid #00E5FF; border-radius: 6px; padding: 6px 8px; font-size: 8.5px; color: #7DD3FC; width: 100%; box-sizing: border-box; margin-bottom: 8px; line-height: 1.35;" id="portalPhoneMsg">
-                <div style="color: #FF0055; font-weight: 800; margin-bottom: 2px;">&gt; PROTOCOLO DE SEGURANÇA ATIVO</div>
-                ${safeMsg}
-              </div>
-
-              <div style="width: 100%; background: rgba(6, 11, 24, 0.9); border: 1px solid rgba(0, 229, 255, 0.4); box-shadow: 0 0 14px rgba(0, 229, 255, 0.18); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;">
-                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 7.5px; color: #94A3B8; margin-bottom: 3px;">
-                  <span>AUTOLIBERAÇÃO PIX</span>
-                  <span style="color: #00E5FF;">0.4s LATENCY</span>
-                </div>
-                <div style="position: relative; padding: 3px; background: #000; border: 1px dashed rgba(0, 229, 255, 0.5); border-radius: 6px;">
-                  <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 82px; height: 82px; background: #FFF; padding: 3px; border-radius: 4px; display: block;">
-                </div>
-                <div style="font-size: 13px; font-weight: 900; color: #00E5FF; margin-top: 4px; text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);" id="portalPhoneVal">
-                  ${safeVal}
-                </div>
+              <div style="width: 1px; height: 26px; background: rgba(0, 229, 255, 0.3); margin: 0 6px;"></div>
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #00E5FF; font-weight: 800;">[CONTRACT_ID]</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #00E5FF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneContract">${safeContract}</div>
+                <div style="font-size: 6.5px; color: #64748B;">POLICY_ENFORCED</div>
               </div>
             </div>
 
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 5px;">
-              <button type="button" style="width: 100%; background: linear-gradient(90deg, #00E5FF 0%, #7C3AED 100%); color: #FFF; border: none; padding: 8px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 0 14px rgba(0, 229, 255, 0.4); cursor: pointer; text-transform: uppercase;">
+            <!-- NOTICE TERMINAL -->
+            <div style="background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(0, 229, 255, 0.35); border-left: 3px solid #00E5FF; border-radius: 6px; padding: 5px 8px; font-size: 7.5px; color: #7DD3FC; width: 100%; box-sizing: border-box; text-align: left; line-height: 1.3;" id="portalPhoneMsg">
+              <div style="color: #FF0055; font-weight: 800; margin-bottom: 2px;">&gt; PROTOCOLO DE SEGURANÇA ATIVO</div>
+              ${safeMsg}
+            </div>
+
+            <!-- CYBER PIX CARD -->
+            <div style="width: 100%; background: rgba(6, 11, 24, 0.95); border: 1px solid rgba(0, 229, 255, 0.4); box-shadow: 0 0 14px rgba(0, 229, 255, 0.18); border-radius: 8px; padding: 7px; display: flex; align-items: center; gap: 10px; box-sizing: border-box;">
+              <div style="position: relative; padding: 2px; background: #000; border: 1px dashed rgba(0, 229, 255, 0.5); border-radius: 6px; flex-shrink: 0;">
+                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 84px; height: 84px; background: #FFF; padding: 2px; border-radius: 4px; display: block;">
+              </div>
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7.5px; color: #94A3B8;">AUTOLIBERAÇÃO PIX</div>
+                <div style="font-size: 9.5px; color: #00E5FF; font-weight: 800; margin: 2px 0;">0.4s LATENCY</div>
+                <div style="font-size: 7px; color: #64748B;">VALOR REGULARIZAÇÃO:</div>
+                <div style="font-size: 16px; font-weight: 900; color: #00E5FF; text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);" id="portalPhoneVal">${safeVal}</div>
+              </div>
+            </div>
+
+            <!-- BOTOES DE ACAO -->
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
+              <button type="button" style="width: 100%; background: linear-gradient(90deg, #00E5FF 0%, #7C3AED 100%); color: #FFF; border: none; padding: 7px 10px; border-radius: 6px; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 0 14px rgba(0, 229, 255, 0.4); cursor: pointer; text-transform: uppercase;">
                 ⚡ <span id="portalPhoneWaBtn">SUPORTE: ${safePhone}</span>
               </button>
-              <button type="button" style="width: 100%; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.4); color: #00E5FF; padding: 6px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
+              <button type="button" style="width: 100%; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.4); color: #00E5FF; padding: 5px 8px; border-radius: 6px; font-size: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
                 🔓 [ INSERIR TOKEN DE DESBLOQUEIO ]
               </button>
-              <div style="font-size: 7.5px; color: #64748B; text-align: center; margin-top: 2px;">
-                NODE_ID: 358941092847120 // HARDWARE CRYPTO LOCK
-              </div>
+            </div>
+
+            <!-- FOOTER TELEMETRIA -->
+            <div style="font-size: 7px; color: #64748B; text-align: center; line-height: 1.2;">
+              NODE_ID: RQCTA06T67T // HARDWARE CRYPTO LOCK // CLOUD V4
             </div>
           </div>
         `;
       } else if (currentApkLayout === 'clean_fintech') {
         container.innerHTML = `
-          <div style="flex: 1; display: flex; flex-direction: column; padding: 12px 14px 14px; width: 100%; box-sizing: border-box; justify-content: space-between; background: linear-gradient(180deg, #0D1629 0%, #080D1A 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-              <div style="display: inline-flex; align-items: center; gap: 5px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #10B981; font-size: 8.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px;">
-                🛡️ Regularização Financeira Segura
-              </div>
-
-              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;">
-                <div style="width: 22px; height: 22px; border-radius: 50%; overflow: hidden; border: 1.5px solid #10B981;">
-                  <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <span style="font-size: 11px; font-weight: 700; color: #FFF;" id="portalPhoneTitle">${safeName}</span>
-                <span style="color: #10B981; font-size: 11px;">✓</span>
-              </div>
-
-              <div style="font-size: 8.5px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 2px;">Valor para Liberação Instantânea</div>
-              <div style="font-size: 23px; font-weight: 900; color: #FFF; letter-spacing: -0.5px; margin-bottom: 2px;" id="portalPhoneVal">
-                ${safeVal}
-              </div>
-              <div style="font-size: 8.5px; color: #10B981; margin-bottom: 8px;">Pague com PIX para liberar o celular em segundos</div>
-
-              <div style="width: 100%; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 7px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;">
-                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 84px; height: 84px; background: #FFF; padding: 4px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-                <div style="margin-top: 5px; font-size: 8.5px; color: #CBD5E1; text-align: center; max-height: 26px; overflow: hidden; line-height: 1.3;" id="portalPhoneMsg">
-                  ${safeMsg}
-                </div>
+          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 10px 12px 10px; width: 100%; box-sizing: border-box; justify-content: space-between; background: linear-gradient(180deg, #0D1629 0%, #080D1A 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+            <!-- TOP PILL -->
+            <div style="display: flex; justify-content: center; width: 100%;">
+              <div style="display: inline-flex; align-items: center; gap: 5px; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #10B981; font-size: 8px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
+                🛡️ Regularização Financeira Segura • Knox Guard
               </div>
             </div>
 
+            <!-- HEADER COM LOGO -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); padding: 4px 12px; border-radius: 999px; width: fit-content; margin: 0 auto;">
+              <div style="width: 20px; height: 20px; border-radius: 50%; overflow: hidden; border: 1.5px solid #10B981; flex-shrink: 0;">
+                <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <span style="font-size: 10.5px; font-weight: 700; color: #FFF;" id="portalPhoneTitle">${safeName}</span>
+              <span style="color: #10B981; font-size: 11px;">✓</span>
+            </div>
+
+            <!-- HARDWARE & CONTRATO GLASS (2 CARDS) -->
+            <div style="width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">📱 Aparelho</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneModel">${safeModel}</div>
+                <div style="font-size: 6.5px; color: #10B981;">Dispositivo Vinculado</div>
+              </div>
+              <div style="width: 1px; height: 28px; background: rgba(255, 255, 255, 0.1); margin: 0 6px;"></div>
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #94A3B8; text-transform: uppercase; font-weight: 700;">📄 Contrato</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #10B981; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneContract">${safeContract}</div>
+                <div style="font-size: 6.5px; color: #CBD5E1;">Regularização Ativa</div>
+              </div>
+            </div>
+
+            <!-- VALOR SECTION -->
+            <div>
+              <div style="font-size: 7.5px; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Valor para Liberação Instantânea</div>
+              <div style="font-size: 21px; font-weight: 900; color: #FFF; letter-spacing: -0.5px; margin: 1px 0;" id="portalPhoneVal">${safeVal}</div>
+              <div style="font-size: 7.5px; color: #10B981;">Pague com PIX para liberar o celular em segundos</div>
+            </div>
+
+            <!-- GLASS QR CARD -->
+            <div style="width: 100%; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 7px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;">
+              <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 82px; height: 82px; background: #FFF; padding: 3px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
+              <div style="margin-top: 4px; font-size: 7.5px; color: #CBD5E1; text-align: center; max-height: 24px; overflow: hidden; line-height: 1.25;" id="portalPhoneMsg">${safeMsg}</div>
+            </div>
+
+            <!-- BOTOES DE ACAO -->
             <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
-              <button type="button" style="width: 100%; background: #10B981; color: #FFF; border: none; padding: 8px 12px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); cursor: pointer;">
-                💬 <span id="portalPhoneWaBtn">Atendimento: ${safePhone}</span>
+              <button type="button" style="width: 100%; background: #10B981; color: #FFF; border: none; padding: 7px 12px; border-radius: 999px; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35); cursor: pointer;">
+                💬 <span id="portalPhoneWaBtn">Atendimento Oficial: ${safePhone}</span>
               </button>
-              <button type="button" style="width: 100%; background: transparent; border: none; color: #94A3B8; padding: 4px 8px; font-size: 8.5px; font-weight: 600; cursor: pointer; text-decoration: underline;">
+              <button type="button" style="width: 100%; background: transparent; border: none; color: #94A3B8; padding: 3px 6px; font-size: 8px; font-weight: 600; cursor: pointer; text-decoration: underline;">
                 Possuo um PIN de desbloqueio
               </button>
-              <div style="font-size: 7.5px; color: #64748B; text-align: center;">
-                Transação protegida via Knox Enterprise Security
-              </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div style="font-size: 7px; color: #64748B; text-align: center;">
+              Transação protegida via Knox Enterprise Security • Contrato Registrado
             </div>
           </div>
         `;
       } else if (currentApkLayout === 'titanium_slate') {
         container.innerHTML = `
-          <div style="flex: 1; display: flex; flex-direction: column; padding: 10px 10px 12px; width: 100%; box-sizing: border-box; justify-content: space-between; background: #070D18; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
-              <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 7px 10px; display: flex; align-items: center; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
-                  <div style="width: 30px; height: 30px; border-radius: 8px; overflow: hidden; background: #1E293B; border: 1px solid rgba(56, 189, 248, 0.3); flex-shrink: 0;">
-                    <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
-                  </div>
-                  <div style="overflow: hidden;">
-                    <div style="font-size: 10.5px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneTitle">${safeName}</div>
-                    <div style="font-size: 7.5px; color: #38BDF8; font-weight: 700;">KNOX GUARD TITANIUM</div>
-                  </div>
+          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 8px 10px 8px; width: 100%; box-sizing: border-box; justify-content: space-between; background: #070D18; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+            <!-- BENTO HEADER -->
+            <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box;">
+              <div style="display: flex; align-items: center; gap: 7px; overflow: hidden;">
+                <div style="width: 26px; height: 26px; border-radius: 6px; overflow: hidden; background: #1E293B; border: 1px solid rgba(56, 189, 248, 0.3); flex-shrink: 0;">
+                  <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #EF4444; color: #EF4444; font-size: 7.5px; font-weight: 900; padding: 2px 5px; border-radius: 5px; flex-shrink: 0;">
-                  LOCKED
+                <div style="overflow: hidden; text-align: left;">
+                  <div style="font-size: 10px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneTitle">${safeName}</div>
+                  <div style="font-size: 7px; color: #38BDF8; font-weight: 700;">KNOX TITANIUM DPC</div>
                 </div>
               </div>
-
-              <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 7px; display: flex; flex-direction: column; align-items: center;">
-                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 4px;">
-                  <span style="font-size: 8px; font-weight: 800; color: #94A3B8; text-transform: uppercase;">Pague via PIX</span>
-                  <span style="font-size: 11.5px; font-weight: 900; color: #38BDF8; font-family: 'JetBrains Mono', monospace;" id="portalPhoneVal">${safeVal}</span>
-                </div>
-                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 82px; height: 82px; background: #FFF; padding: 3px; border-radius: 6px;">
-                <div style="margin-top: 5px; font-size: 8px; color: #94A3B8; text-align: center; line-height: 1.3; max-height: 22px; overflow: hidden;" id="portalPhoneMsg">
-                  ${safeMsg}
-                </div>
-              </div>
-
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                <button type="button" style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #22C55E; padding: 7px 4px; border-radius: 8px; font-size: 8.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer;">
-                  💬 WhatsApp
-                </button>
-                <button type="button" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); color: #38BDF8; padding: 7px 4px; border-radius: 8px; font-size: 8.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer;">
-                  🔑 Digitar PIN
-                </button>
+              <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #EF4444; color: #EF4444; font-size: 7px; font-weight: 900; padding: 2px 5px; border-radius: 4px; flex-shrink: 0;">
+                LOCKED
               </div>
             </div>
 
-            <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 7.5px; color: #64748B;">
+            <!-- BENTO TELEMETRIA (2 CARDS) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; box-sizing: border-box;">
+              <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 5px 7px; text-align: left; overflow: hidden;">
+                <div style="font-size: 6.5px; font-weight: 800; color: #38BDF8; text-transform: uppercase;">📱 APARELHO</div>
+                <div style="font-size: 9px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneModel">${safeModel}</div>
+                <div style="font-size: 6px; color: #94A3B8;">HARDWARE LOCK</div>
+              </div>
+              <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 5px 7px; text-align: left; overflow: hidden;">
+                <div style="font-size: 6.5px; font-weight: 800; color: #38BDF8; text-transform: uppercase;">📋 CONTRATO</div>
+                <div style="font-size: 9px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneContract">${safeContract}</div>
+                <div style="font-size: 6px; color: #94A3B8;">REGISTRO ATIVO</div>
+              </div>
+            </div>
+
+            <!-- BENTO QR CARD -->
+            <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 7px; display: flex; flex-direction: column; align-items: center; width: 100%; box-sizing: border-box;">
+              <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 3px;">
+                <span style="font-size: 7.5px; font-weight: 800; color: #94A3B8; text-transform: uppercase;">Pague via PIX</span>
+                <span style="font-size: 11px; font-weight: 900; color: #38BDF8; font-family: 'JetBrains Mono', monospace;" id="portalPhoneVal">${safeVal}</span>
+              </div>
+              <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 80px; height: 80px; background: #FFF; padding: 3px; border-radius: 6px;">
+              <div style="margin-top: 4px; font-size: 7.5px; color: #94A3B8; text-align: center; line-height: 1.25; max-height: 20px; overflow: hidden;" id="portalPhoneMsg">${safeMsg}</div>
+            </div>
+
+            <!-- BENTO ACTION GRID -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; box-sizing: border-box;">
+              <button type="button" style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #22C55E; padding: 6px 4px; border-radius: 7px; font-size: 8px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer;">
+                💬 WhatsApp
+              </button>
+              <button type="button" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); color: #38BDF8; padding: 6px 4px; border-radius: 7px; font-size: 8px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer;">
+                🔑 Digitar PIN
+              </button>
+            </div>
+
+            <!-- BENTO FOOTER -->
+            <div style="background: #0B1324; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 7px; padding: 4px 7px; display: flex; justify-content: space-between; align-items: center; font-size: 7px; color: #64748B; width: 100%; box-sizing: border-box;">
               <span>TEL: <span id="portalPhoneWaBtn">${safePhone}</span></span>
-              <span>IMEI: 358941092847120</span>
+              <span>CONTRATO VINCULADO</span>
             </div>
           </div>
         `;
       } else if (currentApkLayout === 'crimson_matrix') {
         container.innerHTML = `
-          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 12px 12px 14px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.24) 0%, rgba(10, 4, 8, 0.99) 75%); font-family: 'JetBrains Mono', monospace; border-left: 2px solid #EF4444; border-right: 2px solid #EF4444;">
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px; font-size: 8.5px; color: #EF4444; border-bottom: 1px dashed rgba(239, 68, 68, 0.4); padding-bottom: 4px;">
-                <span>[ TACTICAL_LOCK // SEC-09 ]</span>
-                <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; background: #EF4444; border-radius: 50%; box-shadow: 0 0 8px #EF4444;"></span> BIOMETRIC HOLD</span>
-              </div>
+          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 10px 12px 10px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.25) 0%, rgba(10, 4, 8, 0.99) 75%); font-family: 'JetBrains Mono', monospace; border-left: 2px solid #EF4444; border-right: 2px solid #EF4444; text-align: center;">
+            <!-- TOP HUD BAR -->
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; font-size: 8px; color: #EF4444; border-bottom: 1px dashed rgba(239, 68, 68, 0.4); padding-bottom: 4px;">
+              <span>[ TACTICAL_LOCK // SEC-09 ]</span>
+              <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; background: #EF4444; border-radius: 50%; box-shadow: 0 0 8px #EF4444;"></span> BIOMETRIC HOLD</span>
+            </div>
 
-              <div style="position: relative; margin-bottom: 6px;">
-                <div style="width: 58px; height: 58px; border-radius: 14px; background: #120508; border: 2px solid #EF4444; box-shadow: 0 0 18px rgba(239, 68, 68, 0.5), inset 0 0 8px rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <!-- HEADER TACTICAL -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div style="position: relative; margin-bottom: 4px;">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: #120508; border: 2px solid #EF4444; box-shadow: 0 0 16px rgba(239, 68, 68, 0.5), inset 0 0 6px rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;">
                   <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <span style="position: absolute; bottom: -4px; right: -4px; background: #EF4444; color: #FFF; font-size: 7.5px; font-weight: 900; padding: 1px 4px; border-radius: 4px; border: 1px solid #FFF;">DPC</span>
+                <span style="position: absolute; bottom: -3px; right: -3px; background: #EF4444; color: #FFF; font-size: 7px; font-weight: 900; padding: 1px 3px; border-radius: 3px; border: 1px solid #FFF;">DPC</span>
               </div>
+              <div style="font-size: 12px; font-weight: 900; color: #FFF; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(239, 68, 68, 0.7);" id="portalPhoneTitle">${safeName}</div>
+            </div>
 
-              <div style="font-size: 12.5px; font-weight: 900; color: #FFF; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(239, 68, 68, 0.7); text-align: center; margin-bottom: 6px;" id="portalPhoneTitle">
-                ${safeName}
+            <!-- TACTICAL TELEMETRIA (2 COLUNAS) -->
+            <div style="width: 100%; background: rgba(18, 5, 8, 0.9); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 6px 8px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #EF4444; font-weight: 800;">[TARGET_HW]</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneModel">${safeModel}</div>
+                <div style="font-size: 6.5px; color: #94A3B8;">STATUS: LOCKED</div>
               </div>
-
-              <div style="background: rgba(18, 5, 8, 0.85); border: 1px solid rgba(239, 68, 68, 0.4); border-left: 3px solid #EF4444; border-radius: 6px; padding: 6px 8px; font-size: 8.5px; color: #FECACA; width: 100%; box-sizing: border-box; margin-bottom: 8px; line-height: 1.35;" id="portalPhoneMsg">
-                <div style="color: #EF4444; font-weight: 800; margin-bottom: 2px;">⛔ RESTRIÇÃO DE SISTEMA ATIVA</div>
-                ${safeMsg}
-              </div>
-
-              <div style="width: 100%; background: rgba(18, 5, 8, 0.95); border: 1.5px solid rgba(239, 68, 68, 0.45); box-shadow: 0 0 16px rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;">
-                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 7.5px; color: #94A3B8; margin-bottom: 3px;">
-                  <span>AUTOLIBERAÇÃO PIX</span>
-                  <span style="color: #EF4444; font-weight: 800;">100% AUTOMÁTICO</span>
-                </div>
-                <div style="position: relative; padding: 3px; background: #000; border: 1px dashed rgba(239, 68, 68, 0.6); border-radius: 6px;">
-                  <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 82px; height: 82px; background: #FFF; padding: 3px; border-radius: 4px; display: block;">
-                </div>
-                <div style="font-size: 13px; font-weight: 900; color: #F87171; margin-top: 4px; text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);" id="portalPhoneVal">
-                  ${safeVal}
-                </div>
+              <div style="width: 1px; height: 26px; background: rgba(239, 68, 68, 0.35); margin: 0 6px;"></div>
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #EF4444; font-weight: 800;">[CONTRACT_ID]</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #FCA5A5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneContract">${safeContract}</div>
+                <div style="font-size: 6.5px; color: #94A3B8;">POLICY: ENFORCED</div>
               </div>
             </div>
 
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 5px;">
-              <button type="button" style="width: 100%; background: linear-gradient(90deg, #DC2626 0%, #991B1B 100%); color: #FFF; border: none; padding: 8px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 0 16px rgba(220, 38, 38, 0.45); cursor: pointer; text-transform: uppercase;">
+            <!-- NOTICE TÁTICO -->
+            <div style="background: rgba(18, 5, 8, 0.85); border: 1px solid rgba(239, 68, 68, 0.4); border-left: 3px solid #EF4444; border-radius: 6px; padding: 5px 8px; font-size: 7.5px; color: #FECACA; width: 100%; box-sizing: border-box; text-align: left; line-height: 1.3;" id="portalPhoneMsg">
+              <div style="color: #EF4444; font-weight: 800; margin-bottom: 2px;">⛔ RESTRIÇÃO DE SISTEMA ATIVA</div>
+              ${safeMsg}
+            </div>
+
+            <!-- TACTICAL PIX CARD -->
+            <div style="width: 100%; background: rgba(18, 5, 8, 0.95); border: 1.5px solid rgba(239, 68, 68, 0.45); box-shadow: 0 0 16px rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 7px; display: flex; align-items: center; gap: 10px; box-sizing: border-box;">
+              <div style="position: relative; padding: 2px; background: #000; border: 1px dashed rgba(239, 68, 68, 0.6); border-radius: 6px; flex-shrink: 0;">
+                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 84px; height: 84px; background: #FFF; padding: 2px; border-radius: 4px; display: block;">
+              </div>
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7.5px; color: #94A3B8;">AUTOLIBERAÇÃO PIX</div>
+                <div style="font-size: 9px; color: #EF4444; font-weight: 800; margin: 2px 0;">100% AUTOMÁTICO</div>
+                <div style="font-size: 7px; color: #94A3B8;">VALOR A REGULARIZAR:</div>
+                <div style="font-size: 16px; font-weight: 900; color: #F87171; text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);" id="portalPhoneVal">${safeVal}</div>
+              </div>
+            </div>
+
+            <!-- BOTOES DE ACAO -->
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
+              <button type="button" style="width: 100%; background: linear-gradient(90deg, #DC2626 0%, #991B1B 100%); color: #FFF; border: none; padding: 7px 10px; border-radius: 6px; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 0 16px rgba(220, 38, 38, 0.45); cursor: pointer; text-transform: uppercase;">
                 🚨 <span id="portalPhoneWaBtn">EMERGÊNCIA: ${safePhone}</span>
               </button>
-              <button type="button" style="width: 100%; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.45); color: #FCA5A5; padding: 6px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
+              <button type="button" style="width: 100%; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.45); color: #FCA5A5; padding: 5px 8px; border-radius: 6px; font-size: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
                 🔓 [ INSERIR CÓDIGO DE DESBLOQUEIO ]
               </button>
-              <div style="font-size: 7.5px; color: #64748B; text-align: center; margin-top: 2px;">
-                TACTICAL_NODE: 358941092847120 // HARDWARE MIL-SPEC LOCK
-              </div>
+            </div>
+
+            <!-- FOOTER TÁTICO -->
+            <div style="font-size: 7px; color: #64748B; text-align: center; line-height: 1.2;">
+              TACTICAL_NODE: SEC-MDM // CONTRATO VINCULADO // MIL-SPEC LOCK
             </div>
           </div>
         `;
       } else if (currentApkLayout === 'emerald_minimal') {
         container.innerHTML = `
-          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 14px 14px 14px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.22) 0%, #05130F 50%, #020705 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-              <div style="display: inline-flex; align-items: center; gap: 5px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #10B981; font-size: 8.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px;">
-                ✦ SERVIÇO AUTORIZADO VIP
-              </div>
-
-              <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(16, 185, 129, 0.25); padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;">
-                <div style="width: 22px; height: 22px; border-radius: 50%; overflow: hidden; border: 1.5px solid #10B981;">
-                  <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <span style="font-size: 11px; font-weight: 700; color: #FFF;" id="portalPhoneTitle">${safeName}</span>
-                <span style="color: #10B981; font-size: 11px;">✓</span>
-              </div>
-
-              <div style="font-size: 8.5px; color: #6EE7B7; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 2px;">Valor para Quitação Instantânea</div>
-              <div style="font-size: 24px; font-weight: 900; color: #FFF; letter-spacing: -0.5px; margin-bottom: 2px;" id="portalPhoneVal">
-                ${safeVal}
-              </div>
-              <div style="font-size: 8.5px; color: #34D399; margin-bottom: 8px;">Aponte o app do banco no QR Code abaixo</div>
-
-              <div style="width: 100%; background: rgba(6, 25, 18, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.12);">
-                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 86px; height: 86px; background: #FFF; padding: 4px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                <div style="margin-top: 6px; font-size: 8.5px; color: #A7F3D0; text-align: center; max-height: 28px; overflow: hidden; line-height: 1.3;" id="portalPhoneMsg">
-                  ${safeMsg}
-                </div>
+          <div style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 10px 12px 10px; width: 100%; box-sizing: border-box; justify-content: space-between; background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.22) 0%, #05130F 50%, #020705 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+            <!-- TOP BADGE VIP -->
+            <div style="display: flex; justify-content: center; width: 100%;">
+              <div style="display: inline-flex; align-items: center; gap: 5px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #10B981; font-size: 8px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
+                ✦ SERVIÇO AUTORIZADO VIP • KNOX GATE
               </div>
             </div>
 
+            <!-- HEADER VIP -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(16, 185, 129, 0.25); padding: 4px 12px; border-radius: 999px; width: fit-content; margin: 0 auto;">
+              <div style="width: 20px; height: 20px; border-radius: 50%; overflow: hidden; border: 1.5px solid #10B981; flex-shrink: 0;">
+                <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <span style="font-size: 10.5px; font-weight: 700; color: #FFF;" id="portalPhoneTitle">${safeName}</span>
+              <span style="color: #10B981; font-size: 11px;">✓</span>
+            </div>
+
+            <!-- VIP TELEMETRIA (2 COLUNAS) -->
+            <div style="width: 100%; background: rgba(6, 25, 18, 0.7); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #6EE7B7; text-transform: uppercase; font-weight: 700;">DISPOSITIVO</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneModel">${safeModel}</div>
+                <div style="font-size: 6.5px; color: #34D399;">VIP PROTECTED</div>
+              </div>
+              <div style="width: 1px; height: 28px; background: rgba(16, 185, 129, 0.25); margin: 0 6px;"></div>
+              <div style="flex: 1; text-align: left; overflow: hidden;">
+                <div style="font-size: 7px; color: #6EE7B7; text-transform: uppercase; font-weight: 700;">CONTRATO / ID</div>
+                <div style="font-size: 9.5px; font-weight: 800; color: #10B981; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneContract">${safeContract}</div>
+                <div style="font-size: 6.5px; color: #A7F3D0;">GESTÃO ATIVA</div>
+              </div>
+            </div>
+
+            <!-- VALOR SECTION -->
+            <div>
+              <div style="font-size: 7.5px; color: #6EE7B7; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Valor para Quitação Instantânea</div>
+              <div style="font-size: 21px; font-weight: 900; color: #FFF; letter-spacing: -0.5px; margin: 1px 0;" id="portalPhoneVal">${safeVal}</div>
+              <div style="font-size: 7.5px; color: #34D399;">Aponte o app do banco no QR Code abaixo</div>
+            </div>
+
+            <!-- EMERALD QR CARD -->
+            <div style="width: 100%; background: rgba(6, 25, 18, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 7px; display: flex; flex-direction: column; align-items: center; box-sizing: border-box; box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12);">
+              <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 82px; height: 82px; background: #FFF; padding: 3px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+              <div style="margin-top: 4px; font-size: 7.5px; color: #A7F3D0; text-align: center; max-height: 24px; overflow: hidden; line-height: 1.25;" id="portalPhoneMsg">${safeMsg}</div>
+            </div>
+
+            <!-- BOTOES DE ACAO -->
             <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
-              <button type="button" style="width: 100%; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFF; border: none; padding: 8px 12px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 16px rgba(16, 185, 129, 0.38); cursor: pointer;">
+              <button type="button" style="width: 100%; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFF; border: none; padding: 7px 12px; border-radius: 999px; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.38); cursor: pointer;">
                 💬 <span id="portalPhoneWaBtn">Suporte VIP: ${safePhone}</span>
               </button>
-              <button type="button" style="width: 100%; background: transparent; border: none; color: #6EE7B7; padding: 4px 8px; font-size: 8.5px; font-weight: 600; cursor: pointer; text-decoration: underline;">
+              <button type="button" style="width: 100%; background: transparent; border: none; color: #6EE7B7; padding: 3px 6px; font-size: 8px; font-weight: 600; cursor: pointer; text-decoration: underline;">
                 Inserir PIN de Liberação Manual
               </button>
-              <div style="font-size: 7.5px; color: #059669; text-align: center;">
-                Transação Verificada • Knox VIP Enterprise Gate
-              </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div style="font-size: 7px; color: #059669; text-align: center;">
+              Transação Verificada • Knox VIP Enterprise Gate • Gestão Ativa
             </div>
           </div>
         `;
       } else {
-        // DEFAULT: PADRÃO OFICIAL DO PROJETO (Mantém 100% o layout original preenchendo toda a tela)
+        // DEFAULT: PADRÃO OFICIAL DO PROJETO (Réplica 100% idêntica ao XML nativo do APK com preenchimento total da tela)
         container.innerHTML = `
-          <div class="phone-screen-content" style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 12px 14px 14px; align-items: center; width: 100%; box-sizing: border-box; justify-content: space-between;">
+          <div class="phone-screen-content" style="height: 100%; flex: 1; display: flex; flex-direction: column; padding: 10px 12px 10px; width: 100%; box-sizing: border-box; justify-content: space-between; background: #020604; text-align: center;">
+            
+            <!-- 1. HEADER (LOGO + SUBTÍTULO + STATUS PILL COM RELÓGIO) -->
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-              <div class="phone-logo-holder" id="portalPhoneLogoHolder" style="width: 62px; height: 62px; border-radius: 16px; background: #111827; border: 2px solid var(--phone-accent, #EF4444); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 5px;">
-                <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+              <div style="max-height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 3px;">
+                <img id="portalPhoneLogoImg" src="${logoUrl}" alt="Logo" style="max-height: 38px; max-width: 210px; object-fit: contain; border-radius: 6px;">
+              </div>
+              <div style="font-size: 8px; font-weight: 800; color: #6EE7B7; letter-spacing: 0.6px; text-transform: uppercase;">
+                SOLUÇÕES EM DESBLOQUEIO E GERENCIAMENTO MOBILE
               </div>
 
-              <div class="phone-title-text" id="portalPhoneTitle" style="font-size: 13px; font-weight: 800; color: #FFF; letter-spacing: -0.3px; margin-bottom: 3px; text-align: center;">${safeName}</div>
-
-              <div class="phone-badge-dpc" id="portalPhoneBadge" style="display: inline-flex; align-items: center; gap: 4px; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--phone-accent, #EF4444); color: var(--phone-accent, #EF4444); font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 6px; margin-bottom: 6px;">
-                🔒 DISPOSITIVO BLOQUEADO VIA MDM DPC
-              </div>
-
-              <div class="phone-msg-card" id="portalPhoneMsg" style="background: rgba(15, 23, 42, 0.85); border-left: 3px solid var(--phone-accent, #EF4444); border-radius: 8px; padding: 6px 8px; font-size: 9px; color: #CBD5E1; line-height: 1.35; margin-bottom: 6px; width: 100%; box-sizing: border-box;">
-                ${safeMsg}
-              </div>
-
-              <div class="phone-pix-container" style="width: 100%; background: #0B1120; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px; display: flex; flex-direction: column; align-items: center; margin-bottom: 6px; box-sizing: border-box;">
-                <div style="font-size: 8.5px; font-weight: 800; color: var(--cyan); margin-bottom: 3px;">PAGAMENTO PIX LIBERAÇÃO AUTOMÁTICA</div>
-                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code PIX" style="width: 82px; height: 82px; background: #FFF; padding: 3px; border-radius: 6px;">
-                <div class="phone-val-text" id="portalPhoneVal" style="font-size: 12.5px; font-weight: 800; color: #10B981; margin-top: 3px; font-family: 'JetBrains Mono', monospace;">${safeVal}</div>
+              <!-- STATUS PILL BADGE LARGO -->
+              <div style="width: 100%; background: rgba(0, 230, 118, 0.12); border: 1px solid rgba(0, 230, 118, 0.4); border-radius: 999px; padding: 5px 12px; margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box;">
+                <span style="font-size: 15px;">🕒</span>
+                <div style="display: flex; flex-direction: column; align-items: center; line-height: 1.15;">
+                  <span style="font-size: 11px; font-weight: 800; color: #00E676; letter-spacing: 0.4px;">PAGAMENTO PENDENTE</span>
+                  <span style="font-size: 8px; color: #CBD5E1;">Aguardando confirmação do cliente</span>
+                </div>
               </div>
             </div>
 
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
-              <button type="button" class="phone-btn-wa" style="width: 100%; background: #22C55E; color: #FFF; border: none; padding: 8px 10px; border-radius: 8px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35); cursor: pointer;">
-                💬 <span id="portalPhoneWaBtn">SUPORTE: ${safePhone}</span>
-              </button>
+            <!-- 2. CARD DE TELEMETRIA: DISPOSITIVO & CONTRATO (2 COLUNAS COM DIVISOR) -->
+            <div style="width: 100%; background: rgba(11, 26, 18, 0.85); border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 10px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box;">
+              <!-- COLUNA 1: DISPOSITIVO -->
+              <div style="display: flex; align-items: center; gap: 6px; flex: 1; overflow: hidden;">
+                <span style="font-size: 16px;">📱</span>
+                <div style="overflow: hidden; text-align: left; line-height: 1.2;">
+                  <div style="font-size: 7.5px; font-weight: 800; color: #00E676;">DISPOSITIVO</div>
+                  <div style="font-size: 10px; font-weight: 800; color: #FFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneModel">${safeModel}</div>
+                  <div style="font-size: 7px; color: #94A3B8;">Galaxy S21 FE 5G</div>
+                </div>
+              </div>
 
-              <button type="button" class="phone-btn-code" style="width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: #94A3B8; padding: 5px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 600; cursor: pointer;">
+              <!-- DIVISOR VERTICAL -->
+              <div style="width: 1px; height: 30px; background: rgba(0, 230, 118, 0.3); margin: 0 6px;"></div>
+
+              <!-- COLUNA 2: ID DO APARELHO / CONTRATO -->
+              <div style="display: flex; align-items: center; gap: 6px; flex: 1; overflow: hidden;">
+                <span style="font-size: 16px;">🤖</span>
+                <div style="overflow: hidden; text-align: left; line-height: 1.2;">
+                  <div style="font-size: 7.5px; font-weight: 800; color: #00E676;">ID DO APARELHO</div>
+                  <div style="font-size: 9.5px; font-weight: 800; color: #FFF; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="portalPhoneContract">${safeContract}</div>
+                  <div style="font-size: 7px; color: #94A3B8;">MDM Ativo • Gerenciado</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. CARD DE PAGAMENTO SPLIT (QR CODE À ESQUERDA + VALOR E PIX À DIREITA) -->
+            <div style="width: 100%; background: rgba(11, 26, 18, 0.85); border: 1px solid rgba(0, 230, 118, 0.3); border-radius: 10px; padding: 7px 9px; display: flex; align-items: center; gap: 9px; box-sizing: border-box;">
+              <!-- QR CODE COM MOLDURA VERDE NEON -->
+              <div style="width: 94px; height: 94px; border: 2px solid #00E676; border-radius: 8px; padding: 2px; background: #FFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 10px rgba(0, 230, 118, 0.25);">
+                <img class="phone-qr-img" src="${qrUrl}" alt="QR Code Pix" style="width: 88px; height: 88px; display: block; border-radius: 4px;">
+              </div>
+
+              <!-- LADO DIREITO: PIX + INSTRUÇÕES + VALOR DA OPERAÇÃO -->
+              <div style="flex: 1; display: flex; flex-direction: column; text-align: left; overflow: hidden;">
+                <div style="font-size: 14px; font-weight: 900; color: #FFF; line-height: 1;">❖ pix</div>
+                <div style="font-size: 10px; font-weight: 800; color: #00E676; margin-top: 2px;">PAGUE VIA PIX</div>
+                <div style="font-size: 7.5px; color: #94A3B8; margin-top: 1px; line-height: 1.2;">Escaneie o QR Code e finalize o pagamento.</div>
+                
+                <div style="background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.35); border-radius: 6px; padding: 3px 5px; margin-top: 4px; text-align: center;">
+                  <div style="font-size: 7px; font-weight: 800; color: #A7F3D0;">VALOR DA OPERAÇÃO</div>
+                  <div style="font-size: 16px; font-weight: 900; color: #00E676; font-family: 'JetBrains Mono', monospace;" id="portalPhoneVal">${safeVal}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. AVISO INFORMATIVO (i) -->
+            <div style="width: 100%; background: rgba(11, 26, 18, 0.7); border: 1px solid rgba(0, 230, 118, 0.2); border-radius: 8px; padding: 5px 8px; display: flex; align-items: center; gap: 6px; box-sizing: border-box; text-align: left;">
+              <span style="font-size: 11px; flex-shrink: 0;">ℹ️</span>
+              <div style="font-size: 7.5px; color: #E2E8F0; line-height: 1.25;" id="portalPhoneMsg">${safeMsg}</div>
+            </div>
+
+            <!-- 5. BOTÕES DE CONTATO E CÓDIGO -->
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 4px;">
+              <button type="button" style="width: 100%; background: #22C55E; color: #FFF; border: none; padding: 7px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; box-shadow: 0 3px 10px rgba(34, 197, 94, 0.35);">
+                💬 <span id="portalPhoneWaBtn">SUPORTE TÉCNICO: ${safePhone}</span>
+              </button>
+              <button type="button" style="width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); color: #94A3B8; padding: 4px 6px; border-radius: 6px; font-size: 8px; font-weight: 600; cursor: pointer;">
                 🔑 DIGITAR CÓDIGO DE DESBLOQUEIO
               </button>
+            </div>
 
-              <div style="font-size: 8px; color: #475569; margin-top: 2px; text-align: center; font-family: monospace;">
-                IMEI: 358941092847120 • Knox MDM DPC
+            <!-- 6. FOOTER ESTRUTURADO (3 COLUNAS COM DIVISORES) -->
+            <div style="width: 100%; background: rgba(11, 26, 18, 0.85); border: 1px solid rgba(0, 230, 118, 0.25); border-radius: 8px; padding: 5px 4px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; text-align: center;">
+              <!-- COLUNA 1 -->
+              <div style="flex: 1;">
+                <div style="font-size: 7px; font-weight: 800; color: #00E676;">🎧 SUPORTE</div>
+                <div style="font-size: 8px; font-weight: 700; color: #FFF;" id="portalPhoneFootPhone">${safePhone}</div>
+                <div style="font-size: 6px; color: #94A3B8;">Seg a Sáb 08h-22h</div>
+              </div>
+              <div style="width: 1px; height: 22px; background: rgba(0, 230, 118, 0.2);"></div>
+              <!-- COLUNA 2 -->
+              <div style="flex: 1;">
+                <div style="font-size: 7px; font-weight: 800; color: #00E676;">📶 STATUS</div>
+                <div style="font-size: 8px; font-weight: 800; color: #00E676;">🟢 ONLINE</div>
+                <div style="font-size: 6px; color: #94A3B8;">Conectado à nuvem</div>
+              </div>
+              <div style="width: 1px; height: 22px; background: rgba(0, 230, 118, 0.2);"></div>
+              <!-- COLUNA 3 -->
+              <div style="flex: 1;">
+                <div style="font-size: 7px; font-weight: 800; color: #00E676;">🛡️ OPERAÇÃO</div>
+                <div style="font-size: 8px; font-weight: 700; color: #FFF; font-family: monospace;" id="portalPhoneFootOp">#104</div>
+                <div style="font-size: 6px; color: #94A3B8;">MDM & FRP BRASIL</div>
               </div>
             </div>
+
+            <!-- 7. LINHA FINAL: DISPOSITIVO EM GESTÃO CONTROLADA -->
+            <div style="font-size: 7px; color: #00E676; text-align: center; font-weight: 600; line-height: 1;">
+              🔒 Dispositivo em gestão controlada • Liberação automática via Cloud
+            </div>
+
           </div>
         `;
       }
@@ -7854,6 +8108,15 @@
 
     async function loadTechnicianBranding() {
       try {
+        const savedModel = localStorage.getItem('mdm_kiosk_device_model');
+        if (savedModel && document.getElementById("portalBrandDeviceModel")) {
+          document.getElementById("portalBrandDeviceModel").value = savedModel;
+        }
+        const savedContract = localStorage.getItem('mdm_kiosk_contract_info');
+        if (savedContract && document.getElementById("portalBrandContract")) {
+          document.getElementById("portalBrandContract").value = savedContract;
+        }
+
         const t = localStorage.getItem("token") || localStorage.getItem("authToken") || localStorage.getItem("mdm_token");
         if (!t) {
           selectApkLayout(localStorage.getItem('mdm_kiosk_layout_template') || 'default');
@@ -7869,6 +8132,8 @@
           if (b.support_phone && document.getElementById("portalBrandPhone")) document.getElementById("portalBrandPhone").value = b.support_phone;
           if (b.lock_message && document.getElementById("portalBrandMessage")) document.getElementById("portalBrandMessage").value = b.lock_message;
           if (b.pix_key && document.getElementById("portalBrandPixKey")) document.getElementById("portalBrandPixKey").value = b.pix_key;
+          if (b.device_model && document.getElementById("portalBrandDeviceModel")) document.getElementById("portalBrandDeviceModel").value = b.device_model;
+          if (b.contract_info && document.getElementById("portalBrandContract")) document.getElementById("portalBrandContract").value = b.contract_info;
           if (b.logo_url) {
             const prev = document.getElementById("portalBrandingLogoPreview");
             if (prev) prev.src = b.logo_url;
@@ -7894,6 +8159,8 @@
         const phone = document.getElementById("portalBrandPhone") ? document.getElementById("portalBrandPhone").value : '';
         const msg = document.getElementById("portalBrandMessage") ? document.getElementById("portalBrandMessage").value : '';
         const pixKey = document.getElementById("portalBrandPixKey") ? document.getElementById("portalBrandPixKey").value : '';
+        const devModel = document.getElementById("portalBrandDeviceModel") ? document.getElementById("portalBrandDeviceModel").value : '';
+        const contractInfo = document.getElementById("portalBrandContract") ? document.getElementById("portalBrandContract").value : '';
         const pImg = document.getElementById("portalBrandingLogoPreview");
         const logoUrl = pImg ? pImg.src : '';
 
@@ -7902,6 +8169,8 @@
           support_phone: phone,
           lock_message: msg,
           pix_key: pixKey,
+          device_model: devModel,
+          contract_info: contractInfo,
           logo_url: logoUrl,
           accent_color: currentPortalPhoneColor,
           layout_template: currentApkLayout
@@ -7909,6 +8178,8 @@
 
         try {
           localStorage.setItem('mdm_kiosk_layout_template', currentApkLayout);
+          if (devModel) localStorage.setItem('mdm_kiosk_device_model', devModel);
+          if (contractInfo) localStorage.setItem('mdm_kiosk_contract_info', contractInfo);
         } catch(e) {}
 
         if (t) {

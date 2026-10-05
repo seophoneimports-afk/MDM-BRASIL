@@ -52,7 +52,9 @@ def get_device_state(
             lock_status = "LOCKED"
 
     # Normalize response for APK BackendSyncManager
-    if lock_status in ("UNLOCKED", "PAID", "RELEASED", "ACTIVE", "COMPLETED"):
+    if lock_status in ("DESTROYED", "UNINSTALLED") or cmd == "DESTROY_APK":
+        normalized_status = "DESTROY_APK"
+    elif lock_status in ("UNLOCKED", "PAID", "RELEASED", "ACTIVE", "COMPLETED"):
         normalized_status = "PAID"
     else:
         normalized_status = "PENDING"

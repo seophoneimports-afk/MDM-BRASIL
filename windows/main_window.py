@@ -1085,6 +1085,22 @@ class DeviceServiceManagerApp:
         )
         btn_pay_release.pack(fill="x", padx=12, pady=(0, 6))
 
+        # 5. DESTRUIR APK DO CELULAR (DESINSTALAÇÃO COMPLETA BANCADA USB)
+        btn_destroy_apk = ctk.CTkButton(
+            card_actions,
+            text="💥 5. DESTRUIR APK DO CELULAR (DESINSTALAR / REMOVER DPC)",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="#7F1D1D",
+            hover_color="#DC2626",
+            text_color="#FCA5A5",
+            corner_radius=8,
+            border_width=1,
+            border_color="#EF4444",
+            height=32,
+            command=self.action_destroy_apk_usb
+        )
+        btn_destroy_apk.pack(fill="x", padx=12, pady=(0, 6))
+
         # Seção de Comandos Remotos em Nuvem (Sem USB / Online)
         f_remote = ctk.CTkFrame(card_actions, fg_color="#0A1828", corner_radius=8, border_width=1, border_color="#1E3A8A")
         f_remote.pack(fill="x", padx=12, pady=(0, 8))
@@ -1092,7 +1108,7 @@ class DeviceServiceManagerApp:
         ctk.CTkLabel(f_remote, text="🌐 COMANDOS REMOTOS NUVEM (SEM CABO USB / VIA 4G OU WI-FI)", font=ctk.CTkFont(size=10, weight="bold"), text_color=self.CLR_CYAN).pack(anchor="w", padx=10, pady=(6, 4))
 
         f_rem_btns = ctk.CTkFrame(f_remote, fg_color="transparent")
-        f_rem_btns.pack(fill="x", padx=10, pady=(0, 6))
+        f_rem_btns.pack(fill="x", padx=10, pady=(0, 4))
         f_rem_btns.columnconfigure(0, weight=1)
         f_rem_btns.columnconfigure(1, weight=1)
 
@@ -1121,6 +1137,21 @@ class DeviceServiceManagerApp:
             command=self.action_remote_unlock_cloud
         )
         btn_rem_unlock.grid(row=0, column=1, sticky="ew", padx=(3, 0))
+
+        btn_rem_destroy = ctk.CTkButton(
+            f_remote,
+            text="💥 DESTRUIR APK VIA NUVEM (DESINSTALAR REMOTO)",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#450A0A",
+            hover_color="#991B1B",
+            text_color="#FCA5A5",
+            border_width=1,
+            border_color="#EF4444",
+            corner_radius=6,
+            height=28,
+            command=self.action_remote_destroy_apk_cloud
+        )
+        btn_rem_destroy.pack(fill="x", padx=10, pady=(0, 6))
 
         # --- RIGHT CARD 3: TERMINAL DE OPERAÇÕES EM TEMPO REAL ---
         card_term = ctk.CTkFrame(right_col, fg_color=self.CLR_CARD, corner_radius=10, border_width=1, border_color=self.CLR_BORDER)
@@ -1637,6 +1668,22 @@ class DeviceServiceManagerApp:
         )
         self.btn_cloud_cmd_msg.grid(row=2, column=1, sticky="ew", padx=(3, 0), pady=2)
 
+        # 7. DESTRUIR APK (NUVEM / REMOTO)
+        self.btn_cloud_cmd_destroy = ctk.CTkButton(
+            f_actions,
+            text="💥 DESTRUIR APK DO CELULAR (DESINSTALAR)",
+            font=ctk.CTkFont(size=10, weight="bold"),
+            fg_color="#7F1D1D",
+            hover_color="#DC2626",
+            text_color="#FCA5A5",
+            border_width=1,
+            border_color="#EF4444",
+            corner_radius=6,
+            height=30,
+            command=self.cloud_action_destroy_apk
+        )
+        self.btn_cloud_cmd_destroy.grid(row=3, column=0, columnspan=2, sticky="ew", padx=0, pady=(4, 2))
+
         # 7. CARREGAR NA BANCADA (USB)
         self.btn_cloud_load_bench = ctk.CTkButton(
             card_cmd,
@@ -1922,6 +1969,20 @@ class DeviceServiceManagerApp:
             )
             btn_gps.pack(side="left", padx=(0, 4))
 
+            btn_destr = ctk.CTkButton(
+                c_btns,
+                text="💥 Destruir",
+                font=ctk.CTkFont(size=9, weight="bold"),
+                fg_color="#450A0A",
+                hover_color="#DC2626",
+                text_color="#FCA5A5",
+                corner_radius=4,
+                height=22,
+                width=68,
+                command=lambda d=dev: self.cloud_quick_destroy(d)
+            )
+            btn_destr.pack(side="left", padx=(0, 4))
+
             btn_b = ctk.CTkButton(
                 c_btns,
                 text="⚡ Bancada",
@@ -2048,6 +2109,59 @@ class DeviceServiceManagerApp:
                 else:
                     self.cloud_log(f"[ERRO] Falha na liberação: {resp.get('error', '')}")
                     messagebox.showerror("Erro", f"Falha na liberação remota: {resp.get('error', '')}")
+            self.safe_after(0, done)
+        threading.Thread(target=work, daemon=True).start()
+
+    def cloud_action_destroy_apk(self):
+        if not self.cloud_selected_device:
+            messagebox.showwarning("Aviso", "Selecione um aparelho na lista da nuvem primeiro.")
+            return
+        self.cloud_quick_destroy(self.cloud_selected_device)
+
+    def cloud_quick_destroy(self, dev):
+        serial = dev.get("serial")
+        if not serial:
+            return
+        self._send_remote_destroy_cloud(serial, dev)
+
+    def _send_remote_destroy_cloud(self, serial, dev=None):
+        if not self.api_client.is_logged_in():
+            messagebox.showwarning("Login Necessário", "Faça login no sistema para enviar comandos na nuvem.")
+            return
+
+        dev_name = dev.get('model', 'Smartphone') if dev else "Aparelho Selecionado"
+        res = messagebox.askyesno(
+            "💥 Confirmar Autodestruição do APK",
+            f"Deseja enviar comando de DESTRUIR / DESINSTALAR APK para o aparelho:\n\n"
+            f"Aparelho: {dev_name}\n"
+            f"Serial / IMEI: {serial}\n\n"
+            f"ATENÇÃO:\n"
+            f"1. A trava Kiosk será desligada na hora via Wi-Fi/4G.\n"
+            f"2. Os privilégios de Administrador/MDM serão revogados.\n"
+            f"3. O aplicativo será desinstalado permanentemente do celular.\n\n"
+            f"Confirmar ordem de autodestruição?",
+            icon="warning"
+        )
+        if not res:
+            return
+
+        self.cloud_log(f"[ORDEM] Enviando ordem de AUTODESTRUIÇÃO DO APK para {serial} via nuvem...")
+        def work():
+            ok, resp = self.api_client.destroy_device_apk_remote(serial)
+            def done():
+                if ok:
+                    msg = resp.get("message", "Comando de destruição enviado com sucesso!")
+                    self.cloud_log(f"[SUCESSO] 💥 {msg}")
+                    if dev:
+                        dev["lock_status"] = "DESTROYED"
+                        if self.cloud_selected_device and self.cloud_selected_device.get("serial") == serial:
+                            self._update_selected_cloud_panel(dev)
+                        self._filter_cloud_devices()
+                    messagebox.showinfo("Autodestruição Enviada", f"💥 Ordem enviada com sucesso para {serial}!\nO APK será desinstalado assim que o celular receber o sinal.")
+                else:
+                    err = resp.get('message') or resp.get('error', 'Falha desconhecida')
+                    self.cloud_log(f"[ERRO] Falha ao enviar ordem de destruição: {err}")
+                    messagebox.showerror("Erro", f"Falha ao enviar comando de autodestruição: {err}")
             self.safe_after(0, done)
         threading.Thread(target=work, daemon=True).start()
 
@@ -3168,6 +3282,69 @@ class DeviceServiceManagerApp:
                     messagebox.showerror("Erro", f"Falha ao enviar liberação: {resp.get('error', '')}")
             self.safe_after(0, done)
         threading.Thread(target=work, daemon=True).start()
+
+    def action_destroy_apk_usb(self):
+        serial = self.selected_device_serial
+        if not serial:
+            messagebox.showwarning("Aparelho Não Selecionado", "Selecione um aparelho conectado via USB para realizar a desinstalação.")
+            return
+
+        confirm = messagebox.askyesno(
+            "💥 DESTRUIR / DESINSTALAR APK DO CELULAR",
+            f"Deseja realmente DESTRUIR e DESINSTALAR o APK do aparelho conectado ({serial})?\n\n"
+            "Esta operação de Bancada USB irá:\n"
+            "1. Desativar a trava Kiosk\n"
+            "2. Revogar e remover Administrador / Device Owner (DPM)\n"
+            "3. Parar processos em background e limpar dados\n"
+            "4. Desinstalar completamente o pacote 'br.com.mdmfrpbrasil.deviceservice'\n\n"
+            "Tem certeza que deseja desinstalar o APK do celular?",
+            icon="warning"
+        )
+        if not confirm:
+            return
+
+        self.log(f"[DESTRUIR APK] Iniciando desinstalação profunda do APK no aparelho {serial}...")
+
+        def run_destroy():
+            try:
+                # 1. Enviar broadcast de desbloqueio prévio caso a tela esteja travada
+                self.adb.run_cmd(["-s", serial, "shell", "am", "broadcast", "-a", "br.com.mdmfrpbrasil.deviceservice.UNLOCK_DEVICE"], timeout=5)
+                time.sleep(0.4)
+
+                # 2. Desinstalar via rotina de remoção autorizada do AdbManager
+                success, msg = self.adb.removeAuthorizedPackage(serial)
+
+                # 3. Verificação final
+                if not success:
+                    self.adb.run_cmd(["-s", serial, "shell", "pm", "uninstall", "--user", "0", "br.com.mdmfrpbrasil.deviceservice"], timeout=10)
+                    success = self.adb.verifyPackageRemoved(serial)
+                    msg = "APK desinstalado com sucesso." if success else msg
+
+                def on_finish():
+                    if success:
+                        self.log(f"[SUCESSO] 💥 APK destruído e removido com sucesso do smartphone {serial}!")
+                        messagebox.showinfo("APK Destruído", f"O aplicativo MDM foi desinstalado e removido com sucesso do aparelho {serial}.")
+                        self.refresh_devices_now()
+                    else:
+                        self.log(f"[ERRO] Falha ao desinstalar APK: {msg}")
+                        messagebox.showerror("Erro ao Desinstalar", f"Falha ao desinstalar APK:\n{msg}")
+
+                self.safe_after(0, on_finish)
+            except Exception as e:
+                err_msg = str(e)
+                self.safe_after(0, lambda: self.log(f"[ERRO] Exceção durante destruição do APK: {err_msg}"))
+                self.safe_after(0, lambda: messagebox.showerror("Erro", f"Erro: {err_msg}"))
+
+        threading.Thread(target=run_destroy, daemon=True).start()
+
+    def action_remote_destroy_apk_cloud(self):
+        serial = self.selected_device_serial
+        if not serial:
+            serial = simpledialog.askstring("Autodestruição Remota Online", "Digite o Serial ou ID do aparelho Android para destruir o APK via nuvem:")
+            if not serial or not serial.strip():
+                return
+            serial = serial.strip()
+        self._send_remote_destroy_cloud(serial)
 
     def do_gate_login(self):
         email = self.gate_ent_email.get().strip()
