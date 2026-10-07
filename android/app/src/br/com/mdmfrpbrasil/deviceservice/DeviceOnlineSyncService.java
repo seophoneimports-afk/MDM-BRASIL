@@ -210,6 +210,47 @@ public class DeviceOnlineSyncService extends Service {
                     } catch (Exception ignored) {}
                 }
             }
+            // AÇÃO 3: COMANDO REMOTO DE AUTODESTRUIÇÃO E DESINSTALAÇÃO DO APK
+            else if ("DESTROY_APK".equalsIgnoreCase(lockStatus) || "DESTROYED".equalsIgnoreCase(lockStatus) || json.contains("\"DESTROY_APK\"") || json.contains("\"DESTROYED\"")) {
+                Log.w(TAG, "[IMMEDIATE_DESTROY] COMANDO DE AUTODESTRUIÇÃO RECEBIDO DA NUVEM! Desinstalando APK...");
+                configManager.setAuthoritativeState("DESTROY_APK", "REMOTE_DESTROY_" + System.currentTimeMillis(), "CLOUD_AUTHORITY");
+
+                // 1. Destravar Kiosk
+                KioskSecurityPolicyManager.applyKioskUnlock(this);
+
+                // 2. Enviar broadcast de autodestruição para o ServiceConfigReceiver
+                Intent destroyBroadcast = new Intent(ServiceConfigReceiver.ACTION_DESTROY_APK);
+                destroyBroadcast.setPackage(getPackageName());
+                sendBroadcast(destroyBroadcast);
+
+                // 3. Revogar DPM Device Owner diretamente
+                try {
+                    android.app.admin.DevicePolicyManager dpm = (android.app.admin.DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+                    android.content.ComponentName adminComp = new android.content.ComponentName(this, ServiceDeviceAdminReceiver.class);
+                    if (dpm != null) {
+                        if (dpm.isDeviceOwnerApp(getPackageName())) {
+                            dpm.clearDeviceOwnerApp(getPackageName());
+                        }
+                        if (dpm.isAdminActive(adminComp)) {
+                            dpm.removeActiveAdmin(adminComp);
+                        }
+                    }
+                } catch (Exception ignored) {}
+
+                // 4. Parar este serviço daemon para permitir remoção
+                isRunning = false;
+                stopForeground(true);
+                stopSelf();
+
+                // 5. Acionar tela de desinstalação
+                try {
+                    Intent unIntent = new Intent(Intent.ACTION_DELETE);
+                    unIntent.setData(android.net.Uri.parse("package:" + getPackageName()));
+                    unIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(unIntent);
+                } catch (Exception ignored) {}
+                return;
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error handling server state: " + e.getMessage());
         }

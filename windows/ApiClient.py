@@ -15,8 +15,8 @@ SESSION_FILE_OLD = os.path.join(os.getenv("LOCALAPPDATA", "."), "MDM_FRP_BRASIL_
 
 CREDENTIALS_FILE = os.path.join(os.getenv("LOCALAPPDATA", "."), "MDM_FRP_BRASIL_DSM", "client_creds.dat")
 
-# Chave de integridade do cliente
-CLIENT_INTEGRITY_SALT = "MDM_FRP_BRASIL_SECURE_INTEGRITY_2026_KEY"
+# Chave de integridade do cliente (Rotacionada para Defesa Cibernética 2026)
+CLIENT_INTEGRITY_SALT = "MDM_TITANIUM_DEFENSE_2026_04F3B225B5C250889AAD39AFA8B0C0FD"
 DEFAULT_SERVER_URL = "https://mdm-brasil.onrender.com"
 
 def _get_encryption_cipher() -> Fernet:

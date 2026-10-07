@@ -71,74 +71,9 @@ ctk.set_default_color_theme("green")
 CONFIG_FILE = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "MDM_FRP_BRASIL_DSM", "config.json")
 AUDIT_FILE = os.path.join(os.environ.get("LOCALAPPDATA", os.path.expanduser("~")), "MDM_FRP_BRASIL_DSM", "audit_log.txt")
 
-DEFAULT_DEMO_DEVICES = [
-    {
-        "serial": "SM-A546E-BR9841",
-        "model": "Samsung Galaxy A54 5G",
-        "manufacturer": "Samsung",
-        "lock_status": "LOCKED",
-        "latitude": -22.754841,
-        "longitude": -47.332415,
-        "street": "Rua dos Campos",
-        "number": "62",
-        "neighborhood": "Jardim São Paulo",
-        "city": "Americana",
-        "state": "SP",
-        "cep": "13476-404",
-        "accuracy": 4.5,
-        "provider": "GPS + Glonass",
-        "battery_level": 88,
-        "network_status": "Wi-Fi 5G",
-        "owner_name": "Assistência Americana",
-        "owner_email": "tecnico@mdmbrasil.com.br",
-        "is_online": True,
-        "last_seen": "05/10/2026 01:25"
-    },
-    {
-        "serial": "2312DRA50G-BR1420",
-        "model": "Xiaomi Redmi Note 13 4G",
-        "manufacturer": "Xiaomi",
-        "lock_status": "LOCKED",
-        "latitude": -22.9068,
-        "longitude": -47.0616,
-        "street": "Av. Francisco Glicério",
-        "number": "1050",
-        "neighborhood": "Centro",
-        "city": "Campinas",
-        "state": "SP",
-        "cep": "13012-100",
-        "accuracy": 6.2,
-        "provider": "GPS Híbrido",
-        "battery_level": 74,
-        "network_status": "4G LTE",
-        "owner_name": "Loja Central Campinas",
-        "owner_email": "campinas@mdmbrasil.com.br",
-        "is_online": True,
-        "last_seen": "05/10/2026 01:22"
-    },
-    {
-        "serial": "XT2347-1-BR7732",
-        "model": "Motorola Moto G24 Power",
-        "manufacturer": "Motorola",
-        "lock_status": "UNLOCKED",
-        "latitude": -22.8850,
-        "longitude": -47.0500,
-        "street": "Rua Barão de Jaguara",
-        "number": "720",
-        "neighborhood": "Cambuí",
-        "city": "Campinas",
-        "state": "SP",
-        "cep": "13015-001",
-        "accuracy": 8.0,
-        "provider": "Rede / Antenas",
-        "battery_level": 92,
-        "network_status": "Wi-Fi",
-        "owner_name": "Smart Cell Cambuí",
-        "owner_email": "cambui@mdmbrasil.com.br",
-        "is_online": False,
-        "last_seen": "04/10/2026 23:45"
-    }
-]
+# Apenas aparelhos reais vinculados ao sistema (sem dispositivos fictícios)
+DEFAULT_DEMO_DEVICES = []
+
 
 
 class DeviceServiceManagerApp:
@@ -242,6 +177,7 @@ class DeviceServiceManagerApp:
         try:
             candidates = [
                 os.path.join(os.path.dirname(__file__), "logo.png"),
+                os.path.join(os.path.dirname(__file__), "..", "public", "assets", "logo-mdm-frp.png"),
                 os.path.join(os.path.dirname(__file__), "resources", "logo.png"),
                 os.path.join(os.getcwd(), "logo.png"),
                 os.path.join(os.getcwd(), "windows", "logo.png"),
@@ -249,8 +185,8 @@ class DeviceServiceManagerApp:
             for p in candidates:
                 if os.path.exists(p):
                     pil_img = Image.open(p)
-                    self.brand_logo_sidebar = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(38, 38))
-                    self.brand_logo_header = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(32, 32))
+                    self.brand_logo_sidebar = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(46, 46))
+                    self.brand_logo_header = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(38, 38))
                     break
         except Exception:
             pass
@@ -274,35 +210,51 @@ class DeviceServiceManagerApp:
         self.sidebar_nav.pack(side="left", fill="y", padx=(6, 6), pady=6)
         self.sidebar_nav.pack_propagate(False)
 
-        # Brand header in sidebar with OFFICIAL LOGO
-        brand_frame = ctk.CTkFrame(self.sidebar_nav, fg_color="transparent")
-        brand_frame.pack(fill="x", padx=10, pady=(12, 14))
+        # Brand header in sidebar with OFFICIAL HIGH-TECH EMBLEM
+        brand_frame = ctk.CTkFrame(
+            self.sidebar_nav,
+            fg_color="#0A101F",
+            corner_radius=10,
+            border_width=1,
+            border_color="#1E293B"
+        )
+        brand_frame.pack(fill="x", padx=8, pady=(10, 10))
 
         brand_row = ctk.CTkFrame(brand_frame, fg_color="transparent")
-        brand_row.pack(fill="x")
+        brand_row.pack(fill="x", padx=6, pady=6)
 
         if getattr(self, 'brand_logo_sidebar', None):
             lbl_b_logo = ctk.CTkLabel(brand_row, image=self.brand_logo_sidebar, text="")
             lbl_b_logo.pack(side="left", padx=(0, 8))
 
         b_text_box = ctk.CTkFrame(brand_row, fg_color="transparent")
-        b_text_box.pack(side="left", fill="y")
+        b_text_box.pack(side="left", fill="y", expand=True)
 
         lbl_b_title = ctk.CTkLabel(
             b_text_box,
             text="MDM & FRP",
-            font=ctk.CTkFont(family="Segoe UI", size=14, weight="bold"),
+            font=ctk.CTkFont(family="Segoe UI", size=13, weight="bold"),
             text_color="#FFFFFF"
         )
         lbl_b_title.pack(anchor="w")
 
         lbl_b_sub = ctk.CTkLabel(
             b_text_box,
-            text="BRASIL • TITANIUM",
-            font=ctk.CTkFont(family="Segoe UI", size=9, weight="bold"),
-            text_color="#00E5FF"
+            text="BRASIL • CYBER 2026",
+            font=ctk.CTkFont(family="Segoe UI", size=8, weight="bold"),
+            text_color="#00E676"
         )
         lbl_b_sub.pack(anchor="w")
+
+        tele_strip = ctk.CTkFrame(brand_frame, fg_color="#050914", corner_radius=6)
+        tele_strip.pack(fill="x", padx=6, pady=(0, 6))
+        lbl_tele = ctk.CTkLabel(
+            tele_strip,
+            text="● KERNEL TITANIUM ON",
+            font=ctk.CTkFont(family="Consolas", size=8, weight="bold"),
+            text_color="#00E5FF"
+        )
+        lbl_tele.pack(pady=2)
 
         # Sidebar navigation buttons
         self.nav_buttons = {}
@@ -3175,16 +3127,21 @@ class DeviceServiceManagerApp:
                 pass
         self.safe_after(350, _animate_pulse)
 
-        # Load and display official Phantom Logo with unified typography
+        # Load and display official Cyber Emblem with unified typography
         logo_loaded = False
-        for base_p in [os.path.dirname(__file__), os.path.join(os.path.dirname(__file__), "resources"), os.getcwd()]:
-            lp = os.path.join(base_p, "logo.png")
+        candidates = [
+            os.path.join(os.path.dirname(__file__), "logo.png"),
+            os.path.join(os.path.dirname(__file__), "..", "public", "assets", "logo-mdm-frp.png"),
+            os.path.join(os.path.dirname(__file__), "resources", "logo.png"),
+            os.path.join(os.getcwd(), "logo.png"),
+        ]
+        for lp in candidates:
             if os.path.exists(lp):
                 try:
                     pil_img = Image.open(lp)
-                    self.gate_logo_ctk = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(184, 126))
+                    self.gate_logo_ctk = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(110, 110))
                     lbl_logo = ctk.CTkLabel(self.login_gate_frame, image=self.gate_logo_ctk, text="")
-                    lbl_logo.pack(pady=(14, 2))
+                    lbl_logo.pack(pady=(16, 4))
                     logo_loaded = True
                     break
                 except Exception:
@@ -3533,17 +3490,20 @@ class DeviceServiceManagerApp:
             self.safe_after(0, done)
         threading.Thread(target=work, daemon=True).start()
 
-    def action_destroy_apk_usb(self):
-        serial = self.selected_device_serial
+    def action_destroy_apk_usb(self, serial=None):
         if not serial:
-            messagebox.showwarning("Aparelho Não Selecionado", "Selecione um aparelho conectado via USB para realizar a desinstalação.")
+            serial = self.selected_device_serial
+        if not serial and self.devices_cache:
+            serial = self.devices_cache[0].get("serial")
+        if not serial:
+            messagebox.showwarning("Aparelho Não Selecionado", "Conecte ou selecione um aparelho via USB para realizar a desinstalação.")
             return
 
         confirm = messagebox.askyesno(
             "💥 DESTRUIR / DESINSTALAR APK DO CELULAR",
             f"Deseja realmente DESTRUIR e DESINSTALAR o APK do aparelho conectado ({serial})?\n\n"
             "Esta operação de Bancada USB irá:\n"
-            "1. Desativar a trava Kiosk\n"
+            "1. Desativar a trava Kiosk imediatamente\n"
             "2. Revogar e remover Administrador / Device Owner (DPM)\n"
             "3. Parar processos em background e limpar dados\n"
             "4. Desinstalar completamente o pacote 'br.com.mdmfrpbrasil.deviceservice'\n\n"
@@ -3988,9 +3948,7 @@ class DeviceServiceManagerApp:
         if getattr(self, 'loc_filter_mode', 'cloud') == "usb":
             return self.devices_cache or []
         else:
-            if self.cloud_devices_cache:
-                return self.cloud_devices_cache
-            return DEFAULT_DEMO_DEVICES
+            return self.cloud_devices_cache or []
 
     def refresh_location_devices_list(self):
         devices = self.get_available_location_devices()
@@ -4007,33 +3965,95 @@ class DeviceServiceManagerApp:
                     options.append(f"⚡ {m} ({s})")
         else:
             if not devices:
-                devices = DEFAULT_DEMO_DEVICES
-            for d in devices:
-                m = d.get('model', 'Smartphone')
-                s = d.get('serial', 'N/A')
-                c = d.get('city', 'Brasil')
-                options.append(f"📱 {m} ({s}) • {c}")
+                options = ["☁️ Nenhum aparelho cadastrado na nuvem"]
+            else:
+                for d in devices:
+                    m = d.get('model', 'Smartphone')
+                    s = d.get('serial', 'N/A')
+                    c = d.get('city') or d.get('state') or 'Nuvem'
+                    options.append(f"📱 {m} ({s}) • {c}")
 
         if hasattr(self, 'combo_loc_device') and self.combo_loc_device:
             self.combo_loc_device.configure(values=options)
-            curr = self.combo_loc_device.get()
-            if curr not in options and options:
+            if not devices:
                 self.combo_loc_device.set(options[0])
-                self._on_loc_device_selected(options[0])
-            elif options:
-                self._on_loc_device_selected(self.combo_loc_device.get())
+                self.selected_loc_serial = None
+                self._clear_location_ui()
+            else:
+                curr = self.combo_loc_device.get()
+                if curr not in options:
+                    self.combo_loc_device.set(options[0])
+                    self._on_loc_device_selected(options[0])
+                else:
+                    self._on_loc_device_selected(curr)
 
     def _on_loc_source_changed(self, value):
         self.loc_filter_mode = "usb" if "USB" in value else "cloud"
         self.refresh_location_devices_list()
 
+    def _clear_location_ui(self):
+        if hasattr(self, 'lbl_loc_device') and self.lbl_loc_device:
+            self.lbl_loc_device.configure(text="Dispositivo: Nenhum selecionado")
+        if hasattr(self, 'lbl_loc_dev_id') and self.lbl_loc_dev_id:
+            self.lbl_loc_dev_id.configure(text="Serial / IMEI: —")
+        if hasattr(self, 'lbl_loc_lat') and self.lbl_loc_lat:
+            self.lbl_loc_lat.configure(text="Lat: —")
+        if hasattr(self, 'lbl_loc_lon') and self.lbl_loc_lon:
+            self.lbl_loc_lon.configure(text="Lon: —")
+        if hasattr(self, 'lbl_loc_accuracy') and self.lbl_loc_accuracy:
+            self.lbl_loc_accuracy.configure(text="Precisão: —")
+        if hasattr(self, 'lbl_loc_provider') and self.lbl_loc_provider:
+            self.lbl_loc_provider.configure(text="Provedor: —")
+        if hasattr(self, 'lbl_loc_battery') and self.lbl_loc_battery:
+            self.lbl_loc_battery.configure(text="Bateria: —")
+        if hasattr(self, 'lbl_loc_net') and self.lbl_loc_net:
+            self.lbl_loc_net.configure(text="Rede: —")
+        if hasattr(self, 'lbl_loc_timestamp') and self.lbl_loc_timestamp:
+            self.lbl_loc_timestamp.configure(text="Horário: —")
+        if hasattr(self, 'lbl_loc_report') and self.lbl_loc_report:
+            self.lbl_loc_report.configure(text="Status: Nenhum aparelho selecionado")
+        if hasattr(self, 'lbl_loc_street') and self.lbl_loc_street:
+            self.lbl_loc_street.configure(text="Rua: —")
+        if hasattr(self, 'lbl_loc_number') and self.lbl_loc_number:
+            self.lbl_loc_number.configure(text="Nº: —")
+        if hasattr(self, 'lbl_loc_neighborhood') and self.lbl_loc_neighborhood:
+            self.lbl_loc_neighborhood.configure(text="Bairro: —")
+        if hasattr(self, 'lbl_loc_city') and self.lbl_loc_city:
+            self.lbl_loc_city.configure(text="Cidade/UF: —")
+        if hasattr(self, 'lbl_loc_cep') and self.lbl_loc_cep:
+            self.lbl_loc_cep.configure(text="CEP: —")
+        if hasattr(self, 'lbl_loc_fulladdr') and self.lbl_loc_fulladdr:
+            self.lbl_loc_fulladdr.configure(text="Endereço: Nenhum aparelho selecionado no sistema.")
+        if hasattr(self, 'lbl_loc_conn_badge') and self.lbl_loc_conn_badge:
+            self.lbl_loc_conn_badge.configure(text="● SEM APARELHO", fg_color="#1E293B", text_color="#94A3B8")
+        self.current_location = None
+        if hasattr(self, 'canvas_map') and self.canvas_map:
+            try:
+                self.canvas_map.delete("all")
+                w = self.canvas_map.winfo_width() or 400
+                h = self.canvas_map.winfo_height() or 300
+                self.canvas_map.create_text(
+                    w // 2, h // 2,
+                    text="Nenhum dispositivo selecionado.\nConecte um aparelho via USB ou sincronize da Nuvem.",
+                    fill="#64748B",
+                    font=("Segoe UI", 11, "bold"),
+                    justify="center"
+                )
+            except Exception:
+                pass
+
     def _on_loc_device_selected(self, choice):
-        if not choice or "Nenhum aparelho" in choice:
+        if not choice or choice.startswith("☁️ Nenhum") or choice.startswith("⚡ Nenhum"):
+            self.selected_loc_serial = None
+            self.cloud_selected_device = None
+            self._clear_location_ui()
             return
         serial = None
         if "(" in choice and ")" in choice:
             serial = choice.split("(")[-1].split(")")[0].strip()
         if not serial:
+            self.selected_loc_serial = None
+            self._clear_location_ui()
             return
 
         self.selected_loc_serial = serial
@@ -4047,33 +4067,70 @@ class DeviceServiceManagerApp:
             if dev:
                 self.cloud_selected_device = dev
                 self._apply_device_to_location_ui(dev)
+            else:
+                self._clear_location_ui()
 
     def _apply_device_to_location_ui(self, dev):
         if not dev:
+            self._clear_location_ui()
             return
         model = dev.get("model", "Smartphone")
         serial = dev.get("serial", "—")
         mfg = dev.get("manufacturer", "Android")
 
-        self.lbl_loc_device.configure(text=f"Dispositivo: 📱 {model} ({mfg})")
-        self.lbl_loc_dev_id.configure(text=f"Serial / IMEI: {serial}")
+        if hasattr(self, 'lbl_loc_device') and self.lbl_loc_device:
+            self.lbl_loc_device.configure(text=f"Dispositivo: 📱 {model} ({mfg})")
+        if hasattr(self, 'lbl_loc_dev_id') and self.lbl_loc_dev_id:
+            self.lbl_loc_dev_id.configure(text=f"Serial / IMEI: {serial}")
 
         lat = dev.get("latitude")
         lon = dev.get("longitude")
-        acc = float(dev.get("accuracy", 4.5))
+        acc = float(dev.get("accuracy", 0.0)) if dev.get("accuracy") is not None else 0.0
         prov = str(dev.get("provider", "GPS"))
         bat = dev.get("battery_level", "--")
         net = dev.get("network_status", "Online")
         st = dev.get("lock_status", "LOCKED")
-        is_online = dev.get("is_online", True)
+        is_online = bool(dev.get("is_online", False))
 
-        street = dev.get("street") or "Rua dos Campos"
-        number = str(dev.get("number") or "62")
-        neighborhood = dev.get("neighborhood") or "Jardim São Paulo"
-        city = dev.get("city") or "Americana"
-        state_uf = dev.get("state") or "SP"
-        cep = dev.get("cep") or "13476-404"
-        fulladdr = f"{street}, {number} — {neighborhood}, {city} - {state_uf} — CEP {cep}"
+        street = dev.get("street") or "—"
+        number = str(dev.get("number") or "")
+        neighborhood = dev.get("neighborhood") or "—"
+        city = dev.get("city") or "—"
+        state_uf = dev.get("state") or "—"
+        cep = dev.get("cep") or "—"
+
+        if dev.get("street") and dev.get("street") != "—":
+            num_part = f", {number}" if number else ""
+            fulladdr = f"{street}{num_part} — {neighborhood}, {city} - {state_uf}" + (f" — CEP {cep}" if cep != "—" else "")
+        elif dev.get("address_formatted"):
+            fulladdr = dev.get("address_formatted")
+        else:
+            fulladdr = "Coordenadas não registradas ou endereço pendente."
+
+        if hasattr(self, 'lbl_loc_accuracy') and self.lbl_loc_accuracy:
+            self.lbl_loc_accuracy.configure(text=f"Precisão: ±{acc:.1f}m" if acc > 0 else "Precisão: —")
+        if hasattr(self, 'lbl_loc_provider') and self.lbl_loc_provider:
+            self.lbl_loc_provider.configure(text=f"Provedor: {prov.upper()}")
+        if hasattr(self, 'lbl_loc_battery') and self.lbl_loc_battery:
+            self.lbl_loc_battery.configure(text=f"Bateria: 🔋 {bat}%")
+        if hasattr(self, 'lbl_loc_net') and self.lbl_loc_net:
+            self.lbl_loc_net.configure(text=f"Rede: 📶 {net}")
+        ts_str = dev.get("last_seen", dev.get("last_sync", datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
+        if hasattr(self, 'lbl_loc_timestamp') and self.lbl_loc_timestamp:
+            self.lbl_loc_timestamp.configure(text=f"Horário: ⏱️ {ts_str}")
+
+        if hasattr(self, 'lbl_loc_street') and self.lbl_loc_street:
+            self.lbl_loc_street.configure(text=f"Rua: {street}")
+        if hasattr(self, 'lbl_loc_number') and self.lbl_loc_number:
+            self.lbl_loc_number.configure(text=f"Nº: {number if number else '—'}")
+        if hasattr(self, 'lbl_loc_neighborhood') and self.lbl_loc_neighborhood:
+            self.lbl_loc_neighborhood.configure(text=f"Bairro: {neighborhood}")
+        if hasattr(self, 'lbl_loc_city') and self.lbl_loc_city:
+            self.lbl_loc_city.configure(text=f"Cidade/UF: {city} - {state_uf}")
+        if hasattr(self, 'lbl_loc_cep') and self.lbl_loc_cep:
+            self.lbl_loc_cep.configure(text=f"CEP: {cep}")
+        if hasattr(self, 'lbl_loc_fulladdr') and self.lbl_loc_fulladdr:
+            self.lbl_loc_fulladdr.configure(text=f"Endereço: {fulladdr}")
 
         if lat is not None and lon is not None:
             self.current_location = {
@@ -4087,31 +4144,47 @@ class DeviceServiceManagerApp:
                 "cep": cep,
                 "fullAddress": fulladdr
             }
-            self.lbl_loc_lat.configure(text=f"Lat: {lat:.6f}")
-            self.lbl_loc_lon.configure(text=f"Lon: {lon:.6f}")
-            self.lbl_loc_accuracy.configure(text=f"Precisão: ±{acc:.1f}m")
-            self.lbl_loc_provider.configure(text=f"Provedor: {prov.upper()}")
-            self.lbl_loc_battery.configure(text=f"Bateria: 🔋 {bat}%")
-            if hasattr(self, 'lbl_loc_net'):
-                self.lbl_loc_net.configure(text=f"Rede: 📶 {net}")
-            ts_str = dev.get("last_seen", datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-            self.lbl_loc_timestamp.configure(text=f"Horário: ⏱️ {ts_str}")
-            self.lbl_loc_report.configure(text=f"Status: 🟢 GPS FIX OK ({st})")
-
-            self.lbl_loc_street.configure(text=f"Rua: {street}")
-            self.lbl_loc_number.configure(text=f"Nº: {number}")
-            self.lbl_loc_neighborhood.configure(text=f"Bairro: {neighborhood}")
-            self.lbl_loc_city.configure(text=f"Cidade/UF: {city} - {state_uf}")
-            self.lbl_loc_cep.configure(text=f"CEP: {cep}")
-            self.lbl_loc_fulladdr.configure(text=f"Endereço: {fulladdr}")
-
-            self.lbl_loc_conn_badge.configure(
-                text="● ONLINE" if is_online else "● OFFLINE (ÚLTIMO FIX)",
-                fg_color="#022414" if is_online else "#2A0808",
-                text_color=self.CLR_GREEN if is_online else "#EF4444"
-            )
-
+            if hasattr(self, 'lbl_loc_lat') and self.lbl_loc_lat:
+                self.lbl_loc_lat.configure(text=f"Lat: {lat:.6f}")
+            if hasattr(self, 'lbl_loc_lon') and self.lbl_loc_lon:
+                self.lbl_loc_lon.configure(text=f"Lon: {lon:.6f}")
+            if hasattr(self, 'lbl_loc_report') and self.lbl_loc_report:
+                self.lbl_loc_report.configure(text=f"Status: 🟢 GPS FIX OK ({st})")
+            if hasattr(self, 'lbl_loc_conn_badge') and self.lbl_loc_conn_badge:
+                self.lbl_loc_conn_badge.configure(
+                    text="● ONLINE" if is_online else "● OFFLINE (ÚLTIMO FIX)",
+                    fg_color="#022414" if is_online else "#2A0808",
+                    text_color=self.CLR_GREEN if is_online else "#EF4444"
+                )
             self._draw_tactical_map(lat, lon, acc, prov, "ONLINE" if is_online else "HISTÓRICO")
+        else:
+            self.current_location = None
+            if hasattr(self, 'lbl_loc_lat') and self.lbl_loc_lat:
+                self.lbl_loc_lat.configure(text="Lat: —")
+            if hasattr(self, 'lbl_loc_lon') and self.lbl_loc_lon:
+                self.lbl_loc_lon.configure(text="Lon: —")
+            if hasattr(self, 'lbl_loc_report') and self.lbl_loc_report:
+                self.lbl_loc_report.configure(text=f"Status: 🟡 Aguardando sinal GPS do {model}")
+            if hasattr(self, 'lbl_loc_conn_badge') and self.lbl_loc_conn_badge:
+                self.lbl_loc_conn_badge.configure(
+                    text="● AGUARDANDO GPS",
+                    fg_color="#261D02",
+                    text_color="#F59E0B"
+                )
+            if hasattr(self, 'canvas_map') and self.canvas_map:
+                try:
+                    self.canvas_map.delete("all")
+                    w = self.canvas_map.winfo_width() or 400
+                    h = self.canvas_map.winfo_height() or 300
+                    self.canvas_map.create_text(
+                        w // 2, h // 2,
+                        text=f"Aparelho: {model} ({serial})\nSem coordenadas GPS salvas no sistema.\nClique no botão abaixo para solicitar localização.",
+                        fill="#94A3B8",
+                        font=("Segoe UI", 11, "bold"),
+                        justify="center"
+                    )
+                except Exception:
+                    pass
 
     def action_loc_trigger_alarm(self):
         serial = self.selected_loc_serial or self.selected_device_serial
@@ -4122,7 +4195,7 @@ class DeviceServiceManagerApp:
             if devices:
                 serial = devices[0].get("serial")
         if not serial:
-            messagebox.showwarning("Aviso", "Selecione um aparelho na lista de GPS primeiro.")
+            messagebox.showwarning("Aviso", "Nenhum aparelho real selecionado na lista de GPS.")
             return
         self.open_alarm_selection_dialog(serial)
 
@@ -4135,13 +4208,14 @@ class DeviceServiceManagerApp:
             if devices:
                 serial = devices[0].get("serial")
         if not serial:
-            messagebox.showwarning("Aviso", "Selecione um aparelho na lista de GPS primeiro.")
+            messagebox.showwarning("Aviso", "Nenhum aparelho real selecionado na lista de GPS.")
             return
 
         if getattr(self, 'loc_filter_mode', 'cloud') == "usb":
-            self.action_destroy_apk_usb()
+            self.action_destroy_apk_usb(serial=serial)
         else:
             self._send_remote_destroy_cloud(serial, self.cloud_selected_device)
+
 
     def action_request_location(self):
         serial = self.selected_loc_serial

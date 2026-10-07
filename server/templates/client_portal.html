@@ -3510,6 +3510,11 @@
 
         <!-- NAVEGAÇÃO LINEAR STUDIO (COM SCROLL INDEPENDENTE SUAVE) -->
         <div class="sidebar-linear-nav">
+          <button type="button" class="linear-nav-btn" onclick="openHollywoodTeaser()" style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.18) 0%, rgba(0, 230, 118, 0.18) 100%); border: 1px solid rgba(0, 229, 255, 0.45); margin-bottom: 6px;" title="Assistir Demonstração Rápida de 10s em Estilo Hollywood">
+            <span class="ln-icon">🎬</span>
+            <span class="ln-label" style="color: #00E5FF; font-weight: 800;">Trailer 10s (Cinema)</span>
+            <span class="ln-badge" style="background: #00E676; color: #000; font-weight: 900;">10s</span>
+          </button>
           <button type="button" class="linear-nav-btn active" data-tab="overview" onclick="switchDashTab('overview', this)">
             <span class="ln-icon">⚡</span>
             <span class="ln-label">Bancada USB</span>
@@ -3622,6 +3627,9 @@
             </div>
             <button type="button" class="btn-topbar-quick-recharge" onclick="switchDashTab('recharge')" title="Recarga Instantânea PIX">
               <span>⚡</span> + Recarregar PIX
+            </button>
+            <button type="button" class="btn-topbar-quick-recharge" onclick="openHollywoodTeaser()" style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.25) 0%, rgba(0, 230, 118, 0.25) 100%); border: 1px solid #00E5FF; color: #FFF;" title="Assistir Trailer do Sistema (10s)">
+              <span>🎬</span> Trailer 10s
             </button>
             <a href="/admin" target="_blank" class="btn-linear-admin" id="linkAdminLinear">👑 Admin</a>
             <a href="/download/exe?v=2.2" class="btn-linear-download" title="Baixar aplicativo Windows">📥 Baixar .EXE</a>
@@ -4443,24 +4451,24 @@
             <div id="deviceLocationDetails" style="background: #0B1322; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
               <div>
                 <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px;">Aparelho Selecionado no Mapa</div>
-                <div id="locDeviceTitle" style="font-size: 13.5px; font-weight: 800; color: #FFF; margin-bottom: 8px;">Galaxy A54 5G (SM-A546E-BR9841)</div>
+                <div id="locDeviceTitle" style="font-size: 13.5px; font-weight: 800; color: #FFF; margin-bottom: 8px;">Nenhum dispositivo selecionado</div>
 
                 <div style="display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;">
-                  <span id="locStatusBadge" style="background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">🟢 LIBERADO</span>
-                  <span id="locBatteryBadge" style="background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">🔋 88%</span>
-                  <span id="locNetBadge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">📶 5G / Wi-Fi</span>
+                  <span id="locStatusBadge" style="background: rgba(255, 255, 255, 0.05); color: #94A3B8; border: 1px solid rgba(255, 255, 255, 0.1); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">⚪ SEM SELEÇÃO</span>
+                  <span id="locBatteryBadge" style="background: rgba(255, 255, 255, 0.05); color: #94A3B8; border: 1px solid rgba(255, 255, 255, 0.1); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">🔋 —</span>
+                  <span id="locNetBadge" style="background: rgba(255, 255, 255, 0.05); color: #94A3B8; border: 1px solid rgba(255, 255, 255, 0.1); padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800;">📶 —</span>
                 </div>
 
                 <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
-                  <div style="font-size: 11px; color: var(--cyan); font-weight: 800; margin-bottom: 4px;">🎯 COORDENADAS GPS EXATAS</div>
-                  <div id="locCoordsText" class="mono" style="font-size: 12px; color: #FFF; font-weight: 700;">Lat: -22.749809 | Lon: -47.241569</div>
-                  <div id="locAccuracyText" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Precisão: 8m (GPS Hardware)</div>
+                  <div style="font-size: 11px; color: var(--cyan); font-weight: 800; margin-bottom: 4px;">🎯 COORDENADAS GPS</div>
+                  <div id="locCoordsText" class="mono" style="font-size: 12px; color: #FFF; font-weight: 700;">Lat: — | Lon: —</div>
+                  <div id="locAccuracyText" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Precisão: —</div>
                 </div>
 
                 <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 12px;">
                   <div style="font-size: 11px; color: #F59E0B; font-weight: 800; margin-bottom: 4px;">📍 ENDEREÇO IDENTIFICADO</div>
-                  <div id="locAddressText" style="font-size: 11.5px; color: #CBD5E1; line-height: 1.4;">Rua dos Campos, 62 - Jardim da Mata, Americana - SP, CEP 13476-404</div>
-                  <div id="locLastSyncText" style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px;">Última atualização: Tempo Real</div>
+                  <div id="locAddressText" style="font-size: 11.5px; color: #CBD5E1; line-height: 1.4;">Nenhum dispositivo selecionado no mapa.</div>
+                  <div id="locLastSyncText" style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px;">Última sincronização: —</div>
                 </div>
               </div>
 
@@ -4492,7 +4500,7 @@
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
               <span style="font-size: 16px;">📱</span>
               <h4 style="margin: 0; color: #FFF; font-size: 14px; font-weight: 800;">Aparelhos Android Conectados na Nuvem</h4>
-              <span id="devicesCountBadge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.35); padding: 2px 8px; border-radius: 10px; font-size: 10.5px; font-weight: 800;">3 Aparelhos</span>
+              <span id="devicesCountBadge" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.35); padding: 2px 8px; border-radius: 10px; font-size: 10.5px; font-weight: 800;">0 Aparelhos</span>
             </div>
             
             <!-- ALTERNADOR DE MODO: CAIXAS vs TABELA -->
@@ -4506,17 +4514,6 @@
             </div>
           </div>
 
-          <div id="demoNoticeBanner" style="display: none; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #E2E8F0;">
-                <span>✨</span>
-                <span><strong>Modo Demonstração Interativo:</strong> Aparelhos de exemplo com telemetria GPS e comandos ativos. Entre com sua conta para gerenciar seus celulares reais.</span>
-              </div>
-              <button type="button" class="btn-primary" style="padding: 6px 14px; font-size: 11px; font-weight: 800; width: auto !important;" onclick="openAuthModal('login')">
-                🔑 Fazer Login
-              </button>
-            </div>
-          </div>
 
           <!-- MODO 1: CAIXAS DE IDENTIFICAÇÃO DOS APARELHOS (CARDS BENTO) -->
           <div id="devicesCardsGrid" class="devices-cards-grid">
@@ -5400,7 +5397,7 @@
 
       <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px;">
         <div style="color: #94A3B8; font-size: 11px;">Dispositivo Alvo:</div>
-        <div id="modalAlarmDeviceName" style="color: #FFF; font-weight: 800; font-size: 13.5px; margin-top: 2px;">Galaxy A54 5G (SM-A546E-BR9841)</div>
+        <div id="modalAlarmDeviceName" style="color: #FFF; font-weight: 800; font-size: 13.5px; margin-top: 2px;">Nenhum dispositivo selecionado</div>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
@@ -5498,7 +5495,510 @@
     </div>
   </div>
 
+  <!-- ======================================================== -->
+  <!-- 🎬 MODAL DE APRESENTAÇÃO HOLLYWOOD 10 SEGUNDOS (CINEMA)   -->
+  <!-- ======================================================== -->
+  <div id="hollywoodTeaserModal" style="display: none; position: fixed; inset: 0; z-index: 999999; background: #000; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; user-select: none;">
+    
+    <!-- CANVAS DE FUNDO 3D & EFEITOS CINEMATOGRÁFICOS -->
+    <canvas id="hwCanvas" style="position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
+
+    <!-- FILM GRAIN & SCANLINES OVERLAY -->
+    <div style="position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.85) 100%), repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);"></div>
+
+    <!-- ANAMORPHIC LENS FLARE HORIZONTAL LINE -->
+    <div id="hwLensFlare" style="position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: linear-gradient(90deg, transparent 0%, rgba(0, 229, 255, 0.8) 25%, #FFF 50%, rgba(0, 230, 118, 0.8) 75%, transparent 100%); transform: translateY(-50%) scaleY(1); opacity: 0.6; filter: blur(1px); z-index: 3; pointer-events: none; transition: opacity 0.3s ease;"></div>
+
+    <!-- BARRA SUPERIOR LETTERBOX (2.39:1 CINEMASCOPE) -->
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 70px; background: linear-gradient(180deg, #000 70%, transparent 100%); z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 0 28px;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="font-size: 11px; font-weight: 800; letter-spacing: 2px; color: #94A3B8; text-transform: uppercase;">
+          🎬 DIRECTOR'S CUT • 2.39:1 CINEMASCOPE • 4K HDR • 60 FPS
+        </span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <div style="display: flex; align-items: center; gap: 8px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 20px; padding: 4px 14px;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #EF4444; box-shadow: 0 0 10px #EF4444; animation: blink-rec 0.9s infinite;"></span>
+          <span style="font-family: Consolas, monospace; font-size: 13px; font-weight: 800; color: #FFF; letter-spacing: 1px;">
+            REC <span id="hwTimerVal" style="color: #00E5FF;">00:00.00</span> / 00:10.00
+          </span>
+        </div>
+
+        <button id="hwBtnAudio" type="button" onclick="toggleHwAudio()" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); color: #FFF; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+          <span id="hwAudioIcon">🔊</span> <span id="hwAudioText">SOM ATIVO</span>
+        </button>
+
+        <button type="button" onclick="closeHollywoodTeaser()" style="background: rgba(220, 38, 38, 0.2); border: 1px solid #EF4444; color: #FCA5A5; font-size: 12px; font-weight: 800; padding: 6px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+          ✕ PULAR TRAILER (ESC)
+        </button>
+      </div>
+    </div>
+
+    <!-- TIMELINE PROGRESS BAR (10.0s EXACT) -->
+    <div style="position: absolute; top: 70px; left: 0; right: 0; height: 3px; background: rgba(255, 255, 255, 0.1); z-index: 11;">
+      <div id="hwProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #00E5FF, #00E676); box-shadow: 0 0 12px #00E5FF; transition: width 0.05s linear;"></div>
+    </div>
+
+    <!-- PALCO CENTRAL DE CENAS COMPOSTAS -->
+    <div id="hwStage" style="position: absolute; inset: 70px 0 70px 0; z-index: 5; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+      
+      <!-- CENA 1: RECONHECIMENTO ORBITAL & ALVO GLOBAL (0.0s - 2.0s) -->
+      <div id="hwScene1" class="hw-scene" style="opacity: 0; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 900px; padding: 20px; transition: opacity 0.4s ease, transform 0.4s ease; transform: scale(0.95);">
+        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 30px; background: rgba(0, 229, 255, 0.12); border: 1px solid #00E5FF; color: #00E5FF; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);">
+          🛰️ ORBITAL RECONNAISSANCE ACTIVE • BR-SAT-01
+        </div>
+        <h1 style="margin: 0 0 12px 0; font-size: clamp(34px, 6vw, 68px); font-weight: 900; letter-spacing: 3px; text-transform: uppercase; background: linear-gradient(180deg, #FFFFFF 30%, #94A3B8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 40px rgba(0,0,0,0.8);">
+          MDM &amp; FRP BRASIL
+        </h1>
+        <p style="margin: 0; font-size: clamp(14px, 2.2vw, 22px); font-weight: 600; color: #38BDF8; letter-spacing: 1px; max-width: 750px; line-height: 1.4;">
+          A Mais Poderosa Infraestrutura de Gestão e Desbloqueio da América Latina
+        </p>
+      </div>
+
+      <!-- CENA 2: INVASÃO DE HARDWARE & KNOX DPC (2.0s - 4.5s) -->
+      <div id="hwScene2" class="hw-scene" style="opacity: 0; display: none; flex-direction: column; align-items: center; text-align: center; max-width: 950px; padding: 20px; transition: opacity 0.4s ease, transform 0.4s ease; transform: scale(0.95);">
+        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 30px; background: rgba(0, 230, 118, 0.12); border: 1px solid #00E676; color: #00E676; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; box-shadow: 0 0 20px rgba(0, 230, 118, 0.3);">
+          ⚡ HARDWARE KERNEL HANDSHAKE • ZERO DELAY
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+          <div style="width: 140px; height: 260px; border-radius: 22px; border: 2.5px solid #00E5FF; background: rgba(8, 14, 27, 0.9); box-shadow: 0 0 40px rgba(0, 229, 255, 0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; position: relative;">
+            <div style="width: 40px; height: 4px; background: #334155; border-radius: 2px; position: absolute; top: 10px;"></div>
+            <div style="font-size: 38px; animation: pulse-icon 1s infinite;">📲</div>
+            <div style="font-size: 10px; font-weight: 800; color: #00E676; margin-top: 8px;">KNOX DEFENSE</div>
+            <div style="font-size: 8px; color: #94A3B8;">DPC SYSTEM LEVEL</div>
+          </div>
+          <div style="text-align: left; max-width: 500px;">
+            <h2 style="margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 44px); font-weight: 900; color: #FFF; letter-spacing: 1px;">
+              INJEÇÃO DE SISTEMA DIRETA
+            </h2>
+            <div style="font-family: Consolas, monospace; font-size: 13px; color: #00E5FF; line-height: 1.8;">
+              <div>&gt; ADB STATUS: CONECTADO [100%]</div>
+              <div>&gt; PRIVILÉGIOS DEVICE OWNER: GARANTIDOS</div>
+              <div>&gt; REMOÇÃO DE CONTA FRP: HABILITADA</div>
+              <div>&gt; PROTEÇÃO CONTRA HARD RESET: ATIVA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENA 3: TRAVA KIOSK REMOTA & PAGAMENTO PIX (4.5s - 7.0s) -->
+      <div id="hwScene3" class="hw-scene" style="opacity: 0; display: none; flex-direction: column; align-items: center; text-align: center; max-width: 950px; padding: 20px; transition: opacity 0.4s ease, transform 0.4s ease; transform: scale(0.95);">
+        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 30px; background: rgba(245, 158, 11, 0.15); border: 1px solid #F59E0B; color: #FBBF24; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);">
+          🔒 TRAVA KIOSK INSTANTÂNEA &amp; EMISSÃO PIX
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+          <div style="width: 150px; height: 270px; border-radius: 22px; border: 2.5px solid #00E676; background: #022414; box-shadow: 0 0 50px rgba(0, 230, 118, 0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; position: relative;">
+            <div style="font-size: 10px; font-weight: 900; color: #FFF; background: #059669; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px;">APARELHO BLOQUEADO</div>
+            <div style="width: 80px; height: 80px; background: #FFF; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 0 20px rgba(0,255,100,0.4);">
+              📱
+            </div>
+            <div style="font-size: 11px; font-weight: 900; color: #00E676; margin-top: 8px;">PAGUE VIA PIX</div>
+            <div style="font-size: 9px; color: #A7F3D0;">LIBERAÇÃO AUTOMÁTICA</div>
+          </div>
+          <div style="text-align: left; max-width: 500px;">
+            <h2 style="margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 42px); font-weight: 900; color: #FFF; letter-spacing: 1px;">
+              DINHEIRO NA SUA CONTA
+            </h2>
+            <p style="font-size: 15px; color: #94A3B8; line-height: 1.5; margin: 0 0 12px 0;">
+              O cliente final só utiliza o aparelho após pagar o valor acordado. Sua chave PIX é exibida na tela do celular de forma 100% blindada!
+            </p>
+            <div style="display: inline-block; background: rgba(0, 230, 118, 0.15); border: 1px solid #00E676; color: #00E676; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 800;">
+              ✓ SEM INTERMEDIÁRIOS • RECEBIMENTO DIRETO
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENA 4: RASTREAMENTO TÁTICO GPS MILITAR (7.0s - 8.8s) -->
+      <div id="hwScene4" class="hw-scene" style="opacity: 0; display: none; flex-direction: column; align-items: center; text-align: center; max-width: 950px; padding: 20px; transition: opacity 0.4s ease, transform 0.4s ease; transform: scale(0.95);">
+        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 30px; background: rgba(0, 229, 255, 0.15); border: 1px solid #00E5FF; color: #00E5FF; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);">
+          📍 TACTICAL SATELLITE GPS • LOCALIZAÇÃO REAL
+        </div>
+        <h2 style="margin: 0 0 8px 0; font-size: clamp(28px, 4.5vw, 48px); font-weight: 900; color: #FFF; letter-spacing: 1px;">
+          PRECISÃO CIRÚRGICA DE RUA
+        </h2>
+        <p style="margin: 0 0 16px 0; font-size: 16px; color: #38BDF8; font-weight: 600;">
+          Google Maps em Alta Definição • Coordenadas exatas por Hardware e Satélite
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-family: Consolas, monospace; font-size: 12px;">
+          <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1E293B; border-radius: 8px; padding: 8px 16px; color: #00E5FF;">
+            📡 PRECISÃO: ± 1.2 METROS
+          </div>
+          <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1E293B; border-radius: 8px; padding: 8px 16px; color: #00E676;">
+            🗺️ RUA, BAIRRO &amp; NÚMERO AO VIVO
+          </div>
+          <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1E293B; border-radius: 8px; padding: 8px 16px; color: #F59E0B;">
+            🚨 ALARME SONORO ANTI-PERDA
+          </div>
+        </div>
+      </div>
+
+      <!-- CENA 5: CLÍMAX HOLLYWOOD • TITANIUM COMMAND (8.8s - 10.0s) -->
+      <div id="hwScene5" class="hw-scene" style="opacity: 0; display: none; flex-direction: column; align-items: center; text-align: center; max-width: 950px; padding: 20px; transition: opacity 0.4s ease, transform 0.4s ease; transform: scale(0.95);">
+        <div style="width: 120px; height: 120px; margin-bottom: 16px; position: relative;">
+          <div style="position: absolute; inset: -10px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 230, 118, 0.6) 0%, transparent 70%); animation: pulse-glow 1.5s infinite;"></div>
+          <img src="/static/logo.png" style="width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 2; filter: drop-shadow(0 0 25px #00E676);" alt="MDM &amp; FRP BRASIL">
+        </div>
+        <h1 style="margin: 0 0 8px 0; font-size: clamp(32px, 5.5vw, 62px); font-weight: 900; letter-spacing: 2px; color: #FFFFFF; text-shadow: 0 0 40px rgba(0, 229, 255, 0.8);">
+          MDM &amp; FRP BRASIL
+        </h1>
+        <p style="margin: 0 0 20px 0; font-size: clamp(14px, 2vw, 20px); font-weight: 700; color: #00E676; letter-spacing: 1px;">
+          POTÊNCIA • BLINDAGEM • LUCRO IMEDIATO
+        </p>
+        <button type="button" onclick="closeHollywoodTeaser()" style="pointer-events: auto; background: linear-gradient(135deg, #00E5FF 0%, #00E676 100%); border: none; color: #000; font-size: 15px; font-weight: 900; padding: 14px 38px; border-radius: 30px; cursor: pointer; box-shadow: 0 0 35px rgba(0, 229, 255, 0.7); text-transform: uppercase; letter-spacing: 1px; transition: transform 0.2s;">
+          🚀 ACESSAR PLATAFORMA AGORA
+        </button>
+      </div>
+
+    </div>
+
+    <!-- BARRA INFERIOR LETTERBOX (CREDIT TICKER & TECH FOOTER) -->
+    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 70px; background: linear-gradient(0deg, #000 70%, transparent 100%); z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 0 28px;">
+      <div style="font-size: 11px; font-weight: 700; color: #64748B; letter-spacing: 1px;">
+        PRODUÇÃO: <span style="color: #94A3B8;">MDM TECH STUDIOS 2026</span> • CERTIFICAÇÃO KNOX ENTERPRISE
+      </div>
+      <div id="hwSubTicker" style="font-family: Consolas, monospace; font-size: 12px; font-weight: 700; color: #00E5FF; letter-spacing: 1px;">
+        // INICIANDO SISTEMA // PROTOCOLO TITANIUM NÚMERO 1...
+      </div>
+      <div style="font-size: 11px; font-weight: 700; color: #64748B;">
+        STATUS: <span style="color: #00E676;">100% OPERACIONAL</span>
+      </div>
+    </div>
+
+  </div>
+
+  <style>
+    @keyframes blink-rec { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+    @keyframes pulse-icon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+    @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.2); opacity: 0.9; } }
+  </style>
+
   <script>
+    let hwAudioCtx = null;
+    let hwAudioEnabled = true;
+    let hwAnimFrame = null;
+    let hwStartTime = null;
+    let hwDuration = 10000;
+    let hwIsRunning = false;
+    let hwSoundPlayed = {};
+
+    function initHwAudio() {
+      if (!hwAudioCtx) {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          hwAudioCtx = new AudioContext();
+        } catch (e) {
+          console.warn("Web Audio not supported:", e);
+        }
+      }
+      if (hwAudioCtx && hwAudioCtx.state === 'suspended') {
+        hwAudioCtx.resume();
+      }
+    }
+
+    function playHwSound(type) {
+      if (!hwAudioEnabled || !hwAudioCtx) return;
+      try {
+        const now = hwAudioCtx.currentTime;
+        if (type === 'braaam') {
+          const osc1 = hwAudioCtx.createOscillator();
+          const osc2 = hwAudioCtx.createOscillator();
+          const gain = hwAudioCtx.createGain();
+          
+          osc1.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(80, now);
+          osc1.frequency.exponentialRampToValueAtTime(28, now + 1.8);
+          
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(40, now);
+          osc2.frequency.exponentialRampToValueAtTime(20, now + 2.0);
+
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(hwAudioCtx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 2.3);
+          osc2.stop(now + 2.3);
+        } else if (type === 'whoosh') {
+          const osc = hwAudioCtx.createOscillator();
+          const gain = hwAudioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.exponentialRampToValueAtTime(850, now + 0.4);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc.connect(gain);
+          gain.connect(hwAudioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        } else if (type === 'impact') {
+          const osc = hwAudioCtx.createOscillator();
+          const gain = hwAudioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.exponentialRampToValueAtTime(35, now + 0.5);
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+          osc.connect(gain);
+          gain.connect(hwAudioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.6);
+        } else if (type === 'radar') {
+          const osc = hwAudioCtx.createOscillator();
+          const gain = hwAudioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1200, now);
+          osc.frequency.exponentialRampToValueAtTime(600, now + 0.4);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+          osc.connect(gain);
+          gain.connect(hwAudioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        } else if (type === 'climax') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = hwAudioCtx.createOscillator();
+            const gain = hwAudioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.05);
+            gain.gain.setValueAtTime(0.15, now + i * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.4);
+            osc.connect(gain);
+            gain.connect(hwAudioCtx.destination);
+            osc.start(now + i * 0.05);
+            osc.stop(now + 1.5);
+          });
+        }
+      } catch (e) {
+        console.warn("Audio play err:", e);
+      }
+    }
+
+    function toggleHwAudio() {
+      hwAudioEnabled = !hwAudioEnabled;
+      const icon = document.getElementById("hwAudioIcon");
+      const text = document.getElementById("hwAudioText");
+      if (icon && text) {
+        icon.innerText = hwAudioEnabled ? "🔊" : "🔇";
+        text.innerText = hwAudioEnabled ? "SOM ATIVO" : "MUDO";
+      }
+      if (hwAudioEnabled) initHwAudio();
+    }
+
+    function openHollywoodTeaser() {
+      const modal = document.getElementById("hollywoodTeaserModal");
+      if (!modal) return;
+      initHwAudio();
+      modal.style.display = "block";
+      modal.style.opacity = "1";
+      hwIsRunning = true;
+      hwStartTime = performance.now();
+      hwSoundPlayed = {};
+
+      playHwSound('braaam');
+      startHwCanvasAnimation();
+      requestAnimationFrame(runHwTimeline);
+    }
+
+    function closeHollywoodTeaser() {
+      const modal = document.getElementById("hollywoodTeaserModal");
+      if (!modal) return;
+      hwIsRunning = false;
+      modal.style.opacity = '0';
+      modal.style.transition = 'opacity 0.4s ease';
+      setTimeout(() => {
+        modal.style.display = "none";
+        modal.style.opacity = '1';
+        if (hwAnimFrame) cancelAnimationFrame(hwAnimFrame);
+      }, 400);
+      localStorage.setItem("mdm_hollywood_teaser_seen", "true");
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && hwIsRunning) {
+        closeHollywoodTeaser();
+      }
+    });
+
+    function runHwTimeline(timestamp) {
+      if (!hwIsRunning) return;
+      if (!hwStartTime) hwStartTime = timestamp;
+      const elapsed = timestamp - hwStartTime;
+      const progress = Math.min(1, elapsed / hwDuration);
+
+      const secs = (elapsed / 1000).toFixed(2).padStart(5, '0');
+      const timerEl = document.getElementById("hwTimerVal");
+      if (timerEl) timerEl.innerText = `00:${secs}`;
+
+      const barEl = document.getElementById("hwProgressBar");
+      if (barEl) barEl.style.width = `${progress * 100}%`;
+
+      const s1 = document.getElementById("hwScene1");
+      const s2 = document.getElementById("hwScene2");
+      const s3 = document.getElementById("hwScene3");
+      const s4 = document.getElementById("hwScene4");
+      const s5 = document.getElementById("hwScene5");
+      const ticker = document.getElementById("hwSubTicker");
+
+      function setScene(el, active) {
+        if (!el) return;
+        if (active) {
+          el.style.display = "flex";
+          requestAnimationFrame(() => {
+            el.style.opacity = "1";
+            el.style.transform = "scale(1)";
+          });
+        } else {
+          el.style.opacity = "0";
+          el.style.transform = "scale(0.95)";
+          setTimeout(() => { if (el.style.opacity === "0") el.style.display = "none"; }, 350);
+        }
+      }
+
+      if (elapsed < 2000) {
+        setScene(s1, true);
+        setScene(s2, false);
+        setScene(s3, false);
+        setScene(s4, false);
+        setScene(s5, false);
+        if (ticker) ticker.innerText = "// RECONHECIMENTO ORBITAL // COORD: -22.7392, -47.3314 // SATELLITE LOCKED";
+      } else if (elapsed < 4500) {
+        if (!hwSoundPlayed['whoosh']) {
+          playHwSound('whoosh');
+          hwSoundPlayed['whoosh'] = true;
+        }
+        setScene(s1, false);
+        setScene(s2, true);
+        setScene(s3, false);
+        setScene(s4, false);
+        setScene(s5, false);
+        if (ticker) ticker.innerText = "// INJEÇÃO DE HARDWARE // SAMSUNG KNOX BYPASSED // DPC ADMIN GRANTED";
+      } else if (elapsed < 7000) {
+        if (!hwSoundPlayed['impact']) {
+          playHwSound('impact');
+          hwSoundPlayed['impact'] = true;
+        }
+        setScene(s1, false);
+        setScene(s2, false);
+        setScene(s3, true);
+        setScene(s4, false);
+        setScene(s5, false);
+        if (ticker) ticker.innerText = "// BLOQUEIO KIOSK ATIVO // CHAVE PIX EMITIDA // PAGAMENTO DIRETO AO LOJISTA";
+      } else if (elapsed < 8800) {
+        if (!hwSoundPlayed['radar']) {
+          playHwSound('radar');
+          hwSoundPlayed['radar'] = true;
+        }
+        setScene(s1, false);
+        setScene(s2, false);
+        setScene(s3, false);
+        setScene(s4, true);
+        setScene(s5, false);
+        if (ticker) ticker.innerText = "// RASTREAMENTO TÁTICO GPS // PRECISÃO ±1.2M // GOOGLE MAPS EM TEMPO REAL";
+      } else if (elapsed < 10000) {
+        if (!hwSoundPlayed['climax']) {
+          playHwSound('climax');
+          hwSoundPlayed['climax'] = true;
+        }
+        setScene(s1, false);
+        setScene(s2, false);
+        setScene(s3, false);
+        setScene(s4, false);
+        setScene(s5, true);
+        if (ticker) ticker.innerText = "// MDM & FRP BRASIL // SISTEMA NÚMERO 1 // DOMÍNIO TOTAL EM SUAS MÃOS";
+      } else {
+        closeHollywoodTeaser();
+        return;
+      }
+
+      if (hwIsRunning) {
+        requestAnimationFrame(runHwTimeline);
+      }
+    }
+
+    function startHwCanvasAnimation() {
+      const canvas = document.getElementById("hwCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
+
+      const stars = [];
+      for (let i = 0; i < 120; i++) {
+        stars.push({
+          x: (Math.random() - 0.5) * w * 2,
+          y: (Math.random() - 0.5) * h * 2,
+          z: Math.random() * 1000 + 10,
+          color: Math.random() > 0.4 ? "#00E5FF" : "#00E676"
+        });
+      }
+
+      let radarAngle = 0;
+
+      function renderFrame() {
+        if (!hwIsRunning) return;
+        ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+        ctx.fillRect(0, 0, w, h);
+
+        const cx = w / 2;
+        const cy = h / 2;
+
+        for (let s of stars) {
+          s.z -= 18;
+          if (s.z <= 1) {
+            s.z = 1000;
+            s.x = (Math.random() - 0.5) * w * 2;
+            s.y = (Math.random() - 0.5) * h * 2;
+          }
+          const k = 250 / s.z;
+          const px = s.x * k + cx;
+          const py = s.y * k + cy;
+
+          if (px >= 0 && px <= w && py >= 0 && py <= h) {
+            const size = Math.max(0.5, (1 - s.z / 1000) * 3);
+            ctx.beginPath();
+            ctx.arc(px, py, size, 0, Math.PI * 2);
+            ctx.fillStyle = s.color;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = s.color;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+
+        radarAngle += 0.04;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.min(cx, cy) * 0.75, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(0, 229, 255, 0.15)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.min(cx, cy) * 0.45, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(0, 230, 118, 0.12)";
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(radarAngle) * Math.min(cx, cy) * 0.75, Math.sin(radarAngle) * Math.min(cx, cy) * 0.75);
+        ctx.strokeStyle = "rgba(0, 229, 255, 0.4)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        hwAnimFrame = requestAnimationFrame(renderFrame);
+      }
+      renderFrame();
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("terms") === "accepted") localStorage.setItem("mdm_terms_accepted", "true");
     let token = urlParams.get("token") || localStorage.getItem("mdm_token");
@@ -5539,6 +6039,9 @@
       localStorage.setItem("mdm_terms_accepted", "true");
       const modal = document.getElementById("termsComplianceModal");
       if (modal) modal.style.display = 'none';
+
+      // Dispara imediatamente o vídeo/apresentação de 10 segundos no estilo Hollywood
+      openHollywoodTeaser();
       
       if (typeof window._pendingComplianceAction === 'function') {
         const action = window._pendingComplianceAction;
@@ -5546,6 +6049,18 @@
         action();
       }
     }
+
+    // Gatilho Automático na Abertura do Site:
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        if (localStorage.getItem("mdm_terms_accepted") !== "true") {
+          const modal = document.getElementById("termsComplianceModal");
+          if (modal) modal.style.display = 'flex';
+        } else if (localStorage.getItem("mdm_hollywood_teaser_seen") !== "true") {
+          openHollywoodTeaser();
+        }
+      }, 500);
+    });
 
     function openAuthOverlay(view = 'Login') {
       const overlay = document.getElementById("authOverlay");
@@ -6600,36 +7115,39 @@
       const syncEl = document.getElementById("locLastSyncText");
       const gmapsBtn = document.getElementById("btnExternalGoogleMaps");
 
-      const lat = d.latitude !== null && d.latitude !== undefined ? Number(d.latitude) : -22.749809;
-      const lon = d.longitude !== null && d.longitude !== undefined ? Number(d.longitude) : -47.241569;
+      const lat = (d.latitude !== null && d.latitude !== undefined && d.latitude !== "") ? Number(d.latitude) : null;
+      const lon = (d.longitude !== null && d.longitude !== undefined && d.longitude !== "") ? Number(d.longitude) : null;
 
-      if (coordsEl) coordsEl.textContent = `Lat: ${lat.toFixed(6)} | Lon: ${lon.toFixed(6)}`;
-      if (accEl) accEl.textContent = `Precisão: ${d.accuracy ? d.accuracy + 'm (GPS Hardware)' : '5-15m (Alta Resolução)'}`;
+      if (lat !== null && lon !== null) {
+        if (coordsEl) coordsEl.textContent = `Lat: ${lat.toFixed(6)} | Lon: ${lon.toFixed(6)}`;
+        if (accEl) accEl.textContent = `Precisão: ${d.accuracy ? d.accuracy + 'm (GPS Hardware)' : 'Alta Resolução'}`;
+        const fullAddr = d.address_formatted || (d.street ? `${d.street}, ${d.neighborhood || ''} - ${d.city || ''}/${d.state || ''}` : 'Coordenadas registradas');
+        if (addrEl) addrEl.textContent = fullAddr;
+        const gmapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+        if (gmapsBtn) gmapsBtn.href = gmapsUrl;
 
-      const fullAddr = d.address_formatted || `${d.street || 'Rua dos Campos, 62'}, ${d.neighborhood || 'Jardim da Mata'} - ${d.city || 'Americana'}/${d.state || 'SP'}`;
-      if (addrEl) addrEl.textContent = fullAddr;
+        // Pan map com invalidateSize garantido
+        if (deviceMapInstance && typeof L !== 'undefined') {
+          deviceMapInstance.invalidateSize(true);
+          setTimeout(() => {
+            if (deviceMapInstance) {
+              deviceMapInstance.invalidateSize(true);
+              deviceMapInstance.setView([lat, lon], 16, { animate: true });
+              if (deviceMapMarkers[d.serial]) {
+                deviceMapMarkers[d.serial].openPopup();
+              }
+            }
+          }, 60);
+        }
+      } else {
+        if (coordsEl) coordsEl.textContent = "Lat: — | Lon: — (Sem sinal GPS)";
+        if (accEl) accEl.textContent = "Precisão: —";
+        if (addrEl) addrEl.textContent = "Aguardando transmissão de sinal GPS do smartphone.";
+        if (gmapsBtn) gmapsBtn.href = "#";
+      }
 
       const lastSeenText = d.last_sync || d.last_seen || d.first_seen;
       if (syncEl) syncEl.textContent = `Última sincronização: ${lastSeenText ? new Date(lastSeenText).toLocaleString('pt-BR') : 'Tempo Real'}`;
-
-      const gmapsUrl = `https://www.google.com/maps?q=${lat},${lon}`;
-      if (gmapsBtn) {
-        gmapsBtn.href = gmapsUrl;
-      }
-
-      // Pan map com invalidateSize garantido
-      if (deviceMapInstance && typeof L !== 'undefined') {
-        deviceMapInstance.invalidateSize(true);
-        setTimeout(() => {
-          if (deviceMapInstance) {
-            deviceMapInstance.invalidateSize(true);
-            deviceMapInstance.setView([lat, lon], 16, { animate: true });
-            if (deviceMapMarkers[d.serial]) {
-              deviceMapMarkers[d.serial].openPopup();
-            }
-          }
-        }, 60);
-      }
     }
 
     function openSelectedInGoogleMaps() {
@@ -6638,93 +7156,65 @@
       } else if (allDevicesCache.length > 0 && allDevicesCache[0].latitude && allDevicesCache[0].longitude) {
         window.open(`https://www.google.com/maps?q=${allDevicesCache[0].latitude},${allDevicesCache[0].longitude}`, '_blank');
       } else {
-        window.open('https://www.google.com/maps?q=-22.749809,-47.241569', '_blank');
+        alert('O dispositivo selecionado ainda não possui coordenadas GPS registradas.');
       }
     }
 
-    const DEMO_DEVICES_SHOWCASE = [
-      {
-        serial: "SM-A546E-BR9841",
-        model: "Galaxy A54 5G",
-        manufacturer: "Samsung Knox",
-        lock_status: "UNLOCKED",
-        battery_level: 88,
-        latitude: -22.749809,
-        longitude: -47.241569,
-        accuracy: 8,
-        city: "Americana",
-        state: "SP",
-        street: "Rua dos Campos",
-        neighborhood: "Jardim da Mata",
-        address_formatted: "Rua dos Campos, 62 - Jardim da Mata, Americana - SP, CEP 13476-404",
-        network_status: "5G Vivo • Wi-Fi",
-        last_sync: new Date(Date.now() - 2 * 60000).toISOString()
-      },
-      {
-        serial: "2312DRA50G-BR1420",
-        model: "Redmi Note 13",
-        manufacturer: "Xiaomi HyperOS",
-        lock_status: "LOCKED",
-        battery_level: 64,
-        latitude: -22.9056,
-        longitude: -47.0608,
-        accuracy: 12,
-        city: "Campinas",
-        state: "SP",
-        street: "R. Cel. Silva Telles",
-        neighborhood: "Cambuí",
-        address_formatted: "R. Coronel Silva Telles, 880 - Cambuí, Campinas - SP, 13024-001",
-        network_status: "4G Claro",
-        last_sync: new Date(Date.now() - 14 * 60000).toISOString()
-      },
-      {
-        serial: "XT2347-1-BR7732",
-        model: "Moto G84 5G",
-        manufacturer: "Motorola ThinkPhone",
-        lock_status: "UNLOCKED",
-        battery_level: 95,
-        latitude: -22.7441,
-        longitude: -47.3389,
-        accuracy: 6,
-        city: "Americana",
-        state: "SP",
-        street: "Av. Paulista",
-        neighborhood: "Jd. Colina",
-        address_formatted: "Av. Paulista, 650 - Jardim Colina, Americana - SP, 13478-000",
-        network_status: "Wi-Fi Fibra 500M",
-        last_sync: new Date(Date.now() - 5 * 60000).toISOString()
+    const DEMO_DEVICES_SHOWCASE = [];
+
+    function clearDeviceMapDetails() {
+      currentSelectedDevice = null;
+      const titleEl = document.getElementById("locDeviceTitle");
+      const statusBadge = document.getElementById("locStatusBadge");
+      const batteryBadge = document.getElementById("locBatteryBadge");
+      const netBadge = document.getElementById("locNetBadge");
+      const coordsEl = document.getElementById("locCoordsText");
+      const accEl = document.getElementById("locAccuracyText");
+      const addrEl = document.getElementById("locAddressText");
+      const syncEl = document.getElementById("locLastSyncText");
+      const gmapsBtn = document.getElementById("btnExternalGoogleMaps");
+
+      if (titleEl) titleEl.textContent = "Nenhum dispositivo selecionado";
+      if (statusBadge) { statusBadge.textContent = "⚪ SEM CONEXÃO"; statusBadge.style.color = "#94A3B8"; }
+      if (batteryBadge) batteryBadge.textContent = "🔋 —";
+      if (netBadge) netBadge.textContent = "📶 —";
+      if (coordsEl) coordsEl.textContent = "Lat: — | Lon: —";
+      if (accEl) accEl.textContent = "Precisão: —";
+      if (addrEl) addrEl.textContent = "Nenhum aparelho selecionado no sistema.";
+      if (syncEl) syncEl.textContent = "Última sincronização: —";
+      if (gmapsBtn) gmapsBtn.href = "#";
+
+      if (deviceMapInstance && typeof L !== 'undefined') {
+        for (let k in deviceMapMarkers) {
+          deviceMapInstance.removeLayer(deviceMapMarkers[k]);
+        }
+        deviceMapMarkers = {};
       }
-    ];
+    }
 
     async function refreshDeviceLocation() {
       const targetSerial = currentSelectedDevice ? currentSelectedDevice.serial : (allDevicesCache[0] ? allDevicesCache[0].serial : null);
       const alertEl = document.getElementById("deviceActionAlert");
+      if (!targetSerial) {
+        if (alertEl) {
+          alertEl.style.display = "block";
+          alertEl.style.background = "rgba(245, 158, 11, 0.15)";
+          alertEl.style.border = "1px solid #F59E0B";
+          alertEl.style.color = "#F59E0B";
+          alertEl.textContent = "⚠️ Selecione um aparelho real na lista antes de solicitar o sinal GPS.";
+        }
+        return;
+      }
       if (alertEl) {
         alertEl.style.display = "block";
         alertEl.style.background = "rgba(56, 189, 248, 0.15)";
         alertEl.style.border = "1px solid var(--cyan)";
         alertEl.style.color = "var(--cyan)";
-        alertEl.textContent = "🛰️ Enviando ping de geolocalização imediata para o APK via satélite...";
-      }
-
-      const isDemo = !token || (targetSerial && ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(targetSerial));
-      if (isDemo) {
-        setTimeout(() => {
-          if (alertEl) {
-            alertEl.style.background = "rgba(0, 230, 118, 0.18)";
-            alertEl.style.border = "1px solid var(--green)";
-            alertEl.style.color = "var(--green)";
-            alertEl.textContent = "✅ Coordenadas GPS e telemetria atualizadas via satélite em tempo real!";
-          }
-          if (targetSerial) selectDeviceOnMap(targetSerial);
-        }, 400);
-        return;
+        alertEl.textContent = `🛰️ Enviando ping de geolocalização imediata para o aparelho ${targetSerial}...`;
       }
 
       try {
-        if (targetSerial) {
-          await api('/api/v1/client/devices/' + encodeURIComponent(targetSerial) + '/request-location', 'POST');
-        }
+        await api('/api/v1/client/devices/' + encodeURIComponent(targetSerial) + '/request-location', 'POST');
         await loadDevices();
         if (alertEl) {
           alertEl.style.background = "rgba(0, 230, 118, 0.18)";
@@ -6742,33 +7232,26 @@
 
     async function loadDevices() {
       const tbody = document.getElementById("tblDevicesBody");
-      const demoBanner = document.getElementById("demoNoticeBanner");
       const countBadge = document.getElementById("devicesCountBadge");
       if (!tbody) return;
       initDeviceMap();
 
       let devices = [];
-      let isDemoMode = false;
 
-      // 1. Verificar se cliente está autenticado
+      // Buscar exclusivamente dispositivos reais via API autenticada
       if (typeof token !== 'undefined' && token) {
         try {
           devices = await api('/api/v1/client/devices');
-          if (demoBanner) demoBanner.style.display = 'none';
         } catch (err) {
           console.warn("Falha ao buscar dispositivos reais via API:", err);
-          isDemoMode = true;
-          devices = DEMO_DEVICES_SHOWCASE;
-          if (demoBanner) demoBanner.style.display = 'block';
+          devices = [];
         }
       } else {
-        isDemoMode = true;
-        devices = DEMO_DEVICES_SHOWCASE;
-        if (demoBanner) demoBanner.style.display = 'block';
+        devices = [];
       }
 
-      allDevicesCache = devices || [];
-      if (countBadge) countBadge.textContent = `${allDevicesCache.length} ${allDevicesCache.length === 1 ? 'Aparelho' : 'Aparelhos'}${isDemoMode ? ' (Demo)' : ''}`;
+      allDevicesCache = Array.isArray(devices) ? devices : [];
+      if (countBadge) countBadge.textContent = `${allDevicesCache.length} ${allDevicesCache.length === 1 ? 'Aparelho' : 'Aparelhos'}`;
 
       tbody.innerHTML = '';
 
@@ -6788,6 +7271,8 @@
             </td>
           </tr>
         `;
+        renderDevicesTable([]);
+        clearDeviceMapDetails();
         return;
       }
 
@@ -7222,27 +7707,13 @@
       // Tocar som de confirmação auditiva local
       playWebAudioAlarm(alarmType);
 
-      const isDemo = !token || ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(serial);
-      if (isDemo) {
-        setTimeout(() => {
-          if (alertEl) {
-            alertEl.style.background = "rgba(245, 158, 11, 0.22)";
-            alertEl.style.border = "1px solid #F59E0B";
-            alertEl.style.color = "#FBBF24";
-            alertEl.innerHTML = `🚨 <strong>${labelText.toUpperCase()} ACIONADO!</strong> Sinal transmitido via Nuvem para <code>${escapeHtml(serial)}</code>. O aparelho está emitindo o som em volume máximo!`;
-          }
-          selectDeviceOnMap(serial);
-        }, 350);
-        return;
-      }
-
       try {
         const res = await api('/api/v1/client/devices/' + encodeURIComponent(serial) + '/alarm', 'POST', { alarm_type: alarmType });
         if (alertEl) {
           alertEl.style.background = "rgba(245, 158, 11, 0.22)";
           alertEl.style.border = "1px solid #F59E0B";
           alertEl.style.color = "#FBBF24";
-          alertEl.innerHTML = `🚨 <strong>${labelText.toUpperCase()} ACIONADO!</strong> ${escapeHtml(res.message || 'Ordem de alarme enviada com sucesso!')}`;
+          alertEl.innerHTML = `🚨 <strong>${labelText.toUpperCase()} ACIONADO!</strong> ${escapeHtml(res.message || 'Ordem de alarme transmitida ao smartphone com sucesso!')}`;
         }
       } catch (err) {
         if (alertEl) {
@@ -7269,23 +7740,6 @@
         alertEl.style.border = "1px solid var(--cyan)";
         alertEl.style.color = "var(--cyan)";
         alertEl.textContent = `Enviando comando de bloqueio para ${serial}...`;
-      }
-
-      const isDemo = !token || ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(serial);
-      if (isDemo) {
-        setTimeout(() => {
-          const dev = allDevicesCache.find(x => x.serial === serial);
-          if (dev) dev.lock_status = 'LOCKED';
-          if (alertEl) {
-            alertEl.style.background = "rgba(239, 68, 68, 0.18)";
-            alertEl.style.border = "1px solid #EF4444";
-            alertEl.style.color = "#EF4444";
-            alertEl.textContent = `🔒 Comando de Bloqueio Kiosk enviado via FCM Nuvem com sucesso para ${serial}!`;
-          }
-          renderDevicesTable(allDevicesCache);
-          selectDeviceOnMap(serial);
-        }, 350);
-        return;
       }
 
       try {
@@ -7315,23 +7769,6 @@
         alertEl.style.border = "1px solid var(--cyan)";
         alertEl.style.color = "var(--cyan)";
         alertEl.textContent = `Enviando comando de liberação para ${serial}...`;
-      }
-
-      const isDemo = !token || ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(serial);
-      if (isDemo) {
-        setTimeout(() => {
-          const dev = allDevicesCache.find(x => x.serial === serial);
-          if (dev) dev.lock_status = 'UNLOCKED';
-          if (alertEl) {
-            alertEl.style.background = "rgba(0, 230, 118, 0.18)";
-            alertEl.style.border = "1px solid var(--green)";
-            alertEl.style.color = "var(--green)";
-            alertEl.textContent = `✅ Aparelho liberado via Nuvem com sucesso para ${serial}!`;
-          }
-          renderDevicesTable(allDevicesCache);
-          selectDeviceOnMap(serial);
-        }, 350);
-        return;
       }
 
       try {
@@ -7391,26 +7828,6 @@
         alertEl.style.border = "1px solid #EF4444";
         alertEl.style.color = "#FCA5A5";
         alertEl.textContent = `💥 Enviando ordem de autodestruição do APK para ${serial}...`;
-      }
-
-      const isDemo = !token || ['SM-A546E-BR9841', '2312DRA50G-BR1420', 'XT2347-1-BR7732'].includes(serial);
-      if (isDemo) {
-        setTimeout(() => {
-          const dev = allDevicesCache.find(x => x.serial === serial);
-          if (dev) {
-            dev.lock_status = 'DESTROYED';
-            dev.pending_command = 'DESTROY_APK';
-          }
-          if (alertEl) {
-            alertEl.style.background = "rgba(239, 68, 68, 0.22)";
-            alertEl.style.border = "1px solid #EF4444";
-            alertEl.style.color = "#FECACA";
-            alertEl.textContent = `💥 Ordem de autodestruição e remoção do APK enviada com sucesso para ${serial}!`;
-          }
-          renderDevicesTable(allDevicesCache);
-          selectDeviceOnMap(serial);
-        }, 400);
-        return;
       }
 
       try {

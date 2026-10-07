@@ -3,22 +3,32 @@ import subprocess
 import shutil
 import zipfile
 
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 BUILDER_DIR = r"C:\Users\seoph\.gemini\antigravity\scratch\android-builder"
-PROJECT_DIR = r"C:\Users\seoph\.gemini\antigravity\scratch\mdm-frp-brasil-device-service-manager\android\app"
-DIST_DIR = r"C:\Users\seoph\.gemini\antigravity\scratch\mdm-frp-brasil-device-service-manager\dist"
+PROJECT_DIR = os.path.join(REPO_ROOT, "android", "app")
+DIST_DIR = os.path.join(REPO_ROOT, "dist")
 
 JAVA_HOME = r"C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot"
-JAVAC = os.path.join(JAVA_HOME, "bin", "javac.exe")
-JAVA = os.path.join(JAVA_HOME, "bin", "java.exe")
+if os.path.exists(os.path.join(JAVA_HOME, "bin", "javac.exe")):
+    JAVAC = os.path.join(JAVA_HOME, "bin", "javac.exe")
+    JAVA = os.path.join(JAVA_HOME, "bin", "java.exe")
+else:
+    JAVAC = "javac"
+    JAVA = "java"
+
 AAPT2 = os.path.join(BUILDER_DIR, "aapt2.exe")
 ANDROID_JAR = os.path.join(BUILDER_DIR, "android.jar")
 R8_JAR = os.path.join(BUILDER_DIR, "r8.jar")
 UBER_SIGNER = os.path.join(BUILDER_DIR, "uber-apk-signer.jar")
 
 def run(cmd, cwd=None):
-    cmd_str = " ".join(cmd) if isinstance(cmd, list) else cmd
-    print(f"[*] RUN: {cmd_str}")
-    res = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, shell=True)
+    if isinstance(cmd, str):
+        import shlex
+        cmd = shlex.split(cmd)
+    print("[*] RUN:", " ".join(cmd))
+    env = os.environ.copy()
+    env["__COMPAT_LAYER"] = "RunAsInvoker"
+    res = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True, text=True, shell=False)
     if res.stdout:
         print(res.stdout)
     if res.stderr:
@@ -38,8 +48,8 @@ def compile_apk():
     res_dir = os.path.join(PROJECT_DIR, "res")
     manifest_path = os.path.join(PROJECT_DIR, "AndroidManifest.xml")
 
-    # Clean intermediate build directories
-    for d in [build_dir, gen_dir, classes_dir]:
+    # Clean intermediate build directories (preserve gen_dir which holds R.java)
+    for d in [build_dir, classes_dir]:
         if os.path.exists(d):
             shutil.rmtree(d)
         os.makedirs(d, exist_ok=True)
@@ -58,19 +68,30 @@ def compile_apk():
         "--manifest", manifest_path,
         "--min-sdk-version", "24",
         "--target-sdk-version", "34",
-        "--java", gen_dir,
         "-o", base_apk,
-        compiled_res,
+        "-R", compiled_res,
         "--auto-add-overlay"
     ])
+    import time
+    for _ in range(30):
+        if os.path.exists(base_apk):
+            break
+        time.sleep(0.3)
+    if not os.path.exists(base_apk):
+        raise FileNotFoundError(f"Failed to generate base_unaligned.apk at {base_apk}")
 
     # 3. JAVAC compile
     print("\n--- 3. JAVAC Compile Java Source Code ---")
     java_files = []
-    for r, d, files in os.walk(PROJECT_DIR):
-        for file in files:
-            if file.endswith(".java"):
-                java_files.append(os.path.join(r, file))
+    seen = set()
+    for search_dir in [PROJECT_DIR, gen_dir]:
+        for r, d, files in os.walk(search_dir):
+            for file in files:
+                if file.endswith(".java"):
+                    full_p = os.path.join(r, file)
+                    if full_p not in seen:
+                        seen.add(full_p)
+                        java_files.append(full_p)
 
     print(f"Compiling {len(java_files)} Java source files...")
     run([
@@ -129,9 +150,14 @@ def compile_apk():
     shutil.copyfile(signed_output, target_apk)
 
     # Also copy to resources directory for the Windows app to bundle inside EXE
-    win_res_dir = r"C:\Users\seoph\.gemini\antigravity\scratch\mdm-frp-brasil-device-service-manager\windows\resources"
+    win_res_dir = os.path.join(REPO_ROOT, "windows", "resources")
     os.makedirs(win_res_dir, exist_ok=True)
     shutil.copyfile(signed_output, os.path.join(win_res_dir, "MDM_FRP_BRASIL_DEVICE_SERVICE.apk"))
+
+    # Copy to server static directory for cloud download
+    srv_static_dir = os.path.join(REPO_ROOT, "server", "static")
+    os.makedirs(srv_static_dir, exist_ok=True)
+    shutil.copyfile(signed_output, os.path.join(srv_static_dir, "MDM_FRP_BRASIL_DEVICE_SERVICE.apk"))
 
     print("\n" + "=" * 60)
     print(f"[SUCCESS] APK GENERATED: {target_apk}")

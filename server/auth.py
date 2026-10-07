@@ -30,7 +30,7 @@ def get_secret_key() -> str:
                 )
             return new_key
     except Exception:
-        return "mdm_frp_brasil_super_secret_jwt_key_2026_production"
+        return "MDM_JWT_SHIELD_SECURE_2026_9b88e17a34c568f1d2e09a34bc617e99"
 
 SECRET_KEY = get_secret_key()
 ALGORITHM = "HS256"

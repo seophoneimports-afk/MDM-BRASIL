@@ -777,22 +777,39 @@ class AdbManager:
 
     def removeAuthorizedPackage(self, serial=None):
         s_args = ["-s", serial] if serial else []
-        # 1. Enviar broadcast de desbloqueio prévio e autodestruição para fechar Kiosk
-        self.run_cmd(s_args + ["shell", "am", "broadcast", "-a", "br.com.mdmfrpbrasil.deviceservice.UNLOCK_DEVICE"], timeout=5)
-        self.run_cmd(s_args + ["shell", "am", "broadcast", "-a", "br.com.mdmfrpbrasil.deviceservice.DESTROY_APK"], timeout=5)
+        pkg = "br.com.mdmfrpbrasil.deviceservice"
+        receiver = f"{pkg}/.ServiceConfigReceiver"
+        admin = f"{pkg}/.ServiceDeviceAdminReceiver"
 
-        # 2. Remover administrador de dispositivo (DPM) para permitir desinstalação
-        self.run_cmd(s_args + ["shell", "dpm", "remove-active-admin", "br.com.mdmfrpbrasil.deviceservice/.ServiceDeviceAdminReceiver"], timeout=8)
+        # 1. Acordar tela e remover bloqueio de tela
+        self.run_cmd(s_args + ["shell", "input", "keyevent", "82"], timeout=3)
+        self.run_cmd(s_args + ["shell", "input", "keyevent", "3"], timeout=3)
 
-        # 3. Forçar parada e limpar dados
-        self.run_cmd(s_args + ["shell", "am", "force-stop", "br.com.mdmfrpbrasil.deviceservice"], timeout=8)
-        self.run_cmd(s_args + ["shell", "pm", "clear", "br.com.mdmfrpbrasil.deviceservice"], timeout=8)
+        # 2. Enviar broadcasts explícitos de destravamento e autodestruição para o receiver em primeiro plano
+        self.run_cmd(s_args + ["shell", "am", "broadcast", "-a", f"{pkg}.UNLOCK_DEVICE", "-n", receiver, "--receiver-foreground"], timeout=5)
+        self.run_cmd(s_args + ["shell", "am", "broadcast", "-a", f"{pkg}.DESTROY_APK", "-n", receiver, "--receiver-foreground"], timeout=5)
 
-        # 4. Desinstalar pacote
-        code, out, err = self.run_cmd(s_args + ["uninstall", "br.com.mdmfrpbrasil.deviceservice"], timeout=25)
+        # 3. Disparar MainActivity com comando explícito de autodestruição interna (invoca dpm.clearDeviceOwnerApp)
+        self.run_cmd(s_args + ["shell", "am", "start", "-n", f"{pkg}/.MainActivity", "--es", "action", "DESTROY_APK", "--ez", "destroy", "true"], timeout=5)
+        time.sleep(1.0)
+
+        # 4. Remover administrador de dispositivo (DPM) para permitir desinstalação
+        self.run_cmd(s_args + ["shell", "dpm", "remove-active-admin", admin], timeout=8)
+        self.run_cmd(s_args + ["shell", "dpm", "remove-active-admin", f"{pkg}/.DeviceAdminReceiver"], timeout=5)
+
+        # 5. Forçar parada e limpar dados
+        self.run_cmd(s_args + ["shell", "am", "force-stop", pkg], timeout=8)
+        self.run_cmd(s_args + ["shell", "pm", "clear", pkg], timeout=8)
+
+        # 6. Desinstalar pacote em múltiplos níveis (usuário 0 e global)
+        self.run_cmd(s_args + ["shell", "pm", "uninstall", "--user", "0", pkg], timeout=15)
+        code, out, err = self.run_cmd(s_args + ["uninstall", pkg], timeout=25)
         combined = (out + "\n" + err).strip()
 
-        # Clean only our own temporary files
+        # 7. Desativar pacote caso ainda persista
+        self.run_cmd(s_args + ["shell", "pm", "disable-user", "--user", "0", pkg], timeout=8)
+
+        # Limpar arquivos residuais na pasta temporária
         self.run_cmd(s_args + [
             "shell", "rm", "-f",
             "/data/local/tmp/service_logo.png",
@@ -800,18 +817,10 @@ class AdbManager:
             "/data/local/tmp/mdm_service_status.json"
         ], timeout=4)
 
-        if "Success" in combined or self.verifyPackageRemoved(serial):
-            return True, "APK destruído e desinstalado com sucesso."
+        if self.verifyPackageRemoved(serial) or "Success" in combined:
+            return True, "APK destruído e desinstalado com sucesso do smartphone."
 
-        if "DELETE_FAILED_USER_RESTRICTED" in combined or "DELETE_FAILED_DEVICE_POLICY_MANAGER" in combined:
-            # Tentar remover como usuário 0
-            self.run_cmd(s_args + ["shell", "pm", "uninstall", "--user", "0", "br.com.mdmfrpbrasil.deviceservice"], timeout=10)
-            self.run_cmd(s_args + ["shell", "pm", "disable-user", "--user", "0", "br.com.mdmfrpbrasil.deviceservice"], timeout=8)
-            if self.verifyPackageRemoved(serial):
-                return True, "APK removido com sucesso via modo de restrição."
-            return False, f"Falha de política DPM: {combined}"
-
-        return False, combined
+        return False, combined if combined else "Falha ao desinstalar pacote do sistema."
 
     def uninstall_device_apk(self, serial=None):
         return self.removeAuthorizedPackage(serial)
